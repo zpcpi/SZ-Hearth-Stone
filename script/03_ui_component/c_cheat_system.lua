@@ -9,6 +9,9 @@ function t:init()
     self.作弊界面 = self.obj.getChildByName('作弊界面')
     self.作弊界面.visible = false
 
+    --1231231
+
+
     self.初始面板 = self.作弊界面.getChildByName('initlist')
     self.作弊指令说明 = self.初始面板.getChildByName('说明')
     self.作弊指令提示 = self.初始面板.getChildByName('提示信息')
