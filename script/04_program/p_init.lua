@@ -13,7 +13,7 @@ t['初始化'] = function()
 	G.start_program("作弊系统_初始化作弊系统")
 	G.start_program("地图系统_初始化地图系统")
 	G.call("地图系统_进入地图",G.QueryName(0x10060002))
-	G.call("剧情演示")
+	-- G.call("剧情演示")
 end
 --type=
 --hide=false

@@ -327,7 +327,9 @@ function t:setChildPosition(deltaX,deltaY)
 end 
 function t:needSetPosition()
 	if self.type==1 then 
-		if self._dataNum > self.visibleChildCount or self.content.y > 0 then 
+		if (self._dataNum or 0) > (self.visibleChildCount or 0) then 
+			return true
+		elseif self.content.y > 0 then
 			return true
 		end 
 	else 
