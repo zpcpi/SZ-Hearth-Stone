@@ -1,0 +1,17 @@
+local t = {}
+t[0x1f09]="o_animation"
+t[0x1002]="o_cheat_system_item"
+t[0x1007]="o_citymap_system_city"
+t[0x1006]="o_citymap_system_map"
+t[0x1001]="o_dialogue_system_actionlist"
+t[0x1f04]="o_event"
+t[0x1f03]="o_font"
+t[0x1f05]="o_fontstyle"
+t[0x1f02]="o_image"
+t[0x100f]="o_misc"
+t[0x1f01]="o_typedef"
+t[0x4001]="p_cheat_system"
+t[0x4002]="p_citymap_system"
+t[0x0]="p_dialogue_system"
+t[0x0]="p_init"
+return t
