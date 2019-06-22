@@ -116,7 +116,7 @@ function t:显示作弊界面()
     self.作弊指令提示.visible = true
     G.SetEditing(self.作弊指令内容)
 end
- 
+
 function t:获取字符串真实位置(str, i)
     return G.getStrLen(string.sub(str, 1, i))
 end
