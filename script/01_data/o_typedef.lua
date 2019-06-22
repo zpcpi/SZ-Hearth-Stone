@@ -229,10 +229,53 @@ local t = {
 		},
 	},
 	{
+		['name']='o_excel',
+		['showname']='excel数据对照表',
+		['define']={
+			[1]={
+				['name']='文件名称',
+				['type']='string',
+			},
+			[2]={
+				['name']='sheet名称',
+				['type']='string',
+			},
+			[3]={
+				['name']='默认值文件名称',
+				['type']='type',
+			},
+			[4]={
+				['name']='默认值sheet名称',
+				['type']='string',
+			},
+			[5]={
+				['name']='o表名称',
+				['type']='string',
+			},
+			[6]={
+				['name']='是否转置',
+				['type']='boolean',
+			},
+			[7]={
+				['name']='是否全托',
+				['type']='boolean',
+			},
+			[8]={
+				['name']='导出前额外处理',
+				['type']='funs@excel_fix',
+			},
+			[9]={
+				['name']='导入后额外处理',
+				['type']='funs@excel_fix',
+			},
+		},
+	},
+	{
 		['name']='o_citymap_system_map',
 		['img']='v_citymap_system_map',
 		['mod']='citymapsystem',
-		['modetype']='line',	['define']={
+		['modetype']='line',
+		['define']={
 			[1]={
 				['name']='名称',
 				['type']='string',
