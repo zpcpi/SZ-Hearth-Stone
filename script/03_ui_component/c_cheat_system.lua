@@ -117,6 +117,10 @@ function t:显示作弊界面()
     G.SetEditing(self.作弊指令内容)
 end
 
+function t:获取字符串真实位置(str, i)
+    return G.getStrLen(string.sub(str, 1, i))
+end
+
 function t:作弊文本选取(int_select, boolean_是否向右)
     local text = self.作弊指令内容.text
     local int_长度 = G.getStrLen(text)
@@ -264,10 +268,6 @@ end
 function t:隐藏作弊界面()
     G.SetEditing(nil)
     self.作弊界面.visible = false
-end
-
-function t:获取字符串真实位置(str, i)
-    return G.getStrLen(string.sub(str, 1, i))
 end
 
 return t
