@@ -15,6 +15,7 @@ t[0x7009]="p_cls_data_excelreader"
 t[0x0]="p_init"
 t[0x5001]="a_common"
 t[0x5002]="a_dialogue_system"
+t[0x0]="n_card_system"
 t[0x0]="n_cheat_system"
 t[0x0]="n_common"
 return t
