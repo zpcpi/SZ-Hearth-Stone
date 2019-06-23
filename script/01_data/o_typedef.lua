@@ -5,41 +5,6 @@ local t = {
 'o_typedef',
 {
 	{
-		['name']='o_dialogue_system_tap',
-		['define']={
-			[1]={
-				['name']='动画',
-				['type']='fargo_dialogue_system_action',
-			},
-			[2]={
-				['name']='延迟时间',
-				['type']='number',
-			},
-			[3]={
-				['name']='并行播放',
-				['type']='boolean',
-			},
-		},
-	},
-	{
-		['name']='o_dialogue_system_action',
-		['define']={
-			[1]={
-				['name']='name',
-				['type']='int',
-			},
-		},
-	},
-	{
-		['name']='o_dialogue_system_actionlist',
-		['define']={
-			[1]={
-				['name']='动画',
-				['type']='_o_dialogue_system_tap',
-			},
-		},
-	},
-	{
 		['name']='o_typedef',
 		['define']={
 			[1]={
@@ -134,41 +99,11 @@ local t = {
 		},
 	},
 	{
-		['name']='o_var',
-		['define']={
-			[1]={
-				['name']='id',
-				['type']='string',
-			},
-			[2]={
-				['name']='type',
-				['type']='type',
-			},
-		},
-	},
-	{
-		['name']='o_vector',
-		['define']={
-			[1]={
-				['name']='x',
-				['type']='int',
-			},
-			[2]={
-				['name']='y',
-				['type']='int',
-			},
-		},
-	},
-	{
 		['name']='o_misc',
 		['define']={
 			[1]={
-				['name']='name',
-				['type']='int',
-			},
-			[2]={
-				['name']='当前地图',
-				['type']='i_citymap_system_map',
+				['name']='作弊指令列表',
+				['type']='_string',
 			},
 		},
 	},
@@ -182,49 +117,6 @@ local t = {
 			[2]={
 				['name']='默认参数',
 				['type']='string',
-			},
-		},
-	},
-	{
-		['name']='o_citymap_system_vcp',
-		['define']={
-			[1]={
-				['name']='位置',
-				['type']='o_vector',
-			},
-			[2]={
-				['name']='城市',
-				['type']='i_citymap_system_city',
-			},
-		},
-	},
-	{
-		['name']='o_citymap_system_eventinfo',
-		['define']={
-			[1]={
-				['name']='是否进入',
-				['type']='boolean',
-			},
-		},
-	},
-	{
-		['name']='o_citymap_system_city',
-		['define']={
-			[1]={
-				['name']='名称',
-				['type']='string',
-			},
-			[2]={
-				['name']='图标',
-				['type']='image',
-			},
-			[3]={
-				['name']='锁定',
-				['type']='boolean',
-			},
-			[4]={
-				['name']='关联地图',
-				['type']='i_citymap_system_map',
 			},
 		},
 	},
@@ -267,26 +159,6 @@ local t = {
 			[9]={
 				['name']='导入后额外处理',
 				['type']='funs@excel_fix',
-			},
-		},
-	},
-	{
-		['name']='o_citymap_system_map',
-		['img']='v_citymap_system_map',
-		['mod']='citymapsystem',
-		['modetype']='line',
-		['define']={
-			[1]={
-				['name']='名称',
-				['type']='string',
-			},
-			[2]={
-				['name']='地图背景',
-				['type']='image',
-			},
-			[3]={
-				['name']='城市列表',
-				['type']='_o_citymap_system_vcp',
 			},
 		},
 	},
