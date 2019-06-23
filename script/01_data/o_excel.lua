@@ -17,5 +17,16 @@ local t = {
 		['是否转置']=false,
 		['是否全托']=true,
 	},
+	{
+		['name']=0x10030002,
+		['showname']='作弊指令表',
+		['class']={n=0,[1] = 'excel_读取数据',
+		},
+		['文件名称']='作弊指令表.xlsx',
+		['sheet名称']='作弊指令表',
+		['o表名称']='o_cheat_system_item',
+		['是否转置']=false,
+		['是否全托']=true,
+	},
 }}
 return t

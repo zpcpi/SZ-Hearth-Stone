@@ -27,6 +27,8 @@ function t:init()
     self.作弊指令输入框.visible = true
     self.作弊指令内容.text = ''
 
+    self.编辑焦点 = nil
+
     self.当前作弊历史索引 = 0
 end
 
@@ -40,7 +42,7 @@ function t:keyDown(tar,info)
                 G.trig_event('作弊指令', self.作弊指令内容.text)
             end
             self:隐藏作弊界面()
-        elseif G.KeyState(0x11) ~= 0 and key == 38 then ---- Ctrl + UP
+        elseif G.KeyState(0x11) ~= 0 and key == 38 and self.编辑焦点 == self.作弊指令内容 then ---- Ctrl + UP
             self.当前作弊历史索引 = self.当前作弊历史索引 - 1
             if self.当前作弊历史索引 < 1 then
                 self.当前作弊历史索引 = 1
@@ -49,7 +51,7 @@ function t:keyDown(tar,info)
             int_长度 = G.getStrLen(self.作弊指令内容.text)
             self.作弊指令内容.selectBegin = int_长度
             self.作弊指令内容.selectEnd = int_长度
-        elseif G.KeyState(0x11) ~= 0 and key == 40 then ---- Ctrl + DOWN
+        elseif G.KeyState(0x11) ~= 0 and key == 40 and self.编辑焦点 == self.作弊指令内容 then ---- Ctrl + DOWN
             self.当前作弊历史索引 = self.当前作弊历史索引 + 1
             if self.当前作弊历史索引 > #table_cheatlist then
                 self.当前作弊历史索引 = #table_cheatlist + 1
@@ -60,10 +62,10 @@ function t:keyDown(tar,info)
                 self.作弊指令内容.selectBegin = int_长度
                 self.作弊指令内容.selectEnd = int_长度
             end
-        elseif G.KeyState(0x11) ~= 0 and key == 37 then ---- Ctrl + LEFT
-            self:作弊文本选取(self.作弊指令内容.selectBegin + 1, false)
-        elseif G.KeyState(0x11) ~= 0 and key == 39 then ---- Ctrl + RIGHT
-            self:作弊文本选取(self.作弊指令内容.selectEnd - 1, true)
+        elseif G.KeyState(0x11) ~= 0 and key == 37 and self.编辑焦点 ~= nil then ---- Ctrl + LEFT
+            self:作弊文本选取(self.编辑焦点.selectBegin + 1, false)
+        elseif G.KeyState(0x11) ~= 0 and key == 39 and self.编辑焦点 ~= nil then ---- Ctrl + RIGHT
+            self:作弊文本选取(self.编辑焦点.selectEnd - 1, true)
         elseif G.KeyState(0x11) ~= 0 and key >= 48 and key <= 57 then ---- Ctrl + (1-9)
             local count = 0
             if key == 48 then
@@ -114,7 +116,7 @@ function t:显示作弊界面()
     self.作弊指令内容.visible = true
     self.作弊指令说明.visible = true
     self.作弊指令提示.visible = true
-    G.SetEditing(self.作弊指令内容)
+    self:set_focus(self.作弊指令内容)
 end
 
 function t:获取字符串真实位置(str, i)
@@ -122,7 +124,7 @@ function t:获取字符串真实位置(str, i)
 end
 
 function t:作弊文本选取(int_select, boolean_是否向右)
-    local text = self.作弊指令内容.text
+    local text = self.编辑焦点.text
     local int_长度 = G.getStrLen(text)
     local int_first = 1
     local int_last = 1
@@ -130,8 +132,8 @@ function t:作弊文本选取(int_select, boolean_是否向右)
     local int_temp
     if boolean_是否向右 then
         if int_select >= int_长度 then
-            self.作弊指令内容.selectBegin = 0
-            self.作弊指令内容.selectEnd = 0
+            self.编辑焦点.selectBegin = 0
+            self.编辑焦点.selectEnd = 0
             return
         end
 
@@ -158,8 +160,8 @@ function t:作弊文本选取(int_select, boolean_是否向右)
         end
     else
         if int_select <= 0 then
-            self.作弊指令内容.selectBegin = 0
-            self.作弊指令内容.selectEnd = 0
+            self.编辑焦点.selectBegin = 0
+            self.编辑焦点.selectEnd = 0
             return
         end
         while true do
@@ -180,8 +182,8 @@ function t:作弊文本选取(int_select, boolean_是否向右)
                     int_last = int_last + 1
                 end
             elseif self:获取字符串真实位置(text, int_last) > int_select then
-                self.作弊指令内容.selectBegin = 0
-                self.作弊指令内容.selectEnd = 0
+                self.编辑焦点.selectBegin = 0
+                self.编辑焦点.selectEnd = 0
                 return
             end
         end
@@ -189,8 +191,8 @@ function t:作弊文本选取(int_select, boolean_是否向右)
     if int_first == 1 and string.sub(text, 1, 1) ~= " " then
         int_first = 0
     end
-    self.作弊指令内容.selectBegin = int_first
-    self.作弊指令内容.selectEnd = int_last
+    self.编辑焦点.selectBegin = int_first
+    self.编辑焦点.selectEnd = int_last
 end
 
 function t:更新作弊指令历史ui()
@@ -231,12 +233,21 @@ function t:更新作弊指令历史ui()
     end
 end
 
+local function split(str, reps)
+    local resultStrList = {}
+    string.gsub(str, '([^' .. reps .. ']*)',function (w)
+        table.insert(resultStrList, w)
+    end)
+    resultStrList.n = #resultStrList
+    return resultStrList
+end
+
 function t:click(tar)
     if tar.name == "作弊指令" then
         -- 是右边的输入过的条目
         local cmd = tar.getChildByName('text').text
         G.trig_event('作弊指令', cmd)
-        G.SetEditing(self.作弊指令内容)
+        self:set_focus(self.作弊指令内容)
     elseif tar.name == "作弊条目" then
         -- 是左边的原始条目
         local _o_cheat_system_item = G.DBTable('o_cheat_system_item')
@@ -246,13 +257,15 @@ function t:click(tar)
             local str_args = tar.getChildByName('参数').text
             local string_作弊指令 = data.执行函数
             if str_args ~= nil and str_args ~= '' then
-                string_作弊指令 = string_作弊指令 .. ' ' .. str_args
+                string_作弊指令 = string.format(string_作弊指令, table.unpack(split(str_args, ' ')))
             end
             G.trig_event('作弊指令', string_作弊指令)
             self:隐藏作弊界面()
         end
+    elseif tar.name == '参数' then
+        self:set_focus(tar)
     else
-        G.SetEditing(self.作弊指令内容)
+        self:set_focus(self.作弊指令内容)
     end
 end
 
@@ -262,6 +275,16 @@ function t:rclick(tar)
         -- 删除掉右键点击的条目
         table.remove(G.misc().作弊指令列表, tar.c_button.count)
         self:更新作弊指令历史ui()
+    end
+end
+
+function t:set_focus(obj)
+    if obj then
+        self.编辑焦点 = obj
+        G.SetEditing(obj)
+    else
+        self.编辑焦点 = self.作弊指令内容
+        G.SetEditing(self.作弊指令内容)
     end
 end
 
