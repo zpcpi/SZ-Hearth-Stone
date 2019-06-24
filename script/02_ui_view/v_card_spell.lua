@@ -68,19 +68,6 @@ tp = tc
 		--end
 		tc = G.Quad()
 		tp.addChild(tc)
-		tc.name = '精英板'
-		tc.left = -78.000
-		tc.right = 178.000
-		tc.bottom = 106.500
-		tc.top = 243.500
-		tc.scaleX = 1.300
-		tc.scaleY = 1.300
-		tc.img = 0x5609000f
-		tp = tc
-		tp = tp.parent
-		--end
-		tc = G.Quad()
-		tp.addChild(tc)
 		tc.name = '品质板'
 		tc.left = -30.500
 		tc.right = 30.500
@@ -187,6 +174,19 @@ tp = tc
 				--end
 			tp = tp.parent
 			--end
+		tp = tp.parent
+		--end
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = '精英板'
+		tc.left = -78.000
+		tc.right = 178.000
+		tc.bottom = 106.500
+		tc.top = 243.500
+		tc.scaleX = 1.300
+		tc.scaleY = 1.300
+		tc.img = 0x5609000f
+		tp = tc
 		tp = tp.parent
 		--end
 	tp.c_card_minion = setmetatable({}, c_card_minion)
