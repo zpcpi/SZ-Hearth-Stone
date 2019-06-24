@@ -14,12 +14,15 @@ t.prop =
     {name = 'minwidth', type = 'int', ctrl = 'dragint'},
 }
 function t:boundUpdated()
+-- 	self:update()
+-- end 
+-- function t:update()
     if self.height then 
         self.expheight = self.expheight or 0
         local maxHeight = 0
         for i=1,self.obj.childCount do
             local child = self.obj.getChildAt(i-1) 
-            if child.visible then 
+            if child and child.visible and child.anchor ~= 0x64006400 then 
                 local height = G.GetObjRealHeight(child) - child.y
                 if height > maxHeight then 
                     maxHeight = height
@@ -37,7 +40,7 @@ function t:boundUpdated()
         local maxWidth = 0
         for i=1,self.obj.childCount do
             local child = self.obj.getChildAt(i-1) 
-            if child.visible then 
+            if child and child.visible and child.anchor ~= 0x64006400 then 
                 local width = G.GetObjRealWidth(child) + child.x
                 if width > maxWidth then 
                     maxWidth = width

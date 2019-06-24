@@ -501,6 +501,11 @@ local function type_init()
                 excel_写出函数_可支持类型['_e_' .. name_type] = writefunc_arrayify(excel_写出函数_可支持类型['e_' .. name_type], {"|", })
                 excel_写入函数_是否带杠['_e_' .. name_type] = true
 
+                -- id的数字版，数组
+                excel_写入函数_可支持类型['_o_' .. name_type] = readfunc_arrayify(excel_写入函数_可支持类型['o_' .. name_type], {"|", })
+                excel_写出函数_可支持类型['_o_' .. name_type] = writefunc_arrayify(excel_写出函数_可支持类型['o_' .. name_type], {"|", })
+                excel_写入函数_是否带杠['_o_' .. name_type] = true
+
                 -- id的名字版，i类型数组
                 excel_写入函数_可支持类型['_ei_' .. name_type] = readfunc_arrayify(excel_写入函数_可支持类型['ei_' .. name_type], {"|", })
                 excel_写出函数_可支持类型['_ei_' .. name_type] = writefunc_arrayify(excel_写出函数_可支持类型['ei_' .. name_type], {"|", })
