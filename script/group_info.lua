@@ -7,6 +7,7 @@ local t ={
 			[1] = 'v_card_hero',
 			[2] = 'v_card_minion',
 			[3] = 'v_card_spell',
+			[4] = 'v_card_weapon',
 		},
 	},
 	[3] = {

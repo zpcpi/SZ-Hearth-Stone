@@ -2,7 +2,7 @@
 
 ]]
 local G = require 'gf'
-local c_card_minion = require 'c_card_minion'
+local c_card_spell = require 'c_card_spell'
 local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
@@ -189,6 +189,6 @@ tp = tc
 		tp = tc
 		tp = tp.parent
 		--end
-	tp.c_card_minion = setmetatable({}, c_card_minion)
+	tp.c_card_spell = setmetatable({}, c_card_spell)
 	tp = tp.parent
 	--end
