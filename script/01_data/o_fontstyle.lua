@@ -60,9 +60,21 @@ local t = {
 	},
 	{
 		['name']=0x1f05000c,
-		['showname']='黑色描边',
+		['showname']='卡片描述',
 		['color']=0x0,
 		['outlineThick']=1,
+	},
+	{
+		['name']=0x1f05000d,
+		['showname']='卡牌名字',
+		['color']=0xffffff,
+		['outlineThick']=2,
+	},
+	{
+		['name']=0x1f05000e,
+		['showname']='大数字',
+		['color']=0xffffff,
+		['outlineThick']=100,
 	},
 	{
 		['name']=0x1f05000a,
