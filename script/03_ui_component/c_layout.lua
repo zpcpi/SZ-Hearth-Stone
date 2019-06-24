@@ -19,16 +19,11 @@ t.prop =
 	{name = 'StartSpaceY', type = 'int', ctrl = 'dragint'},
 	{name = 'containVisible', type = 'boolean', ctrl = 'boolean'},
 }
-function t:boundUpdated()
--- 	self:update()
-end
 
-local ceil = math.ceil
-function t:update()
+function t:boundUpdated()
 	self.containVisible = self.containVisible or false
 	-- 过滤所有不显示的child
-	local allChild = {} --G.NewTab()
-	local iChildCount = 0
+	local allChild = G.NewTab()
 	for i=0,self.obj.childCount-1 do
 		local child = self.obj.getChildAt(i)
 		if child and (self.containVisible == true or child.visible ~= false) then
@@ -41,15 +36,11 @@ function t:update()
 			if child.anchor ~= 0x64640000 then 
 				child.anchor = 0x64640000
 			end 
-			iChildCount = iChildCount + 1
-			allChild[iChildCount] = child
-			--table.insert( allChild,child )
+			table.insert( allChild,child )
 		end 
 	end  
-	--if #allChild == 0 then 
-	if iChildCount == 0 then
-		allChild = nil
-		--G.ReleaseTab(allChild)
+	if #allChild == 0 then 
+		G.ReleaseTab(allChild)
 		return 
 	end 
 
@@ -73,15 +64,13 @@ function t:update()
 	local heightCount = self.Count
 	local ChangeDirCount = self.Count
 	if self.constraint == 0 then
-		--widthCount = math.ceil(#allChild / self.Count)
-		widthCount = ceil(iChildCount / self.Count)
+		widthCount = math.ceil(#allChild / self.Count)
 	else 
-		--heightCount = math.ceil(#allChild / self.Count)
+		heightCount = math.ceil(#allChild / self.Count)
 	end 
 
 	if self.direction ~= self.constraint then 
-		--ChangeDirCount = math.ceil(#allChild / self.Count)
-		ChangeDirCount = ceil(iChildCount / self.Count)
+		ChangeDirCount = math.ceil(#allChild / self.Count)
 	end 
 	-- 对齐方式，以哪一个为标准
 	if self.alignment_h == 0 then -- 左对齐
@@ -104,41 +93,7 @@ function t:update()
 	nextY = startY
 
 	local i=1
-	while i <= iChildCount do 
-		if (i-1)%widthCount == 0 and i + widthCount - 1 > iChildCount then 
-			-- 对齐方式，以哪一个为标准
-			if self.alignment_h == 0 then -- 左对齐
-				startX = 0
-			elseif self.alignment_h == 1 then -- 中对齐
-				startX = self.obj.width / 2 - (cw * (iChildCount- i + 1)+self.RowSpace*((iChildCount - i + 1)-1)) / 2 
-			elseif self.alignment_h == 2 then -- 右对齐
-				startX = self.obj.width - (cw * (iChildCount - i + 1)+self.RowSpace*((iChildCount - i + 1)-1))
-			end 
-			startX = startX + self.StartSpaceX
-			startY = startY - self.StartSpaceY
-			nextX = startX
-			nextY = startY
-		else
-			-- 对齐方式，以哪一个为标准
-			if self.alignment_h == 0 then -- 左对齐
-				startX = 0
-			elseif self.alignment_h == 1 then -- 中对齐
-				startX = self.obj.width / 2 - (cw * widthCount+self.RowSpace*(widthCount-1)) / 2 
-			elseif self.alignment_h == 2 then -- 右对齐
-				startX = self.obj.width - (cw * widthCount+self.RowSpace*(widthCount-1))
-			end 
-			if self.alignment_v == 0 then -- 上对齐
-				startY = 0
-			elseif self.alignment_v == 1 then -- 中对齐
-				startY = -self.obj.height / 2 + (ch * heightCount+self.ColSpace*(heightCount-1)) / 2 
-			elseif self.alignment_v == 2 then -- 下对齐
-				startY = -self.obj.height + (ch * heightCount+self.ColSpace*(heightCount-1))
-			end 
-			startX = startX + self.StartSpaceX
-			startY = startY - self.StartSpaceY
-			nextX = startX
-			nextY = startY
-		end 
+	for index=1,#allChild do 
 		if (i-1)%ChangeDirCount == 0 then 
 			if self.direction ==  0 then -- 竖向
 				nextX = startX + (i-1)/ChangeDirCount*cw
@@ -171,12 +126,12 @@ function t:update()
 					nextX = nextX + child.width + self.RowSpace
 					--child.y = nextY
 				end 
+				
 				ii = ii + 1
 			end 
 			i = i+1
 		end 
 	end 
-	allChild = nil
-	--G.ReleaseTab(allChild)
+	G.ReleaseTab(allChild)
 end 
 return t
