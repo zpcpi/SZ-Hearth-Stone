@@ -87,7 +87,12 @@ local t = {
 				['name']='color',
 				['type']='color',
 			},
+			[2]={
+				['name']='outlineThick',
+				['type']='number',
+			},
 		},
+		['static']=true,
 	},
 	{
 		['name']='o_image',
