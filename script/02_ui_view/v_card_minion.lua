@@ -142,6 +142,7 @@ tp = tc
 			tc.text = '每当一个玩家施放一个[br]法术，复制该法术，将[br]  其置入另一个玩家[br]      的手牌。'
 			tc.font = 0x61140000
 			tc.lineSpace = 2
+			tc.style = 12
 			tp = tc
 			tp = tp.parent
 			--end

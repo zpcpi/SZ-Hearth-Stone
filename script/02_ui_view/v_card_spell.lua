@@ -141,6 +141,7 @@ tp = tc
 			tc.text = '   使一个随从变[br]形成为一个0/1并具[br]  有嘲讽的青蛙。'
 			tc.font = 0x61140000
 			tc.lineSpace = 2
+			tc.style = 12
 			tp = tc
 			tp = tp.parent
 			--end

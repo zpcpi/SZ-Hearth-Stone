@@ -59,6 +59,12 @@ local t = {
 		['color']=0x7f7f7f,
 	},
 	{
+		['name']=0x1f05000c,
+		['showname']='黑色描边',
+		['color']=0x0,
+		['outlineThick']=1,
+	},
+	{
 		['name']=0x1f05000a,
 		['showname']='深蓝',
 		['id']=10,
