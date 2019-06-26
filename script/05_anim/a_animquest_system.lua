@@ -4,12 +4,16 @@
 local G = require "gf"
 local t = G.act
 
+-- 有两个规则，要求锁动画队列
+-- 1，quest要求锁
+-- 2，shatf修改了同一个数据
+
 -- 动画结构
 --[[
     o_animactor
         quote_map -- 引用表(唯一)
         alias_map -- 别名表(允许指代多个)
-        _o_animquest -- 并行执行的动画段
+        __o_animquest -- 并行执行的动画段
         
     o_obj
         obj -- 控件
