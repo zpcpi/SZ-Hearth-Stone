@@ -9,10 +9,11 @@ function t:init()
     -- 数据初始化
     self.quote_map = {}
     self.alias_map = {}
-    self.animquests = {}
+    self.__o_animquest = {}
+
+    self.cur_pthread = nil
 
     self.speed = 100
-    self.is_running = false
 end
 
 function t:start()
@@ -80,46 +81,61 @@ function t:del_alias(key)
     self.alias_map[key] = nil
 end
 
-function t:set_speed()
-
+-- 播放速度设置
+function t:set_speed(v)
+    self.speed = v
+end
+function t:get_speed(v)
+    return self.speed
 end
 
 -- 动画执行逻辑
 function t:run_animactor()
-    self.is_running = true
+    local stage, index = self:get_lock_stage_and_index()
+    -- 所有前置阶段动画，直接执行
+    for i = 1, stage - 1, 1 do
+        local anim_list = self.__o_animquest[i]
+        for j = 1, #anim_list, 1 do
+            G.RunAction('run_animquest', self, anim_list[j], true)
+        end
+    end
+    -- 所有前置编号动画，直接执行
+    local anim_list = self.__o_animquest[stage]
+    for i = 1, index - 1, 1 do
+        G.RunAction('run_animquest', self, anim_list[i], true)
+    end
+    -- 需要锁定的动画，等其执行完成
+    self.cur_pthread = G.RunAction('run_animquest', self, self.__o_animquest[stage][index], false)
 
+    -- 清除已经执行的动画
+    self:clear_ran_stage_and_index(stage, index)
+
+    -- 增加最后动画的子动画
 end
 function t:pause_animactor()
-    self.is_running = false
 
 end
 
-
+-- 判断动画是否继续
 function t:update()
-    if self.is_running then
-
-
-
-
-
+    if self.cur_pthread then
+        if self.cur_pthread.co ~= nil then
+        else
+            self.cur_pthread = nil
+            self:run_animactor()
+        end
     end
-
-
-
-
 end
 
 
 
--- 锁动画编号获取
-function t:need_lock_index(__o_animquest_动画队列)
+-- 锁定动画节点、编号获取
+function t:get_lock_stage_and_index()
 
-
-
-
-
-
-
-    return i,j,k
+    return stage, index
 end
 
+-- 清除已经执行的动画
+function t:clear_ran_stage_and_index(stage, index)
+
+end
