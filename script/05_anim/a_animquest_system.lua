@@ -27,8 +27,7 @@ local t = G.act
         _o_animquest -- 后续并行执行的动画段
 
     o_animquest_shaft
-        str_obj -- 控件指代
-        attr -- 控件属性
+        iter -- 执行函数
         _o_animquest_shaft_node -- 节点数组
 
     o_animquest_shaft_node
@@ -54,29 +53,21 @@ local t = G.act
     com.obj.setAnimKeys(attr, 2, pk, com.__name)
 ]]
 
-
 --type=actor
-t['run_animquest_shaft'] = function(o_animactor, o_animquest, o_animquest_shaft)
-    local iter = nil
-    if o_animquest_shaft.str_obj then
+t['run_animquest_shaft'] = function(o_animquest_shaft)
+    if o_animquest_shaft and o_animquest_shaft.iter then
+        local cur_index = 1
+        while true do
+            local nodeA = o_animquest_shaft['nodelist'][cur_index]
+            local nodeB = o_animquest_shaft['nodelist'][nodeA['next_index'] or 0]
 
-
-    end
-
-    if iter then
-        local next_node = 1
-        while next_node do
-            local node = o_animquest_shaft._o_animquest_shaft_node[next_node]
-
-            if node then
-                if node.target then
-                    -- 运动
-    
-                else
-                    -- 不运动，单纯的等待
-    
+            if nodeA and nodeB then
+                if nodeB['target'] then
+                    o_animquest_shaft.iter(nodeA, nodeB)
                 end
-                next_node = node.next_index
+                G.wait_time(nodeA['time'])
+
+                cur_index = nodeA['next_index']
             else
                 return
             end
@@ -84,19 +75,18 @@ t['run_animquest_shaft'] = function(o_animactor, o_animquest, o_animquest_shaft)
     end
 end
 
-
-
 --type=actor
-t['run_animquest'] = function(o_animactor, o_animquest, is_run_child)
+t['run_animquest'] = function(o_animquest, is_run_child)
     -- RemoveAction
+
 
     -- 执行所有的动画轴
     local shaft_plist = {}
-    for k,v in ipairs(o_animquest._o_animquest_shaft or {}) do
-        local p = G.RunAction('run_animquest_shaft', o_animactor, o_animquest, v)
+    for k,v in ipairs(o_animquest['shaft'] or {}) do
+        local p = G.RunAction('run_animquest_shaft', v)
         table.insert(shaft_plist, p)
     end
-
+    
     -- 等待动画过期
     G.wait_time(o_animquest.time)
 
@@ -107,13 +97,13 @@ t['run_animquest'] = function(o_animactor, o_animquest, is_run_child)
         end
     end
 
-    -- 修正坐标
+    -- 最终修正数值
     -- todo
 
     -- 开启新动画
     if is_run_child then
         for k,v in ipairs(o_animquest._o_animquest or {}) do
-            G.RunAction('run_animquest', o_animactor, v, true)
+            G.RunAction('run_animquest', v, true)
         end
     end
 end

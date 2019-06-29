@@ -92,7 +92,6 @@ local t = {
 				['type']='number',
 			},
 		},
-		['static']=true,
 	},
 	{
 		['name']='o_image',
@@ -122,6 +121,95 @@ local t = {
 			[2]={
 				['name']='默认参数',
 				['type']='string',
+			},
+		},
+	},
+	{
+		['name']='o_animquest',
+		['define']={
+			[1]={
+				['name']='is_mono',
+				['type']='boolean',
+			},
+			[2]={
+				['name']='time',
+				['type']='int',
+			},
+			[3]={
+				['name']='iter',
+				['type']='farg@actor',
+			},
+			[4]={
+				['name']='shaft',
+				['type']='_o_animquest_shaft',
+			},
+			[5]={
+				['name']='next_quest',
+				['type']='_o_animquest',
+			},
+		},
+	},
+	{
+		['name']='o_animquest_shaft',
+		['define']={
+			[1]={
+				['name']='iter',
+				['type']='funs',
+			},
+			[2]={
+				['name']='nodelist',
+				['type']='_o_animquest_shaft_node',
+			},
+		},
+	},
+	{
+		['name']='o_animquest_shaft_node',
+		['define']={
+			[1]={
+				['name']='target',
+				['type']='number',
+			},
+			[2]={
+				['name']='time',
+				['type']='int',
+			},
+			[3]={
+				['name']='cubic_bezier',
+				['type']='o_animquest_bezier',
+			},
+			[4]={
+				['name']='next',
+				['type']='int',
+			},
+		},
+	},
+	{
+		['name']='o_animquest_bezier',
+		['define']={
+			[1]={
+				['name']='x1',
+				['type']='number',
+			},
+			[2]={
+				['name']='y1',
+				['type']='number',
+			},
+			[3]={
+				['name']='x2',
+				['type']='number',
+			},
+			[4]={
+				['name']='y2',
+				['type']='number',
+			},
+		},
+	},
+	{
+		['name']='o_animactor',
+		['define']={
+			[1]={
+				['name']='questlist',
+				['type']='__o_animquest',
 			},
 		},
 	},

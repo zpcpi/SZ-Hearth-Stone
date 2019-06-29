@@ -249,5 +249,8 @@ tp = tc
 		tp = tp.parent
 		--end
 	tp.c_card_weapon = setmetatable({}, c_card_weapon)
+	com = tp.c_card_weapon
+	com['autowidth'] =false
+	com['cost'] =1.000
 	tp = tp.parent
 	--end

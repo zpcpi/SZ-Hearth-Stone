@@ -1,3 +1,4 @@
+require "p_animquest_system"
 require "p_array_func"
 require "p_cheat_system"
 require "p_cls_data_excelfixfunc"

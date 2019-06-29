@@ -43,4 +43,11 @@ function noti.card_create()
         ui_obj.scaleY = 0.5
     end
 
+
+    -- 动画设置
+    ui_obj = G.getUI('v_animactor')
+    if not ui_obj then
+        ui_obj = G.addUI('v_animactor')
+
+    end
 end
