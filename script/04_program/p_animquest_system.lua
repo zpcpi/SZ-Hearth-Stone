@@ -9,7 +9,11 @@ local cur_actor = nil
 local cur_quest = nil
 
 local function unpack_bezier(bezier)
-    return bezier.x1, bezier.y1, bezier.x2, bezier.y2
+    if bezier then
+        return bezier.x1, bezier.y1, bezier.x2, bezier.y2
+    else
+        return 0, 0, 1, 1
+    end
 end
 
 local function create_shaftnode(target, time, bezier, next_index)

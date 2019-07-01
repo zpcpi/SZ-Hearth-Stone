@@ -108,6 +108,13 @@ end
 -- 动画执行逻辑
 function t:run_animactor()
     local stage, index = self:get_lock_stage_and_index()
+
+    if stage == 0 then
+        -- 动画队列为空，删除自身
+        
+    end
+
+    print('1123', stage, index)
     -- 所有前置阶段动画，直接执行
     for i = 1, stage - 1, 1 do
         local anim_list = self.__o_animquest[i]
@@ -133,7 +140,7 @@ function t:pause_animactor()
 end
 
 -- 判断动画是否继续
-function t:update123()
+function t:update()
     if self.cur_pthread then
         if self.cur_pthread.co ~= nil then
         else
@@ -143,17 +150,41 @@ function t:update123()
     end
 end
 
-
-
 -- 锁定动画节点、编号获取
 function t:get_lock_stage_and_index()
+    local stage, index = 1, 1
+    local iter = function(quest)
+        if quest['is_mono'] then
+            return true
+        elseif quest['next_quest'] then
+            local result = false
+            for k,v in ipairs(quest['next_quest']) do
+                result = result or iter(v)
+            end
+            return result
+        end
+    end
 
-    return 1, 3
+    for i,t in ipairs(self.__o_animquest) do
+        for j,v in ipairs(t) do
+            if iter(v) then
+                return i, j
+            end
+        end
+    end
+
+    return #self.__o_animquest, #(self.__o_animquest[#self.__o_animquest])
 end
 
 -- 清除已经执行的动画
 function t:clear_ran_stage_and_index(stage, index)
+    for i = index, 1, -1 do
+        table.remove(self.__o_animquest[stage], i)
+    end
 
+    for i = stage - 1, 1, -1 do
+        table.remove(self.__o_animquest, i)
+    end
 end
 
 return t
