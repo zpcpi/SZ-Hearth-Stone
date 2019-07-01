@@ -143,17 +143,30 @@ end
 
 --hide=true
 --ret=o_animquest
-t['动画系统_创建quest'] = function(o_animactor_验算体, o_animquest_动画段模板)
+t['动画系统_创建quest'] = function(o_animactor_演算体, o_animquest_动画段模板)
     local result = {}
 
     result['is_mono'] = o_animquest_动画段模板['is_mono']
     result['time'] = o_animquest_动画段模板['time']
 
-    cur_actor = o_animactor_验算体
+    cur_actor = o_animactor_演算体
     cur_quest = o_animquest_动画段模板
     result['shaft'] = G.call(o_animquest_动画段模板['iter'])
 
     return result
 end
 
+--hide=true
+--ret=o_animquest
+t['动画系统_创建quest_自定义'] = function(o_animactor_演算体, boolean_ismono, int_time, farg@actor_生成函数)
+    local result = {}
 
+    result['is_mono'] = boolean_ismono
+    result['time'] = int_time
+
+    cur_actor = o_animactor_演算体
+    cur_quest = o_animquest_动画段模板
+    result['shaft'] = G.call(farg@actor_生成函数)
+
+    return result
+end

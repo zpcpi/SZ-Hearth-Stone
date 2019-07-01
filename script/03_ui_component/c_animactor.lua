@@ -111,7 +111,8 @@ function t:run_animactor()
 
     if stage == 0 then
         -- 动画队列为空，删除自身
-        
+        -- removeUI
+        -- removeChild
     end
 
     print('1123', stage, index)
@@ -119,21 +120,21 @@ function t:run_animactor()
     for i = 1, stage - 1, 1 do
         local anim_list = self.__o_animquest[i]
         for j = 1, #anim_list, 1 do
-            G.RunAction('run_animquest', anim_list[j], true)
+            G.RunAction('run_animquest', self, anim_list[j], true)
         end
     end
     -- 所有前置编号动画，直接执行
     local anim_list = self.__o_animquest[stage]
     for i = 1, index - 1, 1 do
-        G.RunAction('run_animquest', anim_list[i], true)
+        G.RunAction('run_animquest', self, anim_list[i], true)
     end
+
     -- 需要锁定的动画，等其执行完成
-    self.cur_pthread = G.RunAction('run_animquest', self.__o_animquest[stage][index], false)
+    self.cur_pthread = G.RunAction('run_animquest', self, self.__o_animquest[stage][index], false)
 
     -- 清除已经执行的动画
-    self:clear_ran_stage_and_index(stage, index)
-
-    -- 增加最后动画的子动画
+    -- 增加最后动画的子动画到队列中
+    self:refresh_stage_and_index(stage, index)
 end
 function t:pause_animactor()
 
@@ -163,6 +164,7 @@ function t:get_lock_stage_and_index()
             end
             return result
         end
+        return false
     end
 
     for i,t in ipairs(self.__o_animquest) do
@@ -173,11 +175,11 @@ function t:get_lock_stage_and_index()
         end
     end
 
-    return #self.__o_animquest, #(self.__o_animquest[#self.__o_animquest])
+    return #self.__o_animquest, #(self.__o_animquest[#self.__o_animquest] or {})
 end
 
 -- 清除已经执行的动画
-function t:clear_ran_stage_and_index(stage, index)
+function t:refresh_stage_and_index(stage, index)
     for i = index, 1, -1 do
         table.remove(self.__o_animquest[stage], i)
     end

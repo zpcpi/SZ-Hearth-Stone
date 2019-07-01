@@ -54,7 +54,7 @@ local t = G.act
 ]]
 
 --type=actor
-t['run_animquest_shaft'] = function(o_animquest_shaft)
+t['run_animquest_shaft'] = function(o_animactor, o_animquest_shaft)
     if o_animquest_shaft and o_animquest_shaft.iter then
         local cur_index = 1
         while true do
@@ -76,14 +76,11 @@ t['run_animquest_shaft'] = function(o_animquest_shaft)
 end
 
 --type=actor
-t['run_animquest'] = function(o_animquest, is_run_child)
-    -- RemoveAction
-
-
+t['run_animquest'] = function(o_animactor, o_animquest, is_run_child)
     -- 执行所有的动画轴
     local shaft_plist = {}
     for k,v in ipairs(o_animquest['shaft'] or {}) do
-        local p = G.RunAction('run_animquest_shaft', v)
+        local p = G.RunAction('run_animquest_shaft', o_animactor, v)
         table.insert(shaft_plist, p)
     end
     
@@ -103,7 +100,7 @@ t['run_animquest'] = function(o_animquest, is_run_child)
     -- 开启新动画
     if is_run_child then
         for k,v in ipairs(o_animquest._o_animquest or {}) do
-            G.RunAction('run_animquest', v, true)
+            G.RunAction('run_animquest', o_animactor, v, true)
         end
     end
 end
