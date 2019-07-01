@@ -109,6 +109,14 @@ local t = {
 				['name']='作弊指令列表',
 				['type']='_string',
 			},
+			[2]={
+				['name']='当前演算体',
+				['type']='o_animactor',	
+			},
+			[3]={
+				['name']='当前动画段',
+				['type']='o_animquest',	
+			},
 		},
 	},
 	{
@@ -153,7 +161,7 @@ local t = {
 		['name']='o_animquest_shaft',
 		['define']={
 			[1]={
-				['name']='iter',
+				['name']='funs',
 				['type']='funs',
 			},
 			[2]={

@@ -27,6 +27,14 @@ function t:start()
         },
     }
     
+    self.__o_animquest[1][1]['child_quests'] = {
+        [1] = G.call('动画系统_创建quest', self, G.QueryName(0x10010004)),
+    }
+
+    self.__o_animquest[1][2]['child_quests'] = {
+        [1] = G.call('动画系统_创建quest', self, G.QueryName(0x10010001)),
+    }
+
     self:run_animactor()
 end
 
@@ -110,12 +118,16 @@ function t:run_animactor()
     local stage, index = self:get_lock_stage_and_index()
 
     if stage == 0 then
+        self:delete()
+        return
         -- 动画队列为空，删除自身
         -- removeUI
         -- removeChild
+    elseif stage == 1 and index == 0 then
+        self:delete()
+        return
     end
 
-    print('1123', stage, index)
     -- 所有前置阶段动画，直接执行
     for i = 1, stage - 1, 1 do
         local anim_list = self.__o_animquest[i]
@@ -140,6 +152,11 @@ function t:pause_animactor()
 
 end
 
+-- 控件删除
+function t:delete()
+    self.obj.parent:removeChild(self)
+end
+
 -- 判断动画是否继续
 function t:update()
     if self.cur_pthread then
@@ -154,12 +171,12 @@ end
 -- 锁定动画节点、编号获取
 function t:get_lock_stage_and_index()
     local stage, index = 1, 1
-    local iter = function(quest)
+    local function iter(quest)
         if quest['is_mono'] then
             return true
-        elseif quest['next_quest'] then
+        elseif quest['child_quests'] then
             local result = false
-            for k,v in ipairs(quest['next_quest']) do
+            for k,v in ipairs(quest['child_quests']) do
                 result = result or iter(v)
             end
             return result
@@ -180,12 +197,24 @@ end
 
 -- 清除已经执行的动画
 function t:refresh_stage_and_index(stage, index)
+    -- 记录下最后动画的子动画段
+    local child = self.__o_animquest[stage][index]['child_quests']
+
     for i = index, 1, -1 do
         table.remove(self.__o_animquest[stage], i)
     end
 
+    if #self.__o_animquest[stage] == 0 then
+        table.remove(self.__o_animquest, stage)
+    end
+
     for i = stage - 1, 1, -1 do
         table.remove(self.__o_animquest, i)
+    end
+
+    -- 修正动画队列
+    if child then
+        table.insert(self.__o_animquest, 1, child)
     end
 end
 

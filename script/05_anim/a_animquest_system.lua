@@ -55,7 +55,7 @@ local t = G.act
 
 --type=actor
 t['run_animquest_shaft'] = function(o_animactor, o_animquest_shaft)
-    if o_animquest_shaft and o_animquest_shaft.iter then
+    if o_animquest_shaft and o_animquest_shaft.funs then
         local cur_index = 1
         while true do
             local nodeA = o_animquest_shaft['nodelist'][cur_index]
@@ -63,7 +63,7 @@ t['run_animquest_shaft'] = function(o_animactor, o_animquest_shaft)
 
             if nodeA and nodeB then
                 if nodeB['target'] then
-                    o_animquest_shaft.iter(nodeA, nodeB)
+                    o_animquest_shaft.funs(nodeA, nodeB)
                 end
                 G.wait_time(nodeA['time'])
 
@@ -77,6 +77,11 @@ end
 
 --type=actor
 t['run_animquest'] = function(o_animactor, o_animquest, is_run_child)
+    -- 初始化动画轴
+    G.misc().当前演算体 = o_animactor
+    G.misc().当前动画段 = o_animquest
+    o_animquest['shaft'] = G.call(o_animquest['iter'])
+
     -- 执行所有的动画轴
     local shaft_plist = {}
     for k,v in ipairs(o_animquest['shaft'] or {}) do
@@ -99,7 +104,7 @@ t['run_animquest'] = function(o_animactor, o_animquest, is_run_child)
 
     -- 开启新动画
     if is_run_child then
-        for k,v in ipairs(o_animquest._o_animquest or {}) do
+        for k,v in ipairs(o_animquest['child_quests'] or {}) do
             G.RunAction('run_animquest', o_animactor, v, true)
         end
     end

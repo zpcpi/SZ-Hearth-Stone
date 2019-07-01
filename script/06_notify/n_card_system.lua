@@ -48,6 +48,5 @@ function noti.card_create()
     ui_obj = G.getUI('v_animactor')
     if not ui_obj then
         ui_obj = G.addUI('v_animactor')
-
     end
 end
