@@ -38,7 +38,7 @@ function t:start()
     self:run_animactor()
 end
 
--- 引用相关设置
+-- 引用相关设置，要变成栈
 function t:set_quote(key, obj, com)
     self.quote_map[key] = {
         ['obj'] = obj,

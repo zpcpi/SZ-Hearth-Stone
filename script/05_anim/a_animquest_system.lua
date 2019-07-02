@@ -53,6 +53,25 @@ local t = G.act
     com.obj.setAnimKeys(attr, 2, pk, com.__name)
 ]]
 
+--[[
+    -- 引用格式，只能指代一个控件
+    ::Origin -- 效果源，指代使用的卡片
+    ::Caster -- 释放者，使用卡片的角色
+    ::Target -- 释放目标
+    ::Owner -- 效果拥有者
+
+    -- 别名格式，可以指代多个控件
+    _Card
+    _Hero -- 英雄
+    _Weapon -- 玩家的武器
+    _Spell -- 玩家的英雄技能
+    _Secret -- 二维数组，通过玩家、编号索引奥秘
+    _Missile -- 飞弹
+
+    self -- 动画段自身持有的控件，一般就是刚刚创建的
+]]
+
+
 --type=actor
 t['run_animquest_shaft'] = function(o_animactor, o_animquest_shaft)
     if o_animquest_shaft and o_animquest_shaft.funs then
