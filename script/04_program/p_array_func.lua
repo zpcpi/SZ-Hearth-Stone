@@ -69,3 +69,19 @@ t['array_find_range'] = function (arr, attr, val_min, val_max, iter_gt)
         return {}
     end
 end
+
+--hide=true
+--type=array
+t['array_find_index'] = function (arr, attr, val)
+    local result = {}
+    local index = 0
+    local filter = function(t)
+        index = index + 1
+        if t[attr] == val then
+            table.insert(result, index)
+            return true
+        end
+    end
+    G.call('array_filter', arr, filter)
+    return result
+end

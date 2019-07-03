@@ -94,6 +94,53 @@ local function create_shaft(t_obj, attr, target, time, bezier)
     return {}
 end
 
+local function get_animactor_obj(o_animactor, string_obj)
+    local result = {}
+    local set_obj = function(name)
+        local obj = nil
+        -- 先判断引用格式
+        string.gsub(name, '^::([%w]+)$', function(w)
+            print('1', w)
+            --get_quote
+        end, 1)
+
+        if obj then
+            return
+        end
+
+        -- 再判断别名格式
+        string.gsub(name, '^_([^%[]+)%[([%d]+)%]$', function(w,i)
+            print('2', w, i)
+            --get_quote
+        end)
+    end
+    local set_attr_obj = function(attr)
+
+
+    end
+
+    for index,dot in ipairs(G.call('string_split', string_obj, '.')) do
+        if index == 1 then
+            -- 这里约定获得的是指定或者别名
+            set_obj(dot)
+        else
+            -- 这里约定获得的是子控件，或组件，或属性
+            set_attr_obj(dot)
+        end
+    end
+end
+
+--hide=true
+t['动画系统_获取名称指代'] = function(string_obj)
+    local obj_list = get_animactor_obj(G.misc().当前演算体, string_obj)
+
+
+end
+
+
+
+
+
 --type=actor
 --hide=true
 --ret=_o_animquest_shaft

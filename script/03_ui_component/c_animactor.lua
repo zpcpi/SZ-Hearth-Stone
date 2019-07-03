@@ -17,7 +17,7 @@ function t:init()
 end
 
 function t:start()
-    self:set_quote('::Card', G.getUI('v_card_weapon'))
+    self:push_quote('::Card', G.getUI('v_card_weapon'))
 
     self.__o_animquest = {
         [1] = {
@@ -38,34 +38,86 @@ function t:start()
     self:run_animactor()
 end
 
--- 引用相关设置，要变成栈
-function t:set_quote(key, obj, com)
-    self.quote_map[key] = {
+--[[
+    -- 格式
+    ::Name --引用
+    _Name --别名，指代多个控件
+
+    ::Name.chile_obj.com.attr_name
+
+    .的用法
+        1，子控件查找
+        2，组件查找
+        3，属性（最后只能是属性）
+
+    -- 约定的引用
+    ::Origin -- 效果源，指代使用的卡片
+    ::Caster -- 释放者，使用卡片的角色
+    ::Target -- 释放目标
+    ::Owner -- 效果拥有者
+
+    -- 约定的别名
+    _Card
+    _Hero -- 英雄[4]
+    _Weapon -- 玩家的武器[4]
+    _Spell -- 玩家的英雄技能[4]
+    _Secret -- 玩家头顶的奥秘组[4]
+    _Missile -- 飞弹
+
+    self -- 动画段自身持有的控件，一般就是刚刚创建的
+]]
+
+-- 引用相关设置
+-- 引用在同一时刻只能指代一个控件
+-- 引用在栈，可以保存之前曾指代过的控件（适合在动画递归并返回时获取到旧数据）
+function t:push_quote(key, obj, com)
+    local t_obj = {
         ['obj'] = obj,
         ['com'] = com,
     }
+    local list = self.quote_map[key]
+    if list then
+    else
+        -- list为空
+        list = {}
+        self.quote_map[key] = list
+    end
+    local count = #list or 0
+    list[count + 1] = t_obj
 end
 function t:get_quote(key)
-    return self.quote_map[key]
+    local list = self.quote_map[key] or {}
+    return list[#list]
 end
-function t:del_quote(key)
-    self.quote_map[key] = nil
+function t:pop_quote(key)
+    local list = self.quote_map[key]
+    if list then
+        --删除数组最后一个元素        
+        list[#list] = nil
+        if #list == 0 then
+            --栈为空，直接置nil            
+            self.quote_map[key] = nil
+        end
+    end
 end
 
 -- 别名相关设置
+-- 别名可以指代多个控件，针对别名的动画可以同时控制多个控件（比如播放暗言术：骇）
 function t:set_alias(key, obj, com)
-    if self.alias_map[key] then
-    else
-        self.alias_map[key] = {}
-    end
     local alias = self.alias_map[key]
+    if alias then
+    else
+        alias = {}
+        self.alias_map[key] = alias
+    end
 
     -- 先找下obj
-    local list = G.call('数值_Find', alias, 'obj', obj)
+    local list = G.call('array_find', alias, 'obj', obj)
     if list and #list > 0 then
-        -- 再判断下com
-        list = G.call('数值_Find', list, 'com', com)
+        -- 匹配到了obj，再判断下com
+        list = G.call('array_find', list, 'com', com)
         if list and #list > 0 then
+            -- 也匹配到了，说明已经记录过了
             return
         end
     end
@@ -76,20 +128,23 @@ function t:set_alias(key, obj, com)
     })
 end
 function t:remove_alias(key, obj, com)
-    if self.alias_map[key] then
-    else
-        self.alias_map[key] = {}
-    end
     local alias = self.alias_map[key]
+    if alias then
+    else
+        alias = {}
+        self.alias_map[key] = alias
+    end
 
     -- 先找下obj
-    local list = G.call('数值_Find', alias, 'obj', obj)
+    local list = G.call('array_find', alias, 'obj', obj)
     if list and #list > 0 then
-        -- 再判断下com
-        list = G.call('数值_Find', list, 'com', com)
-        if list and #list > 0 then
-            -- todo
-            -- 删除对应的组合
+        -- 匹配到了obj，再判断下com
+        local index_list = G.call('array_find_index', list, 'com', com)
+        if index_list and #index_list > 0 then
+            -- 删除所有匹配到的组合
+            for i = #index_list, 1, -1 do
+                table.remove(list, index_list[i])
+            end
         end
     end
 end
