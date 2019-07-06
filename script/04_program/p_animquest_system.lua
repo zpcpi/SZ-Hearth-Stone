@@ -97,26 +97,55 @@ end
 local function get_animactor_obj(o_animactor, string_obj)
     local result = {}
     local set_obj = function(name)
-        local obj = nil
+        local t_obj = nil
         -- 先判断引用格式
         string.gsub(name, '^::([%w]+)$', function(w)
-            print('1', w)
-            --get_quote
+            t_obj = o_animactor:get_quote(w)
         end, 1)
 
-        if obj then
+        if t_obj then
+            -- 引用已经找到了，因为是引用，所有只有一个控件
+            result[1] = t_obj
             return
         end
 
         -- 再判断别名格式
         string.gsub(name, '^_([^%[]+)%[([%d]+)%]$', function(w,i)
-            print('2', w, i)
-            --get_quote
+            if i then
+                -- 约定[]内只有数字索引
+                result[1] = (o_animactor:get_alias(w) or {})[tonumber(i)]
+            else
+                -- 没有索引，那么别名中所有的控件都获取
+                result = o_animactor:get_alias(w)
+            end
         end)
     end
     local set_attr_obj = function(attr)
+        local attr_table = {}
+        local attr_split = function()
+            string.gsub(dot, '([^%[]+)%[?', function (w)
+                table.insert(attr_table, w)
+            end, 1)
+            string.gsub(dot, '%[([%d]+)%]', function (w)
+                table.insert(attr_table, tonumber(w))
+            end)
+        end
+        local iter = function(t_obj)
+            local obj, com = t_obj['obj'], t_obj['com']
+            for _,attr in ipairs(attr_table) do
+                if type(attr) == 'string' then
 
+                elseif type(attr) == 'number' then
+                    if com and obj[com] then
+                        
+                    end
+                end
 
+            end
+        end
+        attr_split()
+        G.show_table(attr_table)
+        G.call('array_filtermap', result, iter)
     end
 
     for index,dot in ipairs(G.call('string_split', string_obj, '.')) do
@@ -126,6 +155,12 @@ local function get_animactor_obj(o_animactor, string_obj)
         else
             -- 这里约定获得的是子控件，或组件，或属性
             set_attr_obj(dot)
+        end
+
+        -- 判断下获取情况，一旦为空就终止
+        if result and #result > 0 then
+        else
+            return
         end
     end
 end

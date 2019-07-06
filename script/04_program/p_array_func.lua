@@ -29,6 +29,19 @@ end
 
 --hide=true
 --type=array
+t['array_filtermap'] = function (arr, iter)
+    local new_arr = {}
+    for _,v in ipairs(arr) do
+        local r = iter(v)
+        if v ~= nil then
+            table.insert(new_arr, r)
+        end
+    end
+    return new_arr
+end
+
+--hide=true
+--type=array
 t['array_find'] = function (arr, attr, val)
     local filter = function(t)
         return t[attr] == val

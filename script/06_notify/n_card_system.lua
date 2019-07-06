@@ -41,6 +41,11 @@ function noti.card_create()
         ui_obj.y = ui_obj.y + 200
         ui_obj.scaleX = 0.5
         ui_obj.scaleY = 0.5
+
+        print(ui_obj)
+        print(type(ui_obj))
+        print(ui_obj.c_card_weapon)
+        print(type(ui_obj.c_card_weapon))
     end
 
 
@@ -49,4 +54,8 @@ function noti.card_create()
     if not ui_obj then
         ui_obj = G.addUI('v_animactor')
     end
+
+
+
+
 end
