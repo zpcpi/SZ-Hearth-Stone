@@ -9,6 +9,10 @@ local t ={
 			[3] = 'v_card_spell',
 			[4] = 'v_card_weapon',
 		},
+		[2] = {
+			name = '战场UI',
+			[1] = 'v_battle_handcards_self',
+		},
 	},
 	[3] = {
 		[1] = {

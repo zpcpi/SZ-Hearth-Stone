@@ -196,10 +196,10 @@ end
 
 --hide=true
 --ret=o_animquest
-t['动画系统_创建quest_自定义'] = function(o_animactor_演算体, boolean_ismono, int_time, farg_生成函数)
+t['动画系统_创建quest_自定义'] = function(o_animactor_演算体, boolean_ismono, int_time, _farg_生成函数)
     local result = {}
     result['is_mono'] = boolean_ismono
     result['time'] = int_time
-    result['iter'] = farg_生成函数
+    result['iter'] = _farg_生成函数
     return result
 end

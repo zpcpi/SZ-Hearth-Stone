@@ -190,15 +190,21 @@ end
 
 -- 控件删除
 function t:delete()
+    print(2, self.count)
+
     self.obj.parent:removeChild(self)
 end
 
 -- 判断动画是否继续
 function t:update()
+    self.count = (self.count or 0) + 1
+
     if self.cur_pthread then
         if self.cur_pthread.co ~= nil then
         else
             self.cur_pthread = nil
+            print(1, self.count)
+
             self:run_animactor()
         end
     end
