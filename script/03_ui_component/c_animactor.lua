@@ -48,7 +48,6 @@ end
     .的用法
         1，子控件查找
         2，组件查找
-        3，属性（最后只能是属性）
 
     -- 约定的引用
     ::Origin -- 效果源，指代使用的卡片
@@ -70,11 +69,7 @@ end
 -- 引用相关设置
 -- 引用在同一时刻只能指代一个控件
 -- 引用在栈，可以保存之前曾指代过的控件（适合在动画递归并返回时获取到旧数据）
-function t:push_quote(key, obj, com)
-    local t_obj = {
-        ['obj'] = obj,
-        ['com'] = com,
-    }
+function t:push_quote(key, obj)
     local list = self.quote_map[key]
     if list then
     else
@@ -83,7 +78,7 @@ function t:push_quote(key, obj, com)
         self.quote_map[key] = list
     end
     local count = #list or 0
-    list[count + 1] = t_obj
+    list[count + 1] = obj
 end
 function t:get_quote(key)
     local list = self.quote_map[key] or {}
@@ -103,7 +98,7 @@ end
 
 -- 别名相关设置
 -- 别名可以指代多个控件，针对别名的动画可以同时控制多个控件（比如播放暗言术：骇）
-function t:set_alias(key, obj, com)
+function t:set_alias(key, obj)
     local alias = self.alias_map[key]
     if alias then
     else
@@ -112,22 +107,14 @@ function t:set_alias(key, obj, com)
     end
 
     -- 先找下obj
-    local list = G.call('array_find', alias, 'obj', obj)
-    if list and #list > 0 then
-        -- 匹配到了obj，再判断下com
-        list = G.call('array_find', list, 'com', com)
-        if list and #list > 0 then
-            -- 也匹配到了，说明已经记录过了
-            return
-        end
+    if G.call('array_get_element_index', alias, obj) then
+        -- 已经包含了
+        return
     end
 
-    table.insert(alias, {
-        ['obj'] = obj,
-        ['com'] = com,
-    })
+    table.insert(alias, obj)
 end
-function t:remove_alias(key, obj, com)
+function t:remove_alias(key, obj)
     local alias = self.alias_map[key]
     if alias then
     else
@@ -136,16 +123,10 @@ function t:remove_alias(key, obj, com)
     end
 
     -- 先找下obj
-    local list = G.call('array_find', alias, 'obj', obj)
-    if list and #list > 0 then
-        -- 匹配到了obj，再判断下com
-        local index_list = G.call('array_find_index', list, 'com', com)
-        if index_list and #index_list > 0 then
-            -- 删除所有匹配到的组合
-            for i = #index_list, 1, -1 do
-                table.remove(list, index_list[i])
-            end
-        end
+    local index = G.call('array_get_element_index', alias, obj)
+    if index then
+        -- 找到了
+        table.remove(alias, index)
     end
 end
 function t:get_alias(key)

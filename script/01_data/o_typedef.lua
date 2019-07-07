@@ -145,7 +145,7 @@ local t = {
 			},
 			[3]={
 				['name']='iter',
-				['type']='farg@actor',
+				['type']='_farg@actor',
 			},
 			[4]={
 				['name']='shaft',

@@ -16,8 +16,8 @@ local t = G.act
         __o_animquest -- 并行执行的动画段
         
     o_obj
-        obj -- 控件
-        com_name -- 组件名称
+        可能是obj，也可能是com
+        需要使用的时候再判断
 
     o_animquest
         is_mono -- 是否锁定动画队列
@@ -80,7 +80,7 @@ t['run_animquest'] = function(o_animactor, o_animquest, is_run_child)
     -- 初始化动画轴
     G.misc().当前演算体 = o_animactor
     G.misc().当前动画段 = o_animquest
-    o_animquest['shaft'] = G.call(o_animquest['iter'])
+    o_animquest['shaft'] = G.call('动画系统_汇总动画轴', o_animquest['iter'])
 
     -- 执行所有的动画轴
     local shaft_plist = {}

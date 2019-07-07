@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_card_spell = require 'c_card_spell'
 local c_mintextquadsize = require 'c_mintextquadsize'
+local c_card_spell = require 'c_card_spell'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -125,11 +125,9 @@ tp = tc
 			tc.right = 132.500
 			tc.bottom = -70.000
 			tc.top = 70.000
-			tc.color = 0x0
 			tc.text = '   使一个随从变[br]形成为一个0/1并具[br]  有嘲讽的青蛙。'
 			tc.font = 0x61190000
 			tc.lineSpace = 2
-			tc.style = 2
 			tp = tc
 			tp = tp.parent
 			--end

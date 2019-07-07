@@ -22,73 +22,41 @@ local function create_shaftnode(target, time, bezier, next_index)
     }
 end
 
-local function create_shaft_delta(t_obj, attr, dv, time, bezier)
-    if t_obj then
-        local obj, com = t_obj.obj, t_obj.com
-        local v, target = nil, nil
-        if obj then
-            if type(com) == 'string' then
-                v = obj[com][attr]
-                target = v + dv
-            else
-                v = obj[attr]
-                target = v + dv
-            end
+local function create_shaft(obj, attr, target, time, bezier)
+    if obj and (type(obj) == 'userdata' or type(obj) == 'table') then
+        local v = obj[attr]
 
-            -- 生成过渡函数
-            local iter = function (nodeA, nodeB)
-                if com then
-                    obj[com][attr] = nodeA['target']
-                    G.TweenCom(attr, nodeA['time'], obj[com], nodeB['target'])
-                else
-                    obj[attr] = nodeA['target']
-                    G.TweenBezier(attr, nodeA['time'], obj, nodeB['target'], unpack_bezier(nodeA['bezier']))
-                end
+        -- 生成过渡函数
+        local iter = function (nodeA, nodeB)
+            if type(obj) == 'userdata' then
+                -- 约定是控件
+                obj[attr] = nodeA['target']
+                G.TweenBezier(attr, nodeA['time'], obj, nodeB['target'], unpack_bezier(nodeA['bezier']))
+            elseif type(obj) == 'table' then
+                obj[attr] = nodeA['target']
+                G.TweenCom(attr, nodeA['time'], obj, nodeB['target'])
             end
-
-            -- 生成最终结构
-            return {
-                ['funs'] = iter,
-                ['nodelist'] = {
-                    [1] = create_shaftnode(v, time, bezier, 2),
-                    [2] = create_shaftnode(target, 0, nil, nil),
-                }
-            }
         end
+
+        -- 生成最终结构
+        return {
+            ['funs'] = iter,
+            ['nodelist'] = {
+                [1] = create_shaftnode(v, time, bezier, 2),
+                [2] = create_shaftnode(target, 0, nil, nil),
+            }
+        }
     end
 
     return {}
 end
 
-local function create_shaft(t_obj, attr, target, time, bezier)
-    if t_obj then
-        local obj, com = t_obj.obj, t_obj.com
-        local v = nil
-        if obj then
-            if type(com) == 'string' then
-                v = obj[com][attr]
-            else
-                v = obj[attr]
-            end
+local function create_shaft_delta(obj, attr, dv, time, bezier)
+    if obj and (type(obj) == 'userdata' or type(obj) == 'table') then
+        local v = obj[attr]
+        local target = v + dv
 
-            -- 生成过渡函数
-            local iter = function (nodeA, nodeB)
-                if com then
-                    G.TweenCom(attr, nodeA['time'], obj[com], nodeB['target'])
-                else
-                    G.TweenBezier(attr, nodeA['time'], obj, nodeB['target'], unpack_bezier(nodeA['bezier']))
-                end
-            end
-
-            -- 生成最终结构
-            return {
-                ['funs'] = iter,
-                ['nodelist'] = {
-                    [1] = create_shaftnode(v, time, bezier, 2),
-                    [2] = create_shaftnode(target, 0, nil, nil),
-                },
-            }
-        end
+        return create_shaft(obj, attr, target, time, bezier)
     end
 
     return {}
@@ -97,15 +65,15 @@ end
 local function get_animactor_obj(o_animactor, string_obj)
     local result = {}
     local set_obj = function(name)
-        local t_obj = nil
+        local obj = nil
         -- 先判断引用格式
         string.gsub(name, '^::([%w]+)$', function(w)
-            t_obj = o_animactor:get_quote(w)
+            obj = o_animactor:get_quote('::' .. w)
         end, 1)
 
-        if t_obj then
+        if obj then
             -- 引用已经找到了，因为是引用，所有只有一个控件
-            result[1] = t_obj
+            result[1] = obj
             return
         end
 
@@ -113,39 +81,49 @@ local function get_animactor_obj(o_animactor, string_obj)
         string.gsub(name, '^_([^%[]+)%[([%d]+)%]$', function(w,i)
             if i then
                 -- 约定[]内只有数字索引
-                result[1] = (o_animactor:get_alias(w) or {})[tonumber(i)]
+                result[1] = (o_animactor:get_alias('_' .. w) or {})[tonumber(i)]
             else
                 -- 没有索引，那么别名中所有的控件都获取
-                result = o_animactor:get_alias(w)
+                -- 需要复制一份table
+                for _,v in ipairs(o_animactor:get_alias(w)) do
+                    table.insert(result, v)
+                end
             end
         end)
     end
     local set_attr_obj = function(attr)
         local attr_table = {}
         local attr_split = function()
-            string.gsub(dot, '([^%[]+)%[?', function (w)
+            string.gsub(attr, '([^%[]+)%[?', function (w)
                 table.insert(attr_table, w)
             end, 1)
-            string.gsub(dot, '%[([%d]+)%]', function (w)
+            string.gsub(attr, '%[([%d]+)%]', function (w)
                 table.insert(attr_table, tonumber(w))
             end)
         end
-        local iter = function(t_obj)
-            local obj, com = t_obj['obj'], t_obj['com']
+        local iter = function(obj)
             for _,attr in ipairs(attr_table) do
+                local new = nil
                 if type(attr) == 'string' then
-
-                elseif type(attr) == 'number' then
-                    if com and obj[com] then
-                        
+                    new = obj.getChildByName(attr)
+                    if new then
+                    else
+                        new = obj[attr]
                     end
+                elseif type(attr) == 'number' then
+                    new = obj[tonumber(attr)]
                 end
 
+                if new then
+                    obj = new
+                else
+                    return
+                end
             end
+            return obj
         end
         attr_split()
-        G.show_table(attr_table)
-        G.call('array_filtermap', result, iter)
+        result = G.call('array_filtermap', result, iter)
     end
 
     for index,dot in ipairs(G.call('string_split', string_obj, '.')) do
@@ -163,65 +141,47 @@ local function get_animactor_obj(o_animactor, string_obj)
             return
         end
     end
+    return result
 end
 
 --hide=true
 t['动画系统_获取名称指代'] = function(string_obj)
-    local obj_list = get_animactor_obj(G.misc().当前演算体, string_obj)
-
-
+    return get_animactor_obj(G.misc().当前演算体, string_obj)
 end
 
-
-
-
-
---type=actor
---hide=true
---ret=_o_animquest_shaft
-t['动画系统_平移'] = function(string_obj, int_dx, int_dy, o_animquest_bezier_曲线参数)
+local function create_shaftlist(string_obj, string_attr, number_val, o_animquest_bezier_曲线参数, iter)
     local cur_actor = G.misc().当前演算体
     local cur_quest = G.misc().当前动画段
-    local t_obj = cur_actor:get_quote(string_obj)
+    local obj_list = G.call('动画系统_获取名称指代', string_obj)
     local time = cur_quest['time']
 
-    return {
-        [1] = create_shaft_delta(t_obj, 'x', int_dx, time, o_animquest_bezier_曲线参数),
-        [2] = create_shaft_delta(t_obj, 'y', int_dy, time, o_animquest_bezier_曲线参数),
-    }
+    local shaft_list = {}
+    for _,obj in ipairs(obj_list) do
+        table.insert(shaft_list, iter(obj, string_attr, number_val, time, o_animquest_bezier_曲线参数))
+    end
+    return shaft_list
 end
 
 --type=actor
 --hide=true
 --ret=_o_animquest_shaft
-t['动画系统_缩放'] = function(string_obj, number_scale, o_animquest_bezier_曲线参数)
-    local cur_actor = G.misc().当前演算体
-    local cur_quest = G.misc().当前动画段
-    local t_obj = cur_actor:get_quote(string_obj)
-    local time = cur_quest['time']
-
-    return {
-        [1] = create_shaft(t_obj, 'scaleX', number_scale, time, o_animquest_bezier_曲线参数),
-        [2] = create_shaft(t_obj, 'scaleY', number_scale, time, o_animquest_bezier_曲线参数),
-    }
+t['动画系统_属性设置'] = function(string_obj, string_attr, number_目标值, o_animquest_bezier_曲线参数)
+    return create_shaftlist(string_obj, string_attr, number_目标值, o_animquest_bezier_曲线参数, create_shaft)
 end
 
 --type=actor
 --hide=true
 --ret=_o_animquest_shaft
-t['动画系统_更改费用'] = function(string_obj, int_cost, o_animquest_bezier_曲线参数)
-    local cur_actor = G.misc().当前演算体
-    local cur_quest = G.misc().当前动画段
-    local t_obj = cur_actor:get_quote(string_obj)
-    local time = cur_quest['time']
+t['动画系统_属性累加'] = function(string_obj, string_attr, number_累加值, o_animquest_bezier_曲线参数)
+    return create_shaftlist(string_obj, string_attr, number_累加值, o_animquest_bezier_曲线参数, create_shaft_delta)
+end
 
-    t_obj = {
-        ['obj'] = t_obj['obj'].getChildByName('卡牌框'),
-        ['com'] = 'c_card_weapon',
-    }
-    return {
-        [1] = create_shaft(t_obj, 'cost', int_cost, time, o_animquest_bezier_曲线参数),
-    }
+t['动画系统_汇总动画轴'] = function(_farg_动画轴生成函数)
+    local result = {}
+    for _,farg in ipairs(_farg_动画轴生成函数) do
+        G.call('array_union', result, G.call(farg))
+    end
+    return result
 end
 
 --hide=true

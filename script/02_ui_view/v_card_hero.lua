@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_card_hero = require 'c_card_hero'
 local c_mintextquadsize = require 'c_mintextquadsize'
+local c_card_hero = require 'c_card_hero'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)

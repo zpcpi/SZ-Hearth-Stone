@@ -5,6 +5,43 @@ local G = require "gf"
 local L = {}
 local t = G.api
 
+--================================================
+--================================================
+-- table相关接口
+--================================================
+--================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--================================================
+--================================================
+-- 数组相关接口
+--================================================
+--================================================
+
 --hide=true
 --type=array
 t['array_map'] = function (arr, iter)
@@ -98,3 +135,28 @@ t['array_find_index'] = function (arr, attr, val)
     G.call('array_filter', arr, filter)
     return result
 end
+
+--hide=true
+--type=array
+t['array_get_element_index'] = function (arr, element)
+    for i,v in ipairs(arr) do
+        if v == element then
+            return i
+        end
+    end
+end
+
+--hide=true
+--type=array
+t['array_union'] = function(arrA, arrB)
+    for _,v in ipairs(arrB) do
+        table.insert(arrA, v)
+    end
+    return arrA
+end
+
+--================================================
+--================================================
+-- 集合相关接口
+--================================================
+--================================================

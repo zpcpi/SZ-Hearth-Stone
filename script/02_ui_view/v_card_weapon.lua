@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local c_card_weapon = require 'c_card_weapon'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -126,11 +126,9 @@ tp = tc
 			tc.right = 132.500
 			tc.bottom = -70.000
 			tc.top = 70.000
-			tc.color = 0x0
 			tc.text = '      亡语：[br]将这把武器洗入你的[br]   牌库。保留所[br]   有额外效果。'
 			tc.font = 0x61190000
 			tc.lineSpace = 2
-			tc.style = 2
 			tp = tc
 			tp = tp.parent
 			--end
