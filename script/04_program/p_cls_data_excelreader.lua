@@ -446,7 +446,7 @@ local function type_init()
     local iter_eread = function(s)
         local list = G.DBTable(s)
         return function (showname)
-            local t = G.call('数组_Find', list, 'showname', showname)
+            local t = G.call('array_find', list, 'showname', showname)
             if t and #t > 0 then
                 if #t > 1 then
                     error('数据名称重复！o表：' .. s .. ',name :' .. showname)
@@ -464,7 +464,7 @@ local function type_init()
     local iter_ewrite = function(s)
         local list = G.DBTable(s)
         return function (id)
-            local t = G.call('数组_Find', list, 'name', id)
+            local t = G.call('array_find', list, 'name', id)
             if t and #t > 0 then
                 return tostring(t[1].showname)
             end
@@ -770,7 +770,7 @@ local function excel_读取数据_生成数据表_单行(t, int_row, id_row)
         excel_读取数据_生成数据表_单格(t, 属性数组[1], 类型数组[1], 数据查询表[列号数组[1] .. (id_row or int_row)], 类型字符串[1])
     end
 
-    local o_target = G.call('数组_Find', o_any_all, 'name', t.name)
+    local o_target = G.call('array_find', o_any_all, 'name', t.name)
     if #o_target > 0 and o_target[1].name then
         -- 是已有数据，覆盖
         deepcopy_default(t_原始数据, o_target[1], {})

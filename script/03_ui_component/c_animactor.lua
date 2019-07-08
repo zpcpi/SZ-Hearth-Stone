@@ -17,25 +17,8 @@ function t:init()
 end
 
 function t:start()
-    self:push_quote('::Card', G.getUI('v_card_weapon'))
+    self:push_quote('::HandCards', G.getUI('v_battle_handcards_self'))
 
-    self.__o_animquest = {
-        [1] = {
-            [1] = G.call('动画系统_创建quest', self, G.QueryName(0x10010001)),
-            [2] = G.call('动画系统_创建quest', self, G.QueryName(0x10010002)),
-            [3] = G.call('动画系统_创建quest', self, G.QueryName(0x10010003)),
-        },
-    }
-    
-    self.__o_animquest[1][1]['child_quests'] = {
-        [1] = G.call('动画系统_创建quest', self, G.QueryName(0x10010004)),
-    }
-
-    self.__o_animquest[1][2]['child_quests'] = {
-        [1] = G.call('动画系统_创建quest', self, G.QueryName(0x10010001)),
-    }
-
-    self:run_animactor()
 end
 
 --[[
@@ -154,13 +137,13 @@ function t:run_animactor()
     local stage, index = self:get_lock_stage_and_index()
 
     if stage == 0 then
-        self:delete()
+        -- self:delete()
         return
         -- 动画队列为空，删除自身
         -- removeUI
         -- removeChild
     elseif stage == 1 and index == 0 then
-        self:delete()
+        -- self:delete()
         return
     end
 
@@ -190,8 +173,6 @@ end
 
 -- 控件删除
 function t:delete()
-    print(2, self.count)
-
     self.obj.parent:removeChild(self)
 end
 
@@ -203,8 +184,6 @@ function t:update()
         if self.cur_pthread.co ~= nil then
         else
             self.cur_pthread = nil
-            print(1, self.count)
-
             self:run_animactor()
         end
     end

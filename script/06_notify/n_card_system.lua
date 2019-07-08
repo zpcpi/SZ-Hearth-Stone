@@ -33,16 +33,16 @@ function noti.card_create()
     --     ui_obj.scaleY = 0.5
     -- end
 
-    -- 武器预览
-    ui_obj = G.getUI('v_card_weapon')
-    if not ui_obj then
-        ui_obj = G.addUI('v_card_weapon')
-        ui_obj.x = ui_obj.x + 100
-        ui_obj.y = ui_obj.y + 200
-        ui_obj.scaleX = 0.5
-        ui_obj.scaleY = 0.5
-    end
-    local ui_card = ui_obj
+    -- -- 武器预览
+    -- ui_obj = G.getUI('v_card_weapon')
+    -- if not ui_obj then
+    --     ui_obj = G.addUI('v_card_weapon')
+    --     ui_obj.x = ui_obj.x + 100
+    --     ui_obj.y = ui_obj.y + 200
+    --     ui_obj.scaleX = 0.5
+    --     ui_obj.scaleY = 0.5
+    -- end
+    -- local ui_card = ui_obj
 
     -- 手牌区功能
     ui_obj = G.getUI('v_battle_handcards_self')
@@ -54,12 +54,46 @@ function noti.card_create()
 
 
     -- 动画设置
-    -- ui_obj = G.getUI('v_animactor')
-    -- if not ui_obj then
-    --     ui_obj = G.addUI('v_animactor')
-    -- end
+    ui_obj = G.getUI('v_animactor')
+    if not ui_obj then
+        ui_obj = G.addUI('v_animactor')
+    end
 
 
 
 
+end
+
+function noti.addcard()
+    local ui_obj
+    local count
+    ui_obj = G.getUI('v_battle_handcards_self').c_battle_handcards_self
+    ui_obj:addCard()
+
+    count = ui_obj.CardCount
+
+    ui_obj = G.getUI('v_animactor').c_animactor
+    ui_obj.__o_animquest = {
+        [1] = {
+            [1] = G.call('动画系统_创建quest', ui_obj, G.QueryName(0x10010005 + count - 1)),
+        },
+    }
+    ui_obj:run_animactor()
+end
+
+function noti.removecard()
+    local ui_obj
+    local count
+    ui_obj = G.getUI('v_battle_handcards_self').c_battle_handcards_self
+    ui_obj:removeCard(math.random(1, ui_obj.CardCount))
+
+    count = ui_obj.CardCount
+
+    ui_obj = G.getUI('v_animactor').c_animactor
+    ui_obj.__o_animquest = {
+        [1] = {
+            [1] = G.call('动画系统_创建quest', ui_obj, G.QueryName(0x10010005 + count - 1)),
+        },
+    }
+    ui_obj:run_animactor()
 end

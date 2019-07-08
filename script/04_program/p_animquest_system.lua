@@ -105,7 +105,9 @@ local function get_animactor_obj(o_animactor, string_obj)
             for _,attr in ipairs(attr_table) do
                 local new = nil
                 if type(attr) == 'string' then
-                    new = obj.getChildByName(attr)
+                    if type(obj.getChildByName) == 'function' then
+                        new = obj.getChildByName(attr)
+                    end
                     if new then
                     else
                         new = obj[attr]
@@ -138,7 +140,7 @@ local function get_animactor_obj(o_animactor, string_obj)
         -- 判断下获取情况，一旦为空就终止
         if result and #result > 0 then
         else
-            return
+            return {}
         end
     end
     return result
@@ -149,7 +151,7 @@ t['动画系统_获取名称指代'] = function(string_obj)
     return get_animactor_obj(G.misc().当前演算体, string_obj)
 end
 
-local function create_shaftlist(string_obj, string_attr, number_val, o_animquest_bezier_曲线参数, iter)
+local function create_shaftlist(string_obj, _string_attr, _number_val, o_animquest_bezier_曲线参数, iter)
     local cur_actor = G.misc().当前演算体
     local cur_quest = G.misc().当前动画段
     local obj_list = G.call('动画系统_获取名称指代', string_obj)
@@ -157,7 +159,9 @@ local function create_shaftlist(string_obj, string_attr, number_val, o_animquest
 
     local shaft_list = {}
     for _,obj in ipairs(obj_list) do
-        table.insert(shaft_list, iter(obj, string_attr, number_val, time, o_animquest_bezier_曲线参数))
+        for i = 1, #_string_attr, 1 do
+            table.insert(shaft_list, iter(obj, _string_attr[i], _number_val[i], time, o_animquest_bezier_曲线参数))
+        end
     end
     return shaft_list
 end
@@ -166,14 +170,21 @@ end
 --hide=true
 --ret=_o_animquest_shaft
 t['动画系统_属性设置'] = function(string_obj, string_attr, number_目标值, o_animquest_bezier_曲线参数)
-    return create_shaftlist(string_obj, string_attr, number_目标值, o_animquest_bezier_曲线参数, create_shaft)
+    return create_shaftlist(string_obj, {string_attr}, {number_目标值}, o_animquest_bezier_曲线参数, create_shaft)
+end
+
+--type=actor
+--hide=true
+--ret=_o_animquest_shaft
+t['动画系统_多属性设置'] = function(string_obj, _string_attr, _number_目标值, o_animquest_bezier_曲线参数)
+    return create_shaftlist(string_obj, _string_attr, _number_目标值, o_animquest_bezier_曲线参数, create_shaft)
 end
 
 --type=actor
 --hide=true
 --ret=_o_animquest_shaft
 t['动画系统_属性累加'] = function(string_obj, string_attr, number_累加值, o_animquest_bezier_曲线参数)
-    return create_shaftlist(string_obj, string_attr, number_累加值, o_animquest_bezier_曲线参数, create_shaft_delta)
+    return create_shaftlist(string_obj, {string_attr}, {number_累加值}, o_animquest_bezier_曲线参数, create_shaft_delta)
 end
 
 t['动画系统_汇总动画轴'] = function(_farg_动画轴生成函数)
