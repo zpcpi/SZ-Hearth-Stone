@@ -49,4 +49,21 @@ function t:removeCard(count)
     self.CardCount = self.CardCount - 1
 end
 
+function t:click(tar)
+end
+
+function t:rollOver(tar)
+    tar.alpha = 50
+end
+
+function t:rollOut(tar)
+    tar.alpha = 255
+end
+
+function t:mouseDown(tar)
+end
+
+function t:mouseUp(tar)
+end
+
 return t

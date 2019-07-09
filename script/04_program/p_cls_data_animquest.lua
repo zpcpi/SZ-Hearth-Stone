@@ -12,8 +12,8 @@ t['手牌复位动画生成'] = function(o_animquest_当前数据, _i_animquest_
 
     local time = 300
     local maxCount = 10
-    local Radius = 550
-    local maxRotation = math.atan(Radius * 0.84, Radius)
+    local Radius = 550 * 0.9
+    local maxRotation = math.atan(550 * 1, Radius)
     local minRotation = maxRotation / 4
     local bezier = {x1 = 0, y1 = 0.5, x2 = 0.5, y2 = 1}
 
@@ -24,7 +24,7 @@ t['手牌复位动画生成'] = function(o_animquest_当前数据, _i_animquest_
             minr = maxRotation / (count - 1)
         end
 
-        local begr = -(count - 0.3) * 0.5 * minr
+        local begr = -(count - 0.25) * 0.5 * minr
         if count == 1 then
             begr = 0
         end
@@ -33,7 +33,7 @@ t['手牌复位动画生成'] = function(o_animquest_当前数据, _i_animquest_
             local r = begr + minr * (k - 1)
             list[k] = {
                 [1] = Radius * math.sin(r), -- x
-                [2] = Radius * (math.cos(r) - 1), -- y
+                [2] = Radius * (math.cos(r) - 1) + 10, -- y
                 [3] = r * 180 / math.pi, -- rotation
             }
         end
