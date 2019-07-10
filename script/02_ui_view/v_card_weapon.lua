@@ -18,7 +18,6 @@ tp = tc
 	tc.right = 182.500
 	tc.bottom = -256.000
 	tc.top = 256.000
-	tc.mouseEnabled = true
 	tp = tc
 		tc = G.Entity()
 		tp.addChild(tc)

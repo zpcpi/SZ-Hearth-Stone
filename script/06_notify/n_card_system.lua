@@ -85,7 +85,7 @@ function noti.removecard()
     local ui_obj
     local count
     ui_obj = G.getUI('v_battle_handcards_self').c_battle_handcards_self
-    ui_obj:removeCard(math.random(1, ui_obj.CardCount))
+    ui_obj:removeCard(math.random(1, math.max(ui_obj.CardCount, 1)))
 
     count = ui_obj.CardCount
 
