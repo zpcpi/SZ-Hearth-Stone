@@ -5,6 +5,21 @@
 local G = require "gf"
 local t = G.com()
 
+--api
+--[[
+    addCard()
+    removeCard(count)
+
+]]
+
+
+
+
+
+
+
+
+
 
 function t:init()
     self.功能区 = self.obj.getChildByName('功能区')
