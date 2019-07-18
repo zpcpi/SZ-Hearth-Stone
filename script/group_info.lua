@@ -13,6 +13,9 @@ local t ={
 			name = '战场UI',
 			[1] = 'v_battle_handcards_self',
 		},
+		[3] = {
+			name = '测试UI',
+		},
 	},
 	[3] = {
 		[1] = {

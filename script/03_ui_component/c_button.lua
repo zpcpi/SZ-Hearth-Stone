@@ -189,6 +189,9 @@ function t:set_text()
 end 
 function t:set_img(img)
 	local bg = self.obj.getChildByName("img")
+	if not bg then 
+		return
+	end
 	bg.img = img
 	local w,h = G.imageSize(img)
 	if self.customsize == nil or self.customsize == false then 

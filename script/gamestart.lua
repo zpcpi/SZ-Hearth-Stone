@@ -9,3 +9,4 @@ t.init = function()
 end
 -- 游戏主入口,进入init函数
 G.start_program('init')
+-- G.addUI('v_net_test')
