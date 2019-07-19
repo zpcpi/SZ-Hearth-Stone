@@ -21,11 +21,9 @@ end
 
 function t:click(tar)
     if tar == self.chatButton then 
-        if G.lsocket then 
-            G.lsocket:send(self.chat.text)
-        end
+        G.call('Net_SendMsg', self.chat.text)
     elseif tar == self.hostButton then 
-        G.start_program('Net_CreateListener', self.hostPort.text)
+        G.start_program('Net_CreateHost', self.hostPort.text)
     elseif tar == self.connectButton then 
         G.start_program('Net_TryConnectHost', self.connectIP.text, self.connectPort.text)
     end
