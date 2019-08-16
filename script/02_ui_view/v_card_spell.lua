@@ -16,6 +16,7 @@ tp = tc
 	tc.name = '卡背框'
 	tc.right = 0.000
 	tc.top = 0.000
+	tc.visible = false
 	tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
@@ -87,22 +88,60 @@ tp = tc
 		--end
 		tc = G.Quad()
 		tp.addChild(tc)
-		tc.name = '品质板'
-		tc.left = -30.500
-		tc.right = 30.500
-		tc.bottom = -83.436
-		tc.top = -29.436
+		tc.name = '描述板'
+		tc.left = -233.000
+		tc.right = 233.000
+		tc.bottom = -280.000
+		tc.top = 0.000
+		tc.scaleX = 0.650
+		tc.scaleY = 0.650
 		tc.img = 0x56090003
 		tp = tc
+			tc = G.TextQuad()
+			tp.addChild(tc)
+			tc.name = '描述字符'
+			tc.left = -233.000
+			tc.right = 233.000
+			tc.bottom = -140.000
+			tc.top = 140.000
+			tc.color = 0x0
+			tc.text = '   使一个随从变[br]形成为一个0/1并具[br]  有嘲讽的青蛙。'
+			tc.font = 0x612a0000
+			tc.lineSpace = 2
+			tp = tc
+			tp = tp.parent
+			--end
+		tp = tp.parent
+		--end
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = '品质板'
+		tc.left = -31.500
+		tc.right = 31.500
+		tc.bottom = -81.936
+		tc.top = -32.936
+		tc.img = 0x56090012
+		tp = tc
+			tc = G.Quad()
+			tp.addChild(tc)
+			tc.name = '品质宝石'
+			tc.left = -16.500
+			tc.right = 14.500
+			tc.bottom = -28.000
+			tc.top = 14.000
+			tc.img = 0x560b0011
+			tp = tc
+			tp = tp.parent
+			--end
 		tp = tp.parent
 		--end
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '名称板'
-		tc.left = -265.812
-		tc.right = 261.188
-		tc.bottom = -115.482
-		tc.top = 48.518
+		tc.left = -258.620
+		tc.right = 253.996
+		tc.bottom = -109.059
+		tc.top = 42.095
 		tc.scaleX = 0.650
 		tc.scaleY = 0.650
 		tc.img = 0x56090002
@@ -131,29 +170,6 @@ tp = tc
 		--end
 		tc = G.Entity()
 		tp.addChild(tc)
-		tc.name = '描述板'
-		tc.left = -132.500
-		tc.right = 132.500
-		tc.bottom = -217.000
-		tc.top = -77.000
-		tp = tc
-			tc = G.TextQuad()
-			tp.addChild(tc)
-			tc.name = '描述字符'
-			tc.left = -132.500
-			tc.right = 132.500
-			tc.bottom = -70.000
-			tc.top = 70.000
-			tc.text = '   使一个随从变[br]形成为一个0/1并具[br]  有嘲讽的青蛙。'
-			tc.font = 0x61190000
-			tc.lineSpace = 2
-			tp = tc
-			tp = tp.parent
-			--end
-		tp = tp.parent
-		--end
-		tc = G.Entity()
-		tp.addChild(tc)
 		tc.name = '属性值组合'
 		tc.right = 0.000
 		tc.top = 0.000
@@ -162,20 +178,21 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '费用'
-			tc.left = -208.000
-			tc.right = -68.000
-			tc.bottom = 122.000
-			tc.top = 268.000
+			tc.left = -195.000
+			tc.right = -79.000
+			tc.bottom = 132.000
+			tc.top = 250.000
 			tc.scaleX = 0.700
 			tc.scaleY = 0.700
-			tc.img = 0x56070008
+			tc.img = 0x560b0001
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '费用数值'
-				tc.left = -24.000
-				tc.right = 24.000
-				tc.top = 0.000
+				tc.left = -26.857
+				tc.right = 21.143
+				tc.bottom = 7.143
+				tc.top = 7.143
 				tc.anchor = 0x64003232
 				tc.scaleX = 1.430
 				tc.scaleY = 1.430
