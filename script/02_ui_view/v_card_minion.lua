@@ -16,6 +16,7 @@ tp = tc
 	tc.name = '卡背框'
 	tc.right = 0.000
 	tc.top = 0.000
+	tc.visible = false
 	tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
@@ -87,22 +88,59 @@ tp = tc
 		--end
 		tc = G.Quad()
 		tp.addChild(tc)
-		tc.name = '品质板'
-		tc.left = -28.000
-		tc.right = 36.000
-		tc.bottom = -82.000
-		tc.top = -32.000
+		tc.name = '描述板'
+		tc.left = -142.000
+		tc.right = 144.000
+		tc.bottom = -228.500
+		tc.top = -63.500
 		tc.img = 0x56060003
 		tp = tc
+			tc = G.TextQuad()
+			tp.addChild(tc)
+			tc.name = '描述字符'
+			tc.left = -132.500
+			tc.right = 132.500
+			tc.bottom = -70.000
+			tc.top = 70.000
+			tc.color = 0x0
+			tc.text = '每当一个玩家施放一个[br]法术，复制该法术，将[br]  其置入另一个玩家[br]      的手牌。'
+			tc.font = 0x61190000
+			tc.lineSpace = 2
+			tc.style = 2
+			tp = tc
+			tp = tp.parent
+			--end
+		tp = tp.parent
+		--end
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = '品质板'
+		tc.left = -28.000
+		tc.right = 38.000
+		tc.bottom = -82.000
+		tc.top = -32.000
+		tc.img = 0x56060012
+		tp = tc
+			tc = G.Quad()
+			tp.addChild(tc)
+			tc.name = '品质宝石'
+			tc.left = -13.500
+			tc.right = 15.500
+			tc.bottom = -24.000
+			tc.top = 16.000
+			tc.img = 0x560b0011
+			tp = tc
+			tp = tp.parent
+			--end
 		tp = tp.parent
 		--end
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '名称板'
 		tc.left = -154.500
-		tc.right = 164.500
-		tc.bottom = -64.500
-		tc.top = 14.500
+		tc.right = 160.500
+		tc.bottom = -61.500
+		tc.top = 7.500
 		tc.img = 0x56060002
 		tp = tc
 			tc = G.TextQuad()
@@ -129,31 +167,6 @@ tp = tc
 		--end
 		tc = G.Entity()
 		tp.addChild(tc)
-		tc.name = '描述板'
-		tc.left = -132.500
-		tc.right = 132.500
-		tc.bottom = -217.000
-		tc.top = -77.000
-		tp = tc
-			tc = G.TextQuad()
-			tp.addChild(tc)
-			tc.name = '描述字符'
-			tc.left = -132.500
-			tc.right = 132.500
-			tc.bottom = -70.000
-			tc.top = 70.000
-			tc.color = 0x0
-			tc.text = '每当一个玩家施放一个[br]法术，复制该法术，将[br]  其置入另一个玩家[br]      的手牌。'
-			tc.font = 0x61190000
-			tc.lineSpace = 2
-			tc.style = 2
-			tp = tc
-			tp = tp.parent
-			--end
-		tp = tp.parent
-		--end
-		tc = G.Entity()
-		tp.addChild(tc)
 		tc.name = '属性值组合'
 		tc.right = 0.000
 		tc.top = 0.000
@@ -162,20 +175,21 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '费用'
-			tc.left = -205.000
-			tc.right = -65.000
-			tc.bottom = 119.000
-			tc.top = 265.000
+			tc.left = -193.143
+			tc.right = -76.857
+			tc.bottom = 133.000
+			tc.top = 251.000
 			tc.scaleX = 0.700
 			tc.scaleY = 0.700
-			tc.img = 0x56070008
+			tc.img = 0x560b0001
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '费用数值'
 				tc.left = -24.000
 				tc.right = 24.000
-				tc.top = 0.000
+				tc.bottom = 7.000
+				tc.top = 7.000
 				tc.anchor = 0x64003232
 				tc.scaleX = 1.430
 				tc.scaleY = 1.430
@@ -194,18 +208,19 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '攻击力'
-			tc.left = -184.500
-			tc.right = -85.500
-			tc.bottom = -263.500
-			tc.top = -156.500
-			tc.img = 0x56070005
+			tc.left = -187.500
+			tc.right = -88.500
+			tc.bottom = -259.500
+			tc.top = -146.500
+			tc.img = 0x560b0003
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '攻击力数值'
-				tc.left = -24.000
-				tc.right = 24.000
-				tc.top = 0.000
+				tc.left = -19.000
+				tc.right = 29.000
+				tc.bottom = -4.000
+				tc.top = -4.000
 				tc.anchor = 0x64003232
 				tc.text = '0'
 				tc.font = 0x60500000
@@ -222,17 +237,17 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '生命值'
-			tc.left = 100.500
-			tc.right = 181.500
-			tc.bottom = -261.000
-			tc.top = -145.000
-			tc.img = 0x5607000a
+			tc.left = 105.750
+			tc.right = 177.250
+			tc.bottom = -259.250
+			tc.top = -146.750
+			tc.img = 0x560b0002
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '生命值数值'
-				tc.left = -24.000
-				tc.right = 24.000
+				tc.left = -26.000
+				tc.right = 22.000
 				tc.top = 0.000
 				tc.anchor = 0x64003232
 				tc.text = '4'
@@ -252,10 +267,10 @@ tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '精英板'
-		tc.left = -221.000
-		tc.right = 307.000
-		tc.bottom = -8.500
-		tc.top = 372.500
+		tc.left = -231.000
+		tc.right = 315.000
+		tc.bottom = 36.318
+		tc.top = 333.682
 		tc.scaleX = 0.500
 		tc.scaleY = 0.550
 		tc.img = 0x5606000f
