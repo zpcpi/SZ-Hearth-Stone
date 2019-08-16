@@ -114,6 +114,31 @@ tp = tc
 		--end
 		tc = G.Quad()
 		tp.addChild(tc)
+		tc.name = '种族板'
+		tc.left = -82.000
+		tc.right = 110.000
+		tc.bottom = -236.500
+		tc.top = -189.500
+		tc.img = 0x56060004
+		tp = tc
+			tc = G.TextQuad()
+			tp.addChild(tc)
+			tc.name = '种族字符'
+			tc.left = -106.000
+			tc.right = 86.000
+			tc.bottom = -28.500
+			tc.top = 18.500
+			tc.text = '元素'
+			tc.font = 0x61160000
+			tc.lineSpace = 2
+			tc.style = 13
+			tp = tc
+			tp = tp.parent
+			--end
+		tp = tp.parent
+		--end
+		tc = G.Quad()
+		tp.addChild(tc)
 		tc.name = '品质板'
 		tc.left = -28.000
 		tc.right = 38.000

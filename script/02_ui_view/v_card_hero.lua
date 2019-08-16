@@ -13,26 +13,6 @@ tc.top = 0.000
 tp = tc
 	tc = G.Entity()
 	tp.addChild(tc)
-	tc.name = '卡背框'
-	tc.right = 0.000
-	tc.top = 0.000
-	tc.visible = false
-	tp = tc
-		tc = G.Quad()
-		tp.addChild(tc)
-		tc.name = '卡背'
-		tc.left = -163.500
-		tc.right = 163.500
-		tc.bottom = -236.000
-		tc.top = 236.000
-		tc.img = 0x5601000a
-		tp = tc
-		tp = tp.parent
-		--end
-	tp = tp.parent
-	--end
-	tc = G.Entity()
-	tp.addChild(tc)
 	tc.name = '卡牌框'
 	tc.left = -182.500
 	tc.right = 182.500
@@ -49,13 +29,13 @@ tp = tc
 			tc = G.Shape()
 			tp.addChild(tc)
 			tc.name = 'mask'
-			tc.left = -182.500
-			tc.right = 182.500
-			tc.bottom = -256.000
-			tc.top = 256.000
+			tc.left = -167.000
+			tc.right = 167.000
+			tc.bottom = -137.000
+			tc.top = 249.000
 			tc.mask = 10
-			tc.shapeimg = 0x5604000d
-			tc.SetVertexBuf(34,{0.0,0.0,-82.0,90.0,-83.0,91.0,-83.0,90.0,-82.0,91.0,-82.0,99.0,-78.0,120.0,-68.0,142.0,-59.0,155.0,-44.0,171.0,-20.0,183.0,-9.0,186.0,12.0,186.0,12.0,185.0,27.0,181.0,27.0,180.0,44.0,171.0,59.0,159.0,69.0,146.0,78.0,130.0,85.0,110.0,87.0,89.0,88.0,89.0,87.0,-2.0,88.0,-2.0,87.0,-9.0,86.0,-10.0,52.0,-10.0,51.0,-11.0,50.0,-10.0,-81.0,-11.0,-83.0,-9.0,-83.0,87.0,-82.0,90.0}, {0,0},0xffffffff)
+			tc.shapeimg = 0x560c000c
+			tc.SetVertexBuf(47,{0.0,0.0,-159.0,-30.5,-160.0,-30.5,-160.0,-88.5,-158.0,-88.5,-157.0,-159.5,-158.0,-160.5,-158.0,-172.5,152.0,-172.5,154.0,-171.5,154.0,-57.5,157.0,-56.5,156.0,-55.5,156.0,-44.5,159.0,-43.5,157.0,-39.5,157.0,-26.5,158.0,-23.5,156.0,-20.5,156.0,-4.5,157.0,-3.5,154.0,5.5,151.0,27.5,153.0,28.5,148.0,42.5,142.0,49.5,140.0,68.5,137.0,70.5,132.0,78.5,118.0,95.5,114.0,102.5,78.0,141.5,41.0,164.5,18.0,172.5,-6.0,173.5,-25.0,167.5,-54.0,154.5,-92.0,128.5,-121.0,97.5,-128.0,87.5,-142.0,60.5,-146.0,49.5,-150.0,46.5,-151.0,40.5,-150.0,40.5,-155.0,19.5,-159.0,-30.5}, {0,0},0xffffffff)
 			tc.meshType = 6
 			tp = tc
 			tp = tp.parent
@@ -63,13 +43,13 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '原画'
-			tc.left = -253.000
-			tc.right = 259.000
-			tc.bottom = -166.000
-			tc.top = 346.000
-			tc.scaleX = 0.400
-			tc.scaleY = 0.400
-			tc.img = 0x56010008
+			tc.left = -245.000
+			tc.right = 267.000
+			tc.bottom = -220.000
+			tc.top = 292.000
+			tc.scaleX = 0.800
+			tc.scaleY = 0.800
+			tc.img = 0x5601000b
 			tp = tc
 			tp = tp.parent
 			--end
@@ -78,50 +58,35 @@ tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '背景'
-		tc.left = -168.000
-		tc.right = 168.000
-		tc.bottom = -256.000
-		tc.top = 256.000
-		tc.img = 0x56040005
+		tc.left = -180.000
+		tc.right = 180.000
+		tc.bottom = -265.000
+		tc.top = 265.000
+		tc.img = 0x560c000b
 		tp = tc
 		tp = tp.parent
 		--end
-		tc = G.Quad()
-		tp.addChild(tc)
-		tc.name = '品质板'
-		tc.left = -41.000
-		tc.right = 43.000
-		tc.bottom = -118.000
-		tc.top = 0.000
-		tc.scaleX = 0.300
-		tc.scaleY = 0.300
-		tc.img = 0x560b0011
-		tp = tc
-		tp = tp.parent
-		--end
-		tc = G.Quad()
+		tc = G.Entity()
 		tp.addChild(tc)
 		tc.name = '名称板'
-		tc.left = -286.500
-		tc.right = 286.500
-		tc.bottom = -116.000
-		tc.top = 66.000
-		tc.scaleX = 0.530
-		tc.scaleY = 0.530
-		tc.img = 0x56040001
+		tc.left = -212.000
+		tc.right = 220.000
+		tc.bottom = -293.000
+		tc.top = -45.000
+		tc.scaleX = 0.500
+		tc.scaleY = 0.500
 		tp = tc
 			tc = G.TextQuad()
 			tp.addChild(tc)
 			tc.name = '名称字符'
-			tc.left = -131.000
-			tc.right = 133.000
-			tc.bottom = 41.423
-			tc.top = -49.423
+			tc.left = -61.953
+			tc.right = 73.047
+			tc.top = 0.000
 			tc.anchor = 0x64003232
 			tc.scaleX = 1.890
 			tc.scaleY = 1.890
-			tc.text = '天灾领主加尔鲁什'
-			tc.font = 0x61200041
+			tc.text = '黑曜石雕像'
+			tc.font = 0x611a0000
 			tc.style = 13
 			tc.outlineSize = 5.000
 			tp = tc
@@ -131,116 +96,6 @@ tp = tc
 			com['autowidth'] =true
 			tp = tp.parent
 			--end
-		tp = tp.parent
-		--end
-		tc = G.Entity()
-		tp.addChild(tc)
-		tc.name = '描述板'
-		tc.left = -132.500
-		tc.right = 132.500
-		tc.bottom = -217.000
-		tc.top = -77.000
-		tp = tc
-			tc = G.TextQuad()
-			tp.addChild(tc)
-			tc.name = '描述字符'
-			tc.left = -112.500
-			tc.right = 112.500
-			tc.bottom = -52.500
-			tc.top = 60.500
-			tc.color = 0x0
-			tc.text = '战吼：装备一把4/3的影[br] 之哀伤，影之哀伤同时[br] 对其攻击目标相邻的随[br]     从造成伤害。'
-			tc.font = 0x61120000
-			tc.lineSpace = 2
-			tc.style = 2
-			tp = tc
-			tp = tp.parent
-			--end
-		tp = tp.parent
-		--end
-		tc = G.Entity()
-		tp.addChild(tc)
-		tc.name = '属性值组合'
-		tc.right = 0.000
-		tc.top = 0.000
-		tc.anchor = 0x64006400
-		tp = tc
-			tc = G.Quad()
-			tp.addChild(tc)
-			tc.name = '费用'
-			tc.left = -181.000
-			tc.right = -65.000
-			tc.bottom = 111.000
-			tc.top = 229.000
-			tc.scaleX = 0.700
-			tc.scaleY = 0.700
-			tc.img = 0x560b0001
-			tp = tc
-				tc = G.TextQuad()
-				tp.addChild(tc)
-				tc.name = '费用数值'
-				tc.left = -23.857
-				tc.right = 24.143
-				tc.bottom = 10.429
-				tc.top = 10.429
-				tc.anchor = 0x64003232
-				tc.scaleX = 1.430
-				tc.scaleY = 1.430
-				tc.text = '8'
-				tc.font = 0x60500000
-				tc.style = 14
-				tp = tc
-				tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
-				com = tp.c_mintextquadsize
-				com['minWidth'] =0.000
-				com['autowidth'] =true
-				tp = tp.parent
-				--end
-			tp = tp.parent
-			--end
-			tc = G.Quad()
-			tp.addChild(tc)
-			tc.name = '生命值'
-			tc.left = 87.167
-			tc.right = 170.833
-			tc.bottom = -256.222
-			tc.top = -161.778
-			tc.scaleX = 0.900
-			tc.scaleY = 0.900
-			tc.img = 0x560b0004
-			tp = tc
-				tc = G.TextQuad()
-				tp.addChild(tc)
-				tc.name = '生命值数值'
-				tc.left = -24.000
-				tc.right = 24.000
-				tc.top = 0.000
-				tc.anchor = 0x64003232
-				tc.text = '5'
-				tc.font = 0x60500000
-				tc.style = 14
-				tp = tc
-				tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
-				com = tp.c_mintextquadsize
-				com['minWidth'] =0.000
-				com['autowidth'] =true
-				tp = tp.parent
-				--end
-			tp = tp.parent
-			--end
-		tp = tp.parent
-		--end
-		tc = G.Quad()
-		tp.addChild(tc)
-		tc.name = '精英板'
-		tc.left = -225.000
-		tc.right = 303.000
-		tc.bottom = -41.500
-		tc.top = 339.500
-		tc.scaleX = 0.500
-		tc.scaleY = 0.500
-		tc.img = 0x5604000b
-		tp = tc
 		tp = tp.parent
 		--end
 	tp.c_card_hero = setmetatable({}, c_card_hero)

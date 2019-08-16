@@ -5,9 +5,11 @@ local t ={
 		[1] = {
 			name = '卡牌UI',
 			[1] = 'v_card_hero',
-			[2] = 'v_card_minion',
-			[3] = 'v_card_spell',
-			[4] = 'v_card_weapon',
+			[2] = 'v_card_herocard',
+			[3] = 'v_card_herospell',
+			[4] = 'v_card_minion',
+			[5] = 'v_card_spell',
+			[6] = 'v_card_weapon',
 		},
 		[2] = {
 			name = '战场UI',
