@@ -124,8 +124,8 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '品质宝石'
-			tc.left = -13.500
-			tc.right = 15.500
+			tc.left = -14.000
+			tc.right = 16.000
 			tc.bottom = -24.000
 			tc.top = 16.000
 			tc.img = 0x560b0011

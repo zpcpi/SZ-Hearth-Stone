@@ -16,6 +16,7 @@ tp = tc
 	tc.name = '卡背框'
 	tc.right = 0.000
 	tc.top = 0.000
+	tc.visible = false
 	tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
@@ -88,13 +89,13 @@ tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '品质板'
-		tc.left = -64.000
-		tc.right = 64.000
-		tc.bottom = -126.000
-		tc.top = 2.000
+		tc.left = -41.000
+		tc.right = 43.000
+		tc.bottom = -118.000
+		tc.top = 0.000
 		tc.scaleX = 0.300
 		tc.scaleY = 0.300
-		tc.img = 0x56040002
+		tc.img = 0x560b0011
 		tp = tc
 		tp = tp.parent
 		--end
@@ -167,20 +168,21 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '费用'
-			tc.left = -193.000
-			tc.right = -53.000
-			tc.bottom = 97.000
-			tc.top = 243.000
+			tc.left = -181.000
+			tc.right = -65.000
+			tc.bottom = 111.000
+			tc.top = 229.000
 			tc.scaleX = 0.700
 			tc.scaleY = 0.700
-			tc.img = 0x56070008
+			tc.img = 0x560b0001
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '费用数值'
-				tc.left = -24.000
-				tc.right = 24.000
-				tc.top = 0.000
+				tc.left = -23.857
+				tc.right = 24.143
+				tc.bottom = 10.429
+				tc.top = 10.429
 				tc.anchor = 0x64003232
 				tc.scaleX = 1.430
 				tc.scaleY = 1.430
@@ -199,13 +201,13 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '生命值'
-			tc.left = 82.500
-			tc.right = 179.500
-			tc.bottom = -259.000
-			tc.top = -149.000
+			tc.left = 87.167
+			tc.right = 170.833
+			tc.bottom = -256.222
+			tc.top = -161.778
 			tc.scaleX = 0.900
 			tc.scaleY = 0.900
-			tc.img = 0x56070003
+			tc.img = 0x560b0004
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)

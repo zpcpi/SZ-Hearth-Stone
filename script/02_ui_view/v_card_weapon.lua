@@ -16,6 +16,7 @@ tp = tc
 	tc.name = '卡背框'
 	tc.right = 0.000
 	tc.top = 0.000
+	tc.visible = false
 	tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
@@ -88,21 +89,32 @@ tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '品质板'
-		tc.left = -31.000
-		tc.right = 31.000
-		tc.bottom = -81.500
-		tc.top = -34.500
-		tc.img = 0x560a0002
+		tc.left = -34.000
+		tc.right = 30.000
+		tc.bottom = -73.500
+		tc.top = -28.500
+		tc.img = 0x560a0012
 		tp = tc
+			tc = G.Quad()
+			tp.addChild(tc)
+			tc.name = '品质宝石'
+			tc.left = -14.000
+			tc.right = 16.000
+			tc.bottom = -29.000
+			tc.top = 11.000
+			tc.img = 0x560b0011
+			tp = tc
+			tp = tp.parent
+			--end
 		tp = tp.parent
 		--end
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '名称板'
-		tc.left = -297.000
-		tc.right = 295.000
-		tc.bottom = -89.500
-		tc.top = 49.500
+		tc.left = -298.893
+		tc.right = 296.893
+		tc.bottom = -79.286
+		tc.top = 27.286
 		tc.scaleX = 0.560
 		tc.scaleY = 0.560
 		tc.img = 0x560a0001
@@ -112,8 +124,8 @@ tp = tc
 			tc.name = '名称字符'
 			tc.left = -33.000
 			tc.right = 33.000
-			tc.bottom = 8.000
-			tc.top = 8.000
+			tc.bottom = 19.857
+			tc.top = 19.857
 			tc.anchor = 0x64003232
 			tc.scaleX = 1.780
 			tc.scaleY = 1.780
@@ -169,13 +181,13 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '费用'
-			tc.left = -205.000
-			tc.right = -65.000
-			tc.bottom = 119.000
-			tc.top = 265.000
+			tc.left = -193.000
+			tc.right = -77.000
+			tc.bottom = 133.000
+			tc.top = 251.000
 			tc.scaleX = 0.700
 			tc.scaleY = 0.700
-			tc.img = 0x56070008
+			tc.img = 0x560b0001
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
@@ -201,13 +213,13 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '攻击力'
-			tc.left = -263.000
-			tc.right = -7.000
+			tc.left = -265.000
+			tc.right = -9.000
 			tc.bottom = -338.000
 			tc.top = -82.000
 			tc.scaleX = 0.500
 			tc.scaleY = 0.500
-			tc.img = 0x56070004
+			tc.img = 0x560b0006
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
@@ -233,11 +245,11 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '生命值'
-			tc.left = 189.000
-			tc.right = 93.000
+			tc.left = 93.000
+			tc.right = 189.000
 			tc.bottom = -248.500
 			tc.top = -157.500
-			tc.img = 0x5607000b
+			tc.img = 0x560b0008
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
