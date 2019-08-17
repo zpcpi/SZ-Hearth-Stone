@@ -132,8 +132,6 @@ function t:GetRotBy2Point(number_t)
     end
     local x1, y1 = self:GetPosBy2Point(number_t - 0.05)
     local x2, y2 = self:GetPosBy2Point(number_t + 0.05)
-    -- local x1, y1 = self:GetPosBy2Point(number_t)
-    -- local x2, y2 = self.中心点.x, self.中心点.y
     local k = (y1 - y2) / (x1 - x2)
     local rot = math.atan(k) * 180 / math.pi
     rot = self:ConvertRot(rot)
@@ -146,8 +144,6 @@ function t:GetRotBy3Point(number_t)
     end
     local x1, y1 = self:GetPosBy3Point(number_t - 0.05)
     local x2, y2 = self:GetPosBy3Point(number_t + 0.05)
-    -- local x1, y1 = self:GetPosBy3Point(number_t)
-    -- local x2, y2 = self.中心点.x, self.中心点.y
     local k = (y1 - y2) / (x1 - x2)
     local rot = math.atan(k) * 180 / math.pi
     rot = self:ConvertRot(rot)
@@ -160,8 +156,6 @@ function t:GetRotBy4Point(number_t)
     end
     local x1, y1 = self:GetPosBy4Point(number_t - 0.05)
     local x2, y2 = self:GetPosBy4Point(number_t + 0.05)
-    -- local x1, y1 = self:GetPosBy4Point(number_t)
-    -- local x2, y2 = self.中心点.x, self.中心点.y
     local k = (y1 - y2) / (x1 - x2)
     local rot = math.atan(k) * 180 / math.pi
     print('--== k, rot', k, rot)
@@ -170,16 +164,6 @@ function t:GetRotBy4Point(number_t)
 end
 
 function t:ConvertRot(number_rot)
-    -- if number_rot > 0 then 
-    --     number_rot = 90 - number_rot
-    -- else
-    --     number_rot = -90 - number_rot
-    -- end
-    -- if number_rot > 0 then 
-    --     number_rot = -(90 - number_rot)
-    -- else
-    --     number_rot = number_rot + 90
-    -- end
     return -number_rot
 end
 
