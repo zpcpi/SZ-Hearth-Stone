@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local c_card_herocard = require 'c_card_herocard'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -136,23 +136,27 @@ tp = tc
 		tc = G.Entity()
 		tp.addChild(tc)
 		tc.name = '描述板'
-		tc.left = -132.500
-		tc.right = 132.500
-		tc.bottom = -217.000
-		tc.top = -77.000
+		tc.left = -221.500
+		tc.right = 221.500
+		tc.bottom = -248.000
+		tc.top = -56.000
+		tc.scaleX = 0.650
+		tc.scaleY = 0.650
 		tp = tc
 			tc = G.TextQuad()
 			tp.addChild(tc)
 			tc.name = '描述字符'
-			tc.left = -112.500
-			tc.right = 112.500
-			tc.bottom = -52.500
-			tc.top = 60.500
+			tc.left = -221.500
+			tc.right = 221.500
+			tc.bottom = -92.000
+			tc.scaleX = 1.540
+			tc.scaleY = 1.540
 			tc.color = 0x0
-			tc.text = '战吼：装备一把4/3的影[br] 之哀伤，影之哀伤同时[br] 对其攻击目标相邻的随[br]     从造成伤害。'
-			tc.font = 0x61120000
+			tc.text = '战吼：装备一把4/3的影[br] 之哀伤，影之哀伤同时[br] 对其攻击目标相邻的随[br]       从造成伤害。'
+			tc.font = 0x65160000
 			tc.lineSpace = 2
 			tc.style = 2
+			tc.outlineSize = 0.000
 			tp = tc
 			tp = tp.parent
 			--end
@@ -179,15 +183,14 @@ tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '费用数值'
-				tc.left = -23.857
-				tc.right = 24.143
-				tc.bottom = 10.429
-				tc.top = 10.429
-				tc.anchor = 0x64003232
-				tc.scaleX = 1.430
-				tc.scaleY = 1.430
+				tc.left = -16.357
+				tc.right = 18.643
+				tc.bottom = 13.929
+				tc.top = 44.929
+				tc.scaleX = 1.950
+				tc.scaleY = 1.950
 				tc.text = '8'
-				tc.font = 0x60500000
+				tc.font = 0x63500000
 				tc.style = 14
 				tp = tc
 				tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
@@ -205,19 +208,21 @@ tp = tc
 			tc.right = 170.833
 			tc.bottom = -256.222
 			tc.top = -161.778
-			tc.scaleX = 0.900
-			tc.scaleY = 0.900
+			tc.scaleX = 0.850
+			tc.scaleY = 0.850
 			tc.img = 0x560b0004
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '生命值数值'
-				tc.left = -24.000
-				tc.right = 24.000
-				tc.top = 0.000
-				tc.anchor = 0x64003232
+				tc.left = -13.833
+				tc.right = 21.167
+				tc.bottom = 1.160
+				tc.top = 38.160
+				tc.scaleX = 1.500
+				tc.scaleY = 1.500
 				tc.text = '5'
-				tc.font = 0x60500000
+				tc.font = 0x63500000
 				tc.style = 14
 				tp = tc
 				tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
