@@ -79,14 +79,14 @@ tp = tc
 			tc = G.TextQuad()
 			tp.addChild(tc)
 			tc.name = '名称字符'
-			tc.left = -61.953
-			tc.right = 73.047
+			tc.left = -80.000
+			tc.right = 80.000
 			tc.top = 0.000
 			tc.anchor = 0x64003232
 			tc.scaleX = 1.890
 			tc.scaleY = 1.890
 			tc.text = '黑曜石雕像'
-			tc.font = 0x611a0000
+			tc.font = 0x62200041
 			tc.style = 13
 			tc.outlineSize = 5.000
 			tp = tc
