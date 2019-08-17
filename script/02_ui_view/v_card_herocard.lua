@@ -3,8 +3,8 @@
 ]]
 local G = require 'gf'
 local c_curved_text = require 'c_curved_text'
-local c_card_herocard = require 'c_card_herocard'
 local c_mintextquadsize = require 'c_mintextquadsize'
+local c_card_herocard = require 'c_card_herocard'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -171,8 +171,8 @@ tp = tc
 		tc.right = 221.500
 		tc.bottom = -248.000
 		tc.top = -56.000
-		tc.scaleX = 0.650
-		tc.scaleY = 0.650
+		tc.scaleX = 0.500
+		tc.scaleY = 0.500
 		tp = tc
 			tc = G.TextQuad()
 			tp.addChild(tc)
@@ -180,14 +180,13 @@ tp = tc
 			tc.left = -221.500
 			tc.right = 221.500
 			tc.bottom = -92.000
-			tc.scaleX = 1.540
-			tc.scaleY = 1.540
+			tc.scaleX = 2.000
+			tc.scaleY = 2.000
 			tc.color = 0x0
 			tc.text = '战吼：装备一把4/3的影[br] 之哀伤，影之哀伤同时[br] 对其攻击目标相邻的随[br]       从造成伤害。'
 			tc.font = 0x65160000
 			tc.lineSpace = 2
 			tc.style = 2
-			tc.outlineSize = 0.000
 			tp = tc
 			tp = tp.parent
 			--end
