@@ -2,6 +2,7 @@
 
 ]]
 local G = require 'gf'
+local c_curved_text = require 'c_curved_text'
 local c_card_weapon = require 'c_card_weapon'
 local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
@@ -119,28 +120,55 @@ tp = tc
 		tc.scaleY = 0.560
 		tc.img = 0x560a0001
 		tp = tc
-			tc = G.TextQuad()
+		tc = G.loadUI('v_curved_text')
+			tc.prefab = true
 			tp.addChild(tc)
 			tc.name = '名称字符'
-			tc.left = -33.000
-			tc.right = 33.000
-			tc.bottom = 19.857
-			tc.top = 19.857
-			tc.anchor = 0x64003232
-			tc.scaleX = 1.780
-			tc.scaleY = 1.780
-			tc.shadowX = 3
-			tc.shadowY = -3
-			tc.shadowAlpha = 255
-			tc.text = '弑君'
-			tc.font = 0x61200041
-			tc.style = 13
-			tc.outlineSize = 5.000
+			tc.left = 0.000
+			tc.right = 0.000
+			tc.bottom = -15.000
+			tc.top = -15.000
+			tc.scaleX = 1.54
+			tc.scaleY = 1.54
 			tp = tc
-			tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
-			com = tp.c_mintextquadsize
-			com['minWidth'] =0.000
-			com['autowidth'] =true
+			tp.c_curved_text = setmetatable({}, c_curved_text)
+			com = tp.c_curved_text
+			com['text'] ='弑君'
+			com['p0x'] =-142.000
+			com['p0y'] =20.000
+			com['p1x'] =-104.000
+			com['p1y'] =20.000
+			com['p2x'] =70.000
+			com['p2y'] =20.000
+			com['p3x'] =133.000
+			com['p3y'] =20.000
+			com['space'] =10.000
+			tp = tp.parent
+			--end
+			tc = G.loadUI('v_curved_text')
+			tc.prefab = true
+			tp.addChild(tc)
+			tc.name = '名称字符辅助线'
+			tc.left = 0.000
+			tc.right = 0.000
+			tc.bottom = 0.000
+			tc.top = 0.000
+			tc.visible = false
+			tc.scaleX = 1.54
+			tc.scaleY = 1.54
+			tp = tc
+			tp.c_curved_text = setmetatable({}, c_curved_text)
+			com = tp.c_curved_text
+			com['text'] ='................................................................................................................'
+			com['p0x'] =-142.000
+			com['p0y'] =20.000
+			com['p1x'] =-104.000
+			com['p1y'] =20.000
+			com['p2x'] =70.000
+			com['p2y'] =20.000
+			com['p3x'] =133.000
+			com['p3y'] =20.000
+			com['space'] =1.000
 			tp = tp.parent
 			--end
 		tp = tp.parent
