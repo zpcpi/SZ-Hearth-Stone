@@ -6,16 +6,9 @@ local t = {
 {
 	{
 		['name']=0x1f030001,
-		['showname']='微软雅黑',
+		['showname']='方正行楷简体',
 		['id']=1,
-		['fontname']='微软雅黑',
-		['ttf']=true,
-	},
-	{
-		['name']=0x1f030005,
-		['showname']='BlizzardGlobal',
-		['fontname']='BlizzardGlobal',
-		['id']=5,
+		['fontname']='方正行楷简体',
 		['ttf']=true,
 	},
 	{
@@ -34,30 +27,23 @@ local t = {
 	},
 	{
 		['name']=0x1f030002,
-		['showname']='方正行楷简体',
+		['showname']='汉仪楷体',
 		['id']=2,
-		['fontname']='方正行楷简体',
+		['fontname']='汉仪楷体',
 		['ttf']=true,
 	},
 	{
 		['name']=0x1f030006,
-		['showname']='0006',
+		['showname']='BlizzardGlobal',
 		['id']=6,
-		['fontname']='0006',
+		['fontname']='BlizzardGlobal',
 		['ttf']=true,
 	},
 	{
 		['name']=0x1f030007,
-		['showname']='0007',
+		['showname']='FranklinGothic',
 		['id']=7,
-		['fontname']='0007',
-		['ttf']=true,
-	},
-	{
-		['name']=0x1f030008,
-		['showname']='0008',
-		['id']=8,
-		['fontname']='0008',
+		['fontname']='FranklinGothic',
 		['ttf']=true,
 	},
 }}
