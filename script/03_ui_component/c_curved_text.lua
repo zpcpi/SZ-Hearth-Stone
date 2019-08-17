@@ -87,7 +87,6 @@ function t:UpdateText(string_文字)
             o_node_文字节点.rotation = self:GetRotBy3Point(number_t)
         elseif int_已知点数量 == 4 then 
             o_node_文字节点.x, o_node_文字节点.y = self:GetPosBy4Point(number_t)
-            print('--== o_node_文字节点.text', o_node_文字节点.text)
             o_node_文字节点.rotation = self:GetRotBy4Point(number_t)
         end
     end
@@ -158,7 +157,6 @@ function t:GetRotBy4Point(number_t)
     local x2, y2 = self:GetPosBy4Point(number_t + 0.05)
     local k = (y1 - y2) / (x1 - x2)
     local rot = math.atan(k) * 180 / math.pi
-    print('--== k, rot', k, rot)
     rot = self:ConvertRot(rot)
     return rot
 end

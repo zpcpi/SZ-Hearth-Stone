@@ -136,32 +136,6 @@ tp = tc
 				com['space'] =10.000
 				tp = tp.parent
 				--end
-				tc = G.loadUI('v_curved_text')
-				tc.prefab = true
-				tp.addChild(tc)
-				tc.name = '名称字符辅助线'
-				tc.left = 0.000
-				tc.right = 0.000
-				tc.bottom = 0.000
-				tc.top = 0.000
-				tc.scaleX = 1.9
-				tc.scaleY = 1.9
-				tc.visible = false
-				tp = tc
-				tp.c_curved_text = setmetatable({}, c_curved_text)
-				com = tp.c_curved_text
-				com['text'] ='................................................................................................................'
-				com['p0x'] =-142.000
-				com['p0y'] =-20.000
-				com['p1x'] =-104.000
-				com['p1y'] =15.000
-				com['p2x'] =70.000
-				com['p2y'] =30.000
-				com['p3x'] =133.000
-				com['p3y'] =-20.000
-				com['space'] =1.000
-				tp = tp.parent
-				--end
 		tp = tp.parent
 		--end
 		tc = G.Entity()
