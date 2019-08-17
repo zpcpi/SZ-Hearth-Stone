@@ -1,3 +1,4 @@
+require "hanzi2pinyin"
 require "p_animquest_system"
 require "p_array_func"
 require "p_cheat_system"
