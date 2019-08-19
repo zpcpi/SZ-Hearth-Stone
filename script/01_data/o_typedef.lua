@@ -111,11 +111,11 @@ local t = {
 			},
 			[2]={
 				['name']='当前演算体',
-				['type']='o_animactor',	
+				['type']='o_animactor',
 			},
 			[3]={
 				['name']='当前动画段',
-				['type']='o_animquest',	
+				['type']='o_animquest',
 			},
 		},
 	},
@@ -188,6 +188,56 @@ local t = {
 			[4]={
 				['name']='next',
 				['type']='int',
+			},
+		},
+	},
+	{
+		['name']='o_order',
+		['showname']='指令',
+		['define']={
+			[1]={
+				['name']='状态列表',
+				['type']='_o_order_state',
+			},
+		},
+	},
+	{
+		['name']='o_order_state',
+		['showname']='指令状态',
+		['define']={
+			[1]={
+				['name']='监测列表',
+				['type']='_o_order_edge',
+			},
+			[2]={
+				['name']='跳转节点',
+				['type']='_int',
+			},
+		},
+	},
+	{
+		['name']='o_order_edge',
+		['showname']='指令监测',
+		['define']={
+			[1]={
+				['name']='功能描述',
+				['type']='string',
+			},
+			[2]={
+				['name']='事件',
+				['type']='earg',
+			},
+			[3]={
+				['name']='条件',
+				['type']='fargboolean',
+			},
+			[4]={
+				['name']='初始动画',
+				['type']='farg',
+			},
+			[5]={
+				['name']='修改数据',
+				['type']='farg',
 			},
 		},
 	},
