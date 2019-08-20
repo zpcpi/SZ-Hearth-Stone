@@ -5,28 +5,11 @@
 local G = require "gf"
 local t = G.com()
 
---api
---[[
-    addCard()
-    removeCard(count)
-
-]]
-
-
-
-
-
-
-
-
-
-
 function t:init()
     self.功能区 = self.obj.getChildByName('功能区')
 
     self.tips版 = self.功能区.getChildByName('Tips版')
     self.布局点 = self.功能区.getChildByName('布局点')
-
 end
 
 function t:start()
@@ -38,6 +21,14 @@ function t:start()
     self.TipsCard = nil
 
     self:initTipsCard()
+
+    self:InitAnimActor()
+end
+
+function t:InitAnimActor()
+    self.animActor = G.loadUI('v_animactor')
+    self.animActor.c_animactor:push_quote('::HandCards', self)
+    G.Stage().addChild(self.animActor)
 end
 
 function t:initTipsCard()
@@ -66,16 +57,16 @@ function t:addCard()
     ui_card.scaleY = 0.35
 
     self.CardCount = count
-    
     ui_card.y = 200
 end
 
-function t:removeCard(count)
+function t:removeCard()
+    local count = G.call('角色_获取手牌数量', self:GetPlayerType())
     if count > self.CardCount then
         return
     end
-    local ui_card = self.handCards[count]
-    table.remove(self.handCards, count)
+    local ui_card = self.handCards[count + 1]
+    table.remove(self.handCards, count + 1)
     self.obj:removeChild(ui_card)
 
     ui_card.visible = false
@@ -104,6 +95,18 @@ function t:mouseDown(tar)
 end
 
 function t:mouseUp(tar)
+end
+
+function t:SetPlayerType(playerType)
+    self.playerType = playerType
+end
+
+function t:GetPlayerType()
+    return self.playerType
+end
+
+function t:GetAnimActor()
+    return self.animActor
 end
 
 return t

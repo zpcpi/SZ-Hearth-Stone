@@ -17,7 +17,6 @@ function t:init()
 end
 
 function t:start()
-    self:push_quote('::HandCards', G.getUI('v_battle_1v1').getChildByName('Self'))
 end
 
 --[[
@@ -134,7 +133,6 @@ end
 -- 动画执行逻辑
 function t:run_animactor()
     local stage, index = self:get_lock_stage_and_index()
-
     if stage == 0 then
         -- self:delete()
         return

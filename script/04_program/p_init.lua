@@ -8,7 +8,6 @@ local L = {}
 --hide=false
 --private=false
 t['初始化'] = function()
-
 	G.start_program("作弊系统_初始化作弊系统")
 	G.call('card_create')
 end
