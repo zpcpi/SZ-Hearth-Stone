@@ -1,11 +1,12 @@
---[[2006
+--[[0
 
 ]]
 local G = require 'gf'
+local c_handcards_self = require 'c_handcards_self'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
-tc.name = 'v_battle_handcards_friend'
+tc.name = 'v_handcards_self'
 tc.left = -640.000
 tc.right = 640.000
 tc.bottom = -360.000
@@ -14,10 +15,11 @@ tp = tc
 	tc = G.Entity()
 	tp.addChild(tc)
 	tc.name = '功能区'
+	tc.pivotY = 0.000
 	tc.left = -275.000
 	tc.right = 275.000
-	tc.bottom = -65.000
-	tc.top = 65.000
+	tc.top = 130.000
+	tc.anchor = 0x3232
 	tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
@@ -51,3 +53,4 @@ tp = tc
 		--end
 	tp = tp.parent
 	--end
+tp.c_handcards_self = setmetatable({}, c_handcards_self)

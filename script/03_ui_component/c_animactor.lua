@@ -17,8 +17,7 @@ function t:init()
 end
 
 function t:start()
-    self:push_quote('::HandCards', G.getUI('v_battle_handcards_self'))
-
+    self:push_quote('::HandCards', G.getUI('v_battle_1v1').getChildByName('Self'))
 end
 
 --[[

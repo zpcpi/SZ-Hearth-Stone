@@ -44,47 +44,26 @@ function noti.card_create()
     -- end
     -- local ui_card = ui_obj
 
-    -- 手牌区功能
-    ui_obj = G.getUI('v_battle_handcards_self')
-    if not ui_obj then
-        ui_obj = G.addUI('v_battle_handcards_self')
-        ui_obj.x = ui_obj.x
-        ui_obj.y = ui_obj.y - 230
-    end
+    -- 显示战场
+    G.addUI('v_battle_1v1')
 
+    -- 手牌区功能
+    -- ui_obj = G.getUI('v_handcards_self')
+    -- if not ui_obj then
+    --     ui_obj = G.addUI('v_handcards_self')
+    -- end
 
     -- 动画设置
     ui_obj = G.getUI('v_animactor')
     if not ui_obj then
         ui_obj = G.addUI('v_animactor')
     end
-
-
-
-
-end
-
-function noti.addcard()
-    local ui_obj
-    local count
-    ui_obj = G.getUI('v_battle_handcards_self').c_battle_handcards_self
-    ui_obj:addCard()
-
-    count = ui_obj.CardCount
-
-    ui_obj = G.getUI('v_animactor').c_animactor
-    ui_obj.__o_animquest = {
-        [1] = {
-            [1] = G.call('动画系统_创建quest', ui_obj, G.QueryName(0x10010005 + count - 1)),
-        },
-    }
-    ui_obj:run_animactor()
 end
 
 function noti.removecard()
     local ui_obj
     local count
-    ui_obj = G.getUI('v_battle_handcards_self').c_battle_handcards_self
+    ui_obj = G.getUI('v_handcards_self').c_handcards_self
     ui_obj:removeCard(math.random(1, math.max(ui_obj.CardCount, 1)))
 
     count = ui_obj.CardCount

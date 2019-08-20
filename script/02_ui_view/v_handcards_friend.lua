@@ -1,14 +1,15 @@
---[[2003
+--[[2006
 
 ]]
 local G = require 'gf'
-local c_battle_handcards_self = require 'c_battle_handcards_self'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
-tc.name = 'v_battle_handcards_self'
-tc.right = 0.000
-tc.top = 0.000
+tc.name = 'v_handcards_friend'
+tc.left = -640.000
+tc.right = 640.000
+tc.bottom = -360.000
+tc.top = 360.000
 tp = tc
 	tc = G.Entity()
 	tp.addChild(tc)
@@ -50,4 +51,3 @@ tp = tc
 		--end
 	tp = tp.parent
 	--end
-tp.c_battle_handcards_self = setmetatable({}, c_battle_handcards_self)
