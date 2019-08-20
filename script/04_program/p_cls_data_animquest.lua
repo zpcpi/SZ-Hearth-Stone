@@ -35,6 +35,8 @@ t['手牌复位动画生成'] = function(o_animquest_当前数据, _i_animquest_
                 [1] = Radius * math.sin(r),                      -- 卡牌位置X
                 [2] = Radius * (math.cos(r) - 1) + 10,           -- 卡牌位置Y
                 [3] = r * 180 / math.pi,                         -- 卡牌角度
+                [4] = 0.35,                                      -- 卡牌缩放X
+                [5] = 0.35,                                      -- 卡牌缩放Y
             }
         end
 
@@ -53,7 +55,7 @@ t['手牌复位动画生成'] = function(o_animquest_当前数据, _i_animquest_
                 anim['iter'][k] = {
                     [1] = '动画系统_多属性设置',
                     [2] = '::HandCards.handCards[' .. k .. ']',
-                    [3] = {'x', 'y', 'rotation'},
+                    [3] = {'x', 'y', 'rotation', 'scaleX', 'scaleY'},
                     [4] = list[k],
                     [5] = bezier,
                 }

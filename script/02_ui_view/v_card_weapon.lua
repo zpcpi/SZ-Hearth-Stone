@@ -3,8 +3,8 @@
 ]]
 local G = require 'gf'
 local c_curved_text = require 'c_curved_text'
-local c_card_weapon = require 'c_card_weapon'
 local c_mintextquadsize = require 'c_mintextquadsize'
+local c_card_weapon = require 'c_card_weapon'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -257,8 +257,8 @@ tp = tc
 				tc.name = '生命值数值'
 				tc.left = -20.833
 				tc.right = 14.167
-				tc.bottom = 33.539
-				tc.top = -6.983
+				tc.bottom = -10.961
+				tc.top = 37.517
 				tc.scaleX = 1.350
 				tc.scaleY = 1.350
 				tc.text = '3'
