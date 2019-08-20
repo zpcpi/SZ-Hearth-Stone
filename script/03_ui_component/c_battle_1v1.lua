@@ -7,9 +7,28 @@ local t = G.com()
 
 function t:init()
     self.enemyHandcard = self.obj.getChildByName('EnemyHandcard')
-    self.enemyHandcard.c_handcards_enemy:SetPlayerType('敌方1')
+    self.enemyHandcard.c_handcards_enemy:InitDifference(
+        '敌方1',         -- PlayerType
+        0x1001000f,      -- Anim Basd ID
+        function (obj)   --  Tips fixfunc 
+            obj.y = -160
+        end,
+        function (obj)   -- NewCard fixfunc
+            obj.y = -200
+        end
+    )
+
     self.selfHandcard = self.obj.getChildByName('SelfHandcard')
-    self.selfHandcard.c_handcards_self:SetPlayerType('我方')
+    self.selfHandcard.c_handcards_self:InitDifference(
+        '我方',         -- PlayerType
+        0x10010005,      -- Anim Basd ID
+        function (obj)  -- Tips fixfunc 
+            obj.y = 160
+        end,
+        function (obj)  -- NewCard fixfunc
+            obj.y = 200
+        end
+    )
 end
 
 function t:AddPlayerCard(playerType)

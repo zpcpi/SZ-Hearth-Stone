@@ -1,4 +1,4 @@
---[[3006
+--[[3003
 
 ]]
 
@@ -25,6 +25,13 @@ function t:start()
     self:InitAnimActor()
 end
 
+function t:InitDifference(playerType, baseid, tipsfix, newfix)
+    self:SetPlayerType(playerType)
+    self.TipsFix = tipsfix
+    self.NewcardFix = newfix
+    self.AnimBaseID = baseid
+end
+
 function t:InitAnimActor()
     self.animActor = G.loadUI('v_animactor')
     self.animActor.c_animactor:push_quote('::HandCards', self)
@@ -39,7 +46,28 @@ function t:initTipsCard()
     ui_card.visible = false
     ui_card.scaleX = 0.7
     ui_card.scaleY = 0.7
-    ui_card.y = 160
+
+    self.TipsFix(ui_card)
+end
+
+function t:run_animactor_reset()
+    if self.animActor then
+    else
+        self:InitAnimActor()
+    end
+
+    if self.CardCount and (self.CardCount > 0) and (self.CardCount <= self.maxCount) then
+    else
+        return 
+    end
+
+    local actor = self.animActor.c_animactor
+    actor.__o_animquest = {
+        [1] = {
+            [1] = G.call('动画系统_创建quest', actor, G.QueryName(self.AnimBaseID + self.CardCount - 1)),
+        },
+    }
+    actor:run_animactor()
 end
 
 function t:addCard()
@@ -57,7 +85,9 @@ function t:addCard()
     ui_card.scaleY = 0.35
 
     self.CardCount = count
-    ui_card.y = 200
+
+    self.NewcardFix(ui_card)
+    self:run_animactor_reset()
 end
 
 function t:removeCard()
@@ -71,6 +101,8 @@ function t:removeCard()
 
     ui_card.visible = false
     self.CardCount = self.CardCount - 1
+
+    self:run_animactor_reset()
 end
 
 function t:click(tar)

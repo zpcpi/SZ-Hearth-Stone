@@ -7,7 +7,7 @@ local t = G.api
 
 --hide=true
 --ret=o_animquest
-t['手牌复位动画生成'] = function(o_animquest_当前数据, _i_animquest_复位动画列表)
+t['手牌复位动画生成'] = function(o_animquest_当前数据, _i_animquest_复位动画列表, boolean_是否下方)
     local d = require "_data"
 
     local time = 300                                            -- 复位时间
@@ -29,15 +29,28 @@ t['手牌复位动画生成'] = function(o_animquest_当前数据, _i_animquest_
             begr = 0
         end
 
-        for k = 1, count, 1 do
-            local r = begr + minr * (k - 1)
-            list[k] = {
-                [1] = Radius * math.sin(r),                      -- 卡牌位置X
-                [2] = Radius * (math.cos(r) - 1) + 10,           -- 卡牌位置Y
-                [3] = r * 180 / math.pi,                         -- 卡牌角度
-                [4] = 0.35,                                      -- 卡牌缩放X
-                [5] = 0.35,                                      -- 卡牌缩放Y
-            }
+        if boolean_是否下方 == true then
+            for k = 1, count, 1 do
+                local r = begr + minr * (k - 1)
+                list[k] = {
+                    [1] = Radius * math.sin(r),                      -- 卡牌位置X
+                    [2] = Radius * (math.cos(r) - 1) + 10,           -- 卡牌位置Y
+                    [3] = r * 180 / math.pi,                         -- 卡牌角度
+                    [4] = 0.35,                                      -- 卡牌缩放X
+                    [5] = 0.35,                                      -- 卡牌缩放Y
+                }
+            end
+        else
+            for k = 1, count, 1 do
+                local r = begr + minr * (k - 1)
+                list[k] = {
+                    [1] = Radius * math.sin(r),                      -- 卡牌位置X
+                    [2] = -(Radius * (math.cos(r) - 1) + 10),        -- 卡牌位置Y
+                    [3] = -(r * 180 / math.pi) - 180,                -- 卡牌角度
+                    [4] = 0.35,                                      -- 卡牌缩放X
+                    [5] = 0.35,                                      -- 卡牌缩放Y
+                }
+            end
         end
 
         return list
@@ -65,8 +78,5 @@ t['手牌复位动画生成'] = function(o_animquest_当前数据, _i_animquest_
 
     return o_animquest_当前数据
 end
-
-
-
 
 

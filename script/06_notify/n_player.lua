@@ -14,16 +14,6 @@ function noti.角色_添加手牌(estr_player_玩家)
         script_战场 = G.getUI('v_battle_2v2').c_battle_2v2
     end
     script_战场:AddPlayerCard(estr_player_玩家)
-
-    local cardCount = G.call('角色_获取手牌数量', estr_player_玩家)
-    local node_animactor = script_战场:GetAnimActor(estr_player_玩家)
-    local c_animactor = node_animactor.c_animactor
-    c_animactor.__o_animquest = {
-        [1] = {
-            [1] = G.call('动画系统_创建quest', c_animactor, G.QueryName(0x10010005 + cardCount - 1)),
-        },
-    }
-    c_animactor:run_animactor()
 end
 
 function noti.角色_移除手牌(estr_player_玩家)
@@ -39,14 +29,4 @@ function noti.角色_移除手牌(estr_player_玩家)
         script_战场 = G.getUI('v_battle_2v2').c_battle_2v2
     end
     script_战场:RemovePlayerCard(estr_player_玩家, 1)
-
-    local cardCount = G.call('角色_获取手牌数量', estr_player_玩家)
-    local node_animactor = script_战场:GetAnimActor(estr_player_玩家)
-    local c_animactor = node_animactor.c_animactor
-    c_animactor.__o_animquest = {
-        [1] = {
-            [1] = G.call('动画系统_创建quest', c_animactor, G.QueryName(0x10010005 + cardCount - 1)),
-        },
-    }
-    c_animactor:run_animactor()
 end
