@@ -296,6 +296,34 @@ local t = {
 		},
 	},
 	{
+		['name']='o_card',
+		['showname']='卡牌',
+		['define']={
+			[1]={
+				['name']='卡牌指令',
+				['type']='o_order',
+			},
+		},
+	},
+	{
+		['name']='o_order_info',
+		['showname']='指令信息',
+		['define']={
+			[1]={
+				['name']='Caster',
+				['type']='o_card',
+			},
+			[2]={
+				['name']='Target',
+				['type']='_o_card',
+			},
+			[3]={
+				['name']='Select',
+				['type']='_o_card',
+			},
+		},
+	},
+	{
 		['name']='o_excel',
 		['showname']='excel数据对照表',
 		['define']={
@@ -352,7 +380,7 @@ local t = {
 				['name']='是主机',
 				['type']='boolean',
 			},
-		}
-	}
+		},
+	},
 }}
 return t
