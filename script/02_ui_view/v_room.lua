@@ -2,10 +2,10 @@
 
 ]]
 local G = require 'gf'
-local c_button = require 'c_button'
-local c_room_member = require 'c_room_member'
 local c_room = require 'c_room'
 local c_layout_h = require 'c_layout_h'
+local c_button = require 'c_button'
+local c_room_member = require 'c_room_member'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -334,7 +334,7 @@ tp = tc
 		tc = G.loadUI('v_room_member')
 		tc.prefab = true
 		tp.addChild(tc)
-		tc.name = 'Enemy'
+		tc.name = 'Enemy1'
 		tc.pivotX = 0.000
 		tc.pivotY = 1.000
 		tc.left = 51.000

@@ -125,6 +125,14 @@ local t = {
 				['name']='对决类型',
 				['type']='any',
 			},
+			[6]={
+				['name']='玩家信息',
+				['type']='o_battle_player',
+			},
+			[7]={
+				['name']='对决玩家信息列表',
+				['type']='_o_battle_player',
+			},
 		},
 	},
 	{
@@ -329,5 +337,22 @@ local t = {
 			},
 		},
 	},
+	{
+		['name']='o_battle_player',
+		['define']={
+			[1]={
+				['name']='玩家名称',
+				['type']='string',
+			},
+			[2]={
+				['name']='玩家IP',
+				['type']='string',
+			},
+			[3]={
+				['name']='是主机',
+				['type']='boolean',
+			},
+		}
+	}
 }}
 return t

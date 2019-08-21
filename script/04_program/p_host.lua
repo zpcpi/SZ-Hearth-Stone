@@ -8,6 +8,11 @@ local lsocket = require("socket.core")
 G.tcpSocket = lsocket.tcp()
 
 --hide=true
+t['主机_新建房间'] = function()
+    G.call('对决_增加对决玩家信息', G.misc().玩家信息, true)
+end
+
+--hide=true
 t['Net_CreateHost'] = function(int_port)
     int_port = tonumber(int_port)
     local ret, err = G.tcpSocket:bind('127.0.0.1', int_port)
