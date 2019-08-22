@@ -40,9 +40,9 @@ t['客机_建立监听'] = function()
     local socketList = {G.tcpSocket}
 
     while true do 
-        local readySocketList = lsocket.select(socketList, {}, 0.1)
-        for _, socket in ipairs(socketList) do 
-            local rev, err = socket:receive('*l')
+        local readySocketList = lsocket.select(socketList, nil, 0.1)
+        for _, socket in ipairs(readySocketList) do 
+            local rev, err = socket:receive()
             if rev == nil and err == nil then 
                 socket:close()
                 G.call('系统_输出信息', '与主机连接断开!')
