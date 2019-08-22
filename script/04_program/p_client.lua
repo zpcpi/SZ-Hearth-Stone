@@ -4,10 +4,23 @@
 local G = require "gf"
 local L = {}
 local t = G.api
+local lsocket = require("socket.core")
 
 --hide=true
 t['客机_连接主机'] = function(string_hostip)
-    -- string_hostip
+    local netPort = tonumber(DEFAULT_NET_PORT)
+    G.call('客机_输出连接信息', '正在连接中...')
+    if G.tcpSocket then 
+        G.tcpSocket:close()
+    end
+    G.tcpSocket = lsocket.tcp()
+    local client, err = G.tcpSocket:connect(string_hostip, netPort)
+    if not client then
+        G.call('客机_输出连接信息', '连接失败!' .. err)
+        return
+    end
+    G.call('客机_输出连接信息', '连接成功!正在建立监听...')
+    -- G.start_program('Net_ListenHost', client)
 end
 
 --hide=true
@@ -15,16 +28,8 @@ t['客机_输出连接信息'] = function(string_信息)
 end
 
 --hide=true
-t['Net_TryConnectHost'] = function(string_url, int_port)
-    int_port = tonumber(int_port)
-    print('--== Connecting......', string_url, int_port)
-    local client, err = G.tcpSocket:connect(string_url, int_port)
-    if not client then
-        print('--== Connect Failed!', string_url, int_port)
-        return
-    end
-    print('--== Connect Success!', string_url, int_port)
-    G.start_program('Net_ListenHost', client)
+t['客机_尝试建立连接'] = function(string_hostip)
+    
 end
 
 --hide=true

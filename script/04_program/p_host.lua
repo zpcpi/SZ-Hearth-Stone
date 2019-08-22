@@ -18,6 +18,7 @@ end
 
 --hide=true
 t['主机_断开连接'] = function()
+    G.call('对决_清空对决玩家信息')
     G.tcpSocket:close()
 end
 
@@ -43,6 +44,7 @@ end
 --hide=true
 t['主机_监听玩家加入'] = function()
     local socketList = {G.tcpSocket}
+    G.clientList = {}
 
     while true do 
         local readySocketList = lsocket.select(socketList, {}, 0.1)
@@ -52,6 +54,8 @@ t['主机_监听玩家加入'] = function()
                 local client, err = socket:accept()
                 G.call('系统_输出信息', '新玩家连接成功!')
                 table.insert(socketList, client)
+                table.insert(G.clientList, client)
+                -- G.call('系统_广播消息', )
             -- else
             --     local rev, err = socket:receive('*l')
             --     print('--== rev, err', rev, err)

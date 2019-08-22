@@ -16,7 +16,6 @@ end
 function noti.主机_断开连接()
     G.addUI('v_main_menu')
     G.removeUI('v_room')
-    G.call('对决_清空对决玩家信息')
 end
 
 function noti.系统_输出信息(string_信息)
@@ -41,7 +40,6 @@ function noti.对决_增加对决玩家信息(o_battle_player_对决玩家, bool
 end
 
 function noti.客机_连接主机()
-    G.call('客机_输出连接信息', '正在连接中...')
 end
 
 function noti.客机_输出连接信息(string_信息)
