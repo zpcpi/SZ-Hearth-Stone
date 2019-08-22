@@ -1,7 +1,7 @@
 local t = {}
 t[0x1f09]="o_animation"
 t[0x1001]="o_animquest"
-t[0x0]="o_card"
+t[0x1006]="o_card"
 t[0x1002]="o_cheat_system_item"
 t[0x1f04]="o_event"
 t[0x1003]="o_excel"

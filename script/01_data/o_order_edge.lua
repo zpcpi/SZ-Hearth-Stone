@@ -19,7 +19,8 @@ local t = {
 		['showname']='选择卡牌',
 		['功能描述']='左键点击，或拖拽卡牌，卡牌开始跟随鼠标',
 		['事件'] = function (o_order_info_当前指令信息)
-			return {'11'}
+			local Caster = o_order_info_当前指令信息['Caster']
+			return {'UI_手牌_选择卡牌', Caster}
 		end,
 		['条件'] = function (o_order_info_当前指令信息)
 			return true

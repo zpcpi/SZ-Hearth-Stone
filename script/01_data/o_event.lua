@@ -13,5 +13,14 @@ local t = {
 			},
 		},
 	},
+	{
+		['name']='UI_手牌_选择卡牌',
+		['arg']={
+			[1]={
+				['id']='Caster',
+				['type']='o_card',
+			},
+		},
+	},
 }}
 return t

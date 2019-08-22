@@ -124,6 +124,8 @@ function t:rollOut(tar)
 end
 
 function t:mouseDown(tar)
+    -- todo，传出卡牌id
+    G.call('主线程触发监听', 'UI_手牌_选择卡牌', G.QueryName(0x10060001))
 end
 
 function t:mouseUp(tar)
