@@ -18,6 +18,15 @@ local t = {
 		['name']=0x10050014,
 		['showname']='选择卡牌',
 		['功能描述']='左键点击，或拖拽卡牌，卡牌开始跟随鼠标',
+		['事件'] = function (o_order_info_当前指令信息)
+			return {'11'}
+		end,
+		['条件'] = function (o_order_info_当前指令信息)
+			return true
+		end,
+		['修改数据'] = function (o_order_info_当前指令信息)
+			print('trig 11')
+		end,
 	},
 	{
 		['name']=0x10050015,
@@ -28,6 +37,15 @@ local t = {
 		['name']=0x10050005,
 		['showname']='卡牌进入功能区',
 		['功能描述']='卡牌随鼠标进入功能区',
+		['事件'] = function (o_order_info_当前指令信息)
+			return {'22'}
+		end,
+		['条件'] = function (o_order_info_当前指令信息)
+			return true
+		end,
+		['修改数据'] = function (o_order_info_当前指令信息)
+			print('trig 22')
+		end,
 	},
 	{
 		['name']=0x10050006,
