@@ -8,6 +8,8 @@ local lsocket = require("socket.core")
 
 --hide=true
 t['主机_新建房间'] = function()
+    local any_玩家信息 = G.call('系统_获取玩家信息', '己方')
+    any_玩家信息.是主机 = true
     G.start_program('主机_建立连接')
 end
 
@@ -80,4 +82,10 @@ t['主机_建立监听'] = function()
         end
         G.wait_time(100)
     end
+end
+
+--hide=true
+t['主机_是主机'] = function()
+    local any_玩家信息 = G.call('系统_获取玩家信息', '己方')
+    return any_玩家信息.是主机
 end

@@ -32,6 +32,13 @@ t['系统_获取玩家名称'] = function(estr_player_玩家)
     end
 end
 
+t['系统_获取玩家信息'] = function(estr_player_玩家)
+    local o_misc = G.misc()
+    if estr_player_玩家 == '己方' then 
+        return o_misc.玩家信息
+    end
+end
+
 t['系统_获取table长度'] = function(any_table)
     if type(any_table) ~= 'table' then 
         return 0

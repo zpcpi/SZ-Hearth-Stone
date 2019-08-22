@@ -13,7 +13,6 @@ t['网络通用_发送消息'] = function(target, ...)
     local buffer = json.encode(msg)
     buffer = buffer .. string.char(10)
     local ret = target:send(buffer)
-    print('--== 网络通用_发送消息', ret, buffer)
 end
 
 t['网络通用_广播消息'] = function(...)
@@ -33,14 +32,12 @@ end
 
 t['网络通用_处理消息'] = function(buffer)
     if not pcall(json.decode, buffer) then 
-        print('--== 网络通用_处理消息 无法解析', buffer)
         return 
     end
     local paramsList = json.decode(buffer)
     if type(paramsList) ~= 'table' then 
         return 
     end
-    G.show_table(paramsList)
     local size = paramsList.size
     for i = 1, size do 
         table.insert(paramsList, paramsList[tostring(i)])

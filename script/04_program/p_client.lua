@@ -8,6 +8,9 @@ local lsocket = require("socket.core")
 
 --hide=true
 t['客机_连接主机'] = function(string_hostip)
+    local any_玩家信息 = G.call('系统_获取玩家信息', '己方')
+    any_玩家信息.是主机 = false
+
     local netPort = tonumber(DEFAULT_NET_PORT)
     G.call('客机_输出连接信息', '正在连接中...')
     if G.tcpSocket then 
@@ -19,6 +22,7 @@ t['客机_连接主机'] = function(string_hostip)
         G.call('客机_输出连接信息', '连接失败!' .. err)
         return
     end
+    G.connectList = {G.tcpSocket}
     G.tcpSocket:settimeout(4)
     G.call('客机_输出连接信息', '连接成功!正在建立监听...')
     G.call('客机_连接成功回调')

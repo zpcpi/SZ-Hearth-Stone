@@ -7,8 +7,17 @@ local t = G.com()
 
 function t:init()
     self.gameModeBtn = self.obj.getChildByName('HostGame')
+
     self.startGameBtn = self.obj.getChildByName('StartGame')
     self.prepareBtn = self.obj.getChildByName('Prepare')
+    if G.call('主机_是主机') then 
+        self.startGameBtn.visible = true
+        self.prepareBtn.visible = false
+    else
+        self.startGameBtn.visible = false
+        self.prepareBtn.visible = true
+    end
+
     self.quitBtn = self.obj.getChildByName('Quit')
 
     self.ipText = self.obj.getChildByName('IP').getChildByName('IPText')
@@ -40,10 +49,9 @@ end
 function t:click(tar)
     if tar == self.gameModeBtn then 
     elseif tar == self.startGameBtn then 
-        -- TODO: 判断游戏模式
-        G.addUI('v_battle_1v1')
-        G.removeUI('v_room')
+        G.call('对决_开始')
     elseif tar == self.prepareBtn then 
+        G.call('对决_更新玩家准备状态', G.call('系统_获取玩家信息', '己方'), true)
     elseif tar == self.quitBtn then 
         G.call('主机_断开连接')
     end
