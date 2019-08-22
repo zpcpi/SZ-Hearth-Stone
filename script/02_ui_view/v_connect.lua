@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_button = require 'c_button'
 local c_connect = require 'c_connect'
+local c_button = require 'c_button'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -27,11 +27,13 @@ tp = tc
 	tc = G.TextQuad()
 	tp.addChild(tc)
 	tc.name = 'IPAddress'
-	tc.left = -100.000
+	tc.left = -148.000
+	tc.right = 152.000
 	tc.bottom = 25.000
 	tc.top = 87.000
+	tc.mouseEnabled = true
 	tc.color = 0x0
-	tc.text = '127.0.0.1:3363'
+	tc.text = '127.110.110.111'
 	tc.readOnly = false
 	tc.font = 0x63200041
 	tp = tc
@@ -44,6 +46,7 @@ tp = tc
 	tc.right = 244.500
 	tc.bottom = 14.500
 	tc.top = 97.500
+	tc.visible = false
 	tc.color = 0x0
 	tc.text = '正在连接......'
 	tc.readOnly = false
@@ -183,6 +186,7 @@ tp = tc
 	tc.bottom = -88.000
 	tc.top = -40.000
 	tc.mouseEnabled = true
+	tc.visible = false
 	tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)

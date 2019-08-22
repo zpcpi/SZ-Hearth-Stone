@@ -6,6 +6,15 @@ local L = {}
 local t = G.api
 
 --hide=true
+t['客机_连接主机'] = function(string_hostip)
+    -- string_hostip
+end
+
+--hide=true
+t['客机_输出连接信息'] = function(string_信息)
+end
+
+--hide=true
 t['Net_TryConnectHost'] = function(string_url, int_port)
     int_port = tonumber(int_port)
     print('--== Connecting......', string_url, int_port)

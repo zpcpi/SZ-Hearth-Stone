@@ -58,6 +58,7 @@ G.loadFontStyle(fs)
 
 require 'servershare/require_o_p'
 require 'require_a_n'
+require 'servershare/const'
 c.SetTextRecording(true)
 G.SetDefaultAnim('prepare')
 c.SetMainloop(G.main)

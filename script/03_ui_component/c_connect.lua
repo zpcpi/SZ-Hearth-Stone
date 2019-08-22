@@ -24,6 +24,7 @@ function t:click(tar)
 
         self.connectStatusText.visible = true
         self.cancelConnectBtn.visible = true
+        G.call('客机_连接主机', self.ipAddressText.text)
     elseif tar == self.cancelBtn then 
         G.removeUI('v_connect')
     elseif tar == self.cancelConnectBtn then 
@@ -34,6 +35,10 @@ function t:click(tar)
         self.connectStatusText.visible = false
         self.cancelConnectBtn.visible = false
     end
+end
+
+function t:ShowInfo(info)
+    self.connectStatusText.text = tostring(info)
 end
 
 return t

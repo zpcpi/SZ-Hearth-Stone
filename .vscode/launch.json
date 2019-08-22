@@ -1,0 +1,39 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lua",
+            "request": "launch",
+            "internalConsoleOptions": "openOnFirstSessionStart",
+            "name": "LuaPanda",
+            "program": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}",
+            "pathCaseSensitivity": true,
+            "docPathReplace": [],
+            "luaFileExtension": "lua",
+            "connectionPort": 8818,
+            "stopOnEntry": true,
+            "useCHook": true,
+            "logLevel": 1
+        },
+        {
+            "type": "lua",
+            "request": "launch",
+            "internalConsoleOptions": "neverOpen",
+            "name": "LuaPanda-DebugFile",
+            "program": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}",
+            "pathCaseSensitivity": true,
+            "luaPath": "",
+            "packagePath": [],
+            "luaFileExtension": "lua",
+            "connectionPort": 8818,
+            "stopOnEntry": true,
+            "useCHook": true,
+            "logLevel": 1
+        }
+    ]
+}
