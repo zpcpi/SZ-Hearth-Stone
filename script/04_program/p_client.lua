@@ -59,6 +59,6 @@ t['客机_建立监听'] = function()
                 G.call('网络通用_处理消息', rev)
             end
         end
-        G.wait_time(100)
+        G.wait_time(1000)
     end
 end

@@ -80,7 +80,7 @@ t['主机_建立监听'] = function()
                 end
             end
         end
-        G.wait_time(100)
+        G.wait_time(1000)
     end
 end
 
