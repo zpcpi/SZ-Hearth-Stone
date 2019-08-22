@@ -8,7 +8,7 @@ local lsocket = require("socket.core")
 
 --hide=true
 t['客机_连接主机'] = function(string_hostip)
-    local any_玩家信息 = G.call('系统_获取玩家信息', '己方')
+    local any_玩家信息 = G.call('系统_获取玩家信息', '我方')
     any_玩家信息.是主机 = false
 
     local netPort = tonumber(DEFAULT_NET_PORT)
