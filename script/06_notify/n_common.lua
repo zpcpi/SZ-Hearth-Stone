@@ -48,3 +48,9 @@ function noti.客机_输出连接信息(string_信息)
         v_connect.c_connect:ShowInfo(string_信息)
     end
 end
+
+function noti.客机_连接成功回调()
+    G.addUI('v_room')    
+    G.removeUI('v_main_menu')
+    G.removeUI('v_connect')
+end

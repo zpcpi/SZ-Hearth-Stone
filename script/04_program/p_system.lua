@@ -14,6 +14,7 @@ t['系统_初始化玩家信息'] = function()
     if o_misc.玩家信息 == nil then 
         o_misc.玩家信息 = {}
     end
+    o_misc.玩家信息.玩家IP = G.call('网络通用_获取本机IP地址')
 end
 
 t['系统_设置玩家名称'] = function(string_名称)
@@ -31,7 +32,16 @@ t['系统_获取玩家名称'] = function(estr_player_玩家)
     end
 end
 
-t['系统_获取本机IP地址'] = function()
-    local hostname = lsocket.dns.gethostname()
-    return lsocket.dns.toip(hostname)
+t['系统_获取table长度'] = function(any_table)
+    if type(any_table) ~= 'table' then 
+        return 0
+    end
+
+    local maxSize = 0
+    for k, v in pairs(any_table) do 
+        if type(k) == 'number' and k > maxSize then 
+            maxSize = k
+        end
+    end
+    return maxSize
 end
