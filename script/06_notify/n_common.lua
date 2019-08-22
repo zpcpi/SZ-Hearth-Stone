@@ -48,3 +48,22 @@ function noti.客机_输出连接信息(string_信息)
         v_connect.c_connect:ShowInfo(string_信息)
     end
 end
+
+function noti.客机_连接成功回调()
+    G.addUI('v_room')    
+    G.removeUI('v_main_menu')
+    G.removeUI('v_connect')
+end
+
+function noti.对决_初始化战场()
+    -- TODO: 判断游戏模式
+    G.addUI('v_battle_1v1')
+    G.removeUI('v_room')
+end
+
+function noti.对决_更新玩家准备状态()
+    local v_room = G.getUI('v_room')
+    if v_room then 
+        v_room.c_room:UpdateRoomMember()
+    end
+end

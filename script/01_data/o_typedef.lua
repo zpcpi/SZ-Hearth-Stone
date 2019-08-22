@@ -380,6 +380,10 @@ local t = {
 				['name']='是主机',
 				['type']='boolean',
 			},
+			[4]={
+				['name']='准备就绪',
+				['type']='boolean',
+			},
 		},
 	},
 }}
