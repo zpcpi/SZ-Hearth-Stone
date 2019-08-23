@@ -2,9 +2,11 @@ edirs=
 1
 0
 /o_event.lua
-+UI_手牌_选择卡牌
++UI_选择卡牌1
 1
-+作弊指令
++UI_选择卡牌
 2
++作弊指令
+3
 ;
 endedirs

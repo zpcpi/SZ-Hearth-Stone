@@ -4,7 +4,6 @@
 local G = require "gf"
 local L = {}
 local t = G.api
-local es = require 'gevent'
 
 -- 指令结构
 --[[
@@ -106,12 +105,8 @@ t['卡牌注册指令'] = function (o_card_使用卡牌)
     end
 end
 
-t['主线程触发监听'] = function (...)
-    es.tick_callback(G.srED, {...})
-end
-
 t['order_test'] = function (id)
     G.call('卡牌注册指令', id)
-    --G.trig_event('UI_手牌_选择卡牌', id)
+    --G.trig_event('UI_抓取卡牌', id)
 end
 
