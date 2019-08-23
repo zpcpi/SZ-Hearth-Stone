@@ -63,7 +63,20 @@ local t = {
 			},
 			[2]={
 				['name']='arg',
-				['type']='_o_var',
+				['type']='_o_event_arg',
+			},
+		},
+	},
+	{
+		['name']='o_event_arg',
+		['define']={
+			[1]={
+				['name']='id',
+				['type']='string',
+			},
+			[2]={
+				['name']='type',
+				['type']='type',
 			},
 		},
 	},
