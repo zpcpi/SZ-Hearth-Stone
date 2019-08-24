@@ -314,7 +314,7 @@ local t = {
 		['define']={
 			[1]={
 				['name']='类型',
-				['type']='int',
+				['type']='i_cardtype',
 			},
 			[2]={
 				['name']='费用',
@@ -330,15 +330,15 @@ local t = {
 			},
 			[5]={
 				['name']='职业',
-				['type']='int',
+				['type']='i_profession',
 			},
 			[6]={
 				['name']='品质',
-				['type']='int',
+				['type']='i_rank',
 			},
 			[7]={
 				['name']='种族',
-				['type']='int',
+				['type']='i_race',
 			},
 			[8]={
 				['name']='是精英',
@@ -370,7 +370,7 @@ local t = {
 			},
 			[15]={
 				['name']='扩展包',
-				['type']='int',
+				['type']='i_category',
 			},
 			[16]={
 				['name']='可收集',
@@ -445,6 +445,98 @@ local t = {
 			[3]={
 				['name']='Select',
 				['type']='_o_card',
+			},
+		},
+	},
+	{
+		['name']='o_category',
+		['showname']='扩展包',
+		['define']={
+			[1]={
+				['name']='简称',
+				['type']='string',
+				['show_index']=true,
+			},
+			[2]={
+				['name']='年代',
+				['type']='string',
+				['show_index']=true,
+			},
+			[3]={
+				['name']='描述',
+				['type']='string',
+			},
+		},
+	},
+	{
+		['name']='o_race',
+		['showname']='种族',
+		['define']={
+			[1]={
+				['name']='子种族',
+				['type']='_i_race',
+			},
+		},
+	},
+	{
+		['name']='o_cardtype',
+		['showname']='卡牌类型',
+		['define']={
+			[1]={
+				['name']='描述',
+				['type']='string',
+			},
+		},
+	},
+	{
+		['name']='o_profession',
+		['showname']='职业',
+		['define']={
+			[1]={
+				['name']='子职业',
+				['type']='_i_profession',
+			},
+			[2]={
+				['name']='英雄边框',
+				['type']='image',
+			},
+			[3]={
+				['name']='英雄卡边框',
+				['type']='image',
+			},
+			[4]={
+				['name']='英雄技能边框',
+				['type']='image',
+			},
+			[5]={
+				['name']='随从卡边框',
+				['type']='image',
+			},
+			[6]={
+				['name']='法术卡边框',
+				['type']='image',
+			},
+			[7]={
+				['name']='武器卡边框',
+				['type']='image',
+			},
+			[8]={
+				['name']='奥秘卡边框',
+				['type']='image',
+			},
+			[9]={
+				['name']='阵营边框',
+				['type']='image',
+			},
+		},
+	},
+	{
+		['name']='o_rank',
+		['showname']='品质',
+		['define']={
+			[1]={
+				['name']='宝石图片',
+				['type']='image',
 			},
 		},
 	},
