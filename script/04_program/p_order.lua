@@ -56,7 +56,8 @@ end
 --hide=true
 --ret=o_order
 t['卡牌注册指令'] = function (o_card_使用卡牌)
-    local o_order_当前指令 = o_card_使用卡牌['卡牌指令']
+    local i_order_当前指令 = o_card_使用卡牌['卡牌指令']
+    local o_order_当前指令 = G.QueryName(i_order_当前指令)
 
     if o_order_当前指令 and o_order_当前指令['状态列表'] then
         local o_order_info_当前指令信息 = {}
