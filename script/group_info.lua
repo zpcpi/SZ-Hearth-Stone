@@ -1,5 +1,23 @@
 local t ={
 	[1] = {
+		[1] = {
+			name = '卡牌',
+			[1] = 'o_card',
+			[2] = 'o_cardtype',
+			[3] = 'o_category',
+			[4] = 'o_profession',
+			[5] = 'o_race',
+			[6] = 'o_rank',
+		},
+		[2] = {
+			name = '系统',
+			[1] = 'o_animation',
+			[2] = 'o_event',
+			[3] = 'o_font',
+			[4] = 'o_fontstyle',
+			[5] = 'o_image',
+			[6] = 'o_typedef',
+		},
 	},
 	[2] = {
 		[1] = {
