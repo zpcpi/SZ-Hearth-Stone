@@ -315,22 +315,18 @@ local t = {
 			[1]={
 				['name']='类型',
 				['type']='i_cardtype',
-				['show_index']=true,
 			},
 			[2]={
 				['name']='费用',
 				['type']='int',
-				['show_index']=true,
 			},
 			[3]={
 				['name']='攻击',
 				['type']='int',
-				['show_index']=true,
 			},
 			[4]={
 				['name']='生命',
 				['type']='int',
-				['show_index']=true,
 			},
 			[5]={
 				['name']='职业',
