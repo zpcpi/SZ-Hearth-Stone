@@ -3,8 +3,8 @@
 ]]
 local G = require 'gf'
 local c_curved_text = require 'c_curved_text'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local c_card_spell = require 'c_card_spell'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -12,26 +12,6 @@ tc.name = 'v_card_spell'
 tc.right = 0.000
 tc.top = 0.000
 tp = tc
-	tc = G.Entity()
-	tp.addChild(tc)
-	tc.name = '卡背框'
-	tc.right = 0.000
-	tc.top = 0.000
-	tc.visible = false
-	tp = tc
-		tc = G.Quad()
-		tp.addChild(tc)
-		tc.name = '卡背'
-		tc.left = -163.500
-		tc.right = 163.500
-		tc.bottom = -236.000
-		tc.top = 236.000
-		tc.img = 0x5601000a
-		tp = tc
-		tp = tp.parent
-		--end
-	tp = tp.parent
-	--end
 	tc = G.Entity()
 	tp.addChild(tc)
 	tc.name = '卡牌框'
