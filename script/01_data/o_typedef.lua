@@ -315,18 +315,22 @@ local t = {
 			[1]={
 				['name']='类型',
 				['type']='i_cardtype',
+				['show_index']=true,
 			},
 			[2]={
 				['name']='费用',
 				['type']='int',
+				['show_index']=true,
 			},
 			[3]={
 				['name']='攻击',
 				['type']='int',
+				['show_index']=true,
 			},
 			[4]={
 				['name']='生命',
 				['type']='int',
+				['show_index']=true,
 			},
 			[5]={
 				['name']='职业',
@@ -389,42 +393,46 @@ local t = {
 				['type']='int',
 			},
 			[20]={
+				['name']='原画旋转',
+				['type']='number',
+			},
+			[21]={
 				['name']='提示标签',
 				['type']='_string',
 			},
-			[21]={
+			[22]={
 				['name']='局内描述',
 				['type']='string',
 			},
-			[22]={
+			[23]={
 				['name']='卡牌指令',
 				['type']='i_order',
 			},
-			[23]={
+			[24]={
 				['name']='卡牌特性',
 				['type']='_int',
 			},
-			[24]={
+			[25]={
 				['name']='卡牌效果',
 				['type']='_int',
 			},
-			[25]={
+			[26]={
 				['name']='可使用条件',
 				['type']='fargboolean',
 			},
-			[26]={
+			[27]={
 				['name']='高亮条件',
 				['type']='fargboolean',
 			},
-			[27]={
+			[28]={
 				['name']='目标条件',
 				['type']='_fargboolean',
 			},
-			[28]={
+			[29]={
 				['name']='目标指向文本',
 				['type']='_string',
 			},
-			[29]={
+			[30]={
 				['name']='抉择卡',
 				['type']='_i_card',
 			},
