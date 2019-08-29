@@ -310,6 +310,9 @@ local t = {
 	},
 	{
 		['name']='o_card',
+		['img']='v_card_manager',
+		['mod']='showview',
+		['modetype']='line',
 		['showname']='卡牌',
 		['define']={
 			[1]={
@@ -358,7 +361,7 @@ local t = {
 			},
 			[12]={
 				['name']='原画缩放',
-				['type']='percent',
+				['type']='dragnumber',
 			},
 			[13]={
 				['name']='画家',
@@ -382,15 +385,15 @@ local t = {
 			},
 			[18]={
 				['name']='原画偏移X',
-				['type']='int',
+				['type']='dragint',
 			},
 			[19]={
 				['name']='原画偏移Y',
-				['type']='int',
+				['type']='dragint',
 			},
 			[20]={
 				['name']='原画旋转',
-				['type']='number',
+				['type']='dragnumber',
 			},
 			[21]={
 				['name']='提示标签',
@@ -490,6 +493,11 @@ local t = {
 				['name']='描述',
 				['type']='string',
 			},
+			[2]={
+				['name']='界面控件',
+				['type']='scriptview',
+			},
+			
 		},
 	},
 	{

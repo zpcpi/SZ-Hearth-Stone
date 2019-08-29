@@ -1,7 +1,8 @@
---[[2003
+--[[0
 
 ]]
 local G = require 'gf'
+local c_card_manager = require 'c_card_manager'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -30,3 +31,14 @@ tp = tc
 		--end
 	tp = tp.parent
 	--end
+	tc = G.Entity()
+	tp.addChild(tc)
+	tc.name = '卡片实例'
+	tc.left = -50.000
+	tc.right = 50.000
+	tc.bottom = -50.000
+	tc.top = 50.000
+	tp = tc
+	tp = tp.parent
+	--end
+tp.c_card_manager = setmetatable({}, c_card_manager)
