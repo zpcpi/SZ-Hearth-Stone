@@ -67,3 +67,10 @@ function noti.对决_更新玩家准备状态()
         v_room.c_room:UpdateRoomMember()
     end
 end
+
+function noti.提示_播放提示(string_提示内容)
+    local o_node_提示 = G.addUI('v_tip')
+    o_node_提示.c_tip:setData(string_提示内容)
+    o_node_提示.alpha = 0
+    G.RunAction('提示动画_显示提示', o_node_提示)
+end

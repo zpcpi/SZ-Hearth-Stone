@@ -30,3 +30,16 @@ t['动画通用_播放动画序列'] = function(o_dialogue_system_actionlist_序
         end
     end
 end
+
+t['提示动画_显示提示'] = function(o_node_提示)
+    local int_渐显时间 = 1000
+    local int_显示时间 = 1000
+    local int_渐隐时间 = 1000
+
+    o_node_提示.alpha = 255
+    G.Tween("alpha", 255, o_node_提示, int_渐显时间)
+    G.wait_time(int_渐显时间 + int_显示时间)
+    G.Tween("alpha", 0, o_node_提示, int_渐隐时间)
+    G.wait_time(int_渐隐时间)
+    G.trig_event('TipEnd')
+end
