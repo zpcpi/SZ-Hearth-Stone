@@ -629,7 +629,7 @@ local function excel_读取数据_sheet数据读取(string_文件名称, string_
     local xlsx = require "load_xlsx"
     local path = G.GetScriptPath("o_event")
     local path_task = string.sub(path, 1, -27) .. 'excel/'
-    local excel_data = xlsx.load(path_task .. G.UtfToGbk(string_文件名称))
+    local excel_data = xlsx.load(G.UtfToGbk(path_task .. string_文件名称))
 
     for _,excel_sheet in pairs(excel_data) do
         if excel_sheet.name == string_sheet名称 then
