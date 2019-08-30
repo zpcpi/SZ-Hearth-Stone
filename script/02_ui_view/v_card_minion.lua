@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_curved_text = require 'c_curved_text'
 local c_mintextquadsize = require 'c_mintextquadsize'
+local c_curved_text = require 'c_curved_text'
 local c_card_minion = require 'c_card_minion'
 local tp,tc,com,tk
 tc = G.Entity()
@@ -158,20 +158,20 @@ tp = tc
 			tc.bottom = -9.000
 			tc.top = -9.000
 			tp = tc
-				tp.c_curved_text = setmetatable({}, c_curved_text)
-				com = tp.c_curved_text
-				com['text'] ='游学者周卓'
-				com['p0x'] =-142.000
-				com['p0y'] =-1.000
-				com['p1x'] =-104.000
-				com['p1y'] =-13.000
-				com['p2x'] =50.000
-				com['p2y'] =45.000
-				com['p3x'] =133.000
-				com['p3y'] =7.000
-				com['space'] =10.000
-				tp = tp.parent
-				--end
+			tp.c_curved_text = setmetatable({}, c_curved_text)
+			com = tp.c_curved_text
+			com['text'] ='游学者周卓'
+			com['p0x'] =-142.000
+			com['p0y'] =-1.000
+			com['p1x'] =-104.000
+			com['p1y'] =-13.000
+			com['p2x'] =50.000
+			com['p2y'] =45.000
+			com['p3x'] =133.000
+			com['p3y'] =7.000
+			com['space'] =10.000
+			tp = tp.parent
+			--end
 		tp = tp.parent
 		--end
 		tc = G.Entity()
@@ -228,8 +228,8 @@ tp = tc
 				tc.name = '攻击力数值'
 				tc.left = -11.500
 				tc.right = 23.500
-				tc.bottom = 26.185
-				tc.top = -4.185
+				tc.bottom = -14.815
+				tc.top = 36.815
 				tc.scaleX = 1.400
 				tc.scaleY = 1.400
 				tc.text = '0'
