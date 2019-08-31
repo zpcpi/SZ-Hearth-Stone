@@ -2,9 +2,9 @@
 
 ]]
 local G = require 'gf'
-local c_mintextquadsize = require 'c_mintextquadsize'
-local c_card_spell = require 'c_card_spell'
 local c_curved_text = require 'c_curved_text'
+local c_card_spell = require 'c_card_spell'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -167,10 +167,10 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '费用'
-			tc.left = -195.000
-			tc.right = -79.000
-			tc.bottom = 132.000
-			tc.top = 250.000
+			tc.left = -201.000
+			tc.right = -85.000
+			tc.bottom = 138.000
+			tc.top = 256.000
 			tc.scaleX = 0.700
 			tc.scaleY = 0.700
 			tc.img = 0x560b0001
