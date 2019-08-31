@@ -1,10 +1,10 @@
---[[2001
+--[[0
 
 ]]
 local G = require 'gf'
-local c_curved_text = require 'c_curved_text'
-local c_card_spell = require 'c_card_spell'
 local c_mintextquadsize = require 'c_mintextquadsize'
+local c_card_spell = require 'c_card_spell'
+local c_curved_text = require 'c_curved_text'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -44,10 +44,11 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '原画'
-			tc.left = -254.143
-			tc.right = 257.857
-			tc.bottom = -174.500
-			tc.top = 337.500
+			tc.left = -256.000
+			tc.right = 256.000
+			tc.bottom = -256.000
+			tc.top = 256.000
+			tc.anchor = 0x46463232
 			tc.scaleX = 0.580
 			tc.scaleY = 0.580
 			tc.img = 0x56010007
@@ -133,27 +134,27 @@ tp = tc
 			tc.prefab = true
 			tp.addChild(tc)
 			tc.name = '名称字符'
-			tc.left = 0.000
-			tc.right = 0.000
+			tc.left = -320.000
+			tc.right = 320.000
 			tc.bottom = -9.000
 			tc.top = -9.000
-			tc.scaleX = 1.54
-			tc.scaleY = 1.54
+			tc.scaleX = 1.540
+			tc.scaleY = 1.540
 			tp = tc
-				tp.c_curved_text = setmetatable({}, c_curved_text)
-				com = tp.c_curved_text
-				com['text'] ='妖术'
-				com['p0x'] =-142.000
-				com['p0y'] =10.000
-				com['p1x'] =-104.000
-				com['p1y'] =25.000
-				com['p2x'] =70.000
-				com['p2y'] =40.000
-				com['p3x'] =133.000
-				com['p3y'] =10.000
-				com['space'] =10.000
-				tp = tp.parent
-				--end
+			tp.c_curved_text = setmetatable({}, c_curved_text)
+			com = tp.c_curved_text
+			com['text'] ='妖术'
+			com['p0x'] =-142.000
+			com['p0y'] =10.000
+			com['p1x'] =-104.000
+			com['p1y'] =25.000
+			com['p2x'] =70.000
+			com['p2y'] =40.000
+			com['p3x'] =133.000
+			com['p3y'] =10.000
+			com['space'] =10.000
+			tp = tp.parent
+			--end
 		tp = tp.parent
 		--end
 		tc = G.Entity()

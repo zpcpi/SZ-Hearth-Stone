@@ -497,7 +497,10 @@ local t = {
 				['name']='界面控件',
 				['type']='scriptview',
 			},
-			
+			[3]={
+				['name']='职业边框',
+				['type']='string',
+			},
 		},
 	},
 	{
