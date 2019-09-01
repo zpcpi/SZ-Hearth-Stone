@@ -2,9 +2,9 @@
 
 ]]
 local G = require 'gf'
-local c_curved_text = require 'c_curved_text'
 local c_card_minion = require 'c_card_minion'
 local c_mintextquadsize = require 'c_mintextquadsize'
+local c_curved_text = require 'c_curved_text'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -60,35 +60,35 @@ tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '背景'
-		tc.left = -182.500
-		tc.right = 182.500
-		tc.bottom = -256.000
-		tc.top = 256.000
+		tc.left = -250.000
+		tc.right = 250.000
+		tc.bottom = -353.500
+		tc.top = 353.500
+		tc.scaleX = 0.900
+		tc.scaleY = 0.900
 		tc.img = 0x56060001
 		tp = tc
 		tp = tp.parent
 		--end
 		tc = G.Quad()
 		tp.addChild(tc)
-		tc.name = '描述板'
-		tc.left = -142.000
-		tc.right = 144.000
-		tc.bottom = -228.500
-		tc.top = -63.500
-		tc.img = 0x56060003
+		tc.name = '品质板'
+		tc.left = -15.500
+		tc.right = 45.500
+		tc.bottom = -53.000
+		tc.top = -33.000
+		tc.scaleX = 0.900
+		tc.scaleY = 0.900
+		tc.img = 0x56060012
 		tp = tc
-			tc = G.TextQuad()
+			tc = G.Quad()
 			tp.addChild(tc)
-			tc.name = '描述字符'
-			tc.left = -132.500
-			tc.right = 132.500
-			tc.bottom = -67.000
-			tc.top = 73.000
-			tc.color = 0x0
-			tc.text = '每当一个玩家施放一个[br]法术，复制该法术，将[br]   其置入另一个玩家[br]          的手牌。'
-			tc.font = 0x651c0000
-			tc.lineSpace = 2
-			tc.style = 2
+			tc.name = '品质宝石'
+			tc.left = -19.556
+			tc.right = 10.444
+			tc.bottom = -31.889
+			tc.top = 8.111
+			tc.img = 0x560b0011
 			tp = tc
 			tp = tp.parent
 			--end
@@ -96,11 +96,62 @@ tp = tc
 		--end
 		tc = G.Quad()
 		tp.addChild(tc)
+		tc.name = '精英板'
+		tc.left = -232.000
+		tc.right = 314.000
+		tc.bottom = 33.318
+		tc.top = 330.682
+		tc.scaleX = 0.500
+		tc.scaleY = 0.550
+		tc.img = 0x5606000f
+		tp = tc
+		tp = tp.parent
+		--end
+		tc = G.loadUI('v_curved_text')
+		tc.prefab = true
+		tp.addChild(tc)
+		tc.name = '名称字符'
+		tc.left = -320.000
+		tc.right = 320.000
+		tc.bottom = -28.000
+		tc.top = -28.000
+		tp = tc
+		tp.c_curved_text = setmetatable({}, c_curved_text)
+		com = tp.c_curved_text
+		com['text'] ='游学者周卓'
+		com['p0x'] =-142.000
+		com['p0y'] =-1.000
+		com['p1x'] =-104.000
+		com['p1y'] =-13.000
+		com['p2x'] =50.000
+		com['p2y'] =45.000
+		com['p3x'] =133.000
+		com['p3y'] =7.000
+		com['space'] =10.000
+		tp = tp.parent
+		--end
+		tc = G.TextQuad()
+		tp.addChild(tc)
+		tc.name = '描述字符'
+		tc.left = -126.000
+		tc.right = 140.000
+		tc.bottom = -187.500
+		tc.top = -60.500
+		tc.color = 0x0
+		tc.text = '每当一个玩家施放一个[br]法术，复制该法术，将[br]   其置入另一个玩家[br]          的手牌。'
+		tc.font = 0x651a0000
+		tc.lineSpace = 2
+		tc.style = 2
+		tp = tc
+		tp = tp.parent
+		--end
+		tc = G.Quad()
+		tp.addChild(tc)
 		tc.name = '种族板'
 		tc.left = -82.000
 		tc.right = 110.000
-		tc.bottom = -237.500
-		tc.top = -190.500
+		tc.bottom = -215.500
+		tc.top = -168.500
 		tc.img = 0x56060004
 		tp = tc
 			tc = G.TextQuad()
@@ -119,62 +170,6 @@ tp = tc
 			--end
 		tp = tp.parent
 		--end
-		tc = G.Quad()
-		tp.addChild(tc)
-		tc.name = '品质板'
-		tc.left = -28.000
-		tc.right = 38.000
-		tc.bottom = -82.000
-		tc.top = -32.000
-		tc.img = 0x56060012
-		tp = tc
-			tc = G.Quad()
-			tp.addChild(tc)
-			tc.name = '品质宝石'
-			tc.left = -14.000
-			tc.right = 16.000
-			tc.bottom = -24.000
-			tc.top = 16.000
-			tc.img = 0x560b0011
-			tp = tc
-			tp = tp.parent
-			--end
-		tp = tp.parent
-		--end
-		tc = G.Quad()
-		tp.addChild(tc)
-		tc.name = '名称板'
-		tc.left = -154.500
-		tc.right = 160.500
-		tc.bottom = -61.500
-		tc.top = 7.500
-		tc.img = 0x56060002
-		tp = tc
-			tc = G.loadUI('v_curved_text')
-			tc.prefab = true
-			tp.addChild(tc)
-			tc.name = '名称字符'
-			tc.left = -320.000
-			tc.right = 320.000
-			tc.bottom = -9.000
-			tc.top = -9.000
-			tp = tc
-			tp.c_curved_text = setmetatable({}, c_curved_text)
-			com = tp.c_curved_text
-			com['text'] ='游学者周卓'
-			com['p0x'] =-142.000
-			com['p0y'] =-1.000
-			com['p1x'] =-104.000
-			com['p1y'] =-13.000
-			com['p2x'] =50.000
-			com['p2y'] =45.000
-			com['p3x'] =133.000
-			com['p3y'] =7.000
-			com['space'] =10.000
-			tp = tp.parent
-			--end
-		tp = tp.parent
-		--end
 		tc = G.Entity()
 		tp.addChild(tc)
 		tc.name = '属性值组合'
@@ -185,10 +180,10 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '费用'
-			tc.left = -193.143
-			tc.right = -76.857
-			tc.bottom = 133.000
-			tc.top = 251.000
+			tc.left = -179.143
+			tc.right = -62.857
+			tc.bottom = 135.000
+			tc.top = 253.000
 			tc.scaleX = 0.700
 			tc.scaleY = 0.700
 			tc.img = 0x560b0001
@@ -218,10 +213,12 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '攻击力'
-			tc.left = -187.500
-			tc.right = -88.500
-			tc.bottom = -259.500
-			tc.top = -146.500
+			tc.left = -176.500
+			tc.right = -77.500
+			tc.bottom = -240.500
+			tc.top = -127.500
+			tc.scaleX = 0.950
+			tc.scaleY = 0.950
 			tc.img = 0x560b0003
 			tp = tc
 				tc = G.TextQuad()
@@ -248,19 +245,21 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '生命值'
-			tc.left = 105.750
-			tc.right = 177.250
-			tc.bottom = -259.250
-			tc.top = -146.750
+			tc.left = 101.750
+			tc.right = 173.250
+			tc.bottom = -241.250
+			tc.top = -128.750
+			tc.scaleX = 0.950
+			tc.scaleY = 0.950
 			tc.img = 0x560b0002
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '生命值数值'
-				tc.left = -20.500
-				tc.right = 14.500
-				tc.bottom = -6.500
-				tc.top = 28.500
+				tc.left = -19.447
+				tc.right = 15.553
+				tc.bottom = -6.132
+				tc.top = 28.868
 				tc.scaleX = 1.400
 				tc.scaleY = 1.400
 				tc.text = '4'
@@ -275,19 +274,6 @@ tp = tc
 				--end
 			tp = tp.parent
 			--end
-		tp = tp.parent
-		--end
-		tc = G.Quad()
-		tp.addChild(tc)
-		tc.name = '精英板'
-		tc.left = -231.000
-		tc.right = 315.000
-		tc.bottom = 36.318
-		tc.top = 333.682
-		tc.scaleX = 0.500
-		tc.scaleY = 0.550
-		tc.img = 0x5606000f
-		tp = tc
 		tp = tp.parent
 		--end
 	tp.c_card_minion = setmetatable({}, c_card_minion)

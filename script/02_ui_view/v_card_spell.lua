@@ -2,9 +2,9 @@
 
 ]]
 local G = require 'gf'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local c_curved_text = require 'c_curved_text'
 local c_card_spell = require 'c_card_spell'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -60,41 +60,14 @@ tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '背景'
-		tc.left = -182.500
-		tc.right = 182.500
-		tc.bottom = -256.000
-		tc.top = 256.000
+		tc.left = -250.000
+		tc.right = 250.000
+		tc.bottom = -353.500
+		tc.top = 353.500
+		tc.scaleX = 0.900
+		tc.scaleY = 0.900
 		tc.img = 0x56090010
 		tp = tc
-		tp = tp.parent
-		--end
-		tc = G.Quad()
-		tp.addChild(tc)
-		tc.name = '描述板'
-		tc.left = -233.000
-		tc.right = 233.000
-		tc.bottom = -280.000
-		tc.top = 0.000
-		tc.scaleX = 0.650
-		tc.scaleY = 0.650
-		tc.img = 0x56090003
-		tp = tc
-			tc = G.TextQuad()
-			tp.addChild(tc)
-			tc.name = '描述字符'
-			tc.left = -233.000
-			tc.right = 233.000
-			tc.bottom = -140.000
-			tc.top = 140.000
-			tc.scaleX = 1.540
-			tc.scaleY = 1.540
-			tc.color = 0x0
-			tc.text = '   使一个随从变[br]形成为一个0/1并具[br]  有嘲讽的青蛙。'
-			tc.font = 0x651c0000
-			tc.lineSpace = 2
-			tp = tc
-			tp = tp.parent
-			--end
 		tp = tp.parent
 		--end
 		tc = G.Quad()
@@ -102,8 +75,8 @@ tp = tc
 		tc.name = '品质板'
 		tc.left = -31.500
 		tc.right = 31.500
-		tc.bottom = -81.936
-		tc.top = -32.936
+		tc.bottom = -69.936
+		tc.top = -20.936
 		tc.img = 0x56090012
 		tp = tc
 			tc = G.Quad()
@@ -121,40 +94,52 @@ tp = tc
 		--end
 		tc = G.Quad()
 		tp.addChild(tc)
-		tc.name = '名称板'
-		tc.left = -258.620
-		tc.right = 253.996
-		tc.bottom = -109.059
-		tc.top = 42.095
-		tc.scaleX = 0.650
-		tc.scaleY = 0.650
-		tc.img = 0x56090002
+		tc.name = '精英板'
+		tc.left = -238.500
+		tc.right = 356.500
+		tc.bottom = 3.000
+		tc.top = 333.000
+		tc.scaleX = 0.480
+		tc.scaleY = 0.480
+		tc.img = 0x5609000f
 		tp = tc
-			tc = G.loadUI('v_curved_text')
-			tc.prefab = true
-			tp.addChild(tc)
-			tc.name = '名称字符'
-			tc.left = -320.000
-			tc.right = 320.000
-			tc.bottom = -9.000
-			tc.top = -9.000
-			tc.scaleX = 1.540
-			tc.scaleY = 1.540
-			tp = tc
-			tp.c_curved_text = setmetatable({}, c_curved_text)
-			com = tp.c_curved_text
-			com['text'] ='妖术'
-			com['p0x'] =-142.000
-			com['p0y'] =10.000
-			com['p1x'] =-104.000
-			com['p1y'] =25.000
-			com['p2x'] =70.000
-			com['p2y'] =40.000
-			com['p3x'] =133.000
-			com['p3y'] =10.000
-			com['space'] =10.000
-			tp = tp.parent
-			--end
+		tp = tp.parent
+		--end
+		tc = G.loadUI('v_curved_text')
+		tc.prefab = true
+		tp.addChild(tc)
+		tc.name = '名称字符'
+		tc.left = -320.000
+		tc.right = 320.000
+		tc.bottom = -29.000
+		tc.top = -29.000
+		tp = tc
+		tp.c_curved_text = setmetatable({}, c_curved_text)
+		com = tp.c_curved_text
+		com['text'] ='妖术'
+		com['p0x'] =-142.000
+		com['p0y'] =10.000
+		com['p1x'] =-104.000
+		com['p1y'] =25.000
+		com['p2x'] =70.000
+		com['p2y'] =40.000
+		com['p3x'] =133.000
+		com['p3y'] =10.000
+		com['space'] =10.000
+		tp = tp.parent
+		--end
+		tc = G.TextQuad()
+		tp.addChild(tc)
+		tc.name = '描述字符'
+		tc.left = -125.000
+		tc.right = 133.000
+		tc.bottom = -203.000
+		tc.top = -59.000
+		tc.color = 0x0
+		tc.text = '   使一个随从变[br]形成为一个0/1并具[br]  有嘲讽的青蛙。'
+		tc.font = 0x651c0000
+		tc.lineSpace = 2
+		tp = tc
 		tp = tp.parent
 		--end
 		tc = G.Entity()
@@ -167,10 +152,10 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '费用'
-			tc.left = -197.000
-			tc.right = -81.000
-			tc.bottom = 135.000
-			tc.top = 253.000
+			tc.left = -179.000
+			tc.right = -63.000
+			tc.bottom = 131.000
+			tc.top = 249.000
 			tc.scaleX = 0.750
 			tc.scaleY = 0.750
 			tc.img = 0x560b0001
@@ -197,19 +182,6 @@ tp = tc
 				--end
 			tp = tp.parent
 			--end
-		tp = tp.parent
-		--end
-		tc = G.Quad()
-		tp.addChild(tc)
-		tc.name = '精英板'
-		tc.left = -78.000
-		tc.right = 178.000
-		tc.bottom = 106.500
-		tc.top = 243.500
-		tc.scaleX = 1.300
-		tc.scaleY = 1.300
-		tc.img = 0x5609000f
-		tp = tc
 		tp = tp.parent
 		--end
 	tp.c_card_spell = setmetatable({}, c_card_spell)

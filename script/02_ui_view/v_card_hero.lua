@@ -1,9 +1,9 @@
---[[2001
+--[[0
 
 ]]
 local G = require 'gf'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local c_card_hero = require 'c_card_hero'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -66,6 +66,17 @@ tp = tc
 		tp = tc
 		tp = tp.parent
 		--end
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = '职业'
+		tc.left = -191.500
+		tc.right = -100.500
+		tc.bottom = -137.000
+		tc.top = -45.000
+		tc.img = 0x560d0002
+		tp = tc
+		tp = tp.parent
+		--end
 		tc = G.Entity()
 		tp.addChild(tc)
 		tc.name = '名称板'
@@ -94,6 +105,47 @@ tp = tc
 			com = tp.c_mintextquadsize
 			com['minWidth'] =0.000
 			com['autowidth'] =true
+			tp = tp.parent
+			--end
+		tp = tp.parent
+		--end
+		tc = G.Entity()
+		tp.addChild(tc)
+		tc.name = '属性值组合'
+		tc.right = 0.000
+		tc.top = 0.000
+		tc.anchor = 0x64006400
+		tp = tc
+			tc = G.Quad()
+			tp.addChild(tc)
+			tc.name = '生命值'
+			tc.left = 124.750
+			tc.right = 196.250
+			tc.bottom = -136.250
+			tc.top = -23.750
+			tc.scaleX = 0.950
+			tc.scaleY = 0.950
+			tc.img = 0x560b0002
+			tp = tc
+				tc = G.TextQuad()
+				tp.addChild(tc)
+				tc.name = '生命值数值'
+				tc.left = -28.842
+				tc.right = 29.158
+				tc.bottom = -16.658
+				tc.top = 18.342
+				tc.scaleX = 1.400
+				tc.scaleY = 1.400
+				tc.text = '30'
+				tc.font = 0x63410000
+				tc.style = 14
+				tp = tc
+				tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
+				com = tp.c_mintextquadsize
+				com['minWidth'] =0.000
+				com['autowidth'] =true
+				tp = tp.parent
+				--end
 			tp = tp.parent
 			--end
 		tp = tp.parent

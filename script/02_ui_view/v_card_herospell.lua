@@ -1,9 +1,9 @@
---[[2001
+--[[0
 
 ]]
 local G = require 'gf'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local c_card_herospell = require 'c_card_herospell'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -73,8 +73,6 @@ tp = tc
 		tc.right = 253.000
 		tc.bottom = -45.000
 		tc.top = 55.000
-		tc.scaleX = 0.500
-		tc.scaleY = 0.500
 		tp = tc
 			tc = G.TextQuad()
 			tp.addChild(tc)
@@ -83,8 +81,6 @@ tp = tc
 			tc.right = 58.000
 			tc.top = 0.000
 			tc.anchor = 0x64003232
-			tc.scaleX = 1.890
-			tc.scaleY = 1.890
 			tc.text = '虚空形态'
 			tc.font = 0x621d0000
 			tc.style = 13
@@ -105,21 +101,17 @@ tp = tc
 		tc.right = 234.000
 		tc.bottom = -213.000
 		tc.top = -15.000
-		tc.scaleX = 0.500
-		tc.scaleY = 0.500
 		tp = tc
 			tc = G.TextQuad()
 			tp.addChild(tc)
 			tc.name = '描述字符'
-			tc.left = -234.000
-			tc.right = 234.000
-			tc.bottom = -99.000
-			tc.top = 99.000
-			tc.scaleX = 1.500
-			tc.scaleY = 1.500
+			tc.left = -148.000
+			tc.right = 148.000
+			tc.bottom = -94.000
+			tc.top = 78.000
 			tc.color = 0x0
 			tc.text = '           英雄技能[br]造成2点伤害。在你使用[br]    一张牌后，复原你[br]        的英雄技能。'
-			tc.font = 0x65200041
+			tc.font = 0x65190000
 			tc.style = 2
 			tc.outlineSize = 5.000
 			tp = tc
