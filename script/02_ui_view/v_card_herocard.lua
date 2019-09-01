@@ -2,9 +2,9 @@
 
 ]]
 local G = require 'gf'
+local c_card_herocard = require 'c_card_herocard'
 local c_curved_text = require 'c_curved_text'
 local c_mintextquadsize = require 'c_mintextquadsize'
-local c_card_herocard = require 'c_card_herocard'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -66,6 +66,19 @@ tp = tc
 		tc.scaleX = 0.900
 		tc.scaleY = 0.900
 		tc.img = 0x56040005
+		tp = tc
+		tp = tp.parent
+		--end
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = '品质宝石'
+		tc.left = -9.556
+		tc.right = 20.444
+		tc.bottom = -77.889
+		tc.top = -37.889
+		tc.scaleX = 0.900
+		tc.scaleY = 0.900
+		tc.img = 0x560b0011
 		tp = tc
 		tp = tp.parent
 		--end
