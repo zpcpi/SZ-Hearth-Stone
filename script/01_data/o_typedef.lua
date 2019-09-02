@@ -310,10 +310,10 @@ local t = {
 	},
 	{
 		['name']='o_card',
+		['showname']='卡牌',
 		['img']='v_card_manager',
 		['mod']='showview',
 		['modetype']='line',
-		['showname']='卡牌',
 		['define']={
 			[1]={
 				['name']='类型',
@@ -541,6 +541,10 @@ local t = {
 			},
 			[9]={
 				['name']='阵营边框',
+				['type']='image',
+			},
+			[10]={
+				['name']='职业图标',
 				['type']='image',
 			},
 		},

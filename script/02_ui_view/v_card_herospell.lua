@@ -66,57 +66,37 @@ tp = tc
 		tp = tc
 		tp = tp.parent
 		--end
-		tc = G.Entity()
+		tc = G.TextQuad()
 		tp.addChild(tc)
-		tc.name = '名称板'
-		tc.left = -251.000
-		tc.right = 253.000
-		tc.bottom = -45.000
-		tc.top = 55.000
+		tc.name = '名称字符'
+		tc.left = -58.000
+		tc.right = 58.000
+		tc.bottom = -26.500
+		tc.top = 31.500
+		tc.text = '虚空形态'
+		tc.font = 0x621d0000
+		tc.style = 13
+		tc.outlineSize = 5.000
 		tp = tc
-			tc = G.TextQuad()
-			tp.addChild(tc)
-			tc.name = '名称字符'
-			tc.left = -58.000
-			tc.right = 58.000
-			tc.top = 0.000
-			tc.anchor = 0x64003232
-			tc.text = '虚空形态'
-			tc.font = 0x621d0000
-			tc.style = 13
-			tc.outlineSize = 5.000
-			tp = tc
-			tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
-			com = tp.c_mintextquadsize
-			com['minWidth'] =0.000
-			com['autowidth'] =true
-			tp = tp.parent
-			--end
+		tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
+		com = tp.c_mintextquadsize
+		com['minWidth'] =0.000
+		com['autowidth'] =true
 		tp = tp.parent
 		--end
-		tc = G.Entity()
+		tc = G.TextQuad()
 		tp.addChild(tc)
-		tc.name = '描述板'
-		tc.left = -234.000
-		tc.right = 234.000
-		tc.bottom = -213.000
-		tc.top = -15.000
+		tc.name = '描述字符'
+		tc.left = -139.000
+		tc.right = 139.000
+		tc.bottom = -188.000
+		tc.top = -52.000
+		tc.color = 0x0
+		tc.text = '           英雄技能[br]造成2点伤害。在你使用[br]    一张牌后，复原你[br]        的英雄技能。'
+		tc.font = 0x65190000
+		tc.style = 2
+		tc.outlineSize = 5.000
 		tp = tc
-			tc = G.TextQuad()
-			tp.addChild(tc)
-			tc.name = '描述字符'
-			tc.left = -148.000
-			tc.right = 148.000
-			tc.bottom = -94.000
-			tc.top = 78.000
-			tc.color = 0x0
-			tc.text = '           英雄技能[br]造成2点伤害。在你使用[br]    一张牌后，复原你[br]        的英雄技能。'
-			tc.font = 0x65190000
-			tc.style = 2
-			tc.outlineSize = 5.000
-			tp = tc
-			tp = tp.parent
-			--end
 		tp = tp.parent
 		--end
 		tc = G.Entity()
@@ -126,15 +106,16 @@ tp = tc
 		tc.top = 0.000
 		tc.anchor = 0x64006400
 		tp = tc
-			tc = G.Entity()
+			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '费用'
-			tc.left = -50.000
-			tc.right = 50.000
-			tc.bottom = 172.000
-			tc.top = 272.000
-			tc.scaleX = 0.700
-			tc.scaleY = 0.700
+			tc.left = -59.000
+			tc.right = 57.000
+			tc.bottom = 161.000
+			tc.top = 279.000
+			tc.scaleX = 0.750
+			tc.scaleY = 0.750
+			tc.img = 0x560b0001
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)

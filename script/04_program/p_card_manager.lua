@@ -37,6 +37,10 @@ t['CardCom_SetData'] = function (com, o_card)
     do
         local o_profession_卡牌职业 = query_iter(o_card.职业)
         com.职业边框.img = o_profession_卡牌职业[o_card_type.职业边框]
+
+        if com.职业图标 then
+            com.职业边框.img = o_profession_卡牌职业.职业图标
+        end
     end
 
     -- 品质信息
