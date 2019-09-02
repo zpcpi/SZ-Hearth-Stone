@@ -277,5 +277,9 @@ tp = tc
 		tp = tp.parent
 		--end
 	tp.c_card_minion = setmetatable({}, c_card_minion)
+	com = tp.c_card_minion
+	com['cost'] =nil
+	com['atk'] =nil
+	com['hp'] =nil
 	tp = tp.parent
 	--end

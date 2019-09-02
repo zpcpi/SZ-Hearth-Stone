@@ -87,14 +87,27 @@ t['CardCom_SetData'] = function (com, o_card)
     -- 卡牌数据
     if com.费用数值 then
         local int_卡片费用 = o_card.费用
-        com.费用数值.text = int_卡片费用
+        com.cost = int_卡片费用
     end
     if com.攻击力数值 then
         local int_卡片攻击力 = o_card.攻击
-        com.攻击力数值.text = int_卡片攻击力
+        com.atk = int_卡片攻击力
     end
     if com.生命值数值 then
         local int_卡片生命值 = o_card.生命
-        com.生命值数值.text = int_卡片生命值
+        com.hp = int_卡片生命值
     end
 end
+
+t['CardCom_SetAttr'] = function (attrA, objname, attrB)
+    return function (com, value)
+        if com[attrA] then
+            com[objname][attrB] = tostring(math.floor(com[attrA]))
+        else
+            com[objname][attrB] = nil
+        end
+    end
+end
+
+
+
