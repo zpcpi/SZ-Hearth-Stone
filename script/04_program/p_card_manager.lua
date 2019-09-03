@@ -39,7 +39,7 @@ t['CardCom_SetData'] = function (com, o_card)
         com.职业边框.img = o_profession_卡牌职业[o_card_type.职业边框]
 
         if com.职业图标 then
-            com.职业边框.img = o_profession_卡牌职业.职业图标
+            com.职业图标.img = o_profession_卡牌职业.职业图标
         end
     end
 
