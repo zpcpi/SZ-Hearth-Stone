@@ -360,78 +360,82 @@ local t = {
 				['type']='image',
 			},
 			[12]={
-				['name']='原画缩放',
-				['type']='dragnumber',
+				['name']='原画缩放X',
+				['type']='number',
 			},
 			[13]={
+				['name']='原画缩放Y',
+				['type']='number',
+			},
+			[14]={
 				['name']='画家',
 				['type']='string',
 			},
-			[14]={
+			[15]={
 				['name']='趣味描述',
 				['type']='string',
 			},
-			[15]={
+			[16]={
 				['name']='扩展包',
 				['type']='i_category',
 			},
-			[16]={
+			[17]={
 				['name']='可收集',
 				['type']='boolean',
 			},
-			[17]={
+			[18]={
 				['name']='延伸卡',
 				['type']='_i_card',
 			},
-			[18]={
+			[19]={
 				['name']='原画偏移X',
 				['type']='dragint',
 			},
-			[19]={
+			[20]={
 				['name']='原画偏移Y',
 				['type']='dragint',
 			},
-			[20]={
+			[21]={
 				['name']='原画旋转',
 				['type']='dragnumber',
 			},
-			[21]={
+			[22]={
 				['name']='提示标签',
 				['type']='_string',
 			},
-			[22]={
+			[23]={
 				['name']='局内描述',
 				['type']='string',
 			},
-			[23]={
+			[24]={
 				['name']='卡牌指令',
 				['type']='i_order',
 			},
-			[24]={
+			[25]={
 				['name']='卡牌特性',
 				['type']='_int',
 			},
-			[25]={
+			[26]={
 				['name']='卡牌效果',
 				['type']='_int',
 			},
-			[26]={
+			[27]={
 				['name']='可使用条件',
 				['type']='fargboolean',
 			},
-			[27]={
+			[28]={
 				['name']='高亮条件',
 				['type']='fargboolean',
 			},
-			[28]={
+			[29]={
 				['name']='目标条件',
 				['type']='_fargboolean',
 			},
-			[29]={
+			[30]={
 				['name']='目标指向文本',
 				['type']='_string',
 			},
-			[30]={
+			[31]={
 				['name']='抉择卡',
 				['type']='_i_card',
 			},

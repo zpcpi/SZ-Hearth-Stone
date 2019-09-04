@@ -23,14 +23,15 @@ t['CardCom_SetData'] = function (com, o_card)
         local number_原画偏移X = o_card.原画偏移X or 0
         local number_原画偏移Y = o_card.原画偏移Y or 0
         local number_原画旋转 = o_card.原画旋转 or 0
-        local number_原画缩放 = (o_card.原画缩放 or 1) * 0.58
+        local number_原画缩放X = (o_card.原画缩放X or 1) * 0.58
+        local number_原画缩放Y = (o_card.原画缩放Y or 1) * 0.58
     
         com.原画.img = image_原画
         com.原画.x = number_原画偏移X
         com.原画.y = number_原画偏移Y
         com.原画.rotation = number_原画旋转
-        com.原画.scaleX = number_原画缩放
-        com.原画.scaleY = number_原画缩放
+        com.原画.scaleX = number_原画缩放X
+        com.原画.scaleY = number_原画缩放Y
     end
 
     -- 职业信息
@@ -76,7 +77,7 @@ t['CardCom_SetData'] = function (com, o_card)
     end
     if com.描述字符 then
         local string_卡片描述 = o_card.描述
-        com.描述字符.text = string_卡片描述
+        com.描述字符.text = string_卡片描述 or ''
     end
     if com.种族字符 then
         if o_card.种族 then

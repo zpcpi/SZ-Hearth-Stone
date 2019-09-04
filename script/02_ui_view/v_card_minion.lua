@@ -2,9 +2,9 @@
 
 ]]
 local G = require 'gf'
-local c_card_minion = require 'c_card_minion'
 local c_mintextquadsize = require 'c_mintextquadsize'
 local c_curved_text = require 'c_curved_text'
+local c_card_minion = require 'c_card_minion'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -123,7 +123,7 @@ tp = tc
 		com['p0y'] =-1.000
 		com['p1x'] =-104.000
 		com['p1y'] =-13.000
-		com['p2x'] =50.000
+		com['p2x'] =70.000
 		com['p2y'] =45.000
 		com['p3x'] =133.000
 		com['p3y'] =7.000
