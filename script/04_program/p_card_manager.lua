@@ -45,7 +45,7 @@ t['CardCom_SetData'] = function (com, o_card)
     end
 
     -- 品质信息
-    do
+    if com.品质板 then
         local o_rank_卡牌品质 = query_iter(o_card.品质)
         local image_宝石图片 = o_rank_卡牌品质.宝石图片
         if image_宝石图片 then

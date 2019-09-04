@@ -43,10 +43,11 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '原画'
-			tc.left = -126.000
-			tc.right = 130.000
-			tc.bottom = -5.000
-			tc.top = 251.000
+			tc.left = -128.000
+			tc.right = 128.000
+			tc.bottom = -128.000
+			tc.top = 128.000
+			tc.anchor = 0x4b4b3232
 			tc.scaleX = 0.680
 			tc.scaleY = 0.680
 			tc.img = 0x5601000c
@@ -137,5 +138,7 @@ tp = tc
 		tp = tp.parent
 		--end
 	tp.c_card_herospell = setmetatable({}, c_card_herospell)
+	com = tp.c_card_herospell
+	com['cost'] =nil
 	tp = tp.parent
 	--end

@@ -46,8 +46,9 @@ tp = tc
 			tc.name = '原画'
 			tc.left = -256.000
 			tc.right = 256.000
-			tc.bottom = -153.000
-			tc.top = 359.000
+			tc.bottom = -256.000
+			tc.top = 256.000
+			tc.anchor = 0x46463232
 			tc.scaleX = 0.480
 			tc.scaleY = 0.480
 			tc.img = 0x56010009
@@ -223,7 +224,8 @@ tp = tc
 		--end
 	tp.c_card_weapon = setmetatable({}, c_card_weapon)
 	com = tp.c_card_weapon
-	com['autowidth'] =false
 	com['cost'] =1.000
+	com['atk'] =nil
+	com['hp'] =nil
 	tp = tp.parent
 	--end
