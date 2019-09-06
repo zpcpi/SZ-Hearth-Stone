@@ -7,11 +7,10 @@ local L = {}
 local t = G.api
 
 t['提示_初始化'] = function()
-    -- G.addListener('提示_播放下一条', 'TipEnd')
+    G.addListener('提示_播放下一条', 'TipEnd')
 end
 
 t['提示_添加提示'] = function(string_提示内容)
-    do return end
     if not G.cacheData.isPlayTip then 
         G.cacheData.tipsList = {}
     end
@@ -33,5 +32,4 @@ t['提示_播放下一条'] = function(string_提示内容)
 end
 
 t['提示_播放提示'] = function(string_提示内容)
-    print('--== 提示_播放提示')
 end
