@@ -7,7 +7,6 @@ local t = G.api
 local lsocket = require("socket.core")
 
 t['系统_输出信息'] = function(string_信息)
-    G.call('提示_添加提示', string_信息)
 end
 
 t['系统_初始化玩家信息'] = function()
