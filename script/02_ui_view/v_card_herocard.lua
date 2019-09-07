@@ -3,8 +3,8 @@
 ]]
 local G = require 'gf'
 local c_card_herocard = require 'c_card_herocard'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local c_curved_text = require 'c_curved_text'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -44,10 +44,11 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '原画'
-			tc.left = -250.000
-			tc.right = 262.000
-			tc.bottom = -164.000
-			tc.top = 348.000
+			tc.left = -256.000
+			tc.right = 256.000
+			tc.bottom = -256.000
+			tc.top = 256.000
+			tc.anchor = 0x46463232
 			tc.scaleX = 0.400
 			tc.scaleY = 0.400
 			tc.img = 0x56010008
@@ -194,5 +195,8 @@ tp = tc
 		tp = tp.parent
 		--end
 	tp.c_card_herocard = setmetatable({}, c_card_herocard)
+	com = tp.c_card_herocard
+	com['cost'] =nil
+	com['hp'] =nil
 	tp = tp.parent
 	--end

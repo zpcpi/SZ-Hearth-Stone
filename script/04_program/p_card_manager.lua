@@ -19,13 +19,20 @@ t['CardCom_SetData'] = function (com, o_card)
 
     -- 原画信息
     do
-        local image_原画 = o_card.原画
-        local number_原画偏移X = o_card.原画偏移X or 0
-        local number_原画偏移Y = o_card.原画偏移Y or 0
-        local number_原画旋转 = o_card.原画旋转 or 0
-        local number_原画缩放X = (o_card.原画缩放X or 1) * 0.58
-        local number_原画缩放Y = (o_card.原画缩放Y or 1) * 0.58
-    
+        local o_card_curcard
+        if o_card.原画 then
+            o_card_curcard = o_card
+        else
+            o_card_curcard = query_iter(o_card_type.默认原画配置)
+        end
+
+        local image_原画 = o_card_curcard.原画
+        local number_原画偏移X = o_card_curcard.原画偏移X or 0
+        local number_原画偏移Y = o_card_curcard.原画偏移Y or 0
+        local number_原画旋转 = o_card_curcard.原画旋转 or 0
+        local number_原画缩放X = (o_card_curcard.原画缩放X or 1) * 0.58
+        local number_原画缩放Y = (o_card_curcard.原画缩放Y or 1) * 0.58
+
         com.原画.img = image_原画
         com.原画.x = number_原画偏移X
         com.原画.y = number_原画偏移Y
@@ -36,7 +43,7 @@ t['CardCom_SetData'] = function (com, o_card)
 
     -- 职业信息
     do
-        local o_profession_卡牌职业 = query_iter(o_card.职业)
+        local o_profession_卡牌职业 = query_iter(o_card.职业 or 0x10080001)
         com.职业边框.img = o_profession_卡牌职业[o_card_type.职业边框]
 
         if com.职业图标 then
@@ -46,7 +53,7 @@ t['CardCom_SetData'] = function (com, o_card)
 
     -- 品质信息
     if com.品质板 then
-        local o_rank_卡牌品质 = query_iter(o_card.品质)
+        local o_rank_卡牌品质 = query_iter(o_card.品质 or 0x10070001)
         local image_宝石图片 = o_rank_卡牌品质.宝石图片
         if image_宝石图片 then
             com.品质板.visible = true
@@ -105,9 +112,10 @@ t['CardCom_SetData'] = function (com, o_card)
 end
 
 t['CardCom_SetAttr'] = function (attrA, objname, attrB)
-    return function (com, value)
-        if com[attrA] then
-            com[objname][attrB] = tostring(math.floor(com[attrA]))
+    return function (com, old_value)
+        local value = com[attrA]
+        if value then
+            com[objname][attrB] = tostring(math.floor(value))
         else
             com[objname][attrB] = nil
         end

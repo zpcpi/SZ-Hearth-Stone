@@ -3,7 +3,6 @@
 ]]
 local G = require 'gf'
 local c_card_herospell = require 'c_card_herospell'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -79,10 +78,6 @@ tp = tc
 		tc.style = 13
 		tc.outlineSize = 5.000
 		tp = tc
-		tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
-		com = tp.c_mintextquadsize
-		com['minWidth'] =0.000
-		com['autowidth'] =true
 		tp = tp.parent
 		--end
 		tc = G.TextQuad()
