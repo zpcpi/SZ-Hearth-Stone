@@ -5,6 +5,15 @@ local G = require "gf"
 local L = {}
 local t = G.api
 
+t['角色_身份映射'] = function ()
+
+
+
+
+
+
+end
+
 --hide=true
 t['角色_添加手牌'] = function(estr_player_玩家)
     local o_misc = G.misc()
@@ -17,6 +26,8 @@ t['角色_添加手牌'] = function(estr_player_玩家)
 
     if estr_player_玩家 == '我方' then 
         G.call('网络通用_广播消息', '角色_添加手牌', '敌方1')
+    elseif estr_player_玩家 == '敌方1' then
+        G.call('网络通用_广播消息', '角色_添加手牌', '我方')
     end
 end
 
@@ -34,6 +45,8 @@ t['角色_移除手牌'] = function(estr_player_玩家)
     end
     if estr_player_玩家 == '我方' then 
         G.call('网络通用_广播消息', '角色_移除手牌', '敌方1')
+    elseif estr_player_玩家 == '敌方1' then
+        G.call('网络通用_广播消息', '角色_移除手牌', '我方')
     end
 end
 

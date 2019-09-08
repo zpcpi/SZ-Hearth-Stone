@@ -33,9 +33,14 @@ local t ={
 		[2] = {
 			name = '战场UI',
 			[1] = 'v_battle_1v1',
-			[2] = 'v_handcards_enemy',
-			[3] = 'v_handcards_friend',
-			[4] = 'v_handcards_self',
+			[2] = 'v_battlehero_enemy',
+			[3] = 'v_battlehero_friend',
+			[4] = 'v_battlehero_self',
+			[5] = 'v_battleminion_enemy',
+			[6] = 'v_battleminion_self',
+			[7] = 'v_handcards_enemy',
+			[8] = 'v_handcards_friend',
+			[9] = 'v_handcards_self',
 		},
 		[3] = {
 			name = '测试UI',
