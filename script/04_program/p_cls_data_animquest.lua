@@ -9,11 +9,12 @@ local t = G.api
 --ret=o_animquest
 t['手牌复位动画生成'] = function(o_animquest_当前数据, _i_animquest_复位动画列表, boolean_是否下方)
     local d = require "_data"
+    local scale = 0.8
 
     local time = 300                                            -- 复位时间
     local maxCount = 10                                         -- 最大手牌数
-    local Radius = 550 * 0.9                                    -- 排列圆半径
-    local maxRotation = math.atan(550 * 1, Radius)              -- 最大分布弧度
+    local Radius = 550 * scale * 0.9                            -- 排列圆半径
+    local maxRotation = math.atan(550 * scale, Radius)          -- 最大分布弧度
     local minRotation = maxRotation / 4                         -- 手牌最小夹角
     local bezier = {x1 = 0, y1 = 0.5, x2 = 0.5, y2 = 1}         -- 曲线参数
 
@@ -36,8 +37,8 @@ t['手牌复位动画生成'] = function(o_animquest_当前数据, _i_animquest_
                     [1] = Radius * math.sin(r),                      -- 卡牌位置X
                     [2] = Radius * (math.cos(r) - 1) + 10,           -- 卡牌位置Y
                     [3] = r * 180 / math.pi,                         -- 卡牌角度
-                    [4] = 0.35,                                      -- 卡牌缩放X
-                    [5] = 0.35,                                      -- 卡牌缩放Y
+                    [4] = 0.35 * scale,                              -- 卡牌缩放X
+                    [5] = 0.35 * scale,                              -- 卡牌缩放Y
                 }
             end
         else
@@ -47,8 +48,8 @@ t['手牌复位动画生成'] = function(o_animquest_当前数据, _i_animquest_
                     [1] = Radius * math.sin(r),                      -- 卡牌位置X
                     [2] = -(Radius * (math.cos(r) - 1) + 10),        -- 卡牌位置Y
                     [3] = -(r * 180 / math.pi) - 180,                -- 卡牌角度
-                    [4] = 0.35,                                      -- 卡牌缩放X
-                    [5] = 0.35,                                      -- 卡牌缩放Y
+                    [4] = 0.35 * scale,                              -- 卡牌缩放X
+                    [5] = 0.35 * scale,                              -- 卡牌缩放Y
                 }
             end
         end

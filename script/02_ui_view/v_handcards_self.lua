@@ -15,10 +15,11 @@ tp = tc
 	tc = G.Entity()
 	tp.addChild(tc)
 	tc.name = '功能区'
-	tc.pivotY = 0.000
-	tc.left = -275.000
-	tc.right = 275.000
-	tc.top = 130.000
+	tc.pivotY = 0.300
+	tc.left = -325.000
+	tc.right = 125.000
+	tc.bottom = -24.000
+	tc.top = 106.000
 	tc.anchor = 0x3232
 	tp = tc
 		tc = G.Quad()
@@ -35,8 +36,8 @@ tp = tc
 		tc = G.Entity()
 		tp.addChild(tc)
 		tc.name = '布局点'
-		tc.left = -275.000
-		tc.right = 275.000
+		tc.left = -225.000
+		tc.right = 225.000
 		tc.bottom = -65.000
 		tc.top = 65.000
 		tp = tc
