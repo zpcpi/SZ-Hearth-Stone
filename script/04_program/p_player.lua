@@ -7,11 +7,6 @@ local t = G.api
 
 t['角色_身份映射'] = function ()
 
-
-
-
-
-
 end
 
 --hide=true
@@ -24,7 +19,7 @@ t['角色_添加手牌'] = function(estr_player_玩家)
     o_misc.卡牌数量[estr_player_玩家] = o_misc.卡牌数量[estr_player_玩家] or 0
     o_misc.卡牌数量[estr_player_玩家] = o_misc.卡牌数量[estr_player_玩家] + 1
 
-    if estr_player_玩家 == '我方' then 
+    if estr_player_玩家 == '我方' then
         G.call('网络通用_广播消息', '角色_添加手牌', '敌方1')
     elseif estr_player_玩家 == '敌方1' then
         G.call('网络通用_广播消息', '角色_添加手牌', '我方')
