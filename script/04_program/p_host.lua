@@ -8,7 +8,7 @@ local lsocket = require("socket.core")
 
 --hide=true
 t['主机_新建房间'] = function()
-    local any_玩家信息 = G.call('系统_获取玩家信息', '我方')
+    local any_玩家信息 = G.misc().玩家信息
     any_玩家信息.是主机 = true
     G.start_program('主机_建立连接')
 end
@@ -44,11 +44,12 @@ end
 t['主机_连接建立成功回调'] = function()
     G.socketList = {G.tcpServerSocket}
     G.connectList = {}
+    G.misc().玩家信息.身份标识 = '玩家1'
     G.call('对决_增加对决玩家信息', G.misc().玩家信息, true)
 end
 
 --hide=true
 t['主机_是主机'] = function()
-    local any_玩家信息 = G.call('系统_获取玩家信息', '我方')
+    local any_玩家信息 = G.misc().玩家信息
     return any_玩家信息.是主机
 end

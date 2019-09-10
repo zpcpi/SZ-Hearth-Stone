@@ -4,7 +4,9 @@ local noti = G.notify
 function noti.角色_添加手牌(estr_player_玩家)
     local script_战场
 
-    estr_player_玩家 = estr_player_玩家 or '我方'
+    if not estr_player_玩家 then 
+        return 
+    end
     -- TODO: 判断当前游戏模式
     if true then 
         -- TODO: 1v1 条件
@@ -18,8 +20,10 @@ end
 
 function noti.角色_移除手牌(estr_player_玩家)
     local script_战场
-
-    estr_player_玩家 = estr_player_玩家 or '我方'
+    
+    if not estr_player_玩家 then 
+        return 
+    end
     -- TODO: 判断当前游戏模式
     if true then 
         -- TODO: 1v1 条件
