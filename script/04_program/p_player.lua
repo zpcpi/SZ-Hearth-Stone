@@ -21,8 +21,6 @@ t['角色_添加手牌'] = function(estr_player_玩家)
 
     if estr_player_玩家 == '我方' then
         G.call('网络通用_广播消息', '角色_添加手牌', '敌方1')
-    elseif estr_player_玩家 == '敌方1' then
-        G.call('网络通用_广播消息', '角色_添加手牌', '我方')
     end
 end
 

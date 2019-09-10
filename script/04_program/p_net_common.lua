@@ -58,7 +58,9 @@ t['Net_SendMsg'] = function(msg)
         end
         return 
     end
-    if G.tcpSocket then 
-        G.tcpSocket:send(msg)
+    if G.tcpServerSocket then 
+        G.tcpServerSocket:send(msg)
+    elseif G.tcpClientSocket then 
+        G.tcpClientSocket:send(msg)
     end
 end
