@@ -18,25 +18,8 @@ t['系统_初始化玩家信息'] = function()
 end
 
 t['系统_设置玩家名称'] = function(string_名称)
-    local o_misc = G.misc()
-    if o_misc.玩家信息 == nil then 
-        o_misc.玩家信息 = {}
-    end
-    o_misc.玩家信息.玩家名称 = string_名称
-end
-
-t['系统_获取玩家名称'] = function(estr_player_玩家)
-    local o_misc = G.misc()
-    if estr_player_玩家 == '我方' then 
-        return tostring(o_misc.玩家信息.玩家名称)
-    end
-end
-
-t['系统_获取玩家信息'] = function(estr_player_玩家)
-    local o_misc = G.misc()
-    if estr_player_玩家 == '我方' then 
-        return o_misc.玩家信息
-    end
+    local any_当前玩家 = G.call('系统_获取当前玩家信息')
+    any_当前玩家.玩家名称 = string_名称
 end
 
 t['系统_获取table长度'] = function(any_table)
@@ -51,4 +34,12 @@ t['系统_获取table长度'] = function(any_table)
         end
     end
     return maxSize
+end
+
+t['系统_获取当前玩家信息'] = function()
+    return G.misc().玩家信息 or {}
+end
+
+t['系统_更新当前玩家信息'] = function(o_room_player_玩家信息)
+    G.misc().玩家信息 = o_room_player_玩家信息
 end

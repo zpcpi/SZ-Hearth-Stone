@@ -25,12 +25,10 @@ function noti.系统_输出信息(string_信息)
     end
 end
 
-function noti.对决_增加对决玩家信息(o_battle_player_对决玩家, boolean_是主机)
-    local playerName = o_battle_player_对决玩家.玩家名称
-    if boolean_是主机 then 
+function noti.房间_更新玩家信息(o_room_player_对决玩家)
+    local playerName = o_room_player_对决玩家.玩家名称
+    if o_room_player_对决玩家.是主机 then 
         G.call('系统_输出信息', string.format('[02]%s[ff] 成为了房主', playerName))
-    else
-        G.call('系统_输出信息', string.format('[02]%s[ff] 进入了房间', playerName))
     end
 
     local v_room = G.getUI('v_room')
@@ -59,13 +57,6 @@ function noti.对决_初始化战场()
     -- TODO: 判断游戏模式
     G.addUI('v_battle_1v1')
     G.removeUI('v_room')
-end
-
-function noti.对决_更新玩家准备状态()
-    local v_room = G.getUI('v_room')
-    if v_room then 
-        v_room.c_room:UpdateRoomMember()
-    end
 end
 
 function noti.提示_播放提示(string_提示内容)

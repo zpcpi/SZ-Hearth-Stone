@@ -8,7 +8,7 @@ local lsocket = require("socket.core")
 
 --hide=true
 t['客机_连接主机'] = function(string_hostip)
-    local any_玩家信息 = G.call('系统_获取玩家信息', '我方')
+    local any_玩家信息 = G.call('系统_获取当前玩家信息')
     any_玩家信息.是主机 = false
 
     local netPort = tonumber(DEFAULT_NET_PORT)
@@ -31,8 +31,9 @@ end
 --hide=true
 t['客机_连接成功回调'] = function()
     G.socketList = {G.tcpClientSocket}
-    G.call('对决_增加对决玩家信息', G.misc().玩家信息, false)
-    G.call('网络通用_发送消息', G.tcpClientSocket, '对决_增加对决玩家信息', G.misc().玩家信息, false)
+    local any_当前玩家 = G.call('系统_获取当前玩家信息')
+    any_当前玩家.是主机 = false
+    G.call('房间_更新玩家信息', any_当前玩家)
 end
 
 --hide=true

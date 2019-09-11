@@ -11,7 +11,8 @@ function t:init()
     self.quitGameBtn = self.obj.getChildByName('QuitGame')
 
     self.playerName = self.obj.getChildByName('PlayerName').getChildByName('PlayerNameText')
-    self.playerName.text = G.misc().玩家信息.玩家名称
+    local any_当前玩家信息 = G.call('系统_获取当前玩家信息')
+    self.playerName.text = any_当前玩家信息.玩家名称
     self.oldPlayerName = self.playerName.text
 end
 

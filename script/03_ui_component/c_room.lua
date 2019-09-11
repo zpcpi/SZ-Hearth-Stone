@@ -38,11 +38,11 @@ end
 
 function t:UpdateRoomMember()
     self:ResetRoomMember()
-    local _o_battle_player_对决玩家信息列表 = G.call('对决_获取对决玩家信息列表')
-    for _, o_battle_player_对决玩家 in ipairs(_o_battle_player_对决玩家信息列表) do 
+    local _o_room_player_对决玩家信息列表 = G.call('房间_获取玩家信息列表')
+    for _, o_room_player_对决玩家 in ipairs(_o_room_player_对决玩家信息列表) do 
         local node = G.loadUI('v_room_member')
         self.roomMemberParent.addChild(node)
-        node.c_room_member:UpdatePlayerInfo(o_battle_player_对决玩家)
+        node.c_room_member:UpdatePlayerInfo(o_room_player_对决玩家)
     end
 end
 
@@ -51,7 +51,7 @@ function t:click(tar)
     elseif tar == self.startGameBtn then 
         G.call('对决_开始')
     elseif tar == self.prepareBtn then 
-        G.call('对决_更新玩家准备状态', G.call('系统_获取玩家信息', '我方'), true)
+        G.call('房间_当前玩家准备')
     elseif tar == self.quitBtn then 
         G.call('主机_断开连接')
     end

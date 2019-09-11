@@ -140,11 +140,11 @@ local t = {
 			},
 			[6]={
 				['name']='玩家信息',
-				['type']='o_battle_player',
+				['type']='o_room_player',
 			},
 			[7]={
-				['name']='对决玩家信息列表',
-				['type']='_o_battle_player',
+				['name']='房间玩家列表',
+				['type']='_o_room_player',
 			},
 		},
 	},
@@ -610,7 +610,7 @@ local t = {
 		},
 	},
 	{
-		['name']='o_battle_player',
+		['name']='o_room_player',
 		['define']={
 			[1]={
 				['name']='玩家名称',
@@ -627,6 +627,10 @@ local t = {
 			[4]={
 				['name']='准备就绪',
 				['type']='boolean',
+			},
+			[5]={
+				['name']='绝对身份',
+				['type']='estr_absolute_id_type',
 			},
 		},
 	},

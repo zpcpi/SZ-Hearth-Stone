@@ -1,7 +1,7 @@
 local G = require "gf"
 local noti = G.notify
 
-function noti.角色_添加手牌(estr_player_玩家)
+function noti.角色_添加手牌_相对身份(estr_player_玩家)
     local script_战场
 
     estr_player_玩家 = estr_player_玩家 or '我方'
@@ -16,7 +16,7 @@ function noti.角色_添加手牌(estr_player_玩家)
     script_战场:AddPlayerCard(estr_player_玩家)
 end
 
-function noti.角色_移除手牌(estr_player_玩家)
+function noti.角色_移除手牌_相对身份(estr_player_玩家)
     local script_战场
 
     estr_player_玩家 = estr_player_玩家 or '我方'

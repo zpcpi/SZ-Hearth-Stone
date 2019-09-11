@@ -31,11 +31,14 @@ t['网络通用_广播消息'] = function(...)
 end
 
 t['网络通用_处理消息'] = function(buffer)
+    G.canBroadcast = false
     if not pcall(json.decode, buffer) then 
+        G.canBroadcast = true
         return 
     end
     local paramsList = json.decode(buffer)
     if type(paramsList) ~= 'table' then 
+        G.canBroadcast = true
         return 
     end
     local size = paramsList.size
@@ -43,11 +46,16 @@ t['网络通用_处理消息'] = function(buffer)
         table.insert(paramsList, paramsList[tostring(i)])
     end
     G.call(table.unpack(paramsList, 1, size))
+    G.canBroadcast = true
 end
 
 t['网络通用_获取本机IP地址'] = function()
     local hostname = lsocket.dns.gethostname()
     return lsocket.dns.toip(hostname)
+end
+
+t['网络通用_能否广播'] = function()
+    return G.canBroadcast ~= false
 end
 
 t['Net_SendMsg'] = function(msg)

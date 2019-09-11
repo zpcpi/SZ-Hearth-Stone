@@ -1,2 +1,3 @@
 DEFAULT_NET_PORT = '3363'
 
+PLAYER_ONLY_KEY_LIST = {'玩家名称', '玩家IP', '是主机'}
