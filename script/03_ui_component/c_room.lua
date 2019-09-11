@@ -51,7 +51,7 @@ function t:click(tar)
     elseif tar == self.startGameBtn then 
         G.call('对决_开始')
     elseif tar == self.prepareBtn then 
-        G.call('对决_更新玩家准备状态', G.misc().玩家信息, true)
+        G.call('对决_更新玩家准备状态', G.call('系统_获取玩家信息', '我方'), true)
     elseif tar == self.quitBtn then 
         G.call('主机_断开连接')
     end

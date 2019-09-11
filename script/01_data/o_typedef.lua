@@ -628,10 +628,6 @@ local t = {
 				['name']='准备就绪',
 				['type']='boolean',
 			},
-			[5]={
-				['name']='身份标识',
-				['type']='estr_player',
-			},
 		},
 	},
 }}

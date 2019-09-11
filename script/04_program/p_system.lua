@@ -27,14 +27,14 @@ end
 
 t['系统_获取玩家名称'] = function(estr_player_玩家)
     local o_misc = G.misc()
-    if G.call('角色_身份是自己', estr_player_玩家) then
+    if estr_player_玩家 == '我方' then 
         return tostring(o_misc.玩家信息.玩家名称)
     end
 end
 
 t['系统_获取玩家信息'] = function(estr_player_玩家)
     local o_misc = G.misc()
-    if G.call('角色_身份是自己', estr_player_玩家) then
+    if estr_player_玩家 == '我方' then 
         return o_misc.玩家信息
     end
 end
