@@ -59,6 +59,7 @@ local fs = require "o_fontstyle"
 G.loadFontStyle(fs)
 
 require 'servershare/gfhs_net'
+require 'servershare/gfhs_view'
 require 'servershare/require_o_p'
 require 'require_a_n'
 require 'servershare/const'

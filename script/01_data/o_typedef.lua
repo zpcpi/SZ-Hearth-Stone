@@ -634,5 +634,22 @@ local t = {
 			},
 		},
 	},
+	{
+		['name']='o_ui_topmost',
+		['define']={
+			[1]={
+				['name']='界面名称',
+				['type']='string',
+			},
+			[2]={
+				['name']='优先级',
+				['type']='int',
+			},
+			[3]={
+				['name']='界面类型',
+				['type']='estr_ui_layer_type',
+			},
+		},
+	},
 }}
 return t

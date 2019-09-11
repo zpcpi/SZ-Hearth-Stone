@@ -11,7 +11,6 @@ end
 
 function t:setData(tipText)
     self.tipText.text = tostring(tipText)
-    print('--== tostring(tipText)', tostring(tipText))
 end
 
 return t
