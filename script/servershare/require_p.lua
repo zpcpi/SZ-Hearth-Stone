@@ -1,3 +1,4 @@
+require "p_absolute_player"
 require "p_animquest_system"
 require "p_array_func"
 require "p_battle"
