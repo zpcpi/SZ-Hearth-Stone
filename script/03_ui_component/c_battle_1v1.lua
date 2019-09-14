@@ -11,7 +11,7 @@ function t:init()
         '敌方1',         -- PlayerType
         0x1001000f,      -- Anim Basd ID
         function (obj)   --  Tips fixfunc 
-            obj.y = -160
+            obj.y = -180
         end,
         function (obj)   -- NewCard fixfunc
             obj.y = -200
@@ -23,7 +23,7 @@ function t:init()
         '我方',         -- PlayerType
         0x10010005,      -- Anim Basd ID
         function (obj)  -- Tips fixfunc 
-            obj.y = 160
+            obj.y = 140
         end,
         function (obj)  -- NewCard fixfunc
             obj.y = 200

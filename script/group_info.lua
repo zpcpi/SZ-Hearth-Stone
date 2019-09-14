@@ -41,6 +41,8 @@ local t ={
 			[7] = 'v_handcards_enemy',
 			[8] = 'v_handcards_friend',
 			[9] = 'v_handcards_self',
+			[10] = 'v_history',
+			[11] = 'v_record',
 		},
 		[3] = {
 			name = '测试UI',

@@ -15,7 +15,7 @@ tp = tc
 	tp.addChild(tc)
 	tc.name = '功能区'
 	tc.pivotX = 1.000
-	tc.left = -320.000
+	tc.left = -270.000
 	tc.right = -20.000
 	tc.bottom = -350.000
 	tc.top = 350.000
