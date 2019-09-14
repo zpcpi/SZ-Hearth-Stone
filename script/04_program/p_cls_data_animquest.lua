@@ -65,10 +65,16 @@ t['手牌复位动画生成'] = function(o_animquest_当前数据, _i_animquest_
             anim['iter'] = {}
 
             local list = getPositions(cur_count)
+            local script_quote
+            if boolean_是否下方 == true then
+                script_quote = '::HandCards_Self'
+            else
+                script_quote = '::HandCards_Enemy'
+            end
             for k = 1, cur_count, 1 do
                 anim['iter'][k] = {
                     [1] = '动画系统_多属性设置',
-                    [2] = '::HandCards.handCards[' .. k .. ']',
+                    [2] = script_quote .. '.handCards[' .. k .. ']',
                     [3] = {'x', 'y', 'rotation', 'scaleX', 'scaleY'},
                     [4] = list[k],
                     [5] = bezier,

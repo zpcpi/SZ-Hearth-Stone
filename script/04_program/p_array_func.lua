@@ -149,7 +149,7 @@ end
 --hide=true
 --type=array
 t['array_union'] = function(arrA, arrB)
-    for _,v in ipairs(arrB) do
+    for _,v in ipairs(arrB or {}) do
         table.insert(arrA, v)
     end
     return arrA
@@ -160,3 +160,62 @@ end
 -- 集合相关接口
 --================================================
 --================================================
+
+
+
+
+
+--================================================
+--================================================
+-- 堆栈相关接口
+--================================================
+--================================================
+
+--hide=true
+--type=array
+t['stack_push'] = function(stack, val)
+    if stack then
+        stack.n = (stack.n or 0) + 1
+        stack[stack.n] = val
+    end
+end
+
+--hide=true
+--type=array
+t['stack_pop'] = function(stack)
+    if stack and stack.n and (stack.n > 0) then
+        local result = stack[stack.n]
+        stack.n = stack.n - 1
+        return result
+    end
+end
+
+--hide=true
+--type=array
+t['stack_top'] = function(stack)
+    if stack and stack.n and (stack.n > 0) then
+        return stack[stack.n]
+    end
+end
+
+--hide=true
+--type=array
+t['create_stack'] = function()
+    local iter = {}
+    local stack = {}
+    stack.n = 0
+    
+    iter.stack = stack
+    iter.push = function(val)
+        G.call('stack_push', stack, val)
+    end
+    iter.pop = function()
+        return G.call('stack_pop', stack)
+    end
+    iter.top = function()
+        return G.call('stack_top', stack)
+    end
+
+    return iter
+end
+

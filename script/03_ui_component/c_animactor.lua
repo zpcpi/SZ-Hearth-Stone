@@ -14,6 +14,12 @@ function t:init()
     self.__o_animquest = {}
 
     self.cur_pthread = nil
+
+    self.cur_animquest_list = nil
+    self.cur_animquest = nil
+
+    self.cur_animquest_list_stack = nil
+    self.cur_animquest_stack = nil
 end
 
 function t:start()
@@ -117,8 +123,43 @@ function t:del_alias(key)
 end
 
 -- 设置动画组
-function t:set_questlist()
+function t:add_animquest(o_animquest_动画段)
+    if o_animquest_动画段 ~= nil then
+        if self.cur_animquest_list then
+        else
+            self.cur_animquest_list = {}
+            self.cur_animquest_list_stack = {}
+            self.cur_animquest_stack = {}
 
+            table.insert(self.__o_animquest, self.cur_animquest_list)
+        end
+
+        table.insert(self.cur_animquest_list, o_animquest_动画段)
+        self.cur_animquest = o_animquest_动画段
+    end
+end
+function t:go_deep()
+    if self.cur_animquest then
+        local child
+        if self.cur_animquest['child_quests'] then
+            child = self.cur_animquest['child_quests']
+        else
+            child = {}
+            self.cur_animquest['child_quests'] = child
+        end
+
+        -- 堆栈保存
+        G.call('stack_push', self.cur_animquest_list_stack, self.cur_animquest_list)
+        G.call('stack_push', self.cur_animquest_stack, self.cur_animquest)
+
+        -- 指向新的层级
+        self.cur_animquest_list = child
+        self.cur_animquest = child[#child]
+    end
+end
+function t:go_shallow()
+    self.cur_animquest_list = G.call('stack_pop', self.cur_animquest_list_stack)
+    self.cur_animques =  G.call('stack_pop', self.cur_animquest_stack)
 end
 
 -- 播放速度设置
@@ -182,6 +223,8 @@ function t:update()
             self.cur_pthread = nil
             self:run_animactor()
         end
+    else
+        self:run_animactor()
     end
 end
 
@@ -232,6 +275,14 @@ function t:refresh_stage_and_index(stage, index)
     -- 修正动画队列
     if child then
         table.insert(self.__o_animquest, 1, child)
+    end
+
+    -- 指向新的层级
+    self.cur_animquest_list = self.__o_animquest[#self.__o_animquest]
+    if self.cur_animquest_list then
+        self.cur_animquest = self.cur_animquest_list[#self.cur_animquest_list]
+    else
+        self.cur_animquest = nil
     end
 end
 

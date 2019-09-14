@@ -8,6 +8,8 @@ local t = G.com()
 function t:init()
     self.卡背框 = self.obj.getChildByName('卡背框')
     self.卡片实例 = self.obj.getChildByName('卡片实例')
+
+    self.cur_card = nil
 end
 
 function t:setData(o_card_卡片数据)
@@ -21,6 +23,7 @@ function t:setData(o_card_卡片数据)
         return 
     end
     
+    self.cur_card = o_card_卡片数据
     local o_cardtype_卡片类型
     if G.is_editor then 
         local d = require '_data'
@@ -39,6 +42,10 @@ function t:setData(o_card_卡片数据)
             o_node_卡牌框[script_界面组件]:setData(o_card_卡片数据)
         end
     end
+end
+
+function t:getData()
+    return self.cur_card
 end
 
 return t

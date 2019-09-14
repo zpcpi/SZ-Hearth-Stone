@@ -27,7 +27,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Self.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -59,7 +59,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Self.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -82,7 +82,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Self.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -114,7 +114,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Self.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -137,7 +137,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Self.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -160,7 +160,7 @@ local t = {
 				},
 			},
 			[3]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[3]',
+				[2]='::HandCards_Self.handCards[3]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -192,7 +192,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Self.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -215,7 +215,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Self.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -238,7 +238,7 @@ local t = {
 				},
 			},
 			[3]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[3]',
+				[2]='::HandCards_Self.handCards[3]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -261,7 +261,7 @@ local t = {
 				},
 			},
 			[4]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[4]',
+				[2]='::HandCards_Self.handCards[4]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -293,7 +293,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Self.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -316,7 +316,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Self.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -339,7 +339,7 @@ local t = {
 				},
 			},
 			[3]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[3]',
+				[2]='::HandCards_Self.handCards[3]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -362,7 +362,7 @@ local t = {
 				},
 			},
 			[4]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[4]',
+				[2]='::HandCards_Self.handCards[4]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -385,7 +385,7 @@ local t = {
 				},
 			},
 			[5]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[5]',
+				[2]='::HandCards_Self.handCards[5]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -417,7 +417,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Self.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -440,7 +440,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Self.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -463,7 +463,7 @@ local t = {
 				},
 			},
 			[3]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[3]',
+				[2]='::HandCards_Self.handCards[3]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -486,7 +486,7 @@ local t = {
 				},
 			},
 			[4]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[4]',
+				[2]='::HandCards_Self.handCards[4]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -509,7 +509,7 @@ local t = {
 				},
 			},
 			[5]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[5]',
+				[2]='::HandCards_Self.handCards[5]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -532,7 +532,7 @@ local t = {
 				},
 			},
 			[6]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[6]',
+				[2]='::HandCards_Self.handCards[6]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -564,7 +564,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Self.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -587,7 +587,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Self.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -610,7 +610,7 @@ local t = {
 				},
 			},
 			[3]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[3]',
+				[2]='::HandCards_Self.handCards[3]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -633,7 +633,7 @@ local t = {
 				},
 			},
 			[4]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[4]',
+				[2]='::HandCards_Self.handCards[4]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -656,7 +656,7 @@ local t = {
 				},
 			},
 			[5]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[5]',
+				[2]='::HandCards_Self.handCards[5]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -679,7 +679,7 @@ local t = {
 				},
 			},
 			[6]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[6]',
+				[2]='::HandCards_Self.handCards[6]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -702,7 +702,7 @@ local t = {
 				},
 			},
 			[7]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[7]',
+				[2]='::HandCards_Self.handCards[7]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -734,7 +734,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Self.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -757,7 +757,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Self.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -780,7 +780,7 @@ local t = {
 				},
 			},
 			[3]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[3]',
+				[2]='::HandCards_Self.handCards[3]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -803,7 +803,7 @@ local t = {
 				},
 			},
 			[4]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[4]',
+				[2]='::HandCards_Self.handCards[4]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -826,7 +826,7 @@ local t = {
 				},
 			},
 			[5]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[5]',
+				[2]='::HandCards_Self.handCards[5]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -849,7 +849,7 @@ local t = {
 				},
 			},
 			[6]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[6]',
+				[2]='::HandCards_Self.handCards[6]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -872,7 +872,7 @@ local t = {
 				},
 			},
 			[7]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[7]',
+				[2]='::HandCards_Self.handCards[7]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -895,7 +895,7 @@ local t = {
 				},
 			},
 			[8]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[8]',
+				[2]='::HandCards_Self.handCards[8]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -927,7 +927,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Self.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -950,7 +950,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Self.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -973,7 +973,7 @@ local t = {
 				},
 			},
 			[3]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[3]',
+				[2]='::HandCards_Self.handCards[3]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -996,7 +996,7 @@ local t = {
 				},
 			},
 			[4]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[4]',
+				[2]='::HandCards_Self.handCards[4]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1019,7 +1019,7 @@ local t = {
 				},
 			},
 			[5]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[5]',
+				[2]='::HandCards_Self.handCards[5]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1042,7 +1042,7 @@ local t = {
 				},
 			},
 			[6]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[6]',
+				[2]='::HandCards_Self.handCards[6]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1065,7 +1065,7 @@ local t = {
 				},
 			},
 			[7]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[7]',
+				[2]='::HandCards_Self.handCards[7]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1088,7 +1088,7 @@ local t = {
 				},
 			},
 			[8]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[8]',
+				[2]='::HandCards_Self.handCards[8]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1111,7 +1111,7 @@ local t = {
 				},
 			},
 			[9]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[9]',
+				[2]='::HandCards_Self.handCards[9]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1143,7 +1143,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Self.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1166,7 +1166,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Self.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1189,7 +1189,7 @@ local t = {
 				},
 			},
 			[3]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[3]',
+				[2]='::HandCards_Self.handCards[3]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1212,7 +1212,7 @@ local t = {
 				},
 			},
 			[4]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[4]',
+				[2]='::HandCards_Self.handCards[4]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1235,7 +1235,7 @@ local t = {
 				},
 			},
 			[5]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[5]',
+				[2]='::HandCards_Self.handCards[5]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1258,7 +1258,7 @@ local t = {
 				},
 			},
 			[6]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[6]',
+				[2]='::HandCards_Self.handCards[6]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1281,7 +1281,7 @@ local t = {
 				},
 			},
 			[7]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[7]',
+				[2]='::HandCards_Self.handCards[7]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1304,7 +1304,7 @@ local t = {
 				},
 			},
 			[8]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[8]',
+				[2]='::HandCards_Self.handCards[8]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1327,7 +1327,7 @@ local t = {
 				},
 			},
 			[9]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[9]',
+				[2]='::HandCards_Self.handCards[9]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1350,7 +1350,7 @@ local t = {
 				},
 			},
 			[10]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[10]',
+				[2]='::HandCards_Self.handCards[10]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1400,7 +1400,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Enemy.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1423,7 +1423,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Enemy.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1455,7 +1455,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Enemy.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1478,7 +1478,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Enemy.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1501,7 +1501,7 @@ local t = {
 				},
 			},
 			[3]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[3]',
+				[2]='::HandCards_Enemy.handCards[3]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1533,7 +1533,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Enemy.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1556,7 +1556,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Enemy.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1579,7 +1579,7 @@ local t = {
 				},
 			},
 			[3]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[3]',
+				[2]='::HandCards_Enemy.handCards[3]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1602,7 +1602,7 @@ local t = {
 				},
 			},
 			[4]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[4]',
+				[2]='::HandCards_Enemy.handCards[4]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1634,7 +1634,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Enemy.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1657,7 +1657,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Enemy.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1680,7 +1680,7 @@ local t = {
 				},
 			},
 			[3]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[3]',
+				[2]='::HandCards_Enemy.handCards[3]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1703,7 +1703,7 @@ local t = {
 				},
 			},
 			[4]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[4]',
+				[2]='::HandCards_Enemy.handCards[4]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1726,7 +1726,7 @@ local t = {
 				},
 			},
 			[5]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[5]',
+				[2]='::HandCards_Enemy.handCards[5]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1758,7 +1758,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Enemy.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1781,7 +1781,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Enemy.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1804,7 +1804,7 @@ local t = {
 				},
 			},
 			[3]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[3]',
+				[2]='::HandCards_Enemy.handCards[3]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1827,7 +1827,7 @@ local t = {
 				},
 			},
 			[4]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[4]',
+				[2]='::HandCards_Enemy.handCards[4]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1850,7 +1850,7 @@ local t = {
 				},
 			},
 			[5]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[5]',
+				[2]='::HandCards_Enemy.handCards[5]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1873,7 +1873,7 @@ local t = {
 				},
 			},
 			[6]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[6]',
+				[2]='::HandCards_Enemy.handCards[6]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1905,7 +1905,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Enemy.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1928,7 +1928,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Enemy.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1951,7 +1951,7 @@ local t = {
 				},
 			},
 			[3]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[3]',
+				[2]='::HandCards_Enemy.handCards[3]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1974,7 +1974,7 @@ local t = {
 				},
 			},
 			[4]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[4]',
+				[2]='::HandCards_Enemy.handCards[4]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -1997,7 +1997,7 @@ local t = {
 				},
 			},
 			[5]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[5]',
+				[2]='::HandCards_Enemy.handCards[5]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2020,7 +2020,7 @@ local t = {
 				},
 			},
 			[6]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[6]',
+				[2]='::HandCards_Enemy.handCards[6]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2043,7 +2043,7 @@ local t = {
 				},
 			},
 			[7]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[7]',
+				[2]='::HandCards_Enemy.handCards[7]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2075,7 +2075,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Enemy.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2098,7 +2098,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Enemy.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2121,7 +2121,7 @@ local t = {
 				},
 			},
 			[3]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[3]',
+				[2]='::HandCards_Enemy.handCards[3]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2144,7 +2144,7 @@ local t = {
 				},
 			},
 			[4]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[4]',
+				[2]='::HandCards_Enemy.handCards[4]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2167,7 +2167,7 @@ local t = {
 				},
 			},
 			[5]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[5]',
+				[2]='::HandCards_Enemy.handCards[5]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2190,7 +2190,7 @@ local t = {
 				},
 			},
 			[6]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[6]',
+				[2]='::HandCards_Enemy.handCards[6]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2213,7 +2213,7 @@ local t = {
 				},
 			},
 			[7]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[7]',
+				[2]='::HandCards_Enemy.handCards[7]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2236,7 +2236,7 @@ local t = {
 				},
 			},
 			[8]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[8]',
+				[2]='::HandCards_Enemy.handCards[8]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2268,7 +2268,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Enemy.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2291,7 +2291,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Enemy.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2314,7 +2314,7 @@ local t = {
 				},
 			},
 			[3]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[3]',
+				[2]='::HandCards_Enemy.handCards[3]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2337,7 +2337,7 @@ local t = {
 				},
 			},
 			[4]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[4]',
+				[2]='::HandCards_Enemy.handCards[4]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2360,7 +2360,7 @@ local t = {
 				},
 			},
 			[5]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[5]',
+				[2]='::HandCards_Enemy.handCards[5]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2383,7 +2383,7 @@ local t = {
 				},
 			},
 			[6]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[6]',
+				[2]='::HandCards_Enemy.handCards[6]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2406,7 +2406,7 @@ local t = {
 				},
 			},
 			[7]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[7]',
+				[2]='::HandCards_Enemy.handCards[7]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2429,7 +2429,7 @@ local t = {
 				},
 			},
 			[8]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[8]',
+				[2]='::HandCards_Enemy.handCards[8]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2452,7 +2452,7 @@ local t = {
 				},
 			},
 			[9]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[9]',
+				[2]='::HandCards_Enemy.handCards[9]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2484,7 +2484,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Enemy.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2507,7 +2507,7 @@ local t = {
 				},
 			},
 			[2]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[2]',
+				[2]='::HandCards_Enemy.handCards[2]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2530,7 +2530,7 @@ local t = {
 				},
 			},
 			[3]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[3]',
+				[2]='::HandCards_Enemy.handCards[3]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2553,7 +2553,7 @@ local t = {
 				},
 			},
 			[4]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[4]',
+				[2]='::HandCards_Enemy.handCards[4]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2576,7 +2576,7 @@ local t = {
 				},
 			},
 			[5]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[5]',
+				[2]='::HandCards_Enemy.handCards[5]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2599,7 +2599,7 @@ local t = {
 				},
 			},
 			[6]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[6]',
+				[2]='::HandCards_Enemy.handCards[6]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2622,7 +2622,7 @@ local t = {
 				},
 			},
 			[7]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[7]',
+				[2]='::HandCards_Enemy.handCards[7]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2645,7 +2645,7 @@ local t = {
 				},
 			},
 			[8]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[8]',
+				[2]='::HandCards_Enemy.handCards[8]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2668,7 +2668,7 @@ local t = {
 				},
 			},
 			[9]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[9]',
+				[2]='::HandCards_Enemy.handCards[9]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2691,7 +2691,7 @@ local t = {
 				},
 			},
 			[10]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[10]',
+				[2]='::HandCards_Enemy.handCards[10]',
 				[3]={
 					[1]='x',
 					[2]='y',
@@ -2738,7 +2738,7 @@ local t = {
 		['time']=300,
 		['iter']={
 			[1]={n=4,[1] = '动画系统_多属性设置',
-				[2]='::HandCards.handCards[1]',
+				[2]='::HandCards_Enemy.handCards[1]',
 				[3]={
 					[1]='x',
 					[2]='y',

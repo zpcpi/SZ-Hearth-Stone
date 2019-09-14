@@ -131,20 +131,32 @@ local t = {
 				['type']='o_animquest',
 			},
 			[4]={
-				['name']='卡牌数量',
+				['name']='手牌数量',
 				['type']='any',
 			},
 			[5]={
-				['name']='对决类型',
+				['name']='手牌信息',
 				['type']='any',
 			},
 			[6]={
+				['name']='对决类型',
+				['type']='any',
+			},
+			[7]={
 				['name']='玩家信息',
 				['type']='o_room_player',
 			},
-			[7]={
+			[8]={
 				['name']='房间玩家列表',
 				['type']='_o_room_player',
+			},
+			[9]={
+				['name']='主动画系统',
+				['type']='any',
+			},
+			[10]={
+				['name']='主战场系统',
+				['type']='any',
 			},
 		},
 	},

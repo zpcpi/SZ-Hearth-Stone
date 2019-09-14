@@ -67,7 +67,7 @@ local function get_animactor_obj(o_animactor, string_obj)
     local set_obj = function(name)
         local obj = nil
         -- 先判断引用格式
-        string.gsub(name, '^::([%w]+)$', function(w)
+        string.gsub(name, '^::([%w_]+)$', function(w)
             obj = o_animactor:get_quote('::' .. w)
         end, 1)
 

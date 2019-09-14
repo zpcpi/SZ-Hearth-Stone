@@ -29,56 +29,19 @@ function t:init()
             obj.y = 200
         end
     )
-end
 
-function t:AddPlayerCard(playerType)
-    local script
+    do
+        -- 注册主动画系统
+        local main_actor = self.obj.c_animactor
+        local o_misc = G.misc()
+        o_misc.主动画系统 = main_actor
+        o_misc.主战场系统 = self
 
-    if self.selfHandcard.c_handcards_self:GetPlayerType() == playerType then 
-        script = self.selfHandcard.c_handcards_self
-    elseif self.enemyHandcard.c_handcards_enemy:GetPlayerType() == playerType then 
-        script = self.enemyHandcard.c_handcards_enemy
+        -- 动画系统引用注册
+        main_actor:push_quote('::HandCards_Self', self.selfHandcard.c_handcards_self)
+        main_actor:push_quote('::HandCards_Enemy', self.enemyHandcard.c_handcards_enemy)
     end
-    if not script then 
-        return 
-    end
-    script:addCard()
-end
 
-function t:RemovePlayerCard(playerType)
-    local script
-
-    if self.selfHandcard.c_handcards_self:GetPlayerType() == playerType then 
-        script = self.selfHandcard.c_handcards_self
-    elseif self.enemyHandcard.c_handcards_enemy:GetPlayerType() == playerType then 
-        script = self.enemyHandcard.c_handcards_enemy
-    end
-    if not script then 
-        return 
-    end
-    script:removeCard()
-end
-
-function t:GetHandcardNode(playerType)
-    if self.selfHandcard.c_handcards_self:GetPlayerType() == playerType then 
-        return self.selfHandcard
-    elseif self.enemyHandcard.c_handcards_enemy:GetPlayerType() == playerType then 
-        return self.enemyHandcard
-    end
-end
-
-function t:GetAnimActor(playerType)
-    local script
-
-    if self.selfHandcard.c_handcards_self:GetPlayerType() == playerType then 
-        script = self.selfHandcard.c_handcards_self
-    elseif self.enemyHandcard.c_handcards_enemy:GetPlayerType() == playerType then 
-        script = self.enemyHandcard.c_handcards_enemy
-    end
-    if not script then 
-        return 
-    end
-    return script:GetAnimActor()
 end
 
 return t

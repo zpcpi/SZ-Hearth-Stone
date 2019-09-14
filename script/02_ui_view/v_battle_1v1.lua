@@ -2,9 +2,10 @@
 
 ]]
 local G = require 'gf'
-local c_battle_1v1 = require 'c_battle_1v1'
 local c_handcards_enemy = require 'c_handcards_enemy'
 local c_handcards_self = require 'c_handcards_self'
+local c_battle_1v1 = require 'c_battle_1v1'
+local c_animactor = require 'c_animactor'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -116,4 +117,5 @@ tp = tc
 	tp = tc
 	tp = tp.parent
 	--end
+tp.c_animactor = setmetatable({}, c_animactor)
 tp.c_battle_1v1 = setmetatable({}, c_battle_1v1)

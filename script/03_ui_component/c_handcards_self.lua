@@ -14,15 +14,13 @@ end
 
 function t:start()
     self.CardCount = 0
-    self.maxCount = 10
+    self.maxCount = HANDCARDS_MAX_COUNT
     self.handCards = {}
 
     self.CurCard = nil
     self.TipsCard = nil
 
     self:initTipsCard()
-
-    self:InitAnimActor()
 end
 
 function t:InitDifference(playerType, baseid, tipsfix, newfix)
@@ -32,14 +30,8 @@ function t:InitDifference(playerType, baseid, tipsfix, newfix)
     self.AnimBaseID = baseid
 end
 
-function t:InitAnimActor()
-    self.animActor = G.loadUI('v_animactor')
-    self.animActor.c_animactor:push_quote('::HandCards', self)
-    G.Stage().addChild(self.animActor)
-end
-
 function t:initTipsCard()
-    local ui_card = G.loadUI('v_card_weapon')
+    local ui_card = G.loadUI('v_card_manager')
     self.tips版.addChild(ui_card)
     self.TipsCard = ui_card
 
@@ -50,59 +42,38 @@ function t:initTipsCard()
     self.TipsFix(ui_card)
 end
 
-function t:run_animactor_reset()
-    if self.animActor then
-    else
-        self:InitAnimActor()
-    end
-
-    if self.CardCount and (self.CardCount > 0) and (self.CardCount <= self.maxCount) then
-    else
-        return 
-    end
-
-    local actor = self.animActor.c_animactor
-    actor.__o_animquest = {
-        [1] = {
-            [1] = G.call('动画系统_创建quest', actor, G.QueryName(self.AnimBaseID + self.CardCount - 1)),
-        },
-    }
-    actor:run_animactor()
-end
-
-function t:addCard()
+function t:addCard(o_card_卡牌)
     local count = self.CardCount + 1
     if count > self.maxCount then
         return
     end
 
-    local ui_card = G.loadUI('v_card_weapon')
+    local ui_card = G.loadUI('v_card_manager')
     self.布局点.addChild(ui_card)
     self.handCards[count] = ui_card
 
     ui_card.mouseEnabled = true
     ui_card.scaleX = 0.35
     ui_card.scaleY = 0.35
+    ui_card.c_card_manager:setData(o_card_卡牌)
 
     self.CardCount = count
 
     self.NewcardFix(ui_card)
-    self:run_animactor_reset()
 end
 
-function t:removeCard()
-    local count = G.call('角色_获取手牌数量', self:GetPlayerType())
-    if count > self.CardCount then
+function t:removeCard(del_count)
+    local count = self.CardCount
+    if count < del_count then
         return
     end
-    local ui_card = self.handCards[count + 1]
-    table.remove(self.handCards, count + 1)
+
+    local ui_card = self.handCards[del_count]
+    table.remove(self.handCards, del_count)
     self.obj:removeChild(ui_card)
 
     ui_card.visible = false
-    self.CardCount = self.CardCount - 1
-
-    self:run_animactor_reset()
+    self.CardCount = count - 1
 end
 
 function t:click(tar)
@@ -114,6 +85,7 @@ function t:rollOver(tar)
 
     self.TipsCard.visible = true
     self.TipsCard.x = tar.x
+    self.TipsCard.c_card_manager:setData(tar.c_card_manager:getData())
 end
 
 function t:rollOut(tar)
