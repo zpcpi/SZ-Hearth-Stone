@@ -23,11 +23,10 @@ function t:start()
     self:initTipsCard()
 end
 
-function t:InitDifference(playerType, baseid, tipsfix, newfix)
-    self:SetPlayerType(playerType)
+function t:InitDifference(baseid, tipsfix, newfix)
+    self.AnimBaseID = baseid
     self.TipsFix = tipsfix
     self.NewcardFix = newfix
-    self.AnimBaseID = baseid
 end
 
 function t:initTipsCard()
@@ -99,18 +98,6 @@ function t:mouseDown(tar)
 end
 
 function t:mouseUp(tar)
-end
-
-function t:SetPlayerType(playerType)
-    self.playerType = playerType
-end
-
-function t:GetPlayerType()
-    return self.playerType
-end
-
-function t:GetAnimActor()
-    return self.animActor
 end
 
 return t
