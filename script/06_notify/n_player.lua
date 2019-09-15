@@ -1,7 +1,7 @@
 local G = require "gf"
 local noti = G.notify
 
-function noti.角色_添加手牌_绝对身份(estr_absolute_id_type_绝对身份, o_card_卡牌)
+function noti.角色_添加手牌_绝对身份(estr_absolute_id_type_绝对身份, i_card_卡牌)
     local o_misc = G.misc()
     local script_战场 = o_misc.主战场系统
     local script_动画系统 = o_misc.主动画系统
@@ -20,8 +20,8 @@ function noti.角色_添加手牌_绝对身份(estr_absolute_id_type_绝对身�
     end
 
     script_动画系统:add_animquest(
-        G.call('动画系统_创建quest_自定义', script_动画系统, true, 1, {
-            {script_手牌组件.addCard, script_手牌组件, o_card_卡牌},
+        G.call('动画系统_创建quest_自定义', script_动画系统, true, 500, {
+            {script_手牌组件.addCard, script_手牌组件, G.QueryName(i_card_卡牌)},
         })
     )
     script_动画系统:add_animquest(
@@ -58,3 +58,4 @@ function noti.角色_移除手牌_绝对身份(estr_absolute_id_type_绝对身�
         )
     end
 end
+

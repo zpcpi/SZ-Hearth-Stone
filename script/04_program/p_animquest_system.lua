@@ -183,6 +183,13 @@ end
 --type=actor
 --hide=true
 --ret=_o_animquest_shaft
+t['动画系统_跟随鼠标'] = function(string_obj, _string_attr, o_animquest_bezier_曲线参数)
+    return create_shaftlist(string_obj, _string_attr, {G.MousePos()}, o_animquest_bezier_曲线参数, create_shaft)
+end
+
+--type=actor
+--hide=true
+--ret=_o_animquest_shaft
 t['动画系统_属性累加'] = function(string_obj, string_attr, number_累加值, o_animquest_bezier_曲线参数)
     return create_shaftlist(string_obj, {string_attr}, {number_累加值}, o_animquest_bezier_曲线参数, create_shaft_delta)
 end
@@ -202,15 +209,17 @@ t['动画系统_创建quest'] = function(o_animactor_演算体, o_animquest_动�
     result['is_mono'] = o_animquest_动画段模板['is_mono']
     result['time'] = o_animquest_动画段模板['time']
     result['iter'] = o_animquest_动画段模板['iter']
+    result['child_quests'] = o_animquest_动画段模板['child_quests']
     return result
 end
 
 --hide=true
 --ret=o_animquest
-t['动画系统_创建quest_自定义'] = function(o_animactor_演算体, boolean_ismono, int_time, _farg_生成函数)
+t['动画系统_创建quest_自定义'] = function(o_animactor_演算体, boolean_ismono, int_time, _farg_生成函数, _o_animquest_子动画)
     local result = {}
     result['is_mono'] = boolean_ismono
     result['time'] = int_time
     result['iter'] = _farg_生成函数
+    result['child_quests'] = _o_animquest_子动画
     return result
 end

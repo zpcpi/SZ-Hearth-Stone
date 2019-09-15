@@ -38,8 +38,12 @@ function t:init()
         -- 动画系统引用注册
         main_actor:push_quote('::HandCards_Self', self.selfHandcard.c_handcards_self)
         main_actor:push_quote('::HandCards_Enemy', self.enemyHandcard.c_handcards_enemy)
-    end
 
+
+
+
+        main_actor:push_quote('::TestImg', self.obj.getChildByName('c1'))
+    end
 end
 
 return t

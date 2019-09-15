@@ -193,7 +193,7 @@ local t = {
 				['type']='_o_animquest_shaft',
 			},
 			[5]={
-				['name']='next_quest',
+				['name']='child_quests',
 				['type']='_o_animquest',
 			},
 		},
@@ -223,11 +223,11 @@ local t = {
 				['type']='int',
 			},
 			[3]={
-				['name']='cubic_bezier',
+				['name']='bezier',
 				['type']='o_animquest_bezier',
 			},
 			[4]={
-				['name']='next',
+				['name']='next_index',
 				['type']='int',
 			},
 		},

@@ -4,8 +4,8 @@
 local G = require 'gf'
 local c_handcards_enemy = require 'c_handcards_enemy'
 local c_handcards_self = require 'c_handcards_self'
-local c_battle_1v1 = require 'c_battle_1v1'
 local c_animactor = require 'c_animactor'
+local c_battle_1v1 = require 'c_battle_1v1'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -21,6 +21,7 @@ tp = tc
 	tc.right = 0.000
 	tc.top = 0.000
 	tc.anchor = 0x64006400
+	tc.mouseEnabled = true
 	tc.color = 0xbcaf37
 	tc.alpha = 150
 	tc.img = 0x56000001
@@ -114,6 +115,17 @@ tp = tc
 	tc.right = 640.000
 	tc.bottom = -360.000
 	tc.top = 360.000
+	tp = tc
+	tp = tp.parent
+	--end
+	tc = G.Quad()
+	tp.addChild(tc)
+	tc.name = 'c1'
+	tc.left = -9.000
+	tc.right = 91.000
+	tc.bottom = -104.000
+	tc.top = -4.000
+	tc.img = 0x56000001
 	tp = tc
 	tp = tp.parent
 	--end
