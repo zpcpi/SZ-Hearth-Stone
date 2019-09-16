@@ -206,10 +206,8 @@ end
 --ret=o_animquest
 t['动画系统_创建quest'] = function(o_animactor_演算体, o_animquest_动画段模板)
     local result = {}
-    result['is_mono'] = o_animquest_动画段模板['is_mono']
-    result['time'] = o_animquest_动画段模板['time']
-    result['iter'] = o_animquest_动画段模板['iter']
-    result['child_quests'] = o_animquest_动画段模板['child_quests']
+    
+    G.deepCopyInst(o_animquest_动画段模板, result)
     return result
 end
 

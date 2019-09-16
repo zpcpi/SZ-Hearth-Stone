@@ -259,37 +259,26 @@ end
 function t:refresh_stage_and_index(stage, index)
     -- 记录下最后动画的子动画段
     local child = self.__o_animquest[stage][index]['child_quests']
-
+    
     for i = index, 1, -1 do
         table.remove(self.__o_animquest[stage], i)
     end
-
+    
     if #self.__o_animquest[stage] == 0 then
         table.remove(self.__o_animquest, stage)
     end
-
+    
     for i = stage - 1, 1, -1 do
         table.remove(self.__o_animquest, i)
     end
-
+    
     -- 修正动画队列
     if child then
-        local index = 1
-        local new_child = {}
-        while true do
-            if child[index] then
-                new_child[index] = child[index]
-            elseif child['__' .. index] then
-                new_child[index] = G.QueryName(chile['__' .. index])
-            else
-                break
-            end
-            index = index + 1
-        end
-
-        table.insert(self.__o_animquest, 1, new_child)
+        local newChild = {}
+        G.deepCopyInst(child, newChild)
+        table.insert(self.__o_animquest, 1, newChild)
     end
-
+    
     -- 指向新的层级
     self.cur_animquest_list = self.__o_animquest[#self.__o_animquest]
     if self.cur_animquest_list then

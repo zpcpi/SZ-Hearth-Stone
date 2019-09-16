@@ -1378,7 +1378,7 @@ local t = {
 		['name']=0x10010019,
 		['showname']='连线跟随鼠标',
 		['is_mono']=true,
-		['time']=50,
+		['time']=30,
 		['iter']={
 			[1]={n=3,[1] = '动画系统_跟随鼠标',
 				[2]='::TestImg',
