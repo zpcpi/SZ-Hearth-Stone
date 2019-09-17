@@ -43,3 +43,10 @@ end
 t['系统_更新当前玩家信息'] = function(o_room_player_玩家信息)
     G.misc().玩家信息 = o_room_player_玩家信息
 end
+
+t['系统_重试等待'] = function(string_提示内容, int_秒数)
+    for i = 1, int_秒数 do 
+        G.call('提示_添加提示', (string_提示内容 or '') .. (int_秒数 - i + 1) .. ' 秒后重试')
+        G.wait_time(1000)
+    end
+end

@@ -2,13 +2,13 @@
 
 ]]
 local G = require 'gf'
-local c_room = require 'c_room'
-local c_scrollview = require 'c_scrollview'
-local c_button = require 'c_button'
-local c_perfectsize = require 'c_perfectsize'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local c_layout_v = require 'c_layout_v'
+local c_perfectsize = require 'c_perfectsize'
+local c_scrollview = require 'c_scrollview'
+local c_room = require 'c_room'
 local c_layout_h = require 'c_layout_h'
+local c_button = require 'c_button'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -51,11 +51,11 @@ tp = tc
 		tc = G.TextQuad()
 		tp.addChild(tc)
 		tc.name = 'IPText'
-		tc.left = 70.000
-		tc.right = 270.000
+		tc.left = 59.000
+		tc.right = 327.000
 		tc.bottom = -22.000
 		tc.top = 22.000
-		tc.text = '192.168.215.114'
+		tc.text = '192.168.215.114:3000'
 		tc.font = 0x63200041
 		tp = tc
 		tp = tp.parent
@@ -132,6 +132,7 @@ tp = tc
 	tc.bottom = -244.000
 	tc.top = -196.000
 	tc.mouseEnabled = true
+	tc.visible = false
 	tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
@@ -194,7 +195,6 @@ tp = tc
 	tc.bottom = -244.000
 	tc.top = -196.000
 	tc.mouseEnabled = true
-	tc.visible = false
 	tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
@@ -383,6 +383,14 @@ tp = tc
 			com['autowidth'] =false
 			tp = tp.parent
 			--end
+		tp.c_perfectsize = setmetatable({}, c_perfectsize)
+		com = tp.c_perfectsize
+		com['height'] =true
+		com['expheight'] =0.000
+		com['minheight'] =nil
+		com['width'] =false
+		com['expwidth'] =nil
+		com['minwidth'] =nil
 		tp.c_layout_v = setmetatable({}, c_layout_v)
 		com = tp.c_layout_v
 		com['alignment_h'] =0.000
@@ -392,14 +400,6 @@ tp = tc
 		com['startSpaceY'] =0.000
 		com['changePivot'] =false
 		com['changeAnchor'] =false
-		tp.c_perfectsize = setmetatable({}, c_perfectsize)
-		com = tp.c_perfectsize
-		com['height'] =true
-		com['expheight'] =0.000
-		com['minheight'] =nil
-		com['width'] =false
-		com['expwidth'] =nil
-		com['minwidth'] =nil
 		tp = tp.parent
 		--end
 		tc = G.Entity()

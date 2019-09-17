@@ -21,14 +21,14 @@ end
 
 --hide=true
 t['主机_建立连接'] = function()
-    local netPort = tonumber(DEFAULT_NET_PORT)
     G.tcpServerSocket = lsocket.tcp()
     G.tcpServerSocket:settimeout(0)
-    local ret, err = G.tcpServerSocket:bind('127.0.0.1', netPort)
-    if not ret then
-        G.call('系统_输出信息', '房间建立失败!' .. tostring(err))
-        return
+    G.netPort = tonumber(DEFAULT_NET_PORT)
+    while not G.tcpServerSocket:bind('127.0.0.1', G.netPort) do 
+        G.netPort = G.netPort + 1
+        G.call('系统_重试等待', '房间开启失败, ', 3)
     end
+    print('--== G.netPort', G.netPort)
     G.call('系统_输出信息', '房间建立成功， 正在开启监听!')
     local ret, err = G.tcpServerSocket:listen(1)
     if(ret and ret == 1) then

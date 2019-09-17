@@ -21,7 +21,7 @@ function t:init()
     self.quitBtn = self.obj.getChildByName('Quit')
 
     self.ipText = self.obj.getChildByName('IP').getChildByName('IPText')
-    self.ipText.text = G.call('网络通用_获取本机IP地址')
+    self.ipText.text = G.call('网络通用_获取本机IP地址') .. ':' .. G.call('网络通用_获取主机端口')
 
     self.roomMemberParent = self.obj.getChildByName('RoomMember')
 
@@ -34,6 +34,11 @@ end
 
 function t:ResetRoomMember()
     self.roomMemberParent.removeAllChildren()
+end
+
+function t:UpdateRoom()
+    self.ipText.text = G.call('网络通用_获取本机IP地址') .. ':' .. G.call('网络通用_获取主机端口')
+    self:UpdateRoomMember()
 end
 
 function t:UpdateRoomMember()

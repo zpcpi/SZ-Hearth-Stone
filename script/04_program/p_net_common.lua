@@ -54,6 +54,11 @@ t['网络通用_获取本机IP地址'] = function()
     return lsocket.dns.toip(hostname)
 end
 
+t['网络通用_获取主机端口'] = function()
+    print('--== 网络通用_获取主机端口 G.netPort', G.netPort)
+    return tostring(G.netPort)
+end
+
 t['网络通用_能否广播'] = function()
     return G.canBroadcast ~= false
 end

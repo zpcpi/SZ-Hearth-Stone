@@ -11,13 +11,20 @@ t['客机_连接主机'] = function(string_hostip)
     local any_玩家信息 = G.call('系统_获取当前玩家信息')
     any_玩家信息.是主机 = false
 
-    local netPort = tonumber(DEFAULT_NET_PORT)
+    if not string.find(string_hostip, ':') then 
+        G.netPort = tonumber(DEFAULT_NET_PORT)
+    else
+        local pos = string.find(string_hostip, ':')
+        local portStr = string.sub(string_hostip, pos)
+        string_hostip = string.sub(string_hostip, 1, pos - 1)
+        G.netPort = tonumber(portStr)
+    end
     G.call('客机_输出连接信息', '正在连接中...')
     if G.tcpClientSocket then 
         G.tcpClientSocket:close()
     end
     G.tcpClientSocket = lsocket.tcp()
-    local hostSocket, err = G.tcpClientSocket:connect(string_hostip, netPort)
+    local hostSocket, err = G.tcpClientSocket:connect(string_hostip, G.netPort)
     if not hostSocket then
         G.call('客机_输出连接信息', '连接失败!' .. err)
         return
