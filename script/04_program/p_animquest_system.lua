@@ -184,7 +184,26 @@ end
 --hide=true
 --ret=_o_animquest_shaft
 t['动画系统_跟随鼠标'] = function(string_obj, _string_attr, o_animquest_bezier_曲线参数)
-    return create_shaftlist(string_obj, _string_attr, {G.MousePos()}, o_animquest_bezier_曲线参数, create_shaft)
+    if _string_attr and (#_string_attr == 2) then
+        local cur_actor = G.misc().当前演算体
+        local cur_quest = G.misc().当前动画段
+        local obj_list = G.call('动画系统_获取名称指代', string_obj)
+        local time = cur_quest['time']
+
+        local shaft_list = {}
+        for _,obj in ipairs(obj_list) do
+            local _number_val
+            if obj.parent then
+                _number_val = {obj.parent.globalToLocal(G.MousePos())}
+            elseif obj.obj and obj.obj.parent then
+                _number_val = {obj.obj.parent.globalToLocal(G.MousePos())}
+            end
+            for i = 1, #_string_attr, 1 do
+                table.insert(shaft_list, create_shaft(obj, _string_attr[i], _number_val[i], time, o_animquest_bezier_曲线参数))
+            end
+        end
+        return shaft_list
+    end
 end
 
 --type=actor
