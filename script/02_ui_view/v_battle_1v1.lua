@@ -2,10 +2,11 @@
 
 ]]
 local G = require 'gf'
-local c_handcards_enemy = require 'c_handcards_enemy'
-local c_handcards_self = require 'c_handcards_self'
-local c_animactor = require 'c_animactor'
 local c_battle_1v1 = require 'c_battle_1v1'
+local c_handcards_enemy = require 'c_handcards_enemy'
+local c_pop_pointline = require 'c_pop_pointline'
+local c_animactor = require 'c_animactor'
+local c_handcards_self = require 'c_handcards_self'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -118,15 +119,23 @@ tp = tc
 	tp = tc
 	tp = tp.parent
 	--end
-	tc = G.Quad()
+	tc = G.loadUI('v_pop_pointline')
+	tc.prefab = true
 	tp.addChild(tc)
 	tc.name = 'c1'
-	tc.left = -9.000
-	tc.right = 91.000
-	tc.bottom = -104.000
-	tc.top = -4.000
-	tc.img = 0x56000001
+	tc.left = -640.000
+	tc.right = 640.000
+	tc.bottom = -360.000
+	tc.top = 360.000
 	tp = tc
+	tp.c_pop_pointline = setmetatable({}, c_pop_pointline)
+	com = tp.c_pop_pointline
+	com['p1x'] =nil
+	com['p1y'] =nil
+	com['p2x'] =nil
+	com['p2y'] =nil
+	com['p3x'] =nil
+	com['p3y'] =nil
 	tp = tp.parent
 	--end
 tp.c_animactor = setmetatable({}, c_animactor)

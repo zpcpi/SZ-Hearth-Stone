@@ -17,10 +17,37 @@ local t = G.api
 
 
 
+--================================================
+--================================================
+-- 队列生成相关接口
+--================================================
+--================================================
 
+--hide=true
+--type=array
+t['create_arithmetic_progression'] = function (start, step, count)
+    local queue = {}
+    local temp = start
 
+    for i = 1, count, 1 do
+        table.insert(queue, temp)
+        temp = temp + step
+    end
+    return queue
+end
 
+--hide=true
+--type=array
+t['create_geometric_progression'] = function (start, multiplier, count)
+    local queue = {}
+    local temp = start
 
+    for i = 1, count, 1 do
+        table.insert(queue, temp)
+        temp = temp * multiplier
+    end
+    return queue
+end
 
 
 
@@ -70,7 +97,7 @@ t['array_filtermap'] = function (arr, iter)
     local new_arr = {}
     for _,v in ipairs(arr) do
         local r = iter(v)
-        if v ~= nil then
+        if r ~= nil then
             table.insert(new_arr, r)
         end
     end
@@ -148,11 +175,21 @@ end
 
 --hide=true
 --type=array
-t['array_union'] = function(arrA, arrB)
+t['array_union'] = function (arrA, arrB)
     for _,v in ipairs(arrB or {}) do
         table.insert(arrA, v)
     end
     return arrA
+end
+
+--hide=true
+--type=array
+t['array_inverted'] = function (arr)
+    local result = {}
+    for i = #arr, 1, -1 do
+        table.insert(result, arr[i])
+    end
+    return result
 end
 
 --================================================
@@ -173,7 +210,7 @@ end
 
 --hide=true
 --type=array
-t['stack_push'] = function(stack, val)
+t['stack_push'] = function (stack, val)
     if stack then
         stack.n = (stack.n or 0) + 1
         stack[stack.n] = val
@@ -182,7 +219,7 @@ end
 
 --hide=true
 --type=array
-t['stack_pop'] = function(stack)
+t['stack_pop'] = function (stack)
     if stack and stack.n and (stack.n > 0) then
         local result = stack[stack.n]
         stack.n = stack.n - 1
@@ -192,7 +229,7 @@ end
 
 --hide=true
 --type=array
-t['stack_top'] = function(stack)
+t['stack_top'] = function (stack)
     if stack and stack.n and (stack.n > 0) then
         return stack[stack.n]
     end
@@ -200,7 +237,7 @@ end
 
 --hide=true
 --type=array
-t['create_stack'] = function()
+t['create_stack'] = function ()
     local iter = {}
     local stack = {}
     stack.n = 0

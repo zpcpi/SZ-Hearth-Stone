@@ -41,8 +41,12 @@ function t:init()
 
 
 
-
-        main_actor:push_quote('::TestImg', self.obj.getChildByName('c1'))
+        local ui_pop = self.obj.getChildByName('c1').c_pop_pointline
+        main_actor:push_quote('::PopLine', ui_pop)
+        ui_pop.p1x = -100
+        ui_pop.p1y = -200
+        ui_pop.p2x = 100
+        ui_pop.p2y = 100
     end
 end
 

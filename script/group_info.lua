@@ -42,7 +42,8 @@ local t ={
 			[8] = 'v_handcards_friend',
 			[9] = 'v_handcards_self',
 			[10] = 'v_history',
-			[11] = 'v_record',
+			[11] = 'v_pop_pointline',
+			[12] = 'v_record',
 		},
 		[3] = {
 			name = '测试UI',

@@ -6,11 +6,7 @@ local L = {}
 local t = G.api
 
 t['对决_初始化战场'] = function(estr_battle_type_对决类型)
-    if estr_battle_type_对决类型 == '1v1' then 
-        G.misc().对决类型 = estr_battle_type_对决类型
-        G.addUI('v_battle_1v1')
-    elseif estr_battle_type_对决类型 == '2v2' then 
-    end
+
 end
 
 --ret=estr_battle_type
@@ -32,5 +28,5 @@ t['对决_开始'] = function()
         G.call('房间_分配绝对身份')
         G.call('网络通用_广播消息', '对决_开始')
     end
-    G.call('对决_初始化战场')
+    G.call('对决_初始化战场', '1v1')
 end
