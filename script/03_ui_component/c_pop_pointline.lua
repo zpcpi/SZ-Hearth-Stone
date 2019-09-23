@@ -126,11 +126,11 @@ function t:updateAngle()
             local pointxs, pointys = G.call('Bezier_curve', 
                                             {self.p1x, self.p2x, self.p3x}, 
                                             {self.p1y, self.p2y, self.p3y}, 
-                                            {1 - 1 / self.spritemax, 1}
+                                            {1 - 1 / self.spritemax}
                                         )
             ui_item.rotation = self:getAngle(
                 {x = pointxs[1], y = pointys[1]},
-                {x = pointxs[2], y = pointys[2]}
+                {x = self.p3x, y = self.p3y}
             )
         else
             ui_item.rotation = self:getAngle(

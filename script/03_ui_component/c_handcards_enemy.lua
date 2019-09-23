@@ -20,6 +20,8 @@ function t:start()
     self.CurCard = nil
     self.TipsCard = nil
 
+    self.can_pick = true
+
     self:initTipsCard()
 end
 
@@ -79,25 +81,37 @@ function t:click(tar)
 end
 
 function t:rollOver(tar)
-    tar.alpha = 0
-    self.CurCard = tar
+    if self.can_pick then
+        tar.alpha = 0
+        self.CurCard = tar
 
-    self.TipsCard.visible = true
-    self.TipsCard.x = tar.x
-    self.TipsCard.c_card_manager:setData(tar.c_card_manager:getData())
+        self.TipsCard.visible = true
+        self.TipsCard.x = tar.x
+        self.TipsCard.c_card_manager:setData(tar.c_card_manager:getData())
+    end
 end
 
 function t:rollOut(tar)
-    tar.alpha = 255
-    self.CurCard = nil
+    if self.can_pick then
+        tar.alpha = 255
+        self.CurCard = nil
 
-    self.TipsCard.visible = false
+        self.TipsCard.visible = false
+    end
 end
 
 function t:mouseDown(tar)
 end
 
 function t:mouseUp(tar)
+end
+
+function t:pickcard_state(picking)
+    if picking then
+        self.can_pick = false
+    else
+        self.can_pick = true
+    end
 end
 
 return t

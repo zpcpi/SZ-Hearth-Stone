@@ -35,7 +35,7 @@ end
 t['Bezier_curve'] = function (posxs, posys, dots)
     local pointxs, pointys = {}, {}
 
-    if posxs and posys and dots and (#posxs > 1) and (#posxs == #posys) and (#dots > 1) then
+    if posxs and posys and dots and (#posxs > 1) and (#posxs == #posys) then
         local point_count = #posxs
         local arga = G.call('array_map', 
                             G.call('create_arithmetic_progression', 0, 1, point_count),

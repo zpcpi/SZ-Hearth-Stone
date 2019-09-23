@@ -20,6 +20,10 @@ local t = {
 				['id']='Caster',
 				['type']='o_card',
 			},
+			[2]={
+				['id']='CasterObj',
+				['type']='any',
+			},
 		},
 	},
 	{

@@ -20,7 +20,7 @@ function noti.角色_添加手牌_绝对身份(estr_absolute_id_type_绝对身�
     end
 
     script_动画系统:add_animquest(
-        G.call('动画系统_创建quest_自定义', script_动画系统, true, 500, {
+        G.call('动画系统_创建quest_自定义', script_动画系统, true, 200, {
             {script_手牌组件.addCard, script_手牌组件, G.QueryName(i_card_卡牌)},
         })
     )

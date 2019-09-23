@@ -20,6 +20,8 @@ function t:start()
     self.CurCard = nil
     self.TipsCard = nil
 
+    self.can_pick = true
+
     self:initTipsCard()
 end
 
@@ -55,6 +57,7 @@ function t:addCard(o_card_卡牌)
     ui_card.scaleX = 0.35
     ui_card.scaleY = 0.35
     ui_card.c_card_manager:setData(o_card_卡牌)
+    G.call('卡牌注册指令', o_card_卡牌)
 
     self.CardCount = count
 
@@ -79,27 +82,45 @@ function t:click(tar)
 end
 
 function t:rollOver(tar)
-    tar.alpha = 0
-    self.CurCard = tar
+    if self.can_pick then
+        tar.alpha = 0
+        self.CurCard = tar
 
-    self.TipsCard.visible = true
-    self.TipsCard.x = tar.x
-    self.TipsCard.c_card_manager:setData(tar.c_card_manager:getData())
+        self.TipsCard.visible = true
+        self.TipsCard.x = tar.x
+        self.TipsCard.c_card_manager:setData(tar.c_card_manager:getData())
+    end
 end
 
 function t:rollOut(tar)
-    tar.alpha = 255
-    self.CurCard = nil
+    if self.can_pick then
+        tar.alpha = 255
+        self.CurCard = nil
 
-    self.TipsCard.visible = false
+        self.TipsCard.visible = false
+    end
 end
 
 function t:mouseDown(tar)
-    -- todo，传出卡牌id
-    G.trig_event('UI_抓取卡牌', G.QueryName(0x10060001))
+    local o_card_picked = tar.c_card_manager:getData()
+    if o_card_picked then
+        G.trig_event('UI_抓取卡牌', o_card_picked, tar)
+    end
 end
 
 function t:mouseUp(tar)
+end
+
+function t:pickcard_state(tar, picking)
+    if picking then
+        tar.alpha = 255
+        self.CurCard = nil
+        self.TipsCard.visible = false
+
+        self.can_pick = false
+    else
+        self.can_pick = true
+    end
 end
 
 return t

@@ -105,9 +105,3 @@ t['卡牌注册指令'] = function (o_card_使用卡牌)
         init_order_edge()
     end
 end
-
-t['order_test'] = function (id)
-    G.call('卡牌注册指令', id)
-    --G.trig_event('UI_抓取卡牌', id)
-end
-

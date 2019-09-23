@@ -158,6 +158,14 @@ local t = {
 				['name']='主战场系统',
 				['type']='any',
 			},
+			[11]={
+				['name']='我方手牌控件',
+				['type']='any',
+			},
+			[12]={
+				['name']='敌方1手牌控件',
+				['type']='any',
+			},
 		},
 	},
 	{
@@ -468,6 +476,10 @@ local t = {
 			[3]={
 				['name']='Select',
 				['type']='_o_card',
+			},
+			[4]={
+				['name']='CasterObj',
+				['type']='any',
 			},
 		},
 	},

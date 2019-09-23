@@ -1,6 +1,7 @@
 --[[1005
 
 ]]
+local G = require "gf"
 local t = {
 'o_order_edge',
 {
@@ -43,10 +44,25 @@ local t = {
 			return {'UI_抓取卡牌', Caster}
 		end,
 		['条件'] = function (o_order_info_当前指令信息)
-			return true
+			local Caster = o_order_info_当前指令信息['Caster']
+			print('UI_抓取卡牌', string.format('0x%x', Caster['name']), Caster['showname'])
+			return G.call('卡牌抓取条件判断', o_order_info_当前指令信息)
 		end,
 		['修改数据'] = function (o_order_info_当前指令信息)
-			print('trig 抓取卡牌')
+			local main_actor = G.misc().主动画系统
+			local _, obj = G.event_info()
+
+			o_order_info_当前指令信息['CasterObj'] = obj
+
+			-- 注册动画
+			main_actor:push_quote('::CurPickCard', obj)
+			main_actor:add_animquest(
+				G.call('动画系统_创建quest', main_actor, G.QueryName(0x1001001a))
+			)
+
+			-- 控件状态更改
+			G.misc().我方手牌控件.c_handcards_self:pickcard_state(obj, true)
+			G.misc().敌方1手牌控件.c_handcards_enemy:pickcard_state(true)
 		end,
 	},
 	{
