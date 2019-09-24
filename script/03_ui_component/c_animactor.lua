@@ -159,9 +159,19 @@ function t:go_deep()
 end
 function t:go_shallow()
     self.cur_animquest_list = G.call('stack_pop', self.cur_animquest_list_stack)
-    self.cur_animques =  G.call('stack_pop', self.cur_animquest_stack)
+    self.cur_animques = G.call('stack_pop', self.cur_animquest_stack)
 end
 
+
+function t:clear_animquest()
+    self.__o_animquest = {}
+
+    self.cur_animquest_list = nil
+    self.cur_animques = nil
+
+    G.RemoveAction(self.cur_pthread)
+    self.cur_pthread = nil
+end
 -- 播放速度设置
 -- function t:set_speed(v)
 --     self.speed = v

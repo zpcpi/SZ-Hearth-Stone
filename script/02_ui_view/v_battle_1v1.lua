@@ -2,10 +2,10 @@
 
 ]]
 local G = require 'gf'
-local c_handcards_enemy = require 'c_handcards_enemy'
 local c_animactor = require 'c_animactor'
-local c_battle_1v1 = require 'c_battle_1v1'
 local c_handcards_self = require 'c_handcards_self'
+local c_handcards_enemy = require 'c_handcards_enemy'
+local c_battle_1v1 = require 'c_battle_1v1'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -14,6 +14,7 @@ tc.left = -640.000
 tc.right = 640.000
 tc.bottom = -360.000
 tc.top = 360.000
+tc.mouseEnabled = true
 tp = tc
 	tc = G.Quad()
 	tp.addChild(tc)

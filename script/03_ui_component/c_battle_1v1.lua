@@ -41,11 +41,14 @@ function t:init()
         main_actor:push_quote('::HandCards_Enemy', self.enemyHandcard.c_handcards_enemy)
         
         
-        
-        -- 其他控件注册
-        o_misc.我方手牌控件 = self.selfHandcard
-        o_misc.敌方1手牌控件 = self.enemyHandcard
     end
 end
+
+function t:rmouseUp()
+    G.trig_event('UI_取消操作')
+end
+
+
+
 
 return t

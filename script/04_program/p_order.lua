@@ -96,9 +96,34 @@ t['卡牌注册指令'] = function (o_card_使用卡牌)
                     create_listener(state_info['监测列表'][index], state_info['跳转节点'][index], state_info['分支跳转节点'][index])
                 end
             elseif state == -1 then
+                -- 执行成功
 
             elseif state == -2 then
+                -- 执行失败
+                -- 鼠标跟随终止
+			    local o_misc = G.misc()
+                local script_动画系统 = o_misc.主动画系统
 
+                script_动画系统:pop_quote('::CurPickCard')
+                script_动画系统:clear_animquest()
+
+                -- 手牌状态恢复
+                local script_战场 = o_misc.主战场系统
+                local script_手牌组件 = script_战场.selfHandcard.c_handcards_self
+
+                script_手牌组件:pickcard_state(nil, false)
+                script_战场.enemyHandcard.c_handcards_enemy:pickcard_state(false)
+                
+                -- 播放复位动画
+                local int_当前手牌数量 =  G.call('角色_获取手牌数量', '我方')
+                if int_当前手牌数量 > 0 then
+                    script_动画系统:add_animquest(
+                        G.call('动画系统_创建quest', script_动画系统, G.QueryName(script_手牌组件.AnimBaseID + int_当前手牌数量 - 1))
+                    )
+                end
+
+                -- 重新注册指令
+                G.call('卡牌注册指令', o_card_使用卡牌)
             end
         end
 

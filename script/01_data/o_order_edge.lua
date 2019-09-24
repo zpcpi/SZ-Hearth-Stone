@@ -49,20 +49,22 @@ local t = {
 			return G.call('卡牌抓取条件判断', o_order_info_当前指令信息)
 		end,
 		['修改数据'] = function (o_order_info_当前指令信息)
-			local main_actor = G.misc().主动画系统
+			local o_misc = G.misc()
+			local script_动画系统 = o_misc.主动画系统
 			local _, obj = G.event_info()
 
 			o_order_info_当前指令信息['CasterObj'] = obj
 
 			-- 注册动画
-			main_actor:push_quote('::CurPickCard', obj)
-			main_actor:add_animquest(
-				G.call('动画系统_创建quest', main_actor, G.QueryName(0x1001001a))
+			script_动画系统:push_quote('::CurPickCard', obj)
+			script_动画系统:add_animquest(
+				G.call('动画系统_创建quest', script_动画系统, G.QueryName(0x1001001a))
 			)
 
 			-- 控件状态更改
-			G.misc().我方手牌控件.c_handcards_self:pickcard_state(obj, true)
-			G.misc().敌方1手牌控件.c_handcards_enemy:pickcard_state(true)
+			local script_战场 = o_misc.主战场系统
+			script_战场.selfHandcard.c_handcards_self:pickcard_state(obj, true)
+			script_战场.enemyHandcard.c_handcards_enemy:pickcard_state(true)
 		end,
 	},
 	{
