@@ -44,8 +44,8 @@ local t = {
 			return {'UI_抓取卡牌', Caster}
 		end,
 		['条件'] = function (o_order_info_当前指令信息)
-			local Caster = o_order_info_当前指令信息['Caster']
-			print('UI_抓取卡牌', string.format('0x%x', Caster['name']), Caster['showname'])
+			-- local Caster = o_order_info_当前指令信息['Caster']
+			-- print('UI_抓取卡牌', string.format('0x%x', Caster['name']), Caster['showname'])
 			return G.call('卡牌抓取条件判断', o_order_info_当前指令信息)
 		end,
 		['修改数据'] = function (o_order_info_当前指令信息)
@@ -131,10 +131,11 @@ local t = {
 			return {'UI_取消操作'}
 		end,
 		['条件'] = function (o_order_info_当前指令信息)
+			-- local Caster = o_order_info_当前指令信息['Caster']
+			-- print('UI_取消操作', string.format('0x%x', Caster['name']), Caster['showname'])
 			return true
 		end,
 		['修改数据'] = function (o_order_info_当前指令信息)
-			print('trig 卡牌取消指令')
 		end,
 	},
 	{
