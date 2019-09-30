@@ -26,7 +26,7 @@ t['客机_连接主机'] = function(string_hostip)
     G.tcpClientSocket = lsocket.tcp()
     local hostSocket, err = G.tcpClientSocket:connect(string_hostip, G.netPort)
     if not hostSocket then
-        G.call('客机_输出连接信息', '连接失败!' .. err)
+        G.call('客机_输出连接信息', '连接失败!\n' .. err)
         return
     end
     G.connectList = {G.tcpClientSocket}

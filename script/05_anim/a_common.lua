@@ -33,7 +33,7 @@ end
 
 t['提示动画_显示提示'] = function(o_node_提示)
     local int_渐显时间 = 100
-    local int_显示时间 = 300
+    local int_显示时间 = 1000
     local int_渐隐时间 = 100
 
     o_node_提示.alpha = 0

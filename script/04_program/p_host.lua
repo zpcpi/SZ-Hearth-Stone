@@ -19,8 +19,12 @@ t['主机_建立连接'] = function()
     G.tcpServerSocket:settimeout(0)
     G.netPort = tonumber(DEFAULT_NET_PORT)
     while not G.tcpServerSocket:bind('127.0.0.1', G.netPort) do 
+        if G.netPort > 9999 then 
+            G.call('房间_退出房间')
+            G.call('提示_添加提示', '无法建立房间, 请检查端口占用情况')
+            return 
+        end
         G.netPort = G.netPort + 1
-        G.call('系统_重试等待', '房间开启失败, ', 3)
     end
     G.call('系统_输出信息', '房间建立成功， 正在开启监听!')
     local ret, err = G.tcpServerSocket:listen(1)

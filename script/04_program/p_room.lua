@@ -6,7 +6,6 @@ local L = {}
 local t = G.api
 local lsocket = require("socket.core")
 
-
 t['房间_更新玩家信息'] = function(o_room_player_玩家)
     local o_misc = G.misc()
     local boolean_处理完毕 = false
@@ -31,6 +30,22 @@ t['房间_更新玩家信息'] = function(o_room_player_玩家)
     end
 end
 
+t['房间_删除玩家信息'] = function(o_room_player_玩家)
+    local o_misc = G.misc()
+    if o_misc.房间玩家列表 == nil then 
+        return
+    end
+    for index, o_room_player in ipairs(o_misc.房间玩家列表) do 
+        if G.call('房间_是否是同一玩家', o_room_player, o_room_player_玩家) then 
+            if G.call('房间_是否是同一玩家', G.call('系统_获取当前玩家信息'), o_room_player_玩家) then 
+                return
+            end
+            table.remove(o_misc.房间玩家列表, index)
+            return
+        end
+    end
+end
+
 t['房间_获取玩家信息列表'] = function()
     return G.misc().房间玩家列表 or {}
 end
@@ -49,6 +64,9 @@ end
 
 t['房间_清空玩家列表'] = function()
     G.misc().房间玩家列表 = {}
+    if G.call('网络通用_能否广播') then 
+        G.call('网络通用_广播消息', '房间_删除玩家信息', G.call('系统_获取当前玩家信息'))
+    end
 end
 
 t['房间_是否满足开始条件'] = function()

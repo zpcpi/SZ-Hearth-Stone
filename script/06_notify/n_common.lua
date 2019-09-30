@@ -9,8 +9,7 @@ function noti.初始化()
 end
 
 function noti.主机_新建房间()
-    G.addUI('v_room')
-    G.removeUI('v_main_menu')
+    G.changeUI('v_room')
 end
 
 function noti.房间_退出房间()
@@ -37,6 +36,20 @@ function noti.房间_更新玩家信息(o_room_player_对决玩家)
         G.call('系统_输出信息', string.format('[02]%s[ff] 成为了房主', playerName))
     end
 
+    local v_room = G.getUI('v_room')
+    if v_room then 
+        v_room.c_room:UpdateRoomMember()
+    end
+end
+
+function noti.房间_清空玩家列表()
+    local v_room = G.getUI('v_room')
+    if v_room then 
+        v_room.c_room:UpdateRoomMember()
+    end
+end
+
+function noti.房间_删除玩家信息()
     local v_room = G.getUI('v_room')
     if v_room then 
         v_room.c_room:UpdateRoomMember()
