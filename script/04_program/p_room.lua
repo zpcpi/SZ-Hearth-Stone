@@ -46,6 +46,13 @@ t['房间_删除玩家信息'] = function(o_room_player_玩家)
     end
 end
 
+t['房间_更新房间信息'] = function(estr_battle_type_对决类型)
+    G.misc().对决类型 = estr_battle_type_对决类型
+    if G.call('网络通用_能否广播') then 
+        G.call('网络通用_广播消息', '房间_更新房间信息', estr_battle_type_对决类型)
+    end
+end
+
 t['房间_获取玩家信息列表'] = function()
     return G.misc().房间玩家列表 or {}
 end
@@ -75,8 +82,13 @@ t['房间_是否满足开始条件'] = function()
     if type(o_misc.房间玩家列表) ~= 'table' then 
         return false
     end
-    -- TODO: 判断游戏模式
-    return #o_misc.房间玩家列表 >= 2
+    if G.misc().对决类型 == '1v1' then 
+        return #o_misc.房间玩家列表 == 2
+    elseif G.misc().对决类型 == '2v2' then 
+        return #o_misc.房间玩家列表 == 4
+    else
+        return false
+    end
 end
 
 t['房间_是否所有玩家准备就绪'] = function()
@@ -163,13 +175,18 @@ end
 
 t['房间_分配绝对身份'] = function()
     local any_玩家信息列表 = G.call('房间_获取玩家信息列表')
-    -- TODO: 根据游戏模式分配身份
-    if true then 
-        any_玩家信息列表[1].绝对身份 = '红1'
-        any_玩家信息列表[2].绝对身份 = '蓝1'
-        G.call('房间_更新玩家信息', any_玩家信息列表[1])
-        G.call('房间_更新玩家信息', any_玩家信息列表[2])
-    else
+    local _any_可用身份列表 = {}
+    if G.misc().对决类型 == '1v1' then 
+        _any_可用身份列表 = {'红1', '蓝1'}
+    elseif G.misc().对决类型 == '2v2' then 
+        _any_可用身份列表 = {'红1', '蓝1', '红2', '蓝2'}
+    end
+    for i = 1, #any_玩家信息列表 do 
+        local int_随机数 = G.random(1, #_any_可用身份列表)
+        any_玩家信息列表[i].绝对身份 = table.remove(_any_可用身份列表, int_随机数)
+    end
+    for i = 1, #any_玩家信息列表 do 
+        G.call('房间_更新玩家信息', any_玩家信息列表[i])
     end
 end
 

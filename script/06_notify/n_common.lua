@@ -74,7 +74,6 @@ end
 
 function noti.对决_初始化战场(estr_battle_type_对决类型)
     if estr_battle_type_对决类型 == '1v1' then 
-        G.misc().对决类型 = estr_battle_type_对决类型
         G.addUI('v_battle_1v1')
     elseif estr_battle_type_对决类型 == '2v2' then 
     end

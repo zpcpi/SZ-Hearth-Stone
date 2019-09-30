@@ -17,6 +17,7 @@ function GF.NetReceive()
                 table.insert(GF.connectList, client)
                 local any_当前玩家 = GF.call('系统_获取当前玩家信息')
                 GF.call('网络通用_发送消息', client, '房间_更新玩家信息', any_当前玩家)
+                GF.call('网络通用_发送消息', client, '房间_更新房间信息', GF.misc().对决类型)
             else
                 local rev, err = socket:receive('*l')
                 if rev == nil and err == nil then 

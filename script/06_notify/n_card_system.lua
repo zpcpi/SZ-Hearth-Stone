@@ -45,7 +45,7 @@ function noti.card_create()
     -- local ui_card = ui_obj
 
     -- 显示战场
-    G.call('对决_初始化战场', '1v1')
+    G.call('对决_初始化战场', G.misc().对决类型)
 
     -- 手牌区功能
     -- ui_obj = G.getUI('v_handcards_self')
