@@ -102,5 +102,6 @@ t['对决_是否是先手身份'] = function(any_玩家绝对身份)
 end
 
 t['对决_是否超过最大回合'] = function()
+    -- TODO: 判断当前回合是否超过最大回合
     return false
 end
