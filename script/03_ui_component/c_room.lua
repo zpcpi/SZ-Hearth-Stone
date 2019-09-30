@@ -58,7 +58,7 @@ function t:click(tar)
     elseif tar == self.prepareBtn then 
         G.call('房间_当前玩家准备')
     elseif tar == self.quitBtn then 
-        G.call('主机_断开连接')
+        G.call('房间_退出房间')
     end
 end
 

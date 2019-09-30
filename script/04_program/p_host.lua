@@ -14,12 +14,6 @@ t['主机_新建房间'] = function()
 end
 
 --hide=true
-t['主机_断开连接'] = function()
-    G.call('房间_清空玩家列表')
-    G.tcpServerSocket:close()
-end
-
---hide=true
 t['主机_建立连接'] = function()
     G.tcpServerSocket = lsocket.tcp()
     G.tcpServerSocket:settimeout(0)
@@ -28,7 +22,6 @@ t['主机_建立连接'] = function()
         G.netPort = G.netPort + 1
         G.call('系统_重试等待', '房间开启失败, ', 3)
     end
-    print('--== G.netPort', G.netPort)
     G.call('系统_输出信息', '房间建立成功， 正在开启监听!')
     local ret, err = G.tcpServerSocket:listen(1)
     if(ret and ret == 1) then

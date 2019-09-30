@@ -154,3 +154,19 @@ t['房间_分配绝对身份'] = function()
     else
     end
 end
+
+--hide=true
+t['房间_退出房间'] = function()
+    G.call('房间_清空玩家列表')
+    if type(G.socketList) == 'table' then 
+        for i = #G.connectList, 1, -1 do 
+            local socket = table.remove(G.connectList, i)
+            if socket then 
+                socket:close()
+            end
+        end
+    end
+    G.connectList = nil
+    G.tcpServerSocket = nil
+    G.tcpClientSocket = nil
+end

@@ -42,13 +42,9 @@ function GF.NetReceive()
         local readySocketList = lsocket.select(GF.socketList, nil, 0)
         for _, socket in ipairs(readySocketList) do 
             local rev, err = socket:receive()
-            if rev == nil and err == nil then 
-                socket:close()
-                GF.call('系统_输出信息', '与主机连接断开!')
-                return
-            elseif err == 'closed' then 
-                socket:close()
-                GF.call('系统_输出信息', '与主机连接断开!')
+            if (rev == nil and err == nil) or (err == 'closed') then 
+                GF.call('房间_退出房间')
+                GF.call('提示_添加提示', '与主机连接断开!')
                 return
             else
                 GF.call('网络通用_处理消息', rev)

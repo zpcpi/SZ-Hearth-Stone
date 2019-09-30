@@ -32,9 +32,9 @@ t['动画通用_播放动画序列'] = function(o_dialogue_system_actionlist_序
 end
 
 t['提示动画_显示提示'] = function(o_node_提示)
-    local int_渐显时间 = 500
-    local int_显示时间 = 1000
-    local int_渐隐时间 = 500
+    local int_渐显时间 = 100
+    local int_显示时间 = 300
+    local int_渐隐时间 = 100
 
     o_node_提示.alpha = 0
     G.Tween("alpha", int_渐显时间, o_node_提示, 255)

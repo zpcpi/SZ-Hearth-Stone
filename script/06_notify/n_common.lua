@@ -13,9 +13,8 @@ function noti.主机_新建房间()
     G.removeUI('v_main_menu')
 end
 
-function noti.主机_断开连接()
-    G.addUI('v_main_menu')
-    G.removeUI('v_room')
+function noti.房间_退出房间()
+    G.changeUI('v_main_menu')
 end
 
 function noti.系统_输出信息(string_信息)

@@ -15,7 +15,7 @@ t['客机_连接主机'] = function(string_hostip)
         G.netPort = tonumber(DEFAULT_NET_PORT)
     else
         local pos = string.find(string_hostip, ':')
-        local portStr = string.sub(string_hostip, pos)
+        local portStr = string.sub(string_hostip, pos + 1)
         string_hostip = string.sub(string_hostip, 1, pos - 1)
         G.netPort = tonumber(portStr)
     end
