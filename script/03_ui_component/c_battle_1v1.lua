@@ -39,16 +39,19 @@ function t:init()
         -- 动画系统引用注册
         main_actor:push_quote('::HandCards_Self', self.selfHandcard.c_handcards_self)
         main_actor:push_quote('::HandCards_Enemy', self.enemyHandcard.c_handcards_enemy)
-        
-        
     end
+
+    self.endTurnBtn = self.obj.getChildByName('EndTurnButton')
 end
 
 function t:rmouseUp()
     G.trig_event('UI_取消操作')
 end
 
-
-
+function t:click(tar)
+    if tar == self.endTurnBtn then 
+        G.call('对决_我方回合结束')
+    end
+end
 
 return t

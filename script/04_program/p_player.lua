@@ -36,3 +36,20 @@ t['角色_获取手牌数量'] = function(estr_player_相对身份)
     return G.call('角色_获取手牌数量_绝对身份', estr_absolute_id_type_绝对身份)
 end
 
+--hide=true
+t['角色_抽取随机卡牌'] = function(estr_player_抽牌者相对身份, estr_player_牌库所属相对身份)
+    -- TODO: 从指定牌库中抽取随机卡牌
+    local _o_card_牌库 = G.call('角色_获取牌库', estr_player_牌库所属相对身份)
+    if #_o_card_牌库 == 0 then 
+        -- TODO: 牌库没有卡牌的处理
+        return 
+    end
+    local int_随机数 = G.random(1, #_o_card_牌库)
+    G.call('角色_添加手牌', estr_player_抽牌者相对身份, _o_card_牌库[int_随机数])
+end
+
+--hide=true
+t['角色_获取牌库'] = function(estr_player_牌库所属相对身份)
+    -- TODO: 获取玩家身份
+    return G.DBTable('o_card')
+end

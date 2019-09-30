@@ -2,10 +2,11 @@
 
 ]]
 local G = require 'gf'
-local c_animactor = require 'c_animactor'
-local c_handcards_self = require 'c_handcards_self'
 local c_handcards_enemy = require 'c_handcards_enemy'
+local c_button = require 'c_button'
+local c_handcards_self = require 'c_handcards_self'
 local c_battle_1v1 = require 'c_battle_1v1'
+local c_animactor = require 'c_animactor'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -129,6 +130,36 @@ tp = tc
 	tc.top = 360.000
 	tp = tc
 	tp.c_handcards_self = setmetatable({}, c_handcards_self)
+	tp = tp.parent
+	--end
+	tc = G.loadUI('v_button')
+	tc.prefab = true
+	tp.addChild(tc)
+	tc.name = 'EndTurnButton'
+	tc.left = 241.000
+	tc.right = 353.000
+	tc.bottom = -20.000
+	tc.top = 20.000
+	tc.mouseEnabled = true
+	tp = tc
+	tp.c_button = setmetatable({}, c_button)
+	com = tp.c_button
+	com['text'] ='结束回合'
+	com['btn_class'] =nil
+	com['customsize'] =true
+	com['img_normal'] =1442840577.000
+	com['img_hover'] =nil
+	com['color_hover'] =nil
+	com['audio_hover'] =nil
+	com['img_press'] =nil
+	com['frameList_press'] =nil
+	com['color_press'] =nil
+	com['audio_press'] =nil
+	com['img_disable'] =nil
+	com['color_disable'] =nil
+	com['img_toggle'] =nil
+	com['color_toggle'] =nil
+	com['img_togEx'] =nil
 	tp = tp.parent
 	--end
 tp.c_battle_1v1 = setmetatable({}, c_battle_1v1)
