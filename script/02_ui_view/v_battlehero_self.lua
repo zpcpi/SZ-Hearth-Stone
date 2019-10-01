@@ -2,6 +2,8 @@
 
 ]]
 local G = require 'gf'
+local c_mintextquadsize = require 'c_mintextquadsize'
+local c_card_hero = require 'c_card_hero'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -29,6 +31,17 @@ tp = tc
 		tc.anchor = 0x64006400
 		tc.color = 0x25252e
 		tc.img = 0x56000001
+		tp = tc
+		tp = tp.parent
+		--end
+		tc = G.loadUI('v_card_hero')
+		tc.prefab = true
+		tp.addChild(tc)
+		tc.name = 'c1'
+		tc.right = 0.000
+		tc.top = 0.000
+		tc.scaleX = 0.280
+		tc.scaleY = 0.280
 		tp = tc
 		tp = tp.parent
 		--end
