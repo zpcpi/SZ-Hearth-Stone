@@ -1,11 +1,13 @@
---[[2001
+--[[0
 
 ]]
 local G = require 'gf'
-local tc = G.Entity()
+local tp,tc,com,tk
+tc = G.Entity()
 G.cacheUI(tc)
 tc.name = 'v_battlehero_friend'
-tc.x=0
-tc.y=0
-tc.width=1280
-tc.height=720
+tc.left = -640.000
+tc.right = 640.000
+tc.bottom = -360.000
+tc.top = 360.000
+tp = tc

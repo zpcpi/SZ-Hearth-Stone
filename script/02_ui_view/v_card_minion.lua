@@ -3,8 +3,8 @@
 ]]
 local G = require 'gf'
 local c_mintextquadsize = require 'c_mintextquadsize'
-local c_curved_text = require 'c_curved_text'
 local c_card_minion = require 'c_card_minion'
+local c_curved_text = require 'c_curved_text'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
