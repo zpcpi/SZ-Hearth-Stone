@@ -114,6 +114,13 @@ t['卡牌注册指令'] = function (o_card_使用卡牌)
                 script_手牌组件:pickcard_state(nil, false)
                 script_战场.enemyHandcard.c_handcards_enemy:pickcard_state(false)
                 
+                -- 控件父级设置
+                local obj = o_order_info_当前指令信息['CasterObj']
+			    script_手牌组件.布局点.addChild(obj)
+                local posx, posy = obj.parent.globalToLocal(G.MousePos())
+                obj.x = posx
+                obj.y = posy
+                
                 -- 播放复位动画
                 local int_当前手牌数量 =  G.call('角色_获取手牌数量', '我方')
                 if int_当前手牌数量 > 0 then

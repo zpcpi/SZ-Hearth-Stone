@@ -109,9 +109,17 @@ t['CardCom_SetData'] = function (com, o_card)
         local int_卡片生命值 = o_card.生命
         com.hp = int_卡片生命值
     end
+
+    -- 战场随从数据
+    if com.嘲讽框 then
+        -- todo...
+    end
 end
 
 t['CardCom_SetAttr'] = function (attrA, objname, attrB)
+    -- todo...
+    -- 追加颜色设置
+
     return function (com, old_value)
         local value = com[attrA]
         if value then
@@ -121,6 +129,3 @@ t['CardCom_SetAttr'] = function (attrA, objname, attrB)
         end
     end
 end
-
-
-

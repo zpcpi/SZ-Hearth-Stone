@@ -9,7 +9,9 @@ t['卡牌抓取条件判断'] = function (o_order_info_当前指令信息)
     return true
 end
 
-
+t['卡牌进入功能区条件判断'] = function (o_order_info_当前指令信息)
+    return true
+end
 
 
 

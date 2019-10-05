@@ -37,7 +37,7 @@ tp = tc
 		tc = G.loadUI('v_card_hero')
 		tc.prefab = true
 		tp.addChild(tc)
-		tc.name = 'c1'
+		tc.name = '英雄'
 		tc.right = 0.000
 		tc.top = 0.000
 		tc.scaleX = 0.280

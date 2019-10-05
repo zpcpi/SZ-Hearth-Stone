@@ -41,11 +41,36 @@ function t:init()
         main_actor:push_quote('::HandCards_Enemy', self.enemyHandcard.c_handcards_enemy)
     end
 
+    self.跨界面操作框 = self.obj.getChildByName('跨界面操作框')
+
     self.endTurnBtn = self.obj.getChildByName('EndTurnButton')
+
+    -- 进出功能区开关
+    self.InFuncArea = false
 end
 
 function t:rmouseUp()
     G.trig_event('UI_取消操作')
+end
+
+function t:mouseMove()
+    local posx, posy = G.MousePos()
+
+    if self.InFuncArea then
+        local area = UI_IN_HAND_AREA
+        if (posy < area['maxy']) and (posx > area['minx']) and (posx < area['maxx']) then
+            self.InFuncArea = false
+            G.trig_event('UI_鼠标进入手牌区')
+        end
+    else
+        -- 手牌控件区域，出去时增加了一定的延展距离，防止选中卡牌后立即触发了进入功能区事件
+        local area = UI_IN_FUNC_AREA
+        if (posy > area['maxy']) or (posx < area['minx']) or (posx > area['maxx']) then
+            self.InFuncArea = true
+            G.trig_event('UI_鼠标进入功能区')
+        end
+    end
+
 end
 
 function t:click(tar)

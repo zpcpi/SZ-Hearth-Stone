@@ -36,6 +36,7 @@ local t = {
 		end,
 	},
 	{
+		-- done
 		['name']=0x10050014,
 		['showname']='抓取卡牌',
 		['功能描述']='左键点击，或拖拽卡牌，卡牌开始跟随鼠标',
@@ -55,9 +56,21 @@ local t = {
 
 			o_order_info_当前指令信息['CasterObj'] = obj
 
+			-- 控件父级设置
+			local script_战场 = o_misc.主战场系统
+			script_战场.跨界面操作框.addChild(obj)
+			local posx, posy = obj.parent.globalToLocal(G.MousePos())
+			obj.x = posx
+			obj.y = posy
+
 			-- 注册动画
 			script_动画系统:push_quote('::CurPickCard', obj)
 			script_动画系统:add_animquest(
+				-- 朝向复位
+				G.call('动画系统_创建quest', script_动画系统, G.QueryName(0x1001001b))
+			)
+			script_动画系统:add_animquest(
+				-- 跟随鼠标
 				G.call('动画系统_创建quest', script_动画系统, G.QueryName(0x1001001a))
 			)
 
@@ -65,6 +78,7 @@ local t = {
 			local script_战场 = o_misc.主战场系统
 			script_战场.selfHandcard.c_handcards_self:pickcard_state(obj, true)
 			script_战场.enemyHandcard.c_handcards_enemy:pickcard_state(true)
+			script_战场.InFuncArea = false
 		end,
 	},
 	{
@@ -75,10 +89,38 @@ local t = {
 			return {'UI_鼠标进入功能区'}
 		end,
 		['条件'] = function (o_order_info_当前指令信息)
-			return true
+			return G.call('卡牌进入功能区条件判断', o_order_info_当前指令信息)
 		end,
 		['修改数据'] = function (o_order_info_当前指令信息)
-			print('trig 卡牌进入功能区')
+		end,
+	},
+	{
+		-- doing
+		['name']=0x10050002,
+		['showname']='卡牌进入功能区_单目标法术',
+		['功能描述']='卡牌随鼠标进入功能区',
+		['事件'] = function (o_order_info_当前指令信息)
+			return {'UI_鼠标进入功能区'}
+		end,
+		['条件'] = function (o_order_info_当前指令信息)
+			return G.call('卡牌进入功能区条件判断', o_order_info_当前指令信息)
+		end,
+		['修改数据'] = function (o_order_info_当前指令信息)
+			local o_misc = G.misc()
+			local script_动画系统 = o_misc.主动画系统
+			local obj = o_order_info_当前指令信息['CasterObj']
+
+			-- 卡牌显示在左侧，同时调出指示线
+			script_动画系统:clear_animquest()
+			obj.x, obj.y = obj.parent.globalToLocal(UI_SPELL_TARGET_POS['posx'], UI_SPELL_TARGET_POS['posy'])
+
+
+
+
+
+
+
+
 		end,
 	},
 	{
@@ -124,6 +166,7 @@ local t = {
 		end,
 	},
 	{
+		-- done
 		['name']=0x1005000d,
 		['showname']='卡牌取消指令',
 		['功能描述']='右键抬起触发',

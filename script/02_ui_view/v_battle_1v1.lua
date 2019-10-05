@@ -3,10 +3,12 @@
 ]]
 local G = require 'gf'
 local c_handcards_enemy = require 'c_handcards_enemy'
-local c_button = require 'c_button'
-local c_handcards_self = require 'c_handcards_self'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local c_battle_1v1 = require 'c_battle_1v1'
+local c_handcards_self = require 'c_handcards_self'
+local c_button = require 'c_button'
 local c_animactor = require 'c_animactor'
+local c_card_hero = require 'c_card_hero'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -86,6 +88,18 @@ tp = tc
 	tp.c_handcards_enemy = setmetatable({}, c_handcards_enemy)
 	tp = tp.parent
 	--end
+	tc = G.loadUI('v_handcards_self')
+	tc.prefab = true
+	tp.addChild(tc)
+	tc.name = 'SelfHandcard'
+	tc.left = -640.000
+	tc.right = 640.000
+	tc.bottom = -360.000
+	tc.top = 360.000
+	tp = tc
+	tp.c_handcards_self = setmetatable({}, c_handcards_self)
+	tp = tp.parent
+	--end
 	tc = G.loadUI('v_record')
 	tc.prefab = true
 	tp.addChild(tc)
@@ -120,18 +134,6 @@ tp = tc
 	tp.c_animactor = setmetatable({}, c_animactor)
 	tp = tp.parent
 	--end
-	tc = G.loadUI('v_handcards_self')
-	tc.prefab = true
-	tp.addChild(tc)
-	tc.name = 'SelfHandcard'
-	tc.left = -640.000
-	tc.right = 640.000
-	tc.bottom = -360.000
-	tc.top = 360.000
-	tp = tc
-	tp.c_handcards_self = setmetatable({}, c_handcards_self)
-	tp = tp.parent
-	--end
 	tc = G.loadUI('v_button')
 	tc.prefab = true
 	tp.addChild(tc)
@@ -148,6 +150,7 @@ tp = tc
 	com['btn_class'] =nil
 	com['customsize'] =true
 	com['img_normal'] =1442840577.000
+	com['color_normal'] =nil
 	com['img_hover'] =nil
 	com['color_hover'] =nil
 	com['audio_hover'] =nil
@@ -160,6 +163,15 @@ tp = tc
 	com['img_toggle'] =nil
 	com['color_toggle'] =nil
 	com['img_togEx'] =nil
+	tp = tp.parent
+	--end
+	tc = G.Entity()
+	tp.addChild(tc)
+	tc.name = '跨界面操作框'
+	tc.right = 0.000
+	tc.top = 0.000
+	tc.anchor = 0x64006400
+	tp = tc
 	tp = tp.parent
 	--end
 tp.c_battle_1v1 = setmetatable({}, c_battle_1v1)
