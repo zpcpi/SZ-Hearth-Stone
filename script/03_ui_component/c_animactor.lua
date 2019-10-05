@@ -73,12 +73,14 @@ end
 function t:pop_quote(key)
     local list = self.quote_map[key]
     if list then
+        local obj = self:get_quote(key)
         --删除数组最后一个元素        
         list[#list] = nil
         if #list == 0 then
             --栈为空，直接置nil            
             self.quote_map[key] = nil
         end
+        return obj
     end
 end
 

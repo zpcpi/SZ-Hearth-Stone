@@ -166,6 +166,31 @@ local function create_shaftlist(string_obj, _string_attr, _number_val, o_animque
     return shaft_list
 end
 
+local function create_shaftlist_positions_byglobal(string_obj, _string_attr, _number_val, o_animquest_bezier_曲线参数, iter)
+    local cur_actor = G.misc().当前演算体
+    local cur_quest = G.misc().当前动画段
+    local obj_list = G.call('动画系统_获取名称指代', string_obj)
+    local time = cur_quest['time']
+
+    local shaft_list = {}
+    -- 有效性检查
+    if _string_attr and _number_val and (#_string_attr == #_number_val) and (#_string_attr % 2 == 0) then
+        for _,obj in ipairs(obj_list) do
+            for i = 1, #_string_attr, 2 do
+                local posx, posy
+                if obj.parent then
+                    posx, posy = obj.parent.globalToLocal(_number_val[i], _number_val[i+1])
+                elseif obj.obj and obj.obj.parent then
+                    posx, posy = obj.obj.parent.globalToLocal(_number_val[i], _number_val[i+1])
+                end
+                table.insert(shaft_list, iter(obj, _string_attr[i], posx, time, o_animquest_bezier_曲线参数))
+                table.insert(shaft_list, iter(obj, _string_attr[i+1], posy, time, o_animquest_bezier_曲线参数))
+            end
+        end
+    end
+    return shaft_list
+end
+
 --type=actor
 --hide=true
 --ret=_o_animquest_shaft
@@ -180,31 +205,47 @@ t['动画系统_多属性设置'] = function(string_obj, _string_attr, _number_�
     return create_shaftlist(string_obj, _string_attr, _number_目标值, o_animquest_bezier_曲线参数, create_shaft)
 end
 
+t['动画系统_设置全局位置'] = function(string_obj, _string_attr, _number_目标值, o_animquest_bezier_曲线参数)
+    return create_shaftlist_positions_byglobal(string_obj, _string_attr, _number_目标值, o_animquest_bezier_曲线参数, create_shaft)
+end
+
 --type=actor
 --hide=true
 --ret=_o_animquest_shaft
 t['动画系统_跟随鼠标'] = function(string_obj, _string_attr, o_animquest_bezier_曲线参数)
     if _string_attr and (#_string_attr == 2) then
-        local cur_actor = G.misc().当前演算体
-        local cur_quest = G.misc().当前动画段
-        local obj_list = G.call('动画系统_获取名称指代', string_obj)
-        local time = cur_quest['time']
+        return create_shaftlist_positions_byglobal(string_obj, _string_attr, {G.MousePos()}, o_animquest_bezier_曲线参数, create_shaft)
+    end
+    return {}
+end
 
-        local shaft_list = {}
-        for _,obj in ipairs(obj_list) do
-            local _number_val
+--type=actor
+--hide=true
+--ret=_o_animquest_shaft
+t['动画系统_连线两端跟随'] = function(string_obj, _string_attr, string_startobj, o_animquest_bezier_曲线参数)
+    if _string_attr and (#_string_attr == 6) then
+        local startobj_list = G.call('动画系统_获取名称指代', string_startobj)
+        if startobj_list and (#startobj_list == 1) then
+            local startx, starty
+            local midx, midy
+            local endx, endy = G.MousePos()
+            local obj = startobj_list[1]
             if obj.parent then
-                _number_val = {obj.parent.globalToLocal(G.MousePos())}
+                startx, starty = obj.localToGlobal(0, 0)
             elseif obj.obj and obj.obj.parent then
-                _number_val = {obj.obj.parent.globalToLocal(G.MousePos())}
+                startx, starty = obj.obj.localToGlobal(0, 0)
             end
-            for i = 1, #_string_attr, 1 do
-                table.insert(shaft_list, create_shaft(obj, _string_attr[i], _number_val[i], time, o_animquest_bezier_曲线参数))
+
+            if startx and starty and endx and endy then
+                midx = (endx - startx) * 0.1 + startx
+                midy = (endy - starty) * 0.8 + starty
+                return create_shaftlist_positions_byglobal(string_obj, _string_attr, {startx, starty, midx, midy, endx, endy}, o_animquest_bezier_曲线参数, create_shaft)
             end
         end
-        return shaft_list
     end
+    return {}
 end
+
 
 --type=actor
 --hide=true

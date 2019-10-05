@@ -72,7 +72,7 @@ function t:removeCard(del_count)
 
     local ui_card = self.handCards[del_count]
     table.remove(self.handCards, del_count)
-    self.obj:removeChild(ui_card)
+    ui_card.parent:removeChild(ui_card)
 
     ui_card.visible = false
     self.CardCount = count - 1

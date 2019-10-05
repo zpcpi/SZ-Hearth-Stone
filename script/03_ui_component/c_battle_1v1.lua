@@ -47,6 +47,9 @@ function t:init()
 
     -- 进出功能区开关
     self.InFuncArea = false
+
+    -- 连线管理
+    self.popline_list = {}
 end
 
 function t:rmouseUp()
@@ -80,11 +83,20 @@ function t:click(tar)
 end
 
 function t:add_popline()
-
+    local ui_line = G.loadUI('v_pop_pointline')
+    self.跨界面操作框.addChild(ui_line)
+    table.insert(self.popline_list, ui_line)
+    
+    return ui_line.c_pop_pointline
 end
 
 function t:clear_popline()
+    for _,ui_line in iparis(self.popline_list) do
+        self.obj:removeChild(ui_line)
+        ui_line.visible = false
+    end
 
+    self.popline_list = {}
 end
 
 

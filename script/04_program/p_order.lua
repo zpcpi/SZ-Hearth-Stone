@@ -64,7 +64,7 @@ t['卡牌注册指令'] = function (o_card_使用卡牌)
         local state = 1
         local state_max = #o_order_当前指令['状态列表']
 
-        o_order_info_当前指令信息['Caster'] = o_card_使用卡牌
+        G.call('卡牌注册指令_初始化', o_order_info_当前指令信息, o_card_使用卡牌)
 
         local function init_order_edge()
             -- 注销当前指令信息
@@ -99,41 +99,59 @@ t['卡牌注册指令'] = function (o_card_使用卡牌)
                 -- 执行成功
 
             elseif state == -2 then
-                -- 执行失败
-                -- 鼠标跟随终止
-			    local o_misc = G.misc()
-                local script_动画系统 = o_misc.主动画系统
-
-                script_动画系统:pop_quote('::CurPickCard')
-                script_动画系统:clear_animquest()
-
-                -- 手牌状态恢复
-                local script_战场 = o_misc.主战场系统
-                local script_手牌组件 = script_战场.selfHandcard.c_handcards_self
-
-                script_手牌组件:pickcard_state(nil, false)
-                script_战场.enemyHandcard.c_handcards_enemy:pickcard_state(false)
-                
-                -- 控件父级设置
-                local obj = o_order_info_当前指令信息['CasterObj']
-			    script_手牌组件.布局点.addChild(obj)
-                local posx, posy = obj.parent.globalToLocal(G.MousePos())
-                obj.x = posx
-                obj.y = posy
-                
-                -- 播放复位动画
-                local int_当前手牌数量 =  G.call('角色_获取手牌数量', '我方')
-                if int_当前手牌数量 > 0 then
-                    script_动画系统:add_animquest(
-                        G.call('动画系统_创建quest', script_动画系统, G.QueryName(script_手牌组件.AnimBaseID + int_当前手牌数量 - 1))
-                    )
-                end
-
+                G.call('卡牌注册指令_退出', o_order_info_当前指令信息)
                 -- 重新注册指令
                 G.call('卡牌注册指令', o_card_使用卡牌)
             end
         end
 
         init_order_edge()
+    end
+end
+
+
+t['卡牌注册指令_初始化'] = function (o_order_info_当前指令信息, o_card_使用卡牌)
+    o_order_info_当前指令信息['Caster'] = o_card_使用卡牌
+end
+
+t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
+    -- 鼠标跟随终止
+    local o_misc = G.misc()
+    local script_动画系统 = o_misc.主动画系统
+
+    script_动画系统:pop_quote('::CurPickCard')
+    script_动画系统:clear_animquest()
+
+    -- 删除连线控件
+    while true do
+        local obj_line = script_动画系统:pop_quote('::PopLine')
+        if obj_line then
+            local obj = obj_line.obj
+            obj.parent:removeChild(obj_line)
+            obj.visible = false
+        else
+            break
+        end
+    end
+
+    -- 手牌状态恢复
+    local script_战场 = o_misc.主战场系统
+    local script_手牌组件 = script_战场.selfHandcard.c_handcards_self
+
+    script_手牌组件:pickcard_state(nil, false)
+    script_战场.enemyHandcard.c_handcards_enemy:pickcard_state(false)
+    
+    -- 控件父级设置
+    local obj = o_order_info_当前指令信息['CasterObj']
+    local orgx, orgy = obj.localToGlobal(0, 0)
+    script_手牌组件.布局点.addChild(obj)
+    obj.x, obj.y = obj.parent.globalToLocal(orgx, orgy)
+    
+    -- 播放复位动画
+    local int_当前手牌数量 =  G.call('角色_获取手牌数量', '我方')
+    if int_当前手牌数量 > 0 then
+        script_动画系统:add_animquest(
+            G.call('动画系统_创建quest', script_动画系统, G.QueryName(script_手牌组件.AnimBaseID + int_当前手牌数量 - 1))
+        )
     end
 end

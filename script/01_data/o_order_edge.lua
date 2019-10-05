@@ -95,7 +95,7 @@ local t = {
 		end,
 	},
 	{
-		-- doing
+		-- done
 		['name']=0x10050002,
 		['showname']='卡牌进入功能区_单目标法术',
 		['功能描述']='卡牌随鼠标进入功能区',
@@ -110,44 +110,46 @@ local t = {
 			local script_动画系统 = o_misc.主动画系统
 			local obj = o_order_info_当前指令信息['CasterObj']
 
-			-- 调出指示线
-			
+			-- 创建指示线
+			local script_战场 = o_misc.主战场系统
+			local obj_line = script_战场:add_popline()
 			
 			-- 注册动画
-			local posx, posy = obj.parent.globalToLocal(UI_SPELL_TARGET_POS['posx'], UI_SPELL_TARGET_POS['posy'])
 			script_动画系统:clear_animquest()
+			script_动画系统:push_quote('::PopLine', obj_line)
 			script_动画系统:add_animquest(
-				-- 卡牌显示在左侧
+				-- 卡牌位置移动到左侧
 				G.call('动画系统_创建quest_自定义', script_动画系统, false, 300, 
 				{
-					n = 4,
-					[1] = '动画系统_多属性设置',
-					[2] = '::CurPickCard',
-					[3] = {
-						[1] = 'x',
-						[2] = 'y',
-					},
-					[4] = {
-						[1] = posx,
-						[2] = posy,
-					},
-					[5]={
-						['x1']=0,
-						['y1']=0.5,
-						['x2']=0.5,
-						['y2']=1,
+					[1] = {
+						n = 4,
+						[1] = '动画系统_设置全局位置',
+						[2] = '::CurPickCard',
+						[3] = {
+							[1] = 'x',
+							[2] = 'y',
+						},
+						[4] = {
+							[1] = UI_SPELL_TARGET_POS['posx'],
+							[2] = UI_SPELL_TARGET_POS['posy'],
+						},
+						[5]={
+							['x1']=0,
+							['y1']=0.5,
+							['x2']=0.5,
+							['y2']=1,
+						},
 					},
 				})
 			)
-
-
-
-
-
-
+			script_动画系统:add_animquest(
+				-- 注册连线动画
+				G.call('动画系统_创建quest', script_动画系统, G.QueryName(0x10010019))
+			)
 		end,
 	},
 	{
+		-- done
 		['name']=0x10050006,
 		['showname']='卡牌返回手牌区',
 		['功能描述']='卡牌随鼠标返回手牌区，象征了取消',
@@ -158,7 +160,6 @@ local t = {
 			return true
 		end,
 		['修改数据'] = function (o_order_info_当前指令信息)
-			print('trig 卡牌返回手牌区')
 		end,
 	},
 	{

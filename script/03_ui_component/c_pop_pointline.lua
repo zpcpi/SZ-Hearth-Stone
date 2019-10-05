@@ -55,18 +55,15 @@ function t:update()
     end
 
     local k = 1000 / 30
-    self.dotpro = self.dotpro + 1.5 / k
+    self.dotpro = self.dotpro + 0.7 / k
     while self.dotpro > 1 do
         self.dotpro = self.dotpro - 1
     end
 
     if self.p1x and self.p1y and self.p2x and self.p2y and self.p3x and self.p3y and (getLength(self.p1x, self.p1y, self.p3x, self.p3y) > 20) then
-        self.容器.visible = true
-
-        self.p2x = (self.p3x - self.p1x) * 0.8 + self.p1x
-        self.p2y = (self.p3y - self.p1y) * 0.1 + self.p1y
-
+        -- 头尾是必须的
         self:updateShow()
+        self.容器.visible = true
     else
         self.容器.visible = false
     end
@@ -90,6 +87,14 @@ function t:updateShow()
 
         local t = i - 1 + self.dotpro
         ui_item.scaleX = orgScale * (t / cur_count * 0.7 + 0.3)
+        -- local mid = 0.7
+        -- if t <= cur_count * mid then
+        --     local k = math.tan(1/mid) / cur_count
+        --     ui_item.scaleX = orgScale * (t * k * 0.7 + 0.3)
+        -- else
+        --     local k = math.tan(1/(mid-1)) / cur_count
+        --     ui_item.scaleX = orgScale * ((cur_count * mid - t) * k * 0.7 + 0.3)
+        -- end
         ui_item.scaleY = ui_item.scaleX
 
         if t < 6 then
