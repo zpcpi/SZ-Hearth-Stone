@@ -79,4 +79,13 @@ function t:click(tar)
     end
 end
 
+function t:add_popline()
+
+end
+
+function t:clear_popline()
+
+end
+
+
 return t

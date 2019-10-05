@@ -110,11 +110,35 @@ local t = {
 			local script_动画系统 = o_misc.主动画系统
 			local obj = o_order_info_当前指令信息['CasterObj']
 
-			-- 卡牌显示在左侧，同时调出指示线
+			-- 调出指示线
+			
+			
+			-- 注册动画
+			local posx, posy = obj.parent.globalToLocal(UI_SPELL_TARGET_POS['posx'], UI_SPELL_TARGET_POS['posy'])
 			script_动画系统:clear_animquest()
-			obj.x, obj.y = obj.parent.globalToLocal(UI_SPELL_TARGET_POS['posx'], UI_SPELL_TARGET_POS['posy'])
-
-
+			script_动画系统:add_animquest(
+				-- 卡牌显示在左侧
+				G.call('动画系统_创建quest_自定义', script_动画系统, false, 300, 
+				{
+					n = 4,
+					[1] = '动画系统_多属性设置',
+					[2] = '::CurPickCard',
+					[3] = {
+						[1] = 'x',
+						[2] = 'y',
+					},
+					[4] = {
+						[1] = posx,
+						[2] = posy,
+					},
+					[5]={
+						['x1']=0,
+						['y1']=0.5,
+						['x2']=0.5,
+						['y2']=1,
+					},
+				})
+			)
 
 
 
