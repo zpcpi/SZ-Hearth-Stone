@@ -91,8 +91,8 @@ function t:add_popline()
 end
 
 function t:clear_popline()
-    for _,ui_line in iparis(self.popline_list) do
-        self.obj:removeChild(ui_line)
+    for _,ui_line in ipairs(self.popline_list) do
+        ui_line.parent:removeChild(ui_line)
         ui_line.visible = false
     end
 

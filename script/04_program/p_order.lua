@@ -118,6 +118,7 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
     -- 鼠标跟随终止
     local o_misc = G.misc()
     local script_动画系统 = o_misc.主动画系统
+    local script_战场 = o_misc.主战场系统
 
     script_动画系统:pop_quote('::CurPickCard')
     script_动画系统:clear_animquest()
@@ -126,16 +127,13 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
     while true do
         local obj_line = script_动画系统:pop_quote('::PopLine')
         if obj_line then
-            local obj = obj_line.obj
-            obj.parent:removeChild(obj_line)
-            obj.visible = false
         else
             break
         end
     end
+    script_战场:clear_popline()
 
     -- 手牌状态恢复
-    local script_战场 = o_misc.主战场系统
     local script_手牌组件 = script_战场.selfHandcard.c_handcards_self
 
     script_手牌组件:pickcard_state(nil, false)
