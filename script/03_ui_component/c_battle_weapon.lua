@@ -16,6 +16,7 @@ function t:init()
     self.原画 = self.原画组合.getChildByName('原画')
 
     self.精英板 = self.obj.getChildByName('精英板')
+    self.遮挡板 = self.obj.getChildByName('遮挡板')
 
     self.属性值组合 = self.obj.getChildByName('属性值组合')
     self.攻击力 = self.属性值组合.getChildByName('攻击力')

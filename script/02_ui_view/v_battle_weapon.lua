@@ -31,13 +31,15 @@ tp = tc
 			tc = G.Shape()
 			tp.addChild(tc)
 			tc.name = 'mask'
-			tc.left = -182.500
-			tc.right = 182.500
-			tc.bottom = -256.000
-			tc.top = 256.000
+			tc.left = -92.500
+			tc.right = 92.500
+			tc.bottom = -77.000
+			tc.top = 107.000
+			tc.scaleX = 1.250
+			tc.scaleY = 1.250
 			tc.mask = 10
-			tc.shapeimg = 0x560a0011
-			tc.SetVertexBuf(37,{0.0,0.0,-111.0,110.0,-112.0,110.0,-110.0,79.0,-109.0,79.0,-105.0,60.0,-90.0,33.0,-72.0,13.0,-47.0,-3.0,-47.0,-4.0,-32.0,-9.0,-6.0,-14.0,11.0,-14.0,30.0,-11.0,55.0,-1.0,80.0,17.0,89.0,28.0,103.0,51.0,112.0,78.0,114.0,104.0,113.0,105.0,113.0,112.0,106.0,138.0,95.0,160.0,86.0,172.0,68.0,189.0,61.0,194.0,38.0,205.0,24.0,209.0,-6.0,212.0,-36.0,206.0,-59.0,195.0,-77.0,181.0,-84.0,174.0,-100.0,151.0,-109.0,128.0,-111.0,110.0}, {0,0},0xffffffff)
+			tc.shapeimg = 0x5625000f
+			tc.SetVertexBuf(36,{0.0,0.0,-90.5,18.0,-91.5,18.0,-91.5,-12.0,-90.5,-12.0,-88.5,-28.0,-87.5,-28.0,-74.5,-53.0,-61.5,-68.0,-35.5,-85.0,-16.5,-89.0,-16.5,-90.0,15.5,-90.0,38.5,-83.0,60.5,-69.0,71.5,-56.0,79.5,-43.0,79.5,-44.0,88.5,-20.0,90.5,3.0,84.5,32.0,80.5,42.0,64.5,63.0,54.5,73.0,27.5,88.0,12.5,90.0,11.5,91.0,-16.5,91.0,-17.5,90.0,-26.5,89.0,-42.5,82.0,-45.5,82.0,-60.5,72.0,-70.5,62.0,-87.5,34.0,-90.5,18.0}, {0,0},0xffffffff)
 			tc.meshType = 6
 			tp = tc
 			tp = tp.parent
@@ -61,26 +63,39 @@ tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '背景'
-		tc.left = -250.000
-		tc.right = 250.000
-		tc.bottom = -353.500
-		tc.top = 353.500
-		tc.scaleX = 0.900
-		tc.scaleY = 0.900
-		tc.img = 0x560a000c
+		tc.left = -132.500
+		tc.right = 122.500
+		tc.bottom = -97.000
+		tc.top = 143.000
+		tc.scaleX = 1.250
+		tc.scaleY = 1.250
+		tc.img = 0x5625000d
 		tp = tc
 		tp = tp.parent
 		--end
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '精英板'
-		tc.left = -90.000
-		tc.right = 166.000
-		tc.bottom = 104.000
-		tc.top = 264.000
-		tc.scaleX = 0.900
-		tc.scaleY = 0.900
+		tc.left = -102.500
+		tc.right = 148.500
+		tc.bottom = 24.000
+		tc.top = 176.000
+		tc.scaleX = 1.250
+		tc.scaleY = 1.250
 		tc.img = 0x560a000f
+		tp = tc
+		tp = tp.parent
+		--end
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = '遮挡板'
+		tc.left = -93.500
+		tc.right = 91.500
+		tc.bottom = -77.000
+		tc.top = 107.000
+		tc.scaleX = 1.250
+		tc.scaleY = 1.250
+		tc.img = 0x5625000e
 		tp = tc
 		tp = tp.parent
 		--end
@@ -94,24 +109,24 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '攻击力'
-			tc.left = -176.500
-			tc.right = -77.500
-			tc.bottom = -240.500
-			tc.top = -127.500
+			tc.left = -156.846
+			tc.right = -50.846
+			tc.bottom = -93.000
+			tc.top = 13.000
 			tc.scaleX = 0.950
 			tc.scaleY = 0.950
-			tc.img = 0x560b0003
+			tc.img = 0x560b0006
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '攻击力数值'
-				tc.left = -11.500
-				tc.right = 23.500
-				tc.bottom = -14.815
-				tc.top = 36.815
+				tc.left = -14.500
+				tc.right = 20.500
+				tc.bottom = -8.815
+				tc.top = 42.815
 				tc.scaleX = 1.400
 				tc.scaleY = 1.400
-				tc.text = '0'
+				tc.text = '1'
 				tc.font = 0x63500000
 				tc.style = 14
 				tp = tc
@@ -126,24 +141,25 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '生命值'
-			tc.left = 101.750
-			tc.right = 173.250
-			tc.bottom = -241.250
-			tc.top = -128.750
+			tc.left = 147.039
+			tc.right = 51.039
+			tc.bottom = -88.962
+			tc.top = 2.038
+			tc.rotation = 0.000
 			tc.scaleX = 0.950
 			tc.scaleY = 0.950
-			tc.img = 0x560b0002
+			tc.img = 0x560b0008
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '生命值数值'
-				tc.left = -19.447
-				tc.right = 15.553
-				tc.bottom = -6.132
-				tc.top = 28.868
+				tc.left = -12.500
+				tc.right = 22.500
+				tc.bottom = -2.132
+				tc.top = 32.868
 				tc.scaleX = 1.400
 				tc.scaleY = 1.400
-				tc.text = '4'
+				tc.text = '3'
 				tc.font = 0x63500000
 				tc.style = 14
 				tp = tc
@@ -158,5 +174,8 @@ tp = tc
 		tp = tp.parent
 		--end
 	tp.c_battle_weapon = setmetatable({}, c_battle_weapon)
+	com = tp.c_battle_weapon
+	com['atk'] =nil
+	com['hp'] =nil
 	tp = tp.parent
 	--end
