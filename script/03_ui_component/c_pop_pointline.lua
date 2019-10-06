@@ -60,7 +60,7 @@ function t:update()
         self.dotpro = self.dotpro - 1
     end
 
-    if self.p1x and self.p1y and self.p2x and self.p2y and self.p3x and self.p3y and (getLength(self.p1x, self.p1y, self.p3x, self.p3y) > 20) then
+    if self.p1x and self.p1y and self.p2x and self.p2y and self.p3x and self.p3y and (getLength(self.p1x, self.p1y, self.p3x, self.p3y) > 50) then
         -- 头尾是必须的
         self:updateShow()
         self.容器.visible = true

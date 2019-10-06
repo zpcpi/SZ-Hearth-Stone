@@ -4,6 +4,7 @@ PLAYER_ONLY_KEY_LIST = {'玩家名称', '玩家IP', '是主机'}
 
 
 HANDCARDS_MAX_COUNT = 10
+BATTLEMINIONS_MAX_COUNT = 7
 
 UI_IN_FUNC_AREA = {
     ['minx'] = 285,
