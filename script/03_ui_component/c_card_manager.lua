@@ -15,6 +15,7 @@ end
 function t:setData(o_card_卡片数据)
     self.卡片实例.removeAllChildren()
     self.卡背框.visible = true
+    self.cur_card = o_card_卡片数据
     if not o_card_卡片数据 then 
         return 
     end
@@ -23,15 +24,15 @@ function t:setData(o_card_卡片数据)
         return 
     end
     
-    self.cur_card = o_card_卡片数据
-    local o_cardtype_卡片类型
+    local query_iter
     if G.is_editor then 
         local d = require '_data'
-        o_cardtype_卡片类型 = d.query_inst(i_cardtype_卡片类型)
+        query_iter = d.query_inst
     else
-        o_cardtype_卡片类型 = G.QueryName(i_cardtype_卡片类型)
+        query_iter = G.QueryName
     end
 
+    local o_cardtype_卡片类型 = query_iter(i_cardtype_卡片类型)
     local o_node_界面 = G.loadUI(o_cardtype_卡片类型.界面控件)
     if o_node_界面 then 
         self.卡背框.visible = false

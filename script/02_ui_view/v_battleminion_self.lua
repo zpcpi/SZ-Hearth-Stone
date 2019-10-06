@@ -2,6 +2,7 @@
 
 ]]
 local G = require 'gf'
+local c_battleminion_self = require 'c_battleminion_self'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -31,5 +32,6 @@ tp = tc
 		tp = tc
 		tp = tp.parent
 		--end
+	tp.c_battleminion_self = setmetatable({}, c_battleminion_self)
 	tp = tp.parent
 	--end

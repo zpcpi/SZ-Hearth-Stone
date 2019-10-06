@@ -2,7 +2,7 @@
 
 ]]
 local G = require 'gf'
-local c_card_hero = require 'c_card_hero'
+local c_battle_hero = require 'c_battle_hero'
 local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
@@ -70,10 +70,10 @@ tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '职业图标'
-		tc.left = -133.500
-		tc.right = -42.500
-		tc.bottom = -93.000
-		tc.top = -1.000
+		tc.left = -45.500
+		tc.right = 45.500
+		tc.bottom = -278.000
+		tc.top = -186.000
 		tc.img = 0x560d0002
 		tp = tc
 		tp = tp.parent
@@ -119,6 +119,38 @@ tp = tc
 		tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
+			tc.name = '攻击力'
+			tc.left = -197.500
+			tc.right = -98.500
+			tc.bottom = -139.500
+			tc.top = -26.500
+			tc.scaleX = 0.950
+			tc.scaleY = 0.950
+			tc.img = 0x560b0003
+			tp = tc
+				tc = G.TextQuad()
+				tp.addChild(tc)
+				tc.name = '攻击力数值'
+				tc.left = -11.500
+				tc.right = 23.500
+				tc.bottom = -14.815
+				tc.top = 36.815
+				tc.scaleX = 1.400
+				tc.scaleY = 1.400
+				tc.text = '0'
+				tc.font = 0x63500000
+				tc.style = 14
+				tp = tc
+				tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
+				com = tp.c_mintextquadsize
+				com['minWidth'] =0.000
+				com['autowidth'] =true
+				tp = tp.parent
+				--end
+			tp = tp.parent
+			--end
+			tc = G.Quad()
+			tp.addChild(tc)
 			tc.name = '生命值'
 			tc.left = 131.329
 			tc.right = 202.829
@@ -149,9 +181,41 @@ tp = tc
 				--end
 			tp = tp.parent
 			--end
+			tc = G.Quad()
+			tp.addChild(tc)
+			tc.name = '护甲值'
+			tc.left = 116.579
+			tc.right = 213.579
+			tc.bottom = -64.895
+			tc.top = 45.105
+			tc.scaleX = 0.950
+			tc.scaleY = 0.950
+			tc.img = 0x560b0004
+			tp = tc
+				tc = G.TextQuad()
+				tp.addChild(tc)
+				tc.name = '生命值数值'
+				tc.left = -28.842
+				tc.right = 29.158
+				tc.bottom = 0.342
+				tc.top = 35.342
+				tc.scaleX = 1.400
+				tc.scaleY = 1.400
+				tc.text = '30'
+				tc.font = 0x63410000
+				tc.style = 14
+				tp = tc
+				tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
+				com = tp.c_mintextquadsize
+				com['minWidth'] =0.000
+				com['autowidth'] =true
+				tp = tp.parent
+				--end
+			tp = tp.parent
+			--end
 		tp = tp.parent
 		--end
-	tp.c_card_hero = setmetatable({}, c_card_hero)
-	com = tp.c_card_hero
+	tp.c_battle_hero = setmetatable({}, c_battle_hero)
+	com = tp.c_battle_hero
 	tp = tp.parent
 	--end

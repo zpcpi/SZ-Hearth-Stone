@@ -82,6 +82,7 @@ function t:click(tar)
     end
 end
 
+-- 连线设置
 function t:add_popline()
     local ui_line = G.loadUI('v_pop_pointline')
     self.跨界面操作框.addChild(ui_line)

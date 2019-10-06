@@ -137,6 +137,5 @@ tp = tc
 		--end
 	tp.c_battle_herospell = setmetatable({}, c_battle_herospell)
 	com = tp.c_battle_herospell
-	com['cost'] =nil
 	tp = tp.parent
 	--end

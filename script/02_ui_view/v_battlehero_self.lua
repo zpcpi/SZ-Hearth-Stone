@@ -4,8 +4,9 @@
 local G = require 'gf'
 local c_battle_weapon = require 'c_battle_weapon'
 local c_battle_herospell = require 'c_battle_herospell'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local c_card_hero = require 'c_card_hero'
+local c_battlehero_self = require 'c_battlehero_self'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -77,3 +78,4 @@ tp = tc
 		--end
 	tp = tp.parent
 	--end
+tp.c_battlehero_self = setmetatable({}, c_battlehero_self)
