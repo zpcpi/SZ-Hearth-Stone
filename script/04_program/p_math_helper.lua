@@ -34,6 +34,8 @@ t['Combination_Number'] = function (count, max)
 end
 
 -- 贝赛尔曲线相关
+--hide=true
+--type=math
 t['Bezier_curve'] = function (posxs, posys, dots)
     local pointxs, pointys = {}, {}
 
@@ -73,6 +75,8 @@ t['Bezier_curve'] = function (posxs, posys, dots)
     end
 end
 
+--hide=true
+--type=math
 t['Bezier_curve_bycount'] = function (posxs, posys, count, dotpro)
     if posxs and posys and (#posxs > 1) and (#posxs == #posys) and (count > 1) and (dotpro <= 1) and (dotpro >= 0) then
         local k = 1 / (count - 1)
@@ -82,73 +86,235 @@ t['Bezier_curve_bycount'] = function (posxs, posys, count, dotpro)
 end
 
 -- 随机库功能
+
+local rlib_数据有效性处理 = function (self, boolean_计算条件, boolean_重置权重, func_权重iter, func_排序iter)
+    if self and self.datas then
+    else
+        return
+    end
+
+    -- 数据有效性处理
+    self.int_当前数据量 = 0
+    self.int_最大数据索引 = 0
+    self.int_最大数据量 = #self.datas
+
+    for index,data in ipairs(self.datas) do
+        if boolean_计算条件 then
+            if data['condition'] then
+                data['condivalue'] = G.call(data['condition'])
+            else
+                data['condivalue'] = true
+            end
+        end
+
+        if boolean_重置权重 then
+            if func_权重iter then
+                data['cur_weight'] = func_权重iter(data)
+            else
+                data['cur_weight'] = data['weight']
+            end
+        end
+
+        -- 有效性判定
+        if (data['condivalue'] ~= false) and (data['cur_weight'] > 0) then
+            self.int_当前数据量 = self.int_当前数据量 + 1
+            self.int_最大数据索引 = index
+            data['isvalid'] = 1
+        else
+            data['isvalid'] = 0
+        end
+    end
+
+    if func_排序iter then
+        table.sort(self.datas, func_排序iter)
+        self.int_最大数据索引 = nil
+    end
+
+    -- 最大深度计算
+    local count_max = self.int_最大数据索引 or self.int_当前数据量
+    local deep = 1
+    while count_max > 1 do
+        count_max = (count_max+1) >> 1
+        deep = deep + 1
+    end
+    self.int_最大深度 = deep
+end
+
+local rlib_索引树创建 = function (self, index_list)
+    self.tree = {}
+    
+    self.tree[1] = self.datas
+    for deep = 2, self.int_最大深度, 1 do
+        -- 设置下一层要修改的索引值
+        local index_list_reverse = {}
+        for _,v in ipairs(index_list or {}) do
+            local count = (v+1) >> 1
+            index_list_reverse[count] = 1
+        end
+
+        index_list = {}
+        for count,_ in pairs(index_list_reverse) do
+            table.insert(index_list, count)
+
+            if self.tree[deep] then
+            else
+                self.tree[deep] = {}
+            end
+
+            local data_left = self.tree[deep-1][count*2 - 1]
+            local data_right = self.tree[deep-1][count*2]
+
+            local weight = 0
+            if data_left and (data_left['isvalid'] == 1) then
+                weight = weight + (data_left['cur_weight'] or 0)
+            end
+            if data_right and (data_right['isvalid'] == 1) then
+                weight = weight + (data_right['cur_weight'] or 0)
+            end
+            self.tree[deep][count] = {
+                ['cur_weight'] = weight,
+                ['isvalid'] = 1,
+            }
+        end
+    end
+end
+
+local rlib_查找数据 = function (self, weight_cur)
+    local int_baseindex = 1
+    for deep = self.int_最大深度, 1, -1 do
+        local weight_left = self.tree[deep][int_baseindex]['cur_weight']
+        if weight_cur <= weight_left then
+            -- 在左侧
+        else
+            -- 在右侧
+            weight_cur = weight_cur - weight_left
+            int_baseindex = int_baseindex + 1
+        end
+
+        if deep > 1 then
+            int_baseindex = int_baseindex * 2 - 1
+        end
+    end
+    return int_baseindex
+end
+
+--hide=true
+--type=math
+t['Randomlib_添加数据'] = function (self, data)
+    local new_data = {
+        ['value'] = data[1],
+        ['weight'] = data[2],
+        ['condition'] = data[3],
+    }
+    table.insert(self.datas, new_data)
+    self.int_最大数据量 = self.int_最大数据量 + 1
+
+    self.boolean_是否已初始化 = false
+end
+--hide=true
+--type=math
+t['Randomlib_修改数据'] = function (self, data, index)
+    if index <= self.int_最大数据量 then
+        local new_data = {
+            ['value'] = data[1],
+            ['weight'] = data[2],
+            ['condition'] = data[3],
+        }
+        self.datas[index] = new_data
+
+        self.boolean_是否已初始化 = false
+    end
+end
+--hide=true
+--type=math
+t['Randomlib_删除数据'] = function (self, index)
+    table.remove(self.datas, index)
+    self.boolean_是否已初始化 = false
+end
+--hide=true
+--type=math
+t['Randomlib_初始化_完全随机'] = function (self, boolean_计算条件, boolean_重置权重)
+    rlib_数据有效性处理(self, boolean_计算条件, boolean_重置权重, nil, function (a,b) return (a['isvalid'] > b['isvalid']) end)
+    rlib_索引树创建(self, G.call('create_arithmetic_progression', 1, 1, self.int_最大数据索引 or self.int_当前数据量))
+    self.boolean_是否已初始化 = true
+end
+--hide=true
+--type=math
+t['Randomlib_求值_完全随机'] = function (self)
+    local weight_max = self.tree[self.int_最大深度][1]['cur_weight']
+    local weight_cur = math.random(weight_max)
+    local int_baseindex = rlib_查找数据(self, weight_cur)
+
+    -- 完全随机，啥都不改
+    local data = self.tree[1][int_baseindex]
+    return data['value']
+end
+
+--hide=true
+--type=math
 t['Create_Randomlib'] = function (estr_randomlib_type_随机库类型)
     local rlib = {}
 
     -- 数据
     rlib.datas = {}
-    -- {value, weight, cur_weight, condition}
-    
-    -- 属性
+    rlib.tree = nil
+
+    -- 属性初始化
     rlib.boolean_是否已初始化 = false
     rlib.int_概率基底 = 1
     rlib.boolean_是否循环 = false
-    rlib.max_count = 0
+    rlib.int_最大数据量 = 0
+    rlib.int_当前数据量 = 0
 
-    -- 添加数据 {数值, 权重, 条件} 编号
-    -- 修改数据 类型 编号
-    -- 删除数据 编号
-    -- 设置概率基底 数值
-    -- 设置循环 数值
+    -- 完全随机
+    rlib.添加数据 = t['Randomlib_添加数据']
+    rlib.修改数据 = t['Randomlib_修改数据']
+    rlib.删除数据 = t['Randomlib_删除数据']
+    rlib.初始化 = t['Randomlib_初始化_完全随机']
 
-    -- 查看数据 类型
-    
-    -- 初始化 (是否计算条件, 是否重置权重)
-
-    -- 求值 次数
-
-
-    rlib['添加数据'] = function (data, index)
-        table.insert(rlib.datas, data, index)
-
-        rlib.boolean_是否已初始化 = false
-    end
-
-    rlib['修改数据'] = function (data_type, index, value)
-        local data = rlib.datas[index]
-        if data and (type(data) == 'table') then
-            data[data_type] = value
-
-            rlib.boolean_是否已初始化 = false
+    local mt = {}
+    mt.__call = function (self, count)
+        if self.boolean_是否已初始化 then
+        else
+            self:初始化(false, true)
         end
-    end
 
-    rlib['删除数据'] = function (index)
-        table.remove(rlib.datas, index)
-
-        rlib.boolean_是否已初始化 = false
-    end
-
-    rlib['设置概率基底'] = function (base)
-        if base > 0 then
-            rlib.int_概率基底 = base
+        local result = {}
+        for i = 1, count, 1 do
+            result[i] = G.call('Randomlib_求值_完全随机', self)
         end
+        return result
     end
+    setmetatable(rlib, mt)
 
-    rlib['设置循环'] = function (loop)
-        rlib.boolean_是否循环 = loop
-    end
-
-    rlib['查看数据库数据'] = function (data_type)
-
-    end
-
-    -- 求值用元表
-
+    return rlib
 end
 
+t['asdasd'] = function ()
+    local rlib = G.call('Create_Randomlib', '完全随机')
+
+    rlib:添加数据({1, 10})
+    rlib:添加数据({2, 5})
+    rlib:添加数据({3, 0})
+    rlib:添加数据({4, 10})
+    rlib:添加数据({5, 5})
+    rlib:添加数据({6, 0})
+    rlib:添加数据({7, 5})
+    rlib:添加数据({8, 10})
+    rlib:添加数据({9, 0})
+
+    rlib:初始化(false, true)
+
+    local r = rlib(90000)
+    local tt = {}
+    for k,v in ipairs(r) do
+        tt[v] = (tt[v] or 0) + 1
+    end
 
 
+
+    G.show_table(tt)
+end
 
 
 

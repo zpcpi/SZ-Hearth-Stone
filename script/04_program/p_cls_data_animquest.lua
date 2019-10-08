@@ -85,14 +85,3 @@ t['手牌复位动画生成'] = function(o_animquest_当前数据, _i_animquest_
 
     return o_animquest_当前数据
 end
-
-
-t['asdasd'] = function()
-    local o_misc = G.misc()
-    local script_动画系统 = o_misc.主动画系统
-
-    script_动画系统:add_animquest(
-        G.call('动画系统_创建quest', script_动画系统, G.QueryName(0x10010019))
-    )
-
-end
