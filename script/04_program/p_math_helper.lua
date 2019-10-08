@@ -276,7 +276,7 @@ t['Create_Randomlib'] = function (estr_randomlib_type_随机库类型)
     mt.__call = function (self, count)
         if self.boolean_是否已初始化 then
         else
-            self:初始化(false, true)
+            self:初始化(false, false)
         end
 
         local result = {}
