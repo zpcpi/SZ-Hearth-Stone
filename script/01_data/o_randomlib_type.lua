@@ -1,0 +1,44 @@
+--[[100c
+
+]]
+local t = {
+'o_randomlib_type',
+{
+	{
+		['name']=0x100c0001,
+		['showname']='完全随机',
+		['添加数据功能']='Randomlib_添加数据',
+		['修改数据功能']='Randomlib_修改数据',
+		['删除数据功能']='Randomlib_删除数据',
+		['初始化功能']='Randomlib_初始化',
+		['求值功能']='Randomlib_求值_完全随机',
+	},
+	{
+		['name']=0x100c0002,
+		['showname']='抽取随机',
+		['添加数据功能']='Randomlib_添加数据',
+		['修改数据功能']='Randomlib_修改数据',
+		['删除数据功能']='Randomlib_删除数据',
+		['初始化功能']='Randomlib_初始化',
+		['求值功能']='Randomlib_求值_抽取随机',
+	},
+	{
+		['name']=0x100c0003,
+		['showname']='有损随机',
+		['添加数据功能']='Randomlib_添加数据',
+		['修改数据功能']='Randomlib_修改数据',
+		['删除数据功能']='Randomlib_删除数据',
+		['初始化功能']='Randomlib_初始化',
+		['求值功能']='Randomlib_求值_有损随机',
+	},
+	{
+		['name']=0x100c0004,
+		['showname']='顺序选取',
+		['添加数据功能']='Randomlib_添加数据_顺序选取',
+		['修改数据功能']='Randomlib_修改数据',
+		['删除数据功能']='Randomlib_删除数据',
+		['初始化功能']='Randomlib_初始化_顺序选取',
+		['求值功能']='Randomlib_求值_顺序选取',
+	},
+}}
+return t
