@@ -140,10 +140,7 @@ local rlib_数据有效性处理 = function (self, boolean_计算条件, boolean
     self.int_最大深度 = deep
 end
 
-local rlib_索引树创建 = function (self, index_list)
-    self.tree = {}
-    
-    self.tree[1] = self.datas
+local rlib_索引树更新 = function (self, index_list)    
     for deep = 2, self.int_最大深度, 1 do
         -- 设置下一层要修改的索引值
         local index_list_reverse = {}
@@ -217,8 +214,21 @@ end
 --hide=true
 --type=math
 t['Randomlib_添加数据_顺序选取'] = function (self, index, data)
-    if type(data) == 'table' then
+    if data == nil then
+        index, data = #self.datas+1, index
+    end
 
+    if type(data) == 'table' then
+        local new_data = {
+            ['value'] = data[1],
+            ['weight'] = data[2],
+            ['condition'] = data[3],
+            ['cur_weight'] = data[4],
+        }
+        table.insert(self.datas, index, new_data)
+        self.int_最大数据量 = self.int_最大数据量 + 1
+
+        self.boolean_是否已初始化 = false
     end
 end
 --hide=true
@@ -243,20 +253,36 @@ end
 --type=math
 t['Randomlib_初始化'] = function (self, boolean_计算条件, boolean_重置权重)
     rlib_数据有效性处理(self, boolean_计算条件, boolean_重置权重, nil, function (a,b) return (a['isvalid'] > b['isvalid']) end)
-    rlib_索引树创建(self, G.call('create_arithmetic_progression', 1, 1, self.int_最大数据索引 or self.int_当前数据量))
+    self.tree = {}
+    self.tree[1] = self.datas
+    rlib_索引树更新(self, G.call('create_arithmetic_progression', 1, 1, self.int_最大数据索引 or self.int_当前数据量))
     self.boolean_是否已初始化 = true
 end
 --hide=true
 --type=math
 t['Randomlib_初始化_顺序选取'] = function (self, boolean_计算条件, boolean_重置权重)
-
+    -- 关键就是不要排序
+    rlib_数据有效性处理(self, boolean_计算条件, boolean_重置权重)
+    self.tree = {}
+    self.tree[1] = self.datas
+    rlib_索引树更新(self, G.call('create_arithmetic_progression', 1, 1, self.int_最大数据索引 or self.int_当前数据量))
+    self.boolean_是否已初始化 = true
 end
 --hide=true
 --type=math
 t['Randomlib_求值_完全随机'] = function (self)
     local weight_max = self.tree[self.int_最大深度][1]['cur_weight']
+
+    if weight_max == 0 then
+        return
+    end
+
     local weight_cur = math.random(weight_max)
     local int_baseindex = rlib_查找数据(self, weight_cur)
+
+    if int_baseindex == 0 then
+        return
+    end
 
     -- 完全随机，啥都不改
     local data = self.tree[1][int_baseindex]
@@ -265,22 +291,77 @@ end
 --hide=true
 --type=math
 t['Randomlib_求值_抽取随机'] = function (self)
+    local weight_max = self.tree[self.int_最大深度][1]['cur_weight']
 
+    if weight_max == 0 then
+        return
+    end
+
+    local weight_cur = math.random(weight_max)
+    local int_baseindex = rlib_查找数据(self, weight_cur)
+
+    if int_baseindex == 0 then
+        return
+    end
+
+    -- 抽取随机，权重变0
+    local data = self.tree[1][int_baseindex]
+    data['cur_weight'] = 0
+    rlib_索引树更新(self, {int_baseindex})
+    
+    return data['value']
 end
 --hide=true
 --type=math
 t['Randomlib_求值_有损随机'] = function (self)
+    local weight_max = self.tree[self.int_最大深度][1]['cur_weight']
 
+    if weight_max == 0 then
+        return
+    end
+
+    local weight_cur = math.random(weight_max)
+    local int_baseindex = rlib_查找数据(self, weight_cur)
+
+    if int_baseindex == 0 then
+        return
+    end
+
+    -- 有损随机，权重减1
+    local data = self.tree[1][int_baseindex]
+    data['cur_weight'] = data['cur_weight'] - 1
+    rlib_索引树更新(self, {int_baseindex})
+    
+    return data['value']
 end
 --hide=true
 --type=math
 t['Randomlib_求值_顺序选取'] = function (self)
+    local weight_max = self.tree[self.int_最大深度][1]['cur_weight']
 
+    if weight_max == 0 then
+        return
+    end
+
+    -- 每次都选第一个
+    local weight_cur = 1
+    local int_baseindex = rlib_查找数据(self, weight_cur)
+
+    if int_baseindex == 0 then
+        return
+    end
+
+    -- 顺序选取，权重减1
+    local data = self.tree[1][int_baseindex]
+    data['cur_weight'] = data['cur_weight'] - 1
+    rlib_索引树更新(self, {int_baseindex})
+    
+    return data['value']
 end
 
 --hide=true
 --type=math
-t['Create_Randomlib'] = function (estr_randomlib_type_随机库类型)
+t['Create_Randomlib'] = function (o_randomlib_type_随机库类型)
     local rlib = {}
 
     -- 数据
@@ -295,10 +376,10 @@ t['Create_Randomlib'] = function (estr_randomlib_type_随机库类型)
     rlib.int_当前数据量 = 0
 
     -- 完全随机
-    rlib.添加数据 = t['Randomlib_添加数据']
-    rlib.修改数据 = t['Randomlib_修改数据']
-    rlib.删除数据 = t['Randomlib_删除数据']
-    rlib.初始化 = t['Randomlib_初始化']
+    rlib.添加数据 = t[o_randomlib_type_随机库类型['添加数据功能']]
+    rlib.修改数据 = t[o_randomlib_type_随机库类型['修改数据功能']]
+    rlib.删除数据 = t[o_randomlib_type_随机库类型['删除数据功能']]
+    rlib.初始化 = t[o_randomlib_type_随机库类型['初始化功能']]
 
     local mt = {}
     mt.__call = function (self, count)
@@ -308,8 +389,9 @@ t['Create_Randomlib'] = function (estr_randomlib_type_随机库类型)
         end
 
         local result = {}
+        local funs = o_randomlib_type_随机库类型['求值功能']
         for i = 1, count, 1 do
-            result[i] = G.call('Randomlib_求值_完全随机', self)
+            result[i] = G.call(funs, self)
         end
         return result
     end
@@ -319,7 +401,7 @@ t['Create_Randomlib'] = function (estr_randomlib_type_随机库类型)
 end
 
 t['asdasd'] = function ()
-    local rlib = G.call('Create_Randomlib', '完全随机')
+    local rlib = G.call('Create_Randomlib', G.QueryName(0x100c0004))
 
     rlib:添加数据({1, 10})
     rlib:添加数据({2, 5})
@@ -341,6 +423,7 @@ t['asdasd'] = function ()
 
 
 
+    G.show_table(r)
     G.show_table(tt)
 end
 
