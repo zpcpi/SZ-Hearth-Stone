@@ -201,26 +201,34 @@ end
 --hide=true
 --type=math
 t['Randomlib_添加数据'] = function (self, data)
-    local new_data = {
-        ['value'] = data[1],
-        ['weight'] = data[2],
-        ['condition'] = data[3],
-    }
-    table.insert(self.datas, new_data)
-    self.int_最大数据量 = self.int_最大数据量 + 1
-
-    self.boolean_是否已初始化 = false
-end
---hide=true
---type=math
-t['Randomlib_修改数据'] = function (self, data, index)
-    if index <= self.int_最大数据量 then
+    if type(data) == 'table' then
         local new_data = {
             ['value'] = data[1],
             ['weight'] = data[2],
             ['condition'] = data[3],
+            ['cur_weight'] = data[4],
         }
-        self.datas[index] = new_data
+        table.insert(self.datas, new_data)
+        self.int_最大数据量 = self.int_最大数据量 + 1
+
+        self.boolean_是否已初始化 = false
+    end
+end
+--hide=true
+--type=math
+t['Randomlib_添加数据_顺序选取'] = function (self, index, data)
+    if type(data) == 'table' then
+
+    end
+end
+--hide=true
+--type=math
+t['Randomlib_修改数据'] = function (self, index, key, value)
+    if index <= self.int_最大数据量 then
+        local data = self.datas[index]
+        if data then
+            data[key] = value
+        end
 
         self.boolean_是否已初始化 = false
     end
@@ -233,10 +241,15 @@ t['Randomlib_删除数据'] = function (self, index)
 end
 --hide=true
 --type=math
-t['Randomlib_初始化_完全随机'] = function (self, boolean_计算条件, boolean_重置权重)
+t['Randomlib_初始化'] = function (self, boolean_计算条件, boolean_重置权重)
     rlib_数据有效性处理(self, boolean_计算条件, boolean_重置权重, nil, function (a,b) return (a['isvalid'] > b['isvalid']) end)
     rlib_索引树创建(self, G.call('create_arithmetic_progression', 1, 1, self.int_最大数据索引 or self.int_当前数据量))
     self.boolean_是否已初始化 = true
+end
+--hide=true
+--type=math
+t['Randomlib_初始化_顺序选取'] = function (self, boolean_计算条件, boolean_重置权重)
+
 end
 --hide=true
 --type=math
@@ -248,6 +261,21 @@ t['Randomlib_求值_完全随机'] = function (self)
     -- 完全随机，啥都不改
     local data = self.tree[1][int_baseindex]
     return data['value']
+end
+--hide=true
+--type=math
+t['Randomlib_求值_抽取随机'] = function (self)
+
+end
+--hide=true
+--type=math
+t['Randomlib_求值_有损随机'] = function (self)
+
+end
+--hide=true
+--type=math
+t['Randomlib_求值_顺序选取'] = function (self)
+
 end
 
 --hide=true
@@ -270,13 +298,13 @@ t['Create_Randomlib'] = function (estr_randomlib_type_随机库类型)
     rlib.添加数据 = t['Randomlib_添加数据']
     rlib.修改数据 = t['Randomlib_修改数据']
     rlib.删除数据 = t['Randomlib_删除数据']
-    rlib.初始化 = t['Randomlib_初始化_完全随机']
+    rlib.初始化 = t['Randomlib_初始化']
 
     local mt = {}
     mt.__call = function (self, count)
         if self.boolean_是否已初始化 then
         else
-            self:初始化(false, true)
+            self:初始化(false, false)
         end
 
         local result = {}

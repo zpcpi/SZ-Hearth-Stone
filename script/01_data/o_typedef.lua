@@ -695,5 +695,30 @@ local t = {
 			},
 		},
 	},
+	{
+		['name']='o_randomlib_type',
+		['define']={
+			[1]={
+				['name']='添加数据功能',
+				['type']='funs',
+			},
+			[2]={
+				['name']='修改数据功能',
+				['type']='funs',
+			},
+			[3]={
+				['name']='删除数据功能',
+				['type']='funs',
+			},
+			[4]={
+				['name']='初始化功能',
+				['type']='funs',
+			},
+			[5]={
+				['name']='求值功能',
+				['type']='funs',
+			},
+		},
+	},
 }}
 return t
