@@ -95,7 +95,7 @@ local rlib_数据有效性处理 = function (self, boolean_计算条件, boolean
 
     -- 数据有效性处理
     self.int_当前数据量 = 0
-    self.int_最大数据索引 = 0
+    self.int_最大有效数据索引 = 0
     self.int_最大数据量 = #self.datas
 
     for index,data in ipairs(self.datas) do
@@ -118,7 +118,7 @@ local rlib_数据有效性处理 = function (self, boolean_计算条件, boolean
         -- 有效性判定
         if (data['condivalue'] ~= false) and (data['cur_weight'] > 0) then
             self.int_当前数据量 = self.int_当前数据量 + 1
-            self.int_最大数据索引 = index
+            self.int_最大有效数据索引 = index
             data['isvalid'] = 1
         else
             data['isvalid'] = 0
@@ -127,11 +127,12 @@ local rlib_数据有效性处理 = function (self, boolean_计算条件, boolean
 
     if func_排序iter then
         table.sort(self.datas, func_排序iter)
-        self.int_最大数据索引 = nil
+        -- 有效数据一定都在前面
+        self.int_最大有效数据索引 = self.int_当前数据量
     end
 
     -- 最大深度计算
-    local count_max = self.int_最大数据索引 or self.int_当前数据量
+    local count_max = self.int_最大有效数据索引
     local deep = 1
     while count_max > 1 do
         count_max = (count_max+1) >> 1
@@ -178,20 +179,23 @@ end
 
 local rlib_查找数据 = function (self, weight_cur)
     local int_baseindex = 1
-    for deep = self.int_最大深度, 1, -1 do
+    local iter = function (deep)
         local weight_left = self.tree[deep][int_baseindex]['cur_weight']
         if weight_cur <= weight_left then
             -- 在左侧
         else
-            -- 在右侧
+            -- 在右侧，且约定一定在右侧
             weight_cur = weight_cur - weight_left
             int_baseindex = int_baseindex + 1
         end
-
-        if deep > 1 then
-            int_baseindex = int_baseindex * 2 - 1
-        end
     end
+
+    for deep = self.int_最大深度, 2, -1 do
+        iter(deep)
+        -- 下潜一层
+        int_baseindex = int_baseindex * 2 - 1
+    end
+    iter(1)
     return int_baseindex
 end
 
@@ -215,6 +219,7 @@ end
 --type=math
 t['Randomlib_添加数据_顺序选取'] = function (self, index, data)
     if data == nil then
+        -- index可以缺省，改为填写data
         index, data = #self.datas+1, index
     end
 
@@ -255,7 +260,7 @@ t['Randomlib_初始化'] = function (self, boolean_计算条件, boolean_重置�
     rlib_数据有效性处理(self, boolean_计算条件, boolean_重置权重, nil, function (a,b) return (a['isvalid'] > b['isvalid']) end)
     self.tree = {}
     self.tree[1] = self.datas
-    rlib_索引树更新(self, G.call('create_arithmetic_progression', 1, 1, self.int_最大数据索引 or self.int_当前数据量))
+    rlib_索引树更新(self, G.call('create_arithmetic_progression', 1, 1, self.int_最大有效数据索引))
     self.boolean_是否已初始化 = true
 end
 --hide=true
@@ -265,7 +270,7 @@ t['Randomlib_初始化_顺序选取'] = function (self, boolean_计算条件, bo
     rlib_数据有效性处理(self, boolean_计算条件, boolean_重置权重)
     self.tree = {}
     self.tree[1] = self.datas
-    rlib_索引树更新(self, G.call('create_arithmetic_progression', 1, 1, self.int_最大数据索引 or self.int_当前数据量))
+    rlib_索引树更新(self, G.call('create_arithmetic_progression', 1, 1, self.int_最大有效数据索引))
     self.boolean_是否已初始化 = true
 end
 --hide=true
@@ -280,12 +285,13 @@ t['Randomlib_求值_完全随机'] = function (self)
     local weight_cur = math.random(weight_max)
     local int_baseindex = rlib_查找数据(self, weight_cur)
 
-    if int_baseindex == 0 then
+    if (int_baseindex < 1) or (int_baseindex > self.int_最大有效数据索引) then
+        -- 数据越界
         return
     end
 
     -- 完全随机，啥都不改
-    local data = self.tree[1][int_baseindex]
+    local data = self.datas[int_baseindex]
     return data['value']
 end
 --hide=true
@@ -300,12 +306,13 @@ t['Randomlib_求值_抽取随机'] = function (self)
     local weight_cur = math.random(weight_max)
     local int_baseindex = rlib_查找数据(self, weight_cur)
 
-    if int_baseindex == 0 then
+    if (int_baseindex < 1) or (int_baseindex > self.int_最大有效数据索引) then
+        -- 数据越界
         return
     end
 
     -- 抽取随机，权重变0
-    local data = self.tree[1][int_baseindex]
+    local data = self.datas[int_baseindex]
     data['cur_weight'] = 0
     rlib_索引树更新(self, {int_baseindex})
     
@@ -323,12 +330,13 @@ t['Randomlib_求值_有损随机'] = function (self)
     local weight_cur = math.random(weight_max)
     local int_baseindex = rlib_查找数据(self, weight_cur)
 
-    if int_baseindex == 0 then
+    if (int_baseindex < 1) or (int_baseindex > self.int_最大有效数据索引) then
+        -- 数据越界
         return
     end
 
     -- 有损随机，权重减1
-    local data = self.tree[1][int_baseindex]
+    local data = self.datas[int_baseindex]
     data['cur_weight'] = data['cur_weight'] - 1
     rlib_索引树更新(self, {int_baseindex})
     
@@ -347,12 +355,13 @@ t['Randomlib_求值_顺序选取'] = function (self)
     local weight_cur = 1
     local int_baseindex = rlib_查找数据(self, weight_cur)
 
-    if int_baseindex == 0 then
+    if (int_baseindex < 1) or (int_baseindex > self.int_最大有效数据索引) then
+        -- 数据越界
         return
     end
 
     -- 顺序选取，权重减1
-    local data = self.tree[1][int_baseindex]
+    local data = self.datas[int_baseindex]
     data['cur_weight'] = data['cur_weight'] - 1
     rlib_索引树更新(self, {int_baseindex})
     
@@ -361,6 +370,7 @@ end
 
 --hide=true
 --type=math
+--ret=o_randomlib
 t['Create_Randomlib'] = function (o_randomlib_type_随机库类型)
     local rlib = {}
 
@@ -369,13 +379,16 @@ t['Create_Randomlib'] = function (o_randomlib_type_随机库类型)
     rlib.tree = nil
 
     -- 属性初始化
-    rlib.boolean_是否已初始化 = false
+    rlib.int_当前数据量 = 0
+    rlib.int_最大数据量 = 0
+    rlib.int_最大有效数据索引 = 0
+    rlib.int_最大深度 = 0
     rlib.int_概率基底 = 1
     rlib.boolean_是否循环 = false
-    rlib.int_最大数据量 = 0
-    rlib.int_当前数据量 = 0
+    rlib.boolean_是否已初始化 = false
+    rlib.随机库类型 = o_randomlib_type_随机库类型
 
-    -- 完全随机
+    -- 随机库方法注册
     rlib.添加数据 = t[o_randomlib_type_随机库类型['添加数据功能']]
     rlib.修改数据 = t[o_randomlib_type_随机库类型['修改数据功能']]
     rlib.删除数据 = t[o_randomlib_type_随机库类型['删除数据功能']]
