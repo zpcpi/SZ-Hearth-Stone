@@ -214,7 +214,7 @@ local rlib_终止判断 = function (self)
                 -- 还有数据，直接返回权重总值
                 return weight_max
             else
-                self.boolean_是否已取空 == true
+                self.boolean_是否已取空 = true
             end
         end
     end
@@ -436,7 +436,7 @@ t['Create_Randomlib'] = function (o_randomlib_type_随机库类型)
 end
 
 t['asdasd'] = function ()
-    local rlib = G.call('Create_Randomlib', G.QueryName(0x100c0004))
+    local rlib = G.call('Create_Randomlib', G.QueryName(0x100c0003))
 
     rlib:添加数据({1, 10})
     rlib:添加数据({2, 5})
@@ -448,6 +448,8 @@ t['asdasd'] = function ()
     rlib:添加数据({8, 10})
     rlib:添加数据({9, 0})
 
+    rlib.boolean_是否循环 = true
+
     rlib:初始化(false, true)
 
     local r = rlib(90000)
@@ -458,7 +460,7 @@ t['asdasd'] = function ()
 
 
 
-    G.show_table(r)
+    --G.show_table(r)
     G.show_table(tt)
 end
 
