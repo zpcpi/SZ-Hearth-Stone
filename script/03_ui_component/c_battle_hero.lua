@@ -30,8 +30,8 @@ function t:init()
     self.护甲值数值 = self.护甲值.getChildByName('护甲值数值')
 
     self.setData = G.api['CardCom_SetData']
-    self.set_atk = G.api['CardCom_SetAttr']('atk', '攻击力数值', 'text')
+    self.set_atk = G.api['CardCom_SetAttr_hide']('atk', '攻击力数值', 'text', '攻击力')
     self.set_hp = G.api['CardCom_SetAttr']('hp', '生命值数值', 'text')
-    self.set_ap = G.api['CardCom_SetAttr']('ap', '护甲值数值', 'text')
+    self.set_ap = G.api['CardCom_SetAttr_hide']('ap', '护甲值数值', 'text', '护甲值')
 end
 return t

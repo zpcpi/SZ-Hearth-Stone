@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_battle_hero = require 'c_battle_hero'
 local c_mintextquadsize = require 'c_mintextquadsize'
+local c_battle_hero = require 'c_battle_hero'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -124,20 +124,19 @@ tp = tc
 			tc.right = -98.500
 			tc.bottom = -139.500
 			tc.top = -26.500
-			tc.scaleX = 0.950
-			tc.scaleY = 0.950
+			tc.scaleX = 1.200
+			tc.scaleY = 1.200
 			tc.img = 0x560b0003
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '攻击力数值'
-				tc.left = -11.500
-				tc.right = 23.500
+				tc.left = 6.000
+				tc.right = 6.000
 				tc.bottom = -14.815
 				tc.top = 36.815
 				tc.scaleX = 1.400
 				tc.scaleY = 1.400
-				tc.text = '0'
 				tc.font = 0x63500000
 				tc.style = 14
 				tp = tc
@@ -156,20 +155,19 @@ tp = tc
 			tc.right = 202.829
 			tc.bottom = -131.145
 			tc.top = -18.645
-			tc.scaleX = 0.950
-			tc.scaleY = 0.950
+			tc.scaleX = 1.200
+			tc.scaleY = 1.200
 			tc.img = 0x560b0002
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '生命值数值'
-				tc.left = -28.842
-				tc.right = 29.158
+				tc.left = 0.158
+				tc.right = 0.158
 				tc.bottom = -16.658
 				tc.top = 18.342
 				tc.scaleX = 1.400
 				tc.scaleY = 1.400
-				tc.text = '30'
 				tc.font = 0x63410000
 				tc.style = 14
 				tp = tc
@@ -184,24 +182,23 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '护甲值'
-			tc.left = 116.579
-			tc.right = 213.579
-			tc.bottom = -64.895
-			tc.top = 45.105
-			tc.scaleX = 0.950
-			tc.scaleY = 0.950
+			tc.left = 118.500
+			tc.right = 215.500
+			tc.bottom = -34.895
+			tc.top = 75.105
+			tc.scaleX = 1.200
+			tc.scaleY = 1.200
 			tc.img = 0x560b0004
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
-				tc.name = '生命值数值'
-				tc.left = -28.842
-				tc.right = 29.158
+				tc.name = '护甲值数值'
+				tc.left = 0.158
+				tc.right = 0.158
 				tc.bottom = 0.342
 				tc.top = 35.342
 				tc.scaleX = 1.400
 				tc.scaleY = 1.400
-				tc.text = '30'
 				tc.font = 0x63410000
 				tc.style = 14
 				tp = tc
@@ -217,5 +214,8 @@ tp = tc
 		--end
 	tp.c_battle_hero = setmetatable({}, c_battle_hero)
 	com = tp.c_battle_hero
+	com['atk'] =nil
+	com['hp'] =nil
+	com['ap'] =nil
 	tp = tp.parent
 	--end

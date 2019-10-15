@@ -34,10 +34,14 @@ t['对决_开始'] = function()
 end
 
 t['对决_决定初始卡牌'] = function()
+    -- TODO：设置英雄
+    G.call('角色_战场_设置英雄', '我方', G.QueryName(0x10060079))
+
     -- TODO: 先抽 3(?) 张
     for i = 1, 3 do 
         G.call('角色_抽取随机卡牌', '我方', '我方')
     end
+
     -- TODO: 等待换牌结束
     -- TODO: 换牌
     if not G.call('对决_我方是否是先手') then 

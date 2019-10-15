@@ -109,6 +109,10 @@ t['CardCom_SetData'] = function (com, o_card)
         local int_卡片生命值 = o_card.生命
         com.hp = int_卡片生命值
     end
+    if com.护甲值数值 then
+        local int_卡片护甲值 = o_card.护甲
+        com.ap = int_卡片护甲值
+    end
 
     -- 战场随从数据
     if com.嘲讽框 then
@@ -125,7 +129,23 @@ t['CardCom_SetAttr'] = function (attrA, objname, attrB)
         if value then
             com[objname][attrB] = tostring(math.floor(value))
         else
-            com[objname][attrB] = nil
+            com[objname][attrB] = ''
+        end
+    end
+end
+
+t['CardCom_SetAttr_hide'] = function (attrA, objname, attrB, hide_objname)
+    -- todo...
+    -- 追加颜色设置
+
+    return function (com, old_value)
+        local value = com[attrA]
+        if value then
+            com[objname][attrB] = tostring(math.floor(value))
+            com[hide_objname].visible = true
+        else
+            com[objname][attrB] = ''
+            com[hide_objname].visible = false
         end
     end
 end

@@ -48,6 +48,10 @@ function t:init()
     -- 进出功能区开关
     self.InFuncArea = false
 
+    -- 其他控件注册
+    self.selfBattlehero = self.obj.getChildByName('SelfBattleHero')
+    self.enemyBattlehero = self.obj.getChildByName('EnemyBattleHero')
+
     -- 连线管理
     self.popline_list = {}
 end
