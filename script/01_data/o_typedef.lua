@@ -760,10 +760,14 @@ local t = {
 				['type']='boolean',
 			},
 			[10]={
+				['name']='boolean_是否已取空',
+				['type']='boolean',
+			},
+			[11]={
 				['name']='生成随机库功能',
 				['type']='fargo_randomlib',
 			},
-			[11]={
+			[12]={
 				['name']='随机库类型',
 				['type']='o_randomlib_type',
 			},

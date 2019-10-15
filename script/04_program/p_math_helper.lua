@@ -199,6 +199,28 @@ local rlib_查找数据 = function (self, weight_cur)
     return int_baseindex
 end
 
+local rlib_终止判断 = function (self)
+    local weight_max = self.tree[self.int_最大深度][1]['cur_weight']
+
+    if weight_max > 0 then
+        -- 还有数据，直接返回权重总值
+        return weight_max
+    elseif self.boolean_是否循环 == true then
+        if (self.boolean_是否已取空 == true) and (self.boolean_是否已初始化 == true) then
+        else
+            self:初始化(false, true)
+            weight_max = self.tree[self.int_最大深度][1]['cur_weight']
+            if weight_max > 0 then
+                -- 还有数据，直接返回权重总值
+                return weight_max
+            else
+                self.boolean_是否已取空 == true
+            end
+        end
+    end
+    return 0
+end
+
 --hide=true
 --type=math
 t['Randomlib_添加数据'] = function (self, data)
@@ -276,7 +298,7 @@ end
 --hide=true
 --type=math
 t['Randomlib_求值_完全随机'] = function (self)
-    local weight_max = self.tree[self.int_最大深度][1]['cur_weight']
+    local weight_max = rlib_终止判断(self)
 
     if weight_max == 0 then
         return
@@ -297,7 +319,7 @@ end
 --hide=true
 --type=math
 t['Randomlib_求值_抽取随机'] = function (self)
-    local weight_max = self.tree[self.int_最大深度][1]['cur_weight']
+    local weight_max = rlib_终止判断(self)
 
     if weight_max == 0 then
         return
@@ -321,7 +343,7 @@ end
 --hide=true
 --type=math
 t['Randomlib_求值_有损随机'] = function (self)
-    local weight_max = self.tree[self.int_最大深度][1]['cur_weight']
+    local weight_max = rlib_终止判断(self)
 
     if weight_max == 0 then
         return
@@ -345,7 +367,7 @@ end
 --hide=true
 --type=math
 t['Randomlib_求值_顺序选取'] = function (self)
-    local weight_max = self.tree[self.int_最大深度][1]['cur_weight']
+    local weight_max = rlib_终止判断(self)
 
     if weight_max == 0 then
         return
