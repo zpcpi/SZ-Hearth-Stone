@@ -138,14 +138,25 @@ t['CardCom_SetAttr_hide'] = function (attrA, objname, attrB, hide_objname)
     -- todo...
     -- 追加颜色设置
 
-    return function (com, old_value)
-        local value = com[attrA]
-        if value then
-            com[objname][attrB] = tostring(math.floor(value))
-            com[hide_objname].visible = true
-        else
-            com[objname][attrB] = ''
-            com[hide_objname].visible = false
+    if objname then
+        return function (com, old_value)
+            local value = com[attrA]
+            if value then
+                com[objname][attrB] = tostring(math.floor(value))
+                com[hide_objname].visible = true
+            else
+                com[objname][attrB] = ''
+                com[hide_objname].visible = false
+            end
+        end
+    else
+        return function (com, old_value)
+            local value = com[attrA]
+            if value then
+                com[hide_objname].visible = true
+            else
+                com[hide_objname].visible = false
+            end
         end
     end
 end

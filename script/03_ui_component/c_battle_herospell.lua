@@ -7,7 +7,8 @@ local t = G.com()
 
 t.prop = 
 {
-	{name = 'cost', type = 'int', ctrl = 'dragint'},
+    {name = 'cost', type = 'int', ctrl = 'dragint'},
+    {name = 'used', type = 'boolean'},
 }
 
 function t:init()
@@ -22,5 +23,6 @@ function t:init()
 
     self.setData = G.api['CardCom_SetData']
     self.set_cost = G.api['CardCom_SetAttr']('cost', '费用数值', 'text')
+    self.set_used = G.api['CardCom_SetAttr_hide']('used', nil, nil, '遮挡版')
 end
 return t

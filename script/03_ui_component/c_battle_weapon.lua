@@ -9,6 +9,7 @@ t.prop =
 {
 	{name = 'atk', type = 'int', ctrl = 'dragint'},
 	{name = 'hp', type = 'int', ctrl = 'dragint'},
+    {name = 'used', type = 'boolean'},
 }
 
 function t:init()
@@ -25,7 +26,8 @@ function t:init()
     self.生命值数值 = self.生命值.getChildByName('生命值数值')
 
     self.setData = G.api['CardCom_SetData']
-    self.set_atk = G.api['CardCom_SetAttr']('atk', '攻击力数值', 'text')
+    self.set_atk = G.api['CardCom_SetAttr_hide']('atk', '攻击力数值', 'text', '攻击力')
     self.set_hp = G.api['CardCom_SetAttr']('hp', '生命值数值', 'text')
+    self.set_used = G.api['CardCom_SetAttr_hide']('used', nil, nil, '遮挡板')
 end
 return t

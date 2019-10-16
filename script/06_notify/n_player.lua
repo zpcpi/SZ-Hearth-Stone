@@ -81,9 +81,49 @@ function noti.角色_战场_设置英雄_绝对身份(estr_absolute_id_type_绝�
     )
 end
 
+function noti.角色_战场_设置英雄技能_绝对身份(estr_absolute_id_type_绝对身份, i_card_卡牌)
+    local o_misc = G.misc()
+    local script_战场 = o_misc.主战场系统
+    local script_动画系统 = o_misc.主动画系统
+    local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
 
+    local script_战场英雄组件
+    if estr_player_相对身份 == '我方' then
+        script_战场英雄组件 = script_战场.selfBattlehero.c_battlehero_self
+    elseif estr_player_相对身份 == '敌方1' then
+        script_战场英雄组件 = script_战场.enemyBattlehero.c_battlehero_enemy
+    else
+        return
+    end
 
+    script_动画系统:add_animquest(
+        G.call('动画系统_创建quest_自定义', script_动画系统, true, 200, {
+            {script_战场英雄组件.setData, script_战场英雄组件, G.QueryName(i_card_卡牌)},
+        })
+    )
+end
 
+function noti.角色_战场_设置武器_绝对身份(estr_absolute_id_type_绝对身份, i_card_卡牌)
+    local o_misc = G.misc()
+    local script_战场 = o_misc.主战场系统
+    local script_动画系统 = o_misc.主动画系统
+    local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
+
+    local script_战场英雄组件
+    if estr_player_相对身份 == '我方' then
+        script_战场英雄组件 = script_战场.selfBattlehero.c_battlehero_self
+    elseif estr_player_相对身份 == '敌方1' then
+        script_战场英雄组件 = script_战场.enemyBattlehero.c_battlehero_enemy
+    else
+        return
+    end
+
+    script_动画系统:add_animquest(
+        G.call('动画系统_创建quest_自定义', script_动画系统, true, 200, {
+            {script_战场英雄组件.setData, script_战场英雄组件, G.QueryName(i_card_卡牌)},
+        })
+    )
+end
 
 
 
