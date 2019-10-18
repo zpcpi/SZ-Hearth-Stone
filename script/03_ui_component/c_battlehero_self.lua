@@ -12,6 +12,8 @@ function t:init()
     self.武器 = self.功能区.getChildByName('武器')
 
     self.cur_card_list = {}
+
+    self.can_pick = true
 end
 
 function t:setData(o_card_卡片数据)
@@ -86,5 +88,37 @@ function t:delData(boolean_英雄, boolean_英雄技能, boolean_武器)
         self.cur_card_list['武器'] = nil
     end
 end
+
+function t:getClickData(tar)
+    if tar == self.英雄 then
+        return self.cur_card_list['英雄']
+    elseif tar == self.英雄技能 then
+        return self.cur_card_list['英雄技能']
+    elseif tar == self.武器 then
+        return self.cur_card_list['武器']
+    end
+end
+
+function t:mouseDown(tar)
+    local o_card_picked = self:getClickData(tar)
+
+    if o_card_picked then
+        if self.can_pick then
+            G.trig_event('UI_抓取卡牌', o_card_picked, tar)
+        else
+            G.trig_event('UI_卡牌选择目标', o_card_picked, tar)
+        end
+    end
+end
+
+function t:pickcard_state(picking)
+    if picking then
+        self.can_pick = false
+    else
+        self.can_pick = true
+    end
+end
+
+
 
 return t

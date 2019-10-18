@@ -78,6 +78,7 @@ local t = {
 			local script_战场 = o_misc.主战场系统
 			script_战场.selfHandcard.c_handcards_self:pickcard_state(obj, true)
 			script_战场.enemyHandcard.c_handcards_enemy:pickcard_state(true)
+			script_战场.selfBattlehero.c_battlehero_self:pickcard_state(true)
 			script_战场.InFuncArea = false
 		end,
 	},
@@ -170,9 +171,30 @@ local t = {
 			return {'UI_卡牌选择目标'}
 		end,
 		['条件'] = function (o_order_info_当前指令信息)
+			local Target, tar_obj = G.event_info()
+
+			-- 条件判断
+
+
+
+
 			return true
 		end,
 		['修改数据'] = function (o_order_info_当前指令信息)
+			local Target, tar_obj = G.event_info()
+			
+			if o_order_info_当前指令信息['Target'] then
+			else
+				o_order_info_当前指令信息['Target'] = {}
+			end
+			table.insert(o_order_info_当前指令信息['Target'], Target)
+
+			if o_order_info_当前指令信息['TargetObj'] then
+			else
+				o_order_info_当前指令信息['TargetObj'] = {}
+			end
+			table.insert(o_order_info_当前指令信息['TargetObj'], tar_obj)
+			
 			print('trig 卡牌选择目标')
 		end,
 	},

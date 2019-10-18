@@ -5,8 +5,8 @@ local G = require 'gf'
 local c_battle_hero = require 'c_battle_hero'
 local c_battle_herospell = require 'c_battle_herospell'
 local c_mintextquadsize = require 'c_mintextquadsize'
-local c_battle_weapon = require 'c_battle_weapon'
 local c_battlehero_self = require 'c_battlehero_self'
+local c_battle_weapon = require 'c_battle_weapon'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -43,6 +43,7 @@ tp = tc
 		tc.name = '英雄'
 		tc.right = 0.000
 		tc.top = 0.000
+		tc.mouseEnabled = true
 		tc.visible = false
 		tc.scaleX = 0.280
 		tc.scaleY = 0.280
@@ -53,9 +54,12 @@ tp = tc
 		tc.prefab = true
 		tp.addChild(tc)
 		tc.name = '英雄技能'
+		tc.left = -640.000
 		tc.right = 0.000
+		tc.bottom = -360.000
 		tc.top = 0.000
 		tc.anchor = 0x32325050
+		tc.mouseEnabled = true
 		tc.visible = false
 		tc.scaleX = 0.350
 		tc.scaleY = 0.350
@@ -66,9 +70,12 @@ tp = tc
 		tc.prefab = true
 		tp.addChild(tc)
 		tc.name = '武器'
+		tc.left = -640.000
 		tc.right = 0.000
+		tc.bottom = -360.000
 		tc.top = 0.000
 		tc.anchor = 0x32321414
+		tc.mouseEnabled = true
 		tc.visible = false
 		tc.scaleX = 0.300
 		tc.scaleY = 0.300

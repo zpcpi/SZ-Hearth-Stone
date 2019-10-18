@@ -33,6 +33,10 @@ local t = {
 				['id']='Target',
 				['type']='o_card',
 			},
+			[2]={
+				['id']='TargetObj',
+				['type']='any',
+			},
 		},
 	},
 	{

@@ -2,13 +2,18 @@
 
 ]]
 local G = require 'gf'
-local c_handcards_enemy = require 'c_handcards_enemy'
-local c_mintextquadsize = require 'c_mintextquadsize'
-local c_battle_1v1 = require 'c_battle_1v1'
+local c_battlehero_self = require 'c_battlehero_self'
+local c_battle_herospell = require 'c_battle_herospell'
+local c_battle_weapon = require 'c_battle_weapon'
 local c_handcards_self = require 'c_handcards_self'
-local c_button = require 'c_button'
 local c_animactor = require 'c_animactor'
-local c_card_hero = require 'c_card_hero'
+local c_battleminion_self = require 'c_battleminion_self'
+local c_battle_hero = require 'c_battle_hero'
+local c_battlehero_enemy = require 'c_battlehero_enemy'
+local c_battle_1v1 = require 'c_battle_1v1'
+local c_mintextquadsize = require 'c_mintextquadsize'
+local c_handcards_enemy = require 'c_handcards_enemy'
+local c_button = require 'c_button'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -63,6 +68,7 @@ tp = tc
 	tc.bottom = -360.000
 	tc.top = 360.000
 	tp = tc
+	tp.c_battlehero_enemy = setmetatable({}, c_battlehero_enemy)
 	tp = tp.parent
 	--end
 	tc = G.loadUI('v_battlehero_self')
@@ -74,6 +80,7 @@ tp = tc
 	tc.bottom = -360.000
 	tc.top = 360.000
 	tp = tc
+	tp.c_battlehero_self = setmetatable({}, c_battlehero_self)
 	tp = tp.parent
 	--end
 	tc = G.loadUI('v_handcards_enemy')

@@ -138,6 +138,7 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
 
     script_手牌组件:pickcard_state(nil, false)
     script_战场.enemyHandcard.c_handcards_enemy:pickcard_state(false)
+	script_战场.selfBattlehero.c_battlehero_self:pickcard_state(false)
     
     -- 控件父级设置
     local obj = o_order_info_当前指令信息['CasterObj']
