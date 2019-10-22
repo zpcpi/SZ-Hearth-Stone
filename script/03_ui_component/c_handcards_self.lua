@@ -64,6 +64,15 @@ function t:addCard(o_card_卡牌)
     self.NewcardFix(ui_card)
 end
 
+function t:get_cardindex_byobj(obj)
+    for k,v in ipairs(self.handCards or {}) do
+        if v == obj then
+            return k
+        end
+    end
+    return 0
+end
+
 function t:removeCard(del_count)
     local count = self.CardCount
     if count < del_count then
