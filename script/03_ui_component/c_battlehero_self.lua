@@ -99,15 +99,25 @@ function t:getClickData(tar)
     end
 end
 
-function t:mouseDown(tar)
-    local o_card_picked = self:getClickData(tar)
+function t:getClickData_pick(tar)
+    if tar == self.英雄 then
+        return self.cur_card_list['英雄']
+    elseif tar == self.英雄技能 then
+        return self.cur_card_list['英雄技能']
+    elseif tar == self.武器 then
+        return self.cur_card_list['英雄']
+    end
+end
 
-    if o_card_picked then
-        if self.can_pick then
-            G.trig_event('UI_抓取卡牌', o_card_picked, tar)
-        else
-            G.trig_event('UI_卡牌选择目标', o_card_picked, tar)
-        end
+function t:mouseDown(tar)
+    local o_card_picked
+
+    if self.can_pick then
+        o_card_picked = self:getClickData_pick(tar)
+        G.trig_event('UI_抓取卡牌', o_card_picked, self.英雄)
+    else
+        o_card_picked = self:getClickData(tar)
+        G.trig_event('UI_卡牌选择目标', o_card_picked, tar)
     end
 end
 
