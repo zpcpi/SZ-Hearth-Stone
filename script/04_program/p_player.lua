@@ -115,3 +115,24 @@ t['角色_获取随从数量'] = function(estr_player_相对身份)
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
     return G.call('角色_获取随从数量_绝对身份', estr_absolute_id_type_绝对身份)
 end
+
+t['角色_设置水晶数据'] = function(estr_player_相对身份, estr_mana_type_修改类型, int_value)
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
+
+    int_value = int_value or 0
+    if int_value < 0 then
+        int_value = 0
+    elseif int_value > 10 then
+        int_value = 10
+    end
+
+    if true then
+        G.call('角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, int_value)
+        G.call('网络通用_广播消息', '角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, int_value)
+    end
+end
+
+t['角色_获取水晶数据'] = function(estr_player_相对身份, estr_mana_type_获取类型)
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
+    return G.call('角色_获取水晶数据_绝对身份', estr_absolute_id_type_绝对身份, estr_mana_type_获取类型)
+end

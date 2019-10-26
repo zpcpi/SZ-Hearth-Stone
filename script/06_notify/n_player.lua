@@ -48,7 +48,7 @@ function noti.角色_移除手牌_绝对身份(estr_absolute_id_type_绝对身�
     end
 
     script_动画系统:add_animquest(
-        G.call('动画系统_创建quest_自定义', script_动画系统, false, 1, {
+        G.call('动画系统_创建quest_自定义', script_动画系统, false, 30, {
             {script_手牌组件.removeCard, script_手牌组件, int_手牌序号},
         })
     )
@@ -125,5 +125,25 @@ function noti.角色_战场_设置武器_绝对身份(estr_absolute_id_type_绝�
     )
 end
 
+function noti.角色_设置水晶数据_绝对身份(estr_absolute_id_type_绝对身份, estr_mana_type_修改类型, int_value)
+    local o_misc = G.misc()
+    local script_战场 = o_misc.主战场系统
+    local script_动画系统 = o_misc.主动画系统
+    local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
 
+    local script_水晶组件
+    if estr_player_相对身份 == '我方' then
+        script_水晶组件 = script_战场.selfBattlemana.c_battlemana_self
+    elseif estr_player_相对身份 == '敌方1' then
+        script_水晶组件 = script_战场.enemyBattlemana.c_battlemana_enemy
+    else
+        return
+    end
+
+    script_动画系统:add_animquest(
+        G.call('动画系统_创建quest_自定义', script_动画系统, false, 30, {
+            {G.api['com_set_value'], script_水晶组件, estr_mana_type_修改类型, int_value},
+        })
+    )
+end
 

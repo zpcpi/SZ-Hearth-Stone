@@ -1082,8 +1082,3 @@ t['excel_写出数据'] = function(o_excel_当前数据)
         csv_save(string_o表名称, _string_待写入数据, 'w+')
     end
 end
-
-t['excel_test'] = function()
-    G.addUI('v_zpczzz')
-
-end

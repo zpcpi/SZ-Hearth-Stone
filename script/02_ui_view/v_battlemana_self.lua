@@ -3,6 +3,7 @@
 ]]
 local G = require 'gf'
 local c_mintextquadsize = require 'c_mintextquadsize'
+local c_battlemana_self = require 'c_battlemana_self'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -15,10 +16,10 @@ tp = tc
 	tc = G.Entity()
 	tp.addChild(tc)
 	tc.name = '功能区'
-	tc.left = 84.715
-	tc.right = 365.595
-	tc.bottom = -244.346
-	tc.top = -203.234
+	tc.left = 82.500
+	tc.right = 327.500
+	tc.bottom = -244.556
+	tc.top = -187.444
 	tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
@@ -41,10 +42,10 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '水晶模板'
-			tc.left = -259.000
-			tc.right = 3.000
-			tc.bottom = -125.000
-			tc.top = 143.000
+			tc.left = -230.000
+			tc.right = 21.000
+			tc.bottom = -121.000
+			tc.top = 147.000
 			tc.visible = false
 			tc.scaleX = 0.075
 			tc.scaleY = 0.075
@@ -57,12 +58,12 @@ tp = tc
 		tc = G.TextQuad()
 		tp.addChild(tc)
 		tc.name = '法力值数值'
-		tc.left = -26.000
-		tc.right = 26.000
-		tc.bottom = 7.500
-		tc.top = 42.500
+		tc.left = -47.500
+		tc.right = 47.500
+		tc.bottom = 12.500
+		tc.top = 47.500
 		tc.anchor = 0x64643232
-		tc.text = '10'
+		tc.text = '3/10'
 		tc.font = 0x633b0000
 		tc.style = 14
 		tp = tc
@@ -72,5 +73,12 @@ tp = tc
 		com['autowidth'] =true
 		tp = tp.parent
 		--end
+	tp.c_battlemana_self = setmetatable({}, c_battlemana_self)
+	com = tp.c_battlemana_self
+	com['max'] =nil
+	com['cur'] =nil
+	com['preview'] =nil
+	com['locked'] =nil
+	com['next_lock'] =nil
 	tp = tp.parent
 	--end
