@@ -142,7 +142,7 @@ function noti.角色_设置水晶数据_绝对身份(estr_absolute_id_type_绝�
 
     script_动画系统:add_animquest(
         G.call('动画系统_创建quest_自定义', script_动画系统, false, 30, {
-            {G.api['com_set_value'], script_水晶组件, estr_mana_type_修改类型, int_value},
+            {G.api.com_set_value, script_水晶组件, estr_mana_type_修改类型, int_value},
         })
     )
 end

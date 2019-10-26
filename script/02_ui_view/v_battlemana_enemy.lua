@@ -2,12 +2,12 @@
 
 ]]
 local G = require 'gf'
-local c_battlemana_self = require 'c_battlemana_self'
+local c_battlemana_enemy = require 'c_battlemana_enemy'
 local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
-tc.name = 'v_battlemana_self'
+tc.name = 'v_battlemana_enemy'
 tc.left = -640.000
 tc.right = 640.000
 tc.bottom = -360.000
@@ -18,8 +18,8 @@ tp = tc
 	tc.name = '功能区'
 	tc.left = 82.500
 	tc.right = 327.500
-	tc.bottom = -244.556
-	tc.top = -187.444
+	tc.bottom = 220.444
+	tc.top = 277.556
 	tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
@@ -60,9 +60,9 @@ tp = tc
 		tc.name = '法力值数值'
 		tc.left = -47.500
 		tc.right = 47.500
-		tc.bottom = 12.500
-		tc.top = 47.500
-		tc.anchor = 0x64643232
+		tc.bottom = -27.500
+		tc.top = 7.500
+		tc.anchor = 0x3232
 		tc.text = '3/10'
 		tc.font = 0x633b0000
 		tc.style = 14
@@ -75,8 +75,8 @@ tp = tc
 		--end
 	tp = tp.parent
 	--end
-tp.c_battlemana_self = setmetatable({}, c_battlemana_self)
-com = tp.c_battlemana_self
+tp.c_battlemana_enemy = setmetatable({}, c_battlemana_enemy)
+com = tp.c_battlemana_enemy
 com['最大值'] =nil
 com['当前值'] =nil
 com['预览值'] =nil

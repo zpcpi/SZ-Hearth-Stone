@@ -9,7 +9,6 @@ t['com_set_value'] = function (com, attr, value)
     com[attr] = value
 end
 
-
 t['zpc_test'] = function (a, b, c, d, e)
     G.call('角色_设置水晶数据', '我方', '最大值', a)
     G.call('角色_设置水晶数据', '我方', '当前值', b)

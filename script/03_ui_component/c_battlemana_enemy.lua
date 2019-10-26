@@ -48,6 +48,7 @@ function t:水晶_init()
         self.布局点.addChild(水晶obj)
 
         水晶obj.x = self.水晶_startx + (i - 1) * self.水晶_px
+        水晶obj.y = self.水晶_starty - self.水晶_py
 
         -- 锁定水晶
         水晶obj = G.Clone(self.水晶模板)
@@ -56,7 +57,6 @@ function t:水晶_init()
         self.布局点.addChild(水晶obj)
         水晶obj.img = 0x560b000a
         水晶obj.x = self.水晶_startx + (i - 1) * self.水晶_px
-        水晶obj.y = self.水晶_starty - self.水晶_py
     end
 end
 
