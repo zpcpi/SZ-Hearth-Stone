@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_battlemana_self = require 'c_battlemana_self'
 local c_mintextquadsize = require 'c_mintextquadsize'
+local c_battlemana_self = require 'c_battlemana_self'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -79,6 +79,7 @@ tp.c_battlemana_self = setmetatable({}, c_battlemana_self)
 com = tp.c_battlemana_self
 com['最大值'] =nil
 com['当前值'] =nil
-com['预览值'] =nil
 com['锁定值'] =nil
-com['预锁定值'] =nil
+com['下回锁定值'] =nil
+com['预览值'] =nil
+com['预览锁定值'] =nil
