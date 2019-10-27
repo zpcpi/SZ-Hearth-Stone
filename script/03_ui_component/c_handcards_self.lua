@@ -95,9 +95,12 @@ function t:rollOver(tar)
         tar.alpha = 0
         self.CurCard = tar
 
+        local o_card_picked = tar.c_card_manager:getData()
+        G.trig_event('UI_鼠标覆盖卡牌', o_card_picked)
+
         self.TipsCard.visible = true
         self.TipsCard.x = tar.x
-        self.TipsCard.c_card_manager:setData(tar.c_card_manager:getData())
+        self.TipsCard.c_card_manager:setData(o_card_picked)
     end
 end
 
@@ -106,6 +109,9 @@ function t:rollOut(tar)
         tar.alpha = 255
         self.CurCard = nil
 
+        local o_card_picked = tar.c_card_manager:getData()
+        G.trig_event('UI_鼠标离开卡牌', o_card_picked)
+        
         self.TipsCard.visible = false
     end
 end

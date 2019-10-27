@@ -126,8 +126,8 @@ t['角色_设置水晶数据'] = function(estr_player_相对身份, estr_mana_ty
         int_value = MANA_MAX_COUNT
     end
 
-    if true then
-        G.call('角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, estr_mana_type_修改类型, int_value)
+    G.call('角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, estr_mana_type_修改类型, int_value)
+    if (estr_mana_type_修改类型 ~= '预览值') and (estr_mana_type_修改类型 ~= '预览锁定值') then
         G.call('网络通用_广播消息', '角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, estr_mana_type_修改类型, int_value)
     end
 end

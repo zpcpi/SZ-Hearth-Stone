@@ -27,11 +27,18 @@ t['法力消耗预览_事件'] = function (o_order_info_当前指令信息)
 end
 
 t['法力消耗预览_条件'] = function (o_order_info_当前指令信息)
-    return true
+    return G.call('卡牌抓取条件判断', o_order_info_当前指令信息) and
+           G.call('卡牌法力水晶消耗判断', o_order_info_当前指令信息)
 end
 
 t['法力消耗预览_修改数据'] = function (o_order_info_当前指令信息)
-	print('trig 法力消耗预览')
+    local Caster = o_order_info_当前指令信息['Caster']
+
+    local 预览值 = Caster['费用']
+    local 预览锁定值 = Caster['过载费用']
+
+    G.call('角色_设置水晶数据', '我方', '预览值', 预览值)
+    G.call('角色_设置水晶数据', '我方', '预览锁定值', 预览锁定值)
 end
 
 --==========================================================
@@ -48,7 +55,9 @@ t['法力消耗预览取消_条件'] = function (o_order_info_当前指令信息
 end
 
 t['法力消耗预览取消_修改数据'] = function (o_order_info_当前指令信息)
-	print('trig 法力消耗预览取消')
+    local Caster = o_order_info_当前指令信息['Caster']
+    G.call('角色_设置水晶数据', '我方', '预览值', 0)
+    G.call('角色_设置水晶数据', '我方', '预览锁定值', 0)
 end
 
 --==========================================================
@@ -80,6 +89,10 @@ t['抓取卡牌_修改数据'] = function (o_order_info_当前指令信息)
     obj.x = posx
     obj.y = posy
 
+    -- 水晶预览取消
+    G.call('角色_设置水晶数据', '我方', '预览值', 0)
+    G.call('角色_设置水晶数据', '我方', '预览锁定值', 0)
+
     -- 注册动画
     script_动画系统:push_quote('::CurPickCard', obj)
     script_动画系统:add_animquest(
@@ -108,7 +121,8 @@ t['卡牌进入功能区_事件'] = function (o_order_info_当前指令信息)
 end
 
 t['卡牌进入功能区_条件'] = function (o_order_info_当前指令信息)
-	return G.call('卡牌进入功能区条件判断', o_order_info_当前指令信息)
+    return G.call('卡牌进入功能区条件判断', o_order_info_当前指令信息) and
+           G.call('卡牌法力水晶消耗判断', o_order_info_当前指令信息)
 end
 
 t['卡牌进入功能区_修改数据'] = function (o_order_info_当前指令信息)
@@ -416,6 +430,15 @@ end
 t['卡牌抓取条件判断'] = function(o_order_info_当前指令信息)
     -- TODO: 是否是当前回合
     return true
+end
+
+--ret=boolean
+t['卡牌法力水晶消耗判断'] = function(o_order_info_当前指令信息)
+    local Caster = o_order_info_当前指令信息['Caster']
+
+    local 预览值 = Caster['费用']
+    local 当前值 = G.call('角色_获取水晶数据', '我方', '当前值')
+    return 预览值 <= 当前值
 end
 
 --ret=boolean
