@@ -294,23 +294,15 @@ local t = {
 			},
 			[2]={
 				['name']='事件',
-				['type']='earg',
+				['type']='funs',
 			},
 			[3]={
 				['name']='条件',
-				['type']='fargboolean',
+				['type']='funs',
 			},
 			[4]={
-				['name']='开启动画',
-				['type']='farg',
-			},
-			[5]={
-				['name']='结束动画',
-				['type']='farg',
-			},
-			[6]={
 				['name']='修改数据',
-				['type']='farg',
+				['type']='funs',
 			},
 		},
 	},

@@ -76,9 +76,9 @@ t['卡牌注册指令'] = function (o_card_使用卡牌)
                 local function create_listener(edge, t1, t2)
                     local function worker()
                         local next = 0
-                        if edge['条件'](o_order_info_当前指令信息) then
+                        if t[edge['条件']](o_order_info_当前指令信息) then
                             next = t1
-                            edge['修改数据'](o_order_info_当前指令信息)
+                            t[edge['修改数据']](o_order_info_当前指令信息)
                         else
                             next = t2
                         end
@@ -89,7 +89,7 @@ t['卡牌注册指令'] = function (o_card_使用卡牌)
                     end
         
                     -- 创建动态key，注册监听
-                    add_listener(edge['事件'], worker, o_order_info_当前指令信息)
+                    add_listener(t[edge['事件']], worker, o_order_info_当前指令信息)
                 end
 
                 for index = 1, #state_info['监测列表'], 1 do
@@ -108,96 +108,5 @@ t['卡牌注册指令'] = function (o_card_使用卡牌)
         end
 
         init_order_edge()
-    end
-end
-
-t['卡牌注册指令_初始化'] = function (o_order_info_当前指令信息, o_card_使用卡牌)
-    o_order_info_当前指令信息['Caster'] = o_card_使用卡牌
-end
-
-t['卡牌注册指令_完成'] = function (o_order_info_当前指令信息)
-    -- 鼠标跟随终止
-    local o_misc = G.misc()
-    local script_动画系统 = o_misc.主动画系统
-    local script_战场 = o_misc.主战场系统
-
-    script_动画系统:pop_quote('::CurPickCard')
-    script_动画系统:clear_animquest()
-
-    -- 删除连线控件
-    while true do
-        local obj_line = script_动画系统:pop_quote('::PopLine')
-        if obj_line then
-        else
-            break
-        end
-    end
-    script_战场:clear_popline()
-
-    
-    -- 手牌中删除
-    local script_手牌组件 = script_战场.selfHandcard.c_handcards_self
-    local obj = o_order_info_当前指令信息['CasterObj']
-    local obj_index = script_手牌组件:get_cardindex_byobj(obj)
-    if obj_index > 0 then
-        script_手牌组件:removeCard(obj_index)
-        
-        -- 当前卡牌消耗，约定手牌obj的编号和逻辑编号一致
-        -- 如果每张卡都有实例的话，就不用这个方法了
-        G.call('角色_移除手牌', '我方', obj_index)
-    end
-
-    -- 手牌状态恢复
-    script_手牌组件:pickcard_state(nil, false)
-    script_战场.enemyHandcard.c_handcards_enemy:pickcard_state(false)
-	script_战场.selfBattlehero.c_battlehero_self:pickcard_state(false)
-    
-    -- 播放复位动画
-    local int_当前手牌数量 =  G.call('角色_获取手牌数量', '我方')
-    if int_当前手牌数量 > 0 then
-        script_动画系统:add_animquest(
-            G.call('动画系统_创建quest', script_动画系统, G.QueryName(script_手牌组件.AnimBaseID + int_当前手牌数量 - 1))
-        )
-    end
-end
-
-t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
-    -- 鼠标跟随终止
-    local o_misc = G.misc()
-    local script_动画系统 = o_misc.主动画系统
-    local script_战场 = o_misc.主战场系统
-
-    script_动画系统:pop_quote('::CurPickCard')
-    script_动画系统:clear_animquest()
-
-    -- 删除连线控件
-    while true do
-        local obj_line = script_动画系统:pop_quote('::PopLine')
-        if obj_line then
-        else
-            break
-        end
-    end
-    script_战场:clear_popline()
-
-    -- 手牌状态恢复
-    local script_手牌组件 = script_战场.selfHandcard.c_handcards_self
-
-    script_手牌组件:pickcard_state(nil, false)
-    script_战场.enemyHandcard.c_handcards_enemy:pickcard_state(false)
-	script_战场.selfBattlehero.c_battlehero_self:pickcard_state(false)
-    
-    -- 控件父级设置
-    local obj = o_order_info_当前指令信息['CasterObj']
-    local orgx, orgy = obj.localToGlobal(0, 0)
-    script_手牌组件.布局点.addChild(obj)
-    obj.x, obj.y = obj.parent.globalToLocal(orgx, orgy)
-    
-    -- 播放复位动画
-    local int_当前手牌数量 =  G.call('角色_获取手牌数量', '我方')
-    if int_当前手牌数量 > 0 then
-        script_动画系统:add_animquest(
-            G.call('动画系统_创建quest', script_动画系统, G.QueryName(script_手牌组件.AnimBaseID + int_当前手牌数量 - 1))
-        )
     end
 end
