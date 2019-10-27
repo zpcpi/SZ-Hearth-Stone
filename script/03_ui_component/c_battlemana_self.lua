@@ -58,7 +58,6 @@ function t:水晶_init()
         -- 水晶obj.visible = true
         self.水晶list_next[i] = 水晶obj
         self.布局点.addChild(水晶obj)
-        水晶obj.img = 0x560b000a
         水晶obj.x = self.水晶_startx + (i - 1) * self.水晶_px
         水晶obj.y = self.水晶_starty - self.水晶_py
     end
@@ -217,7 +216,7 @@ function t:update(attr, old_value)
             elseif state == '锁定' then
                 ui_item.visible = true
                 ui_item.alpha = 255
-                ui_item.img = 0x560b000a
+                ui_item.img = 0x560b000c
             elseif state == '预览' then
                 ui_item.visible = true
                 ui_item.alpha = 120
@@ -232,10 +231,10 @@ function t:update(attr, old_value)
                 ui_item.visible = false
             elseif state == '锁定' then
                 ui_item.visible = true
-                ui_item.alpha = 255
+                ui_item.img = 0x560b000c
             elseif state == '预览锁定' then
                 ui_item.visible = true
-                ui_item.alpha = 120
+                ui_item.img = 0x560b000e
             end
         end
 
