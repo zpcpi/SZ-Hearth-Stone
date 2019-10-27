@@ -139,7 +139,6 @@ end
 
 function t:水晶状态计算()
     local 当前值, 预览值, 已用值, 锁定值, 临时值, 下回剩余值, 预览锁定值, 下回锁定值 = self:水晶值计算()
-    print(当前值, 预览值, 已用值, 锁定值, 临时值, 下回剩余值, 预览锁定值, 下回锁定值)
 
     local 水晶state = {}
     local 水晶state_next = {}
@@ -193,7 +192,7 @@ function t:need_flash(attr, old_value)
     self.等待计算 = true
 end
 
-function t:update(attr, old_value)
+function t:update()
     if self.等待计算 == true then
         self.等待计算 = false
 
