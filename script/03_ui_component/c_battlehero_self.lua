@@ -109,7 +109,7 @@ function t:getClickData_pick(tar)
     end
 end
 
-function t:mouseDown(tar)
+function t:mouseUp(tar)
     local o_card_picked
 
     if self.can_pick then

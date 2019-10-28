@@ -17,6 +17,7 @@ function t:init()
     self.职业边框 = self.obj.getChildByName('背景')
 
     self.名称字符 = self.obj.getChildByName('名称字符')
+    self.描述字符 = self.obj.getChildByName('描述字符')
 
     self.属性值组合 = self.obj.getChildByName('属性值组合')
     self.费用 = self.属性值组合.getChildByName('费用')

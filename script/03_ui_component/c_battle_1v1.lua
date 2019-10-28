@@ -89,6 +89,10 @@ function t:click(tar)
     end
 end
 
+function t:mouseUp(tar)
+    G.trig_event('UI_卡牌确认使用')
+end
+
 -- 连线设置
 function t:add_popline()
     local ui_line = G.loadUI('v_pop_pointline')

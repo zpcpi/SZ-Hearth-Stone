@@ -126,7 +126,6 @@ t['卡牌进入功能区_条件'] = function (o_order_info_当前指令信息)
 end
 
 t['卡牌进入功能区_修改数据'] = function (o_order_info_当前指令信息)
-	print('trig 卡牌进入功能区')
 end
 
 --==========================================================
@@ -288,7 +287,6 @@ t['卡牌确认使用_修改数据'] = function (o_order_info_当前指令信息
     -- 抉择
     -- 随从
     -- 完成使用
-    print('trig 卡牌确认使用')
 end
 
 
@@ -308,17 +306,17 @@ end
 
 
 
-t['xxx_事件'] = function (o_order_info_当前指令信息)
+-- t['xxx_事件'] = function (o_order_info_当前指令信息)
 
-end
+-- end
 
-t['xxx_条件'] = function (o_order_info_当前指令信息)
+-- t['xxx_条件'] = function (o_order_info_当前指令信息)
 
-end
+-- end
 
-t['xxx_修改数据'] = function (o_order_info_当前指令信息)
+-- t['xxx_修改数据'] = function (o_order_info_当前指令信息)
 
-end
+-- end
 
 
 
