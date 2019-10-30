@@ -80,21 +80,25 @@ t['抓取卡牌_修改数据'] = function (o_order_info_当前指令信息)
     local script_动画系统 = o_misc.主动画系统
     local _, obj = G.event_info()
 
+    local copy_obj = G.Clone(obj)
     o_order_info_当前指令信息['CasterObj'] = obj
+    o_order_info_当前指令信息['CasterObj_Clone'] = copy_obj
+    copy_obj.alpha = 255
+    obj.visible = false
 
     -- 控件父级设置
     local script_战场 = o_misc.主战场系统
-    script_战场.跨界面操作框.addChild(obj)
-    local posx, posy = obj.parent.globalToLocal(G.MousePos())
-    obj.x = posx
-    obj.y = posy
+    script_战场.跨界面操作框.addChild(copy_obj)
+    local posx, posy = copy_obj.parent.globalToLocal(G.MousePos())
+    copy_obj.x = posx
+    copy_obj.y = posy
 
     -- 水晶预览取消
     G.call('角色_设置水晶数据', '我方', '预览值', 0)
     G.call('角色_设置水晶数据', '我方', '预览锁定值', 0)
 
     -- 注册动画
-    script_动画系统:push_quote('::CurPickCard', obj)
+    script_动画系统:push_quote('::CurPickCard', copy_obj)
     script_动画系统:add_animquest(
         -- 朝向复位
         G.call('动画系统_创建quest', script_动画系统, G.QueryName(0x1001001b))
@@ -408,9 +412,12 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
     
     -- 控件父级设置
     local obj = o_order_info_当前指令信息['CasterObj']
-    local orgx, orgy = obj.localToGlobal(0, 0)
-    script_手牌组件.布局点.addChild(obj)
+    local copy_obj = o_order_info_当前指令信息['CasterObj_Clone']
+    local orgx, orgy = copy_obj.localToGlobal(0, 0)
     obj.x, obj.y = obj.parent.globalToLocal(orgx, orgy)
+    obj.visible = true
+    copy_obj.parent:removeChild(copy_obj)
+    copy_obj.visible = false
     
     -- 播放复位动画
     local int_当前手牌数量 =  G.call('角色_获取手牌数量', '我方')
