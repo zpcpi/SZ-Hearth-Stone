@@ -428,6 +428,7 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
     local copy_obj = o_order_info_当前指令信息['CasterObj_Clone']
     local orgx, orgy = copy_obj.localToGlobal(0, 0)
     obj.x, obj.y = obj.parent.globalToLocal(orgx, orgy)
+    obj.rotation = 0
     obj.visible = true
     copy_obj.visible = false
     copy_obj.parent:removeChild(copy_obj)
