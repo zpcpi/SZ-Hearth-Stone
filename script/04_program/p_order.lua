@@ -55,8 +55,8 @@ end
 
 --hide=true
 --ret=o_order
-t['卡牌注册指令'] = function (o_card_使用卡牌)
-    local i_order_当前指令 = o_card_使用卡牌['卡牌指令']
+t['卡牌注册指令'] = function (o_card_使用卡牌, i_order_当前指令)
+    i_order_当前指令 = i_order_当前指令 or o_card_使用卡牌['卡牌指令']
     local o_order_当前指令 = G.QueryName(i_order_当前指令)
 
     if o_order_当前指令 and o_order_当前指令['状态列表'] then
@@ -103,7 +103,7 @@ t['卡牌注册指令'] = function (o_card_使用卡牌)
             elseif state == -2 then
                 G.call('卡牌注册指令_退出', o_order_info_当前指令信息)
                 -- 重新注册指令
-                G.call('卡牌注册指令', o_card_使用卡牌)
+                G.call('卡牌注册指令', o_card_使用卡牌, i_order_当前指令)
             end
         end
 

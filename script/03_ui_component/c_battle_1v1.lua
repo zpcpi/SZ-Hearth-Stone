@@ -55,6 +55,9 @@ function t:init()
     self.selfBattlemana = self.obj.getChildByName('SelfBattleMana')
     self.enemyBattlemana = self.obj.getChildByName('EnemyBattleMana')
 
+    self.selfBattleminion = self.obj.getChildByName('SelfBattleMinion')
+    self.enemyBattleminion = self.obj.getChildByName('EnemyBattleMinion')
+
     -- 连线管理
     self.popline_list = {}
 end

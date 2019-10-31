@@ -45,9 +45,13 @@ t['对决_决定初始卡牌'] = function()
     -- TODO: 等待换牌结束
     -- TODO: 换牌
     if not G.call('对决_我方是否是先手') then 
-        local o_card_硬币 = G.QueryName(0x10060003)
+        local o_card_硬币 = G.QueryName(0x1006000e)
+        
         -- 后手添加硬币
         G.call('角色_添加手牌', '我方', o_card_硬币)
+    else
+        -- 测试用卡牌
+        G.call('角色_添加手牌', '我方', G.QueryName(0x10060061))
     end
 end
 

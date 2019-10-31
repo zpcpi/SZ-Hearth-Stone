@@ -33,6 +33,6 @@ tp = tc
 		tp = tc
 		tp = tp.parent
 		--end
-	tp.c_battleminion_enemy = setmetatable({}, c_battleminion_enemy)
 	tp = tp.parent
 	--end
+tp.c_battleminion_enemy = setmetatable({}, c_battleminion_enemy)

@@ -27,6 +27,6 @@ UI_SPELL_TARGET_POS = {
 }
 
 UI_BATTLEMINIONS_POSX = {
-    ['centerx'] = 540,
-    ['spacex'] = 60,
+    ['centerx'] = 0,
+    ['spacex'] = 75,
 }

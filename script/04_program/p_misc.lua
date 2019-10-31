@@ -10,5 +10,10 @@ t['com_set_value'] = function (com, attr, value)
 end
 
 t['zpc_test'] = function ()
-    G.call('网络通用_广播消息', 'asd', 1, false, {}, {[1] = 1, ['2'] = '2'})
+    local o_misc = G.misc()
+    local script_战场 = o_misc.主战场系统
+    local minion = script_战场.selfBattleminion.c_battleminion_self
+
+    minion:addMinion(G.QueryName(0x10060061))
+
 end

@@ -42,15 +42,14 @@ t['CardCom_SetData'] = function (com, o_card)
     end
 
     -- 职业信息
-    do
-        local o_profession_卡牌职业 = query_iter(o_card.职业 or 0x10080001)
+    local o_profession_卡牌职业 = query_iter(o_card.职业 or 0x10080001)
+    if com.职业边框 then
         com.职业边框.img = o_profession_卡牌职业[o_card_type.职业边框]
-
-        if com.职业图标 then
-            com.职业图标.img = o_profession_卡牌职业.职业图标
-        end
     end
-
+    if com.职业图标 then
+        com.职业图标.img = o_profession_卡牌职业.职业图标
+    end
+    
     -- 品质信息
     if com.品质板 then
         local o_rank_卡牌品质 = query_iter(o_card.品质 or 0x10070001)

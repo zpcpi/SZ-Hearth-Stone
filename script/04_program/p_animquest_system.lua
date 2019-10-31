@@ -246,7 +246,6 @@ t['动画系统_连线两端跟随'] = function(string_obj, _string_attr, string
     return {}
 end
 
-
 --type=actor
 --hide=true
 --ret=_o_animquest_shaft

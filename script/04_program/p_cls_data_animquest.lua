@@ -85,3 +85,15 @@ t['手牌复位动画生成'] = function(o_animquest_当前数据, _i_animquest_
 
     return o_animquest_当前数据
 end
+
+--hide=true
+--ret=o_animquest
+t['随从卡变形为战场随从'] = function(o_animquest_当前数据)
+
+
+
+
+
+
+
+end
