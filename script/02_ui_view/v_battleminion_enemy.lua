@@ -2,6 +2,7 @@
 
 ]]
 local G = require 'gf'
+local c_battleminion_enemy = require 'c_battleminion_enemy'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -19,6 +20,7 @@ tp = tc
 	tc.right = 225.000
 	tc.bottom = 20.000
 	tc.top = 140.000
+	tc.mouseEnabled = true
 	tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
@@ -31,5 +33,6 @@ tp = tc
 		tp = tc
 		tp = tp.parent
 		--end
+	tp.c_battleminion_enemy = setmetatable({}, c_battleminion_enemy)
 	tp = tp.parent
 	--end

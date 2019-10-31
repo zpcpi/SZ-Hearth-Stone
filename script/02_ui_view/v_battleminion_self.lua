@@ -20,6 +20,7 @@ tp = tc
 	tc.right = 225.000
 	tc.bottom = -100.000
 	tc.top = 20.000
+	tc.mouseEnabled = true
 	tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)

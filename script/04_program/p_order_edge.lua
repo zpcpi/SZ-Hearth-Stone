@@ -84,6 +84,7 @@ t['抓取卡牌_修改数据'] = function (o_order_info_当前指令信息)
     o_order_info_当前指令信息['CasterObj'] = obj
     o_order_info_当前指令信息['CasterObj_Clone'] = copy_obj
     copy_obj.alpha = 255
+    copy_obj.mouseEnabled = false
     obj.visible = false
 
     -- 控件父级设置
@@ -283,6 +284,11 @@ t['卡牌确认使用_事件'] = function (o_order_info_当前指令信息)
 end
 
 t['卡牌确认使用_条件'] = function (o_order_info_当前指令信息)
+    local side = G.event_info()
+
+    print('asd', side)
+
+
     return true
 end
 
@@ -358,13 +364,16 @@ t['卡牌注册指令_完成'] = function (o_order_info_当前指令信息)
     end
     script_战场:clear_popline()
     
+    -- 显示用卡牌删除
+    local copy_obj = o_order_info_当前指令信息['CasterObj_Clone']
+    copy_obj.visible = false
+    copy_obj.parent:removeChild(copy_obj)
+
     -- 手牌中删除
     local script_手牌组件 = script_战场.selfHandcard.c_handcards_self
     local obj = o_order_info_当前指令信息['CasterObj']
     local obj_index = script_手牌组件:get_cardindex_byobj(obj)
     if obj_index > 0 then
-        script_手牌组件:removeCard(obj_index)
-        
         -- 当前卡牌消耗，约定手牌obj的编号和逻辑编号一致
         -- 如果每张卡都有实例的话，就不用这个方法了
         G.call('角色_移除手牌', '我方', obj_index)
@@ -416,8 +425,8 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
     local orgx, orgy = copy_obj.localToGlobal(0, 0)
     obj.x, obj.y = obj.parent.globalToLocal(orgx, orgy)
     obj.visible = true
-    copy_obj.parent:removeChild(copy_obj)
     copy_obj.visible = false
+    copy_obj.parent:removeChild(copy_obj)
     
     -- 播放复位动画
     local int_当前手牌数量 =  G.call('角色_获取手牌数量', '我方')

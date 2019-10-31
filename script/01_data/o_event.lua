@@ -50,6 +50,12 @@ local t = {
 	},
 	{
 		['name']='UI_卡牌确认使用',
+		['arg']={
+			[1]={
+				['id']='Side',
+				['type']='estr_side',
+			},
+		},
 	},
 	{
 		['name']='UI_取消操作',
