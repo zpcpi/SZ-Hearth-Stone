@@ -81,9 +81,24 @@ function t:removeCard(del_count)
 end
 
 function t:rollOver(tar)
+    if tar.parent == self.布局点 then
+        if self.can_pick then
+            self.CurCard = tar
+
+            local o_card_picked = tar.getChildByName('卡牌框').c_battle_minion:getData()
+
+            self.TipsCard.visible = true
+            self.TipsCard.x = tar.x
+            self.TipsCard.c_card_manager:setData(o_card_picked)
+        end
+    end
 end
 
 function t:rollOut(tar)
+    if tar.parent == self.布局点 then
+        self.CurCard = nil
+        self.TipsCard.visible = false
+    end
 end
 
 function t:mouseDown(tar)
@@ -92,7 +107,9 @@ function t:mouseDown(tar)
 end
 
 function t:mouseUp(tar)
-    G.trig_event('UI_卡牌确认使用', '我方')
+    if tar.parent ~= self.布局点 then
+        G.trig_event('UI_卡牌确认使用', '我方')
+    end
 end
 
 return t

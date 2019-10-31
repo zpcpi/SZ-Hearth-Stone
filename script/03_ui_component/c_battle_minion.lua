@@ -25,8 +25,16 @@ function t:init()
     self.生命值 = self.属性值组合.getChildByName('生命值')
     self.生命值数值 = self.生命值.getChildByName('生命值数值')
 
-    self.setData = G.api['CardCom_SetData']
+    self.setData = function (self, o_card)
+        self.cur_card = o_card
+        G.api['CardCom_SetData'](self, o_card)
+    end
     self.set_atk = G.api['CardCom_SetAttr']('atk', '攻击力数值', 'text')
     self.set_hp = G.api['CardCom_SetAttr']('hp', '生命值数值', 'text')
 end
+
+function t:getData()
+    return self.cur_card
+end
+
 return t
