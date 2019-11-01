@@ -56,8 +56,8 @@ tp = tc
 	tc.name = 'HostGame'
 	tc.left = -80.000
 	tc.right = 80.000
-	tc.bottom = -160.000
-	tc.top = -112.000
+	tc.bottom = -114.000
+	tc.top = -66.000
 	tc.mouseEnabled = true
 	tp = tc
 		tc = G.Quad()
@@ -118,8 +118,8 @@ tp = tc
 	tc.name = 'ConnectGame'
 	tc.left = -80.000
 	tc.right = 80.000
-	tc.bottom = -241.000
-	tc.top = -193.000
+	tc.bottom = -184.000
+	tc.top = -136.000
 	tc.mouseEnabled = true
 	tp = tc
 		tc = G.Quad()
@@ -177,11 +177,73 @@ tp = tc
 	--end
 	tc = G.Entity()
 	tp.addChild(tc)
+	tc.name = 'Collection'
+	tc.left = -80.000
+	tc.right = 80.000
+	tc.bottom = -254.000
+	tc.top = -206.000
+	tc.mouseEnabled = true
+	tp = tc
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = 'img_ex'
+		tc.right = 0.000
+		tc.top = 0.000
+		tc.anchor = 0x64006400
+		tc.visible = false
+		tp = tc
+		tp = tp.parent
+		--end
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = 'img'
+		tc.right = 0.000
+		tc.top = 0.000
+		tc.anchor = 0x64006400
+		tc.img = 0x56000001
+		tp = tc
+		tp = tp.parent
+		--end
+		tc = G.TextQuad()
+		tp.addChild(tc)
+		tc.name = 'text'
+		tc.right = 0.000
+		tc.top = 0.000
+		tc.anchor = 0x64006400
+		tc.color = 0x0
+		tc.text = '收藏'
+		tc.font = 0x63200041
+		tp = tc
+		tp = tp.parent
+		--end
+	tp.c_button = setmetatable({}, c_button)
+	com = tp.c_button
+	com['text'] ='收藏'
+	com['btn_class'] =nil
+	com['customsize'] =true
+	com['img_normal'] =1442840577.000
+	com['color_normal'] =nil
+	com['img_hover'] =nil
+	com['color_hover'] =nil
+	com['audio_hover'] =nil
+	com['img_press'] =nil
+	com['frameList_press'] =nil
+	com['color_press'] =nil
+	com['audio_press'] =nil
+	com['img_disable'] =nil
+	com['color_disable'] =nil
+	com['img_toggle'] =nil
+	com['color_toggle'] =nil
+	com['img_togEx'] =nil
+	tp = tp.parent
+	--end
+	tc = G.Entity()
+	tp.addChild(tc)
 	tc.name = 'QuitGame'
 	tc.left = -80.000
 	tc.right = 80.000
-	tc.bottom = -320.000
-	tc.top = -272.000
+	tc.bottom = -324.000
+	tc.top = -276.000
 	tc.mouseEnabled = true
 	tp = tc
 		tc = G.Quad()
