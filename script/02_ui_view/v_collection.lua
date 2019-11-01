@@ -2,8 +2,9 @@
 
 ]]
 local G = require 'gf'
-local c_layout_h = require 'c_layout_h'
 local c_button = require 'c_button'
+local c_layout_h = require 'c_layout_h'
+local c_collection = require 'c_collection'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -221,3 +222,72 @@ tp = tc
 		--end
 	tp = tp.parent
 	--end
+	tc = G.Entity()
+	tp.addChild(tc)
+	tc.name = 'ReturnButton'
+	tc.pivotX = 1.000
+	tc.pivotY = 0.000
+	tc.left = -84.000
+	tc.right = 0.000
+	tc.top = 50.000
+	tc.anchor = 0x6464
+	tc.mouseEnabled = true
+	tp = tc
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = 'img_ex'
+		tc.right = 0.000
+		tc.top = 0.000
+		tc.anchor = 0x64006400
+		tc.visible = false
+		tp = tc
+		tp = tp.parent
+		--end
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = 'img'
+		tc.pivotX = 0.000
+		tc.pivotY = 1.000
+		tc.right = 84.000
+		tc.bottom = -50.000
+		tc.top = 0.000
+		tc.anchor = 0x64640000
+		tc.color = 0x6c6c6c
+		tc.img = 0x56000001
+		tp = tc
+		tp = tp.parent
+		--end
+		tc = G.TextQuad()
+		tp.addChild(tc)
+		tc.name = 'text'
+		tc.right = 0.000
+		tc.top = 0.000
+		tc.anchor = 0x64006400
+		tc.color = 0x0
+		tc.text = '返回'
+		tc.font = 0x65140000
+		tp = tc
+		tp = tp.parent
+		--end
+	tp.c_button = setmetatable({}, c_button)
+	com = tp.c_button
+	com['text'] ='返回'
+	com['btn_class'] =nil
+	com['customsize'] =true
+	com['img_normal'] =1442840577.000
+	com['color_normal'] =0.000
+	com['img_hover'] =nil
+	com['color_hover'] =nil
+	com['audio_hover'] =nil
+	com['img_press'] =nil
+	com['frameList_press'] =nil
+	com['color_press'] =nil
+	com['audio_press'] =nil
+	com['img_disable'] =nil
+	com['color_disable'] =nil
+	com['img_toggle'] =nil
+	com['color_toggle'] =nil
+	com['img_togEx'] =nil
+	tp = tp.parent
+	--end
+tp.c_collection = setmetatable({}, c_collection)

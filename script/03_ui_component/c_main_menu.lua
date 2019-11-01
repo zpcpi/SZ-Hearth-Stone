@@ -8,6 +8,7 @@ local t = G.com()
 function t:init()
     self.hostGameBtn = self.obj.getChildByName('HostGame')
     self.connectGameBtn = self.obj.getChildByName('ConnectGame')
+    self.collectionBtn = self.obj.getChildByName('Collection')
     self.quitGameBtn = self.obj.getChildByName('QuitGame')
 
     self.playerName = self.obj.getChildByName('PlayerName').getChildByName('PlayerNameText')
@@ -21,6 +22,8 @@ function t:click(tar)
         G.call('主机_新建房间')
     elseif tar == self.connectGameBtn then 
         G.addUI('v_connect')
+    elseif tar == self.collectionBtn then 
+        G.call('收藏_进入收藏界面')
     elseif tar == self.quitGameBtn then 
     end
 end

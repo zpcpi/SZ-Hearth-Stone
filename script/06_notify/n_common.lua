@@ -86,3 +86,11 @@ function noti.提示_播放提示(string_提示内容)
     o_node_提示.alpha = 0
     G.RunAction('提示动画_显示提示', o_node_提示)
 end
+
+function noti.收藏_进入收藏界面()
+    G.changeUI('v_collection')
+end
+
+function noti.收藏_退出收藏界面()
+    G.changeUI('v_main_menu')
+end
