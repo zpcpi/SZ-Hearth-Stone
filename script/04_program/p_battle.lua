@@ -56,12 +56,15 @@ t['对决_决定初始卡牌'] = function()
 end
 
 t['对决_流程控制'] = function()
+    -- TODO: 重置当前回合
     if not G.call('对决_我方是否是先手') then 
         G.call('对决_等待对方回合结束')
     end
     while not G.call('对决_是否超过最大回合') do
         G.call('对决_回合开始')
+        -- TODO: 更新当前回合
         G.call('对决_等待我方回合结束')
+        -- TODO: 播放对方回合开始动画
         G.call('对决_等待对方回合结束')
     end
 end
@@ -112,5 +115,22 @@ end
 
 t['对决_是否超过最大回合'] = function()
     -- TODO: 判断当前回合是否超过最大回合
+    return false
+end
+
+t['对决_设置当前回合玩家绝对身份'] = function(any_绝对身份)
+    G['当前回合玩家绝对身份'] = any_绝对身份
+end
+
+t['对决_获取当前回合玩家绝对身份'] = function()
+    return G['当前回合玩家绝对身份']
+end
+
+t['对决_当前是否是我方回合'] = function()
+    local any_我方绝对身份 = G.call('房间_获取绝对身份', '我方') 
+    local any_当前回合玩家绝对身份 = G.call('对决_获取当前回合玩家绝对身份')
+    if any_我方绝对身份 == any_当前回合玩家绝对身份 then 
+        return true
+    end
     return false
 end

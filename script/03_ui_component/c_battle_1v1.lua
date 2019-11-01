@@ -86,6 +86,10 @@ function t:mouseMove()
 
 end
 
+function t:update()
+    -- TODO: 根据当前回合玩家身份, 更新结束回合按钮的显示
+end
+
 function t:click(tar)
     if tar == self.endTurnBtn then 
         G.call('对决_我方回合结束')
