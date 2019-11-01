@@ -2,13 +2,13 @@
 
 ]]
 local G = require 'gf'
-local c_button = require 'c_button'
+local c_layout_h = require 'c_layout_h'
 local c_card_manager = require 'c_card_manager'
+local c_scrollview = require 'c_scrollview'
+local c_button = require 'c_button'
 local c_perfectsize = require 'c_perfectsize'
 local c_layout_v = require 'c_layout_v'
-local c_scrollview = require 'c_scrollview'
 local c_collection = require 'c_collection'
-local c_layout_h = require 'c_layout_h'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -239,6 +239,7 @@ tp = tc
 			tc.right = -270.000
 			tc.bottom = 85.000
 			tc.top = 185.000
+			tc.visible = false
 			tp = tc
 				tc = G.loadUI('v_card_manager')
 				tc.prefab = true
@@ -263,6 +264,7 @@ tp = tc
 			tc.right = -70.000
 			tc.bottom = 85.000
 			tc.top = 185.000
+			tc.visible = false
 			tp = tc
 				tc = G.Entity()
 				tp.addChild(tc)
@@ -315,6 +317,7 @@ tp = tc
 			tc.right = 130.000
 			tc.bottom = 85.000
 			tc.top = 185.000
+			tc.visible = false
 			tp = tc
 				tc = G.Entity()
 				tp.addChild(tc)
@@ -367,6 +370,7 @@ tp = tc
 			tc.right = 330.000
 			tc.bottom = 85.000
 			tc.top = 185.000
+			tc.visible = false
 			tp = tc
 				tc = G.Entity()
 				tp.addChild(tc)
@@ -419,6 +423,7 @@ tp = tc
 			tc.right = -270.000
 			tc.bottom = -185.000
 			tc.top = -85.000
+			tc.visible = false
 			tp = tc
 				tc = G.Entity()
 				tp.addChild(tc)
@@ -471,6 +476,7 @@ tp = tc
 			tc.right = -70.000
 			tc.bottom = -185.000
 			tc.top = -85.000
+			tc.visible = false
 			tp = tc
 				tc = G.Entity()
 				tp.addChild(tc)
@@ -523,6 +529,7 @@ tp = tc
 			tc.right = 130.000
 			tc.bottom = -185.000
 			tc.top = -85.000
+			tc.visible = false
 			tp = tc
 				tc = G.Entity()
 				tp.addChild(tc)
@@ -575,6 +582,7 @@ tp = tc
 			tc.right = 330.000
 			tc.bottom = -185.000
 			tc.top = -85.000
+			tc.visible = false
 			tp = tc
 				tc = G.Entity()
 				tp.addChild(tc)
@@ -622,6 +630,144 @@ tp = tc
 			--end
 		tp = tp.parent
 		--end
+		tc = G.Entity()
+		tp.addChild(tc)
+		tc.name = 'LastPage'
+		tc.pivotX = 1.000
+		tc.pivotY = 0.000
+		tc.left = -204.000
+		tc.right = -120.000
+		tc.bottom = -50.000
+		tc.top = 0.000
+		tc.anchor = 0x6464
+		tc.mouseEnabled = true
+		tp = tc
+			tc = G.Quad()
+			tp.addChild(tc)
+			tc.name = 'img_ex'
+			tc.right = 0.000
+			tc.top = 0.000
+			tc.anchor = 0x64006400
+			tc.visible = false
+			tp = tc
+			tp = tp.parent
+			--end
+			tc = G.Quad()
+			tp.addChild(tc)
+			tc.name = 'img'
+			tc.pivotX = 0.000
+			tc.pivotY = 1.000
+			tc.right = 84.000
+			tc.bottom = -50.000
+			tc.top = 0.000
+			tc.anchor = 0x64640000
+			tc.color = 0x6c6c6c
+			tc.img = 0x56000001
+			tp = tc
+			tp = tp.parent
+			--end
+			tc = G.TextQuad()
+			tp.addChild(tc)
+			tc.name = 'text'
+			tc.right = 0.000
+			tc.top = 0.000
+			tc.anchor = 0x64006400
+			tc.color = 0x0
+			tc.text = '上一页'
+			tc.font = 0x65140000
+			tp = tc
+			tp = tp.parent
+			--end
+		tp.c_button = setmetatable({}, c_button)
+		com = tp.c_button
+		com['text'] ='上一页'
+		com['btn_class'] =nil
+		com['customsize'] =true
+		com['img_normal'] =1442840577.000
+		com['color_normal'] =0.000
+		com['img_hover'] =nil
+		com['color_hover'] =nil
+		com['audio_hover'] =nil
+		com['img_press'] =nil
+		com['frameList_press'] =nil
+		com['color_press'] =nil
+		com['audio_press'] =nil
+		com['img_disable'] =nil
+		com['color_disable'] =nil
+		com['img_toggle'] =nil
+		com['color_toggle'] =nil
+		com['img_togEx'] =nil
+		tp = tp.parent
+		--end
+		tc = G.Entity()
+		tp.addChild(tc)
+		tc.name = 'NextPage'
+		tc.pivotX = 1.000
+		tc.pivotY = 0.000
+		tc.left = -104.000
+		tc.right = -20.000
+		tc.bottom = -50.000
+		tc.top = 0.000
+		tc.anchor = 0x6464
+		tc.mouseEnabled = true
+		tp = tc
+			tc = G.Quad()
+			tp.addChild(tc)
+			tc.name = 'img_ex'
+			tc.right = 0.000
+			tc.top = 0.000
+			tc.anchor = 0x64006400
+			tc.visible = false
+			tp = tc
+			tp = tp.parent
+			--end
+			tc = G.Quad()
+			tp.addChild(tc)
+			tc.name = 'img'
+			tc.pivotX = 0.000
+			tc.pivotY = 1.000
+			tc.right = 84.000
+			tc.bottom = -50.000
+			tc.top = 0.000
+			tc.anchor = 0x64640000
+			tc.color = 0x6c6c6c
+			tc.img = 0x56000001
+			tp = tc
+			tp = tp.parent
+			--end
+			tc = G.TextQuad()
+			tp.addChild(tc)
+			tc.name = 'text'
+			tc.right = 0.000
+			tc.top = 0.000
+			tc.anchor = 0x64006400
+			tc.color = 0x0
+			tc.text = '下一页'
+			tc.font = 0x65140000
+			tp = tc
+			tp = tp.parent
+			--end
+		tp.c_button = setmetatable({}, c_button)
+		com = tp.c_button
+		com['text'] ='下一页'
+		com['btn_class'] =nil
+		com['customsize'] =true
+		com['img_normal'] =1442840577.000
+		com['color_normal'] =0.000
+		com['img_hover'] =nil
+		com['color_hover'] =nil
+		com['audio_hover'] =nil
+		com['img_press'] =nil
+		com['frameList_press'] =nil
+		com['color_press'] =nil
+		com['audio_press'] =nil
+		com['img_disable'] =nil
+		com['color_disable'] =nil
+		com['img_toggle'] =nil
+		com['color_toggle'] =nil
+		com['img_togEx'] =nil
+		tp = tp.parent
+		--end
 	tp = tp.parent
 	--end
 	tc = G.Entity()
@@ -651,6 +797,7 @@ tp = tc
 		tc.right = 125.000
 		tc.bottom = -275.000
 		tc.top = 275.000
+		tc.mouseEnabled = true
 		tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
