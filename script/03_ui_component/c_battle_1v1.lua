@@ -28,18 +28,29 @@ function t:init()
         end
     )
 
+    local o_misc = G.misc()
+    o_misc.主战场系统 = self
     do
         self.main_actor_obj = self.obj.getChildByName('MainActor')
         -- 注册主动画系统
         local main_actor = self.main_actor_obj.c_animactor
-        local o_misc = G.misc()
         o_misc.主动画系统 = main_actor
-        o_misc.主战场系统 = self
         
         -- 动画系统引用注册
         main_actor:push_quote('::HandCards_Self', self.selfHandcard.c_handcards_self)
         main_actor:push_quote('::HandCards_Enemy', self.enemyHandcard.c_handcards_enemy)
     end
+    do
+        self.skill_actor_obj = self.obj.getChildByName('SkillActor')
+        -- 注册技能动画系统
+        local skill_actor = self.skill_actor_obj.c_animactor
+        o_misc.技能动画系统 = skill_actor
+
+        -- 动画系统引用注册
+
+
+    end
+
 
     self.跨界面操作框 = self.obj.getChildByName('跨界面操作框')
 
@@ -112,6 +123,13 @@ function t:clear_popline()
     end
 
     self.popline_list = {}
+end
+
+-- tips在全局显示
+function t:showtips(o_card, posx, posy)
+
+
+
 end
 
 
