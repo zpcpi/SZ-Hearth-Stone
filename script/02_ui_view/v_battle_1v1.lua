@@ -184,6 +184,18 @@ tp = tc
 	tp.c_animactor = setmetatable({}, c_animactor)
 	tp = tp.parent
 	--end
+	tc = G.loadUI('v_animactor')
+	tc.prefab = true
+	tp.addChild(tc)
+	tc.name = 'SkillActor'
+	tc.left = -640.000
+	tc.right = 640.000
+	tc.bottom = -360.000
+	tc.top = 360.000
+	tp = tc
+	tp.c_animactor = setmetatable({}, c_animactor)
+	tp = tp.parent
+	--end
 	tc = G.Entity()
 	tp.addChild(tc)
 	tc.name = 'EndTurnButton'
