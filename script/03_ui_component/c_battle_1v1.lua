@@ -94,11 +94,14 @@ function t:mouseMove()
             G.trig_event('UI_鼠标进入功能区')
         end
     end
+end
 
+function t:update()
+    self:update_end_turn_button()
 end
 
 function t:click(tar)
-    if tar == self.endTurnBtn then 
+    if G.call('对决_当前是否是我方回合') and tar == self.endTurnBtn then 
         G.call('对决_我方回合结束')
     end
 end
@@ -125,8 +128,28 @@ function t:clear_popline()
     self.popline_list = {}
 end
 
+function t:update_end_turn_button()
+    local string_按钮文字 = ''
+    if G.call('对决_当前是否是我方回合') then 
+        -- TODO: 判断当前是否还有卡片可以使用
+        if true then
+            string_按钮文字 = '结束回合(黄)'
+        else
+            string_按钮文字 = '结束回合(绿)'
+        end
+    else
+        string_按钮文字 = '对方回合'
+    end
+    if self.endTurnBtn.c_button.text ~= string_按钮文字 then 
+        self.endTurnBtn.c_button.text = string_按钮文字
+    end
+end
+
 -- tips在全局显示
 function t:showtips(o_card, posx, posy)
+
+
+
 
 
 
