@@ -110,6 +110,10 @@ t['抓取卡牌_修改数据'] = function (o_order_info_当前指令信息)
     script_战场.selfHandcard.c_handcards_self:pickcard_state(obj, true)
     script_战场.enemyHandcard.c_handcards_enemy:pickcard_state(true)
     script_战场.selfBattlehero.c_battlehero_self:pickcard_state(true)
+
+    script_战场.selfBattleminion.c_battleminion_self:pickcard_state(true)
+
+    script_战场.selfBattleminion.c_battleminion_self:showcard_state(true)
     script_战场.InFuncArea = false
 end
 
@@ -174,6 +178,35 @@ t['卡牌进入功能区_单目标法术_修改数据'] = function (o_order_info
         -- 注册连线动画
         G.call('动画系统_创建quest', script_动画系统, G.QueryName(0x10010019))
     )
+
+    -- 控件状态更改
+    script_战场.selfBattleminion.c_battleminion_self:showcard_state(false)
+end
+
+--==========================================================
+-- 卡牌进入功能区_随从
+-- 0x10050015
+--==========================================================
+
+t['卡牌进入功能区_随从_条件'] = function (o_order_info_当前指令信息)
+    return G.call('卡牌进入功能区条件判断', o_order_info_当前指令信息) and
+           G.call('卡牌法力水晶消耗判断', o_order_info_当前指令信息) and
+           G.call('随从召唤条件判断', o_order_info_当前指令信息)
+end
+
+t['卡牌进入功能区_随从_修改数据'] = function (o_order_info_当前指令信息)
+    local o_misc = G.misc()
+
+    -- 控件状态更改
+    local script_战场 = o_misc.主战场系统
+    local script_己方战场随从 = script_战场.selfBattleminion.c_battleminion_self
+    script_战场:move_state(true)
+
+    -- 添加一个占位
+    local index = script_己方战场随从:get_minion_index(G.MousePos())
+    script_己方战场随从:addMinion(nil, index)
+    script_己方战场随从:set_minion_pos()
+
 end
 
 --==========================================================
@@ -268,7 +301,13 @@ t['随从切换站位_条件'] = function (o_order_info_当前指令信息)
 end
 
 t['随从切换站位_修改数据'] = function (o_order_info_当前指令信息)
-    print('trig 随从切换站位')
+    local o_misc = G.misc()
+    local script_战场 = o_misc.主战场系统
+    local script_己方战场随从 = script_战场.selfBattleminion.c_battleminion_self
+    
+    local index = G.event_info()
+    script_己方战场随从:addMinion(nil, index)
+    script_己方战场随从:set_minion_pos()
 end
 
 --==========================================================
@@ -281,9 +320,6 @@ end
 
 t['卡牌确认使用_条件'] = function (o_order_info_当前指令信息)
     local side = G.event_info()
-
-    print('asd', side)
-
 
     return true
 end
@@ -384,6 +420,14 @@ t['卡牌注册指令_完成'] = function (o_order_info_当前指令信息)
     script_战场.enemyHandcard.c_handcards_enemy:pickcard_state(false)
 	script_战场.selfBattlehero.c_battlehero_self:pickcard_state(false)
     
+    -- 战场随从恢复
+    script_战场:move_state(false)
+    local script_己方战场随从 = script_战场.selfBattleminion.c_battleminion_self
+    script_己方战场随从:pickcard_state(false)
+    script_己方战场随从:showcard_state(false)
+    script_己方战场随从:removeBlank()
+    script_己方战场随从:set_minion_pos()
+    
     -- 播放复位动画
     local int_当前手牌数量 =  G.call('角色_获取手牌数量', '我方')
     if int_当前手牌数量 > 0 then
@@ -416,12 +460,20 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
     end
     script_战场:clear_popline()
 
-    -- 手牌状态恢复
     local script_手牌组件 = script_战场.selfHandcard.c_handcards_self
 
+    -- 手牌状态恢复
     script_手牌组件:pickcard_state(nil, false)
     script_战场.enemyHandcard.c_handcards_enemy:pickcard_state(false)
 	script_战场.selfBattlehero.c_battlehero_self:pickcard_state(false)
+    
+    -- 战场随从恢复
+    script_战场:move_state(false)
+    local script_己方战场随从 = script_战场.selfBattleminion.c_battleminion_self
+    script_己方战场随从:pickcard_state(false)
+    script_己方战场随从:showcard_state(false)
+    script_己方战场随从:removeBlank()
+    script_己方战场随从:set_minion_pos()
     
     -- 控件父级设置
     local obj = o_order_info_当前指令信息['CasterObj']
@@ -462,5 +514,10 @@ end
 
 --ret=boolean
 t['卡牌进入功能区条件判断'] = function(o_order_info_当前指令信息)
+    return true
+end
+
+--ret=boolean
+t['随从召唤条件判断'] = function(o_order_info_当前指令信息)
     return true
 end

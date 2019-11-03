@@ -28,6 +28,30 @@ function t:init()
         end
     )
 
+    self.跨界面操作框 = self.obj.getChildByName('跨界面操作框')
+
+    self.endTurnBtn = self.obj.getChildByName('EndTurnButton')
+
+    -- 进出功能区开关
+    self.InFuncArea = false
+    self.can_move = false
+
+    -- 其他控件注册
+    self.selfBattlehero = self.obj.getChildByName('SelfBattleHero')
+    self.enemyBattlehero = self.obj.getChildByName('EnemyBattleHero')
+
+    self.selfBattlemana = self.obj.getChildByName('SelfBattleMana')
+    self.enemyBattlemana = self.obj.getChildByName('EnemyBattleMana')
+
+    self.selfBattleminion = self.obj.getChildByName('SelfBattleMinion')
+    self.enemyBattleminion = self.obj.getChildByName('EnemyBattleMinion')
+
+    self.tips版 = self.obj.getChildByName('全局Tips版')
+    self:initTipsCard()
+
+    -- 连线管理
+    self.popline_list = {}
+
     local o_misc = G.misc()
     o_misc.主战场系统 = self
     do
@@ -50,27 +74,6 @@ function t:init()
 
 
     end
-
-
-    self.跨界面操作框 = self.obj.getChildByName('跨界面操作框')
-
-    self.endTurnBtn = self.obj.getChildByName('EndTurnButton')
-
-    -- 进出功能区开关
-    self.InFuncArea = false
-
-    -- 其他控件注册
-    self.selfBattlehero = self.obj.getChildByName('SelfBattleHero')
-    self.enemyBattlehero = self.obj.getChildByName('EnemyBattleHero')
-
-    self.selfBattlemana = self.obj.getChildByName('SelfBattleMana')
-    self.enemyBattlemana = self.obj.getChildByName('EnemyBattleMana')
-
-    self.selfBattleminion = self.obj.getChildByName('SelfBattleMinion')
-    self.enemyBattleminion = self.obj.getChildByName('EnemyBattleMinion')
-
-    -- 连线管理
-    self.popline_list = {}
 end
 
 function t:rmouseUp()
@@ -92,6 +95,14 @@ function t:mouseMove()
         if (posy > area['maxy']) or (posx < area['minx']) or (posx > area['maxx']) then
             self.InFuncArea = true
             G.trig_event('UI_鼠标进入功能区')
+        end
+    end
+
+    if self.can_move then
+        local script_己方战场随从 = self.selfBattleminion.c_battleminion_self
+        local index = script_己方战场随从:get_minion_index(G.MousePos())
+        if index ~= script_己方战场随从.随从占位编号 then
+            G.trig_event('UI_鼠标切换站位', index)
         end
     end
 end
@@ -145,15 +156,29 @@ function t:update_end_turn_button()
     end
 end
 
--- tips在全局显示
-function t:showtips(o_card, posx, posy)
+function t:initTipsCard()
+    local ui_card = G.loadUI('v_card_manager')
+    self.tips版.addChild(ui_card)
+    self.TipsCard = ui_card
 
-
-
-
-
-
+    ui_card.visible = false
+    ui_card.scaleX = 0.7
+    ui_card.scaleY = 0.7
 end
 
+-- tips在全局显示
+function t:showtips(o_card, posx, posy)
+    self.TipsCard.visible = true
+    self.TipsCard.x, self.TipsCard.y = self.TipsCard.parent.globalToLocal(posx, posy)
+    self.TipsCard.c_card_manager:setData(o_card)
+end
+
+function t:hidetips()
+    self.TipsCard.visible = false
+end
+
+function t:move_state(moving)
+    self.can_move = moving
+end
 
 return t

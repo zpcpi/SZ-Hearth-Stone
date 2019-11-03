@@ -3,6 +3,7 @@
 ]]
 local G = require 'gf'
 local c_battleminion_self = require 'c_battleminion_self'
+local c_animactor = require 'c_animactor'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -41,15 +42,30 @@ tp = tc
 		tc.bottom = -60.000
 		tc.top = 60.000
 		tp = tc
+			tc = G.Quad()
+			tp.addChild(tc)
+			tc.name = '随从占位'
+			tc.left = -50.000
+			tc.right = 50.000
+			tc.bottom = -50.000
+			tc.top = 50.000
+			tc.visible = false
+			tc.img = 0x56000001
+			tp = tc
+			tp = tp.parent
+			--end
 		tp = tp.parent
 		--end
-		tc = G.Entity()
+		tc = G.loadUI('v_animactor')
+		tc.prefab = true
 		tp.addChild(tc)
-		tc.name = 'Tips版'
-		tc.right = 0.000
-		tc.top = 0.000
-		tc.anchor = 0x64006400
+		tc.name = '动画控件'
+		tc.left = -640.000
+		tc.right = 640.000
+		tc.bottom = -360.000
+		tc.top = 360.000
 		tp = tc
+		tp.c_animactor = setmetatable({}, c_animactor)
 		tp = tp.parent
 		--end
 	tp = tp.parent

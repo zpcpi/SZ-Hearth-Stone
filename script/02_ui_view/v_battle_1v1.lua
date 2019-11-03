@@ -2,21 +2,21 @@
 
 ]]
 local G = require 'gf'
-local c_battle_1v1 = require 'c_battle_1v1'
-local c_battlemana_self = require 'c_battlemana_self'
+local c_handcards_enemy = require 'c_handcards_enemy'
+local c_battleminion_self = require 'c_battleminion_self'
+local c_button = require 'c_button'
+local c_battlehero_enemy = require 'c_battlehero_enemy'
+local c_handcards_self = require 'c_handcards_self'
 local c_battle_hero = require 'c_battle_hero'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local c_animactor = require 'c_animactor'
 local c_battlemana_enemy = require 'c_battlemana_enemy'
-local c_mintextquadsize = require 'c_mintextquadsize'
-local c_handcards_self = require 'c_handcards_self'
-local c_battleminion_self = require 'c_battleminion_self'
 local c_battlehero_self = require 'c_battlehero_self'
-local c_handcards_enemy = require 'c_handcards_enemy'
-local c_battle_weapon = require 'c_battle_weapon'
+local c_battlemana_self = require 'c_battlemana_self'
 local c_battleminion_enemy = require 'c_battleminion_enemy'
+local c_battle_1v1 = require 'c_battle_1v1'
 local c_battle_herospell = require 'c_battle_herospell'
-local c_battlehero_enemy = require 'c_battlehero_enemy'
-local c_button = require 'c_button'
+local c_battle_weapon = require 'c_battle_weapon'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -256,6 +256,15 @@ tp = tc
 	com['img_toggle'] =nil
 	com['color_toggle'] =nil
 	com['img_togEx'] =nil
+	tp = tp.parent
+	--end
+	tc = G.Entity()
+	tp.addChild(tc)
+	tc.name = '全局Tips版'
+	tc.right = 0.000
+	tc.top = 0.000
+	tc.anchor = 0x64006400
+	tp = tc
 	tp = tp.parent
 	--end
 	tc = G.Entity()

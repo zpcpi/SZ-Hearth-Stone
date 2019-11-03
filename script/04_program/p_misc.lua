@@ -9,11 +9,42 @@ t['com_set_value'] = function (com, attr, value)
     com[attr] = value
 end
 
+
+t['asdasd'] = function ()
+    local rlib = G.call('Create_Randomlib', G.QueryName(0x100c0003))
+
+    rlib:添加数据({1, 10})
+    rlib:添加数据({2, 5})
+    rlib:添加数据({3, 0})
+    rlib:添加数据({4, 10})
+    rlib:添加数据({5, 5})
+    rlib:添加数据({6, 0})
+    rlib:添加数据({7, 5})
+    rlib:添加数据({8, 10})
+    rlib:添加数据({9, 0})
+
+    rlib.boolean_是否循环 = true
+
+    rlib:初始化(false, true)
+
+    local r = rlib(90000)
+    local tt = {}
+    for k,v in ipairs(r) do
+        tt[v] = (tt[v] or 0) + 1
+    end
+
+
+
+    --G.show_table(r)
+    G.show_table(tt)
+end
+
 t['zpc_test'] = function ()
     local o_misc = G.misc()
     local script_战场 = o_misc.主战场系统
     local minion = script_战场.selfBattleminion.c_battleminion_self
 
-    minion:addMinion(G.QueryName(0x10060061))
+    minion:addMinion(G.QueryName(0x10060011))
+    minion:set_minion_pos()
 
 end

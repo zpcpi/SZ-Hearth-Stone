@@ -210,16 +210,16 @@ function t:update()
                 ui_item.visible = false
             elseif state == '已用' then
                 ui_item.visible = true
-                ui_item.alpha = 255
-                ui_item.img = 0x560b0009
+                ui_item.alpha = 120
+                ui_item.img = 0x560b0001
             elseif state == '锁定' then
                 ui_item.visible = true
                 ui_item.alpha = 255
                 ui_item.img = 0x560b000c
             elseif state == '预览' then
                 ui_item.visible = true
-                ui_item.alpha = 120
-                ui_item.img = 0x560b0001
+                ui_item.alpha = 255
+                ui_item.img = 0x560b000f
             end
         end
 
