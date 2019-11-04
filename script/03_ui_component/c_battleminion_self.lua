@@ -149,6 +149,9 @@ end
 function t:mouseUp(tar)
     if tar.parent ~= self.布局点 then
         G.trig_event('UI_卡牌确认使用', '我方')
+    elseif tar.parent == self.布局点 then
+        local o_card_picked = tar.getChildByName('卡牌框').c_battle_minion:getData()
+        G.trig_event('UI_卡牌选择目标', o_card_picked, tar)
     end
 end
 

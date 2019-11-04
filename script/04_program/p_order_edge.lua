@@ -34,8 +34,8 @@ end
 t['法力消耗预览_修改数据'] = function (o_order_info_当前指令信息)
     local Caster = o_order_info_当前指令信息['Caster']
 
-    local 预览值 = Caster['费用']
-    local 预览锁定值 = Caster['过载费用']
+    local 预览值 = Caster['费用'] or 0
+    local 预览锁定值 = Caster['过载费用'] or 0
 
     G.call('角色_设置水晶数据', '我方', '预览值', 预览值)
     G.call('角色_设置水晶数据', '我方', '预览锁定值', 预览锁定值)

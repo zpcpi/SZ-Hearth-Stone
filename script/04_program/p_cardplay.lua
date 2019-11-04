@@ -30,8 +30,8 @@ end
 t['卡牌使用_法力值消耗'] = function (estr_player_相对身份, o_order_info_当前指令信息)
     local Caster = o_order_info_当前指令信息['Caster']
 
-    local 费用 = Caster['费用']
-    local 过载费用 = Caster['过载费用']
+    local 费用 = Caster['费用'] or 0
+    local 过载费用 = Caster['过载费用'] or 0
 
     local 当前值 = G.call('角色_获取水晶数据', estr_player_相对身份, '当前值')
     G.call('角色_设置水晶数据', estr_player_相对身份, '当前值', 当前值 - 费用)
