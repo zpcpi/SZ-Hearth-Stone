@@ -501,6 +501,14 @@ local t = {
 				['name']='CasterObj',
 				['type']='any',
 			},
+			[5]={
+				['name']='CasterObj_Clone',
+				['type']='any',
+			},
+			[6]={
+				['name']='MinionPos',
+				['type']='int',
+			},
 		},
 	},
 	{
