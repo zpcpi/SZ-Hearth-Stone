@@ -11,6 +11,7 @@ t['提示_初始化'] = function()
 end
 
 t['提示_添加提示'] = function(string_提示内容)
+    print(string_提示内容)
     if not G.cacheData.isPlayTip then 
         G.cacheData.tipsList = {}
     end

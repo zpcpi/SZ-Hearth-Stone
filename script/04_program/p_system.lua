@@ -5,6 +5,7 @@ local G = require "gf"
 local L = {}
 local t = G.api
 local lsocket = require("socket.core")
+local js = require "cjson.c"
 
 t['系统_输出信息'] = function(string_信息)
 end
@@ -48,5 +49,52 @@ t['系统_重试等待'] = function(string_提示内容, int_秒数)
     for i = 1, int_秒数 do 
         G.call('提示_添加提示', (string_提示内容 or '') .. (int_秒数 - i + 1) .. ' 秒后重试')
         G.wait_time(1000)
+    end
+end
+
+t['系统_保存数据'] = function()
+    G.call('系统_保存卡组数据')
+end
+
+t['系统_保存卡组数据'] = function()
+    local _o_deck_卡组列表 = G.call('收藏_获取所有卡组')
+    for i = 1, #_o_deck_卡组列表 do 
+        local o_deck_卡组 = {}
+        o_deck_卡组.卡组名称 = _o_deck_卡组列表[i].卡组名称
+        o_deck_卡组.卡牌列表 = {}
+        for _, o_card_卡片 in ipairs(_o_deck_卡组列表[i].卡牌列表) do 
+            table.insert(o_deck_卡组.卡牌列表, o_card_卡片.name)
+        end
+        o_deck_卡组.职业 = _o_deck_卡组列表[i].职业
+        _o_deck_卡组列表[i] = o_deck_卡组
+    end
+    local buf = js.encode(_o_deck_卡组列表)
+    local path = G.GetSavePath('Deck')
+    G.WriteFile(path, buf)
+end
+
+t['系统_读取卡组列表'] = function()
+    local path = G.GetSavePath('Deck')
+    local buf = G.LoadFile(path)
+    if not buf then 
+        return
+    end
+    if not pcall(js.decode, buf) then 
+        G.call('提示_添加提示', '读取卡组信息错误')
+        return
+    end
+    local _o_deck_卡组列表 = js.decode(buf)
+    if not _o_deck_卡组列表 then
+        G.call('提示_添加提示', '卡组信息为空')
+        return
+    end
+    for _, o_deck_档案卡组 in ipairs(_o_deck_卡组列表) do 
+        local o_deck_卡组 = G.NewInst('o_deck')
+        o_deck_卡组.卡组名称 = o_deck_档案卡组.卡组名称
+        o_deck_卡组.职业 = o_deck_档案卡组.职业
+        o_deck_卡组.卡牌列表 = {}
+        for _, i_card_卡片ID in ipairs(o_deck_档案卡组.卡牌列表) do 
+            table.insert(o_deck_卡组.卡牌列表, G.QueryName(i_card_卡片ID))
+        end
     end
 end

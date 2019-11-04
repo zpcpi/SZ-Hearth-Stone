@@ -89,6 +89,11 @@ end
 
 function noti.收藏_进入收藏界面()
     G.changeUI('v_collection')
+    local o_node_界面 = G.getUI('v_collection')
+    if o_node_界面 and o_node_界面.c_collection then 
+        o_node_界面.c_collection:UpdateProfessionMark()
+        o_node_界面.c_collection:UpdateDeckInfo()
+    end
 end
 
 function noti.收藏_退出收藏界面()

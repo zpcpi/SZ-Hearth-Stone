@@ -276,6 +276,7 @@ function t:EditDeck(o_deck)
 end
 
 function t:EndDeckEdit()
+    G.call('系统_保存卡组数据')
     self.currentEditDeck = nil
     local textNode = self.endDeckEditButton.getChildByName('DeckName')
     textNode.text = '新建卡组'
