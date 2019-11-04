@@ -613,6 +613,10 @@ local t = {
 				['name']='宝石图片',
 				['type']='image',
 			},
+			[2]={
+				['name']='品质颜色',
+				['type']='color',
+			},
 		},
 	},
 	{
@@ -803,6 +807,19 @@ local t = {
 			[6]={
 				['name']='condivalue',
 				['type']='boolean',
+			},
+		},
+	},
+	{
+		['name']='o_deck',
+		['define']={
+			[1]={
+				['name']='卡组名称',
+				['type']='string',
+			},
+			[2]={
+				['name']='卡牌列表',
+				['type']='_o_card',
 			},
 		},
 	},

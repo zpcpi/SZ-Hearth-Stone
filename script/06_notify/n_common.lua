@@ -94,3 +94,24 @@ end
 function noti.收藏_退出收藏界面()
     G.changeUI('v_main_menu')
 end
+
+function noti.收藏_新建卡组()
+    local o_node_界面 = G.getUI('v_collection')
+    if o_node_界面 and o_node_界面.c_collection then 
+        o_node_界面.c_collection:UpdateDeckInfo()
+    end
+end
+
+function noti.收藏_添加卡组卡片()
+    local o_node_界面 = G.getUI('v_collection')
+    if o_node_界面 and o_node_界面.c_collection then 
+        o_node_界面.c_collection:UpdateDeckInfo()
+    end
+end
+
+function noti.收藏_移除卡组卡片()
+    local o_node_界面 = G.getUI('v_collection')
+    if o_node_界面 and o_node_界面.c_collection then 
+        o_node_界面.c_collection:UpdateDeckInfo()
+    end
+end

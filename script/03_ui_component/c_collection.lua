@@ -8,11 +8,15 @@ local t = G.com()
 t.prop =
 {
     {name = 'professionMarkSelectScale', type = 'number'},
+    {name = 'DeckButtonHeight', type = 'int'},
+    {name = "DeckButtonColor",type = 'hex',ctrl = 'color'},
+    {name = 'DeckCardButtonHeight', type = 'int'},
 }
 
 function t:init()
     self.returnButton = self.obj.getChildByName('ReturnButton')
     self.cardCollection = self.obj.getChildByName('CardCollection').getChildByName('CardCollection')
+    self.cardDataList = {}
     self.cardNodeList = {}
     for i = 1, 8 do 
         local cardNode = self.cardCollection.getChildByName('Card' .. i)
@@ -25,12 +29,18 @@ function t:init()
     self.professionMarkTemplate = self.professionMarkParent.getChildByName('ProfessionMarkButton')
     self.professionMarkTemplate.visible = false
 
+    self.deckInfoParent = self.obj.getChildByName('DeckList').getChildByName('DeckScrollView').getChildByName('content')
+    self.newDeckButton = self.deckInfoParent.getChildByName('DeckInfo')
+    self.endDeckEditButton = self.newDeckButton
+
+    self.currentEditDeck = nil
     self.startCardIndex = 1
     self.cardProfession = nil
 
     if not G.is_editor then
         self:UpdateProfessionMark()
         self:UpdateCardCollection()
+        self:UpdateDeckInfo()
     end
 end
 
@@ -43,6 +53,28 @@ function t:click(tar)
         self:GoToNextPage()
     elseif self:IsProfessionMarkButton(tar) then 
         self:OnClickProfessionButton(tar)
+    elseif self.currentEditDeck ~= nil and self:GetCardNodeIndex(tar) ~= 0 then
+        local cardIndex = self:GetCardNodeIndex(tar)
+        local o_card_卡片 = self.cardDataList[cardIndex]
+        if o_card_卡片 ~= nil then 
+            G.call('收藏_添加卡组卡片', self.currentEditDeck, o_card_卡片)
+        end
+    elseif self.currentEditDeck == nil and tar == self.newDeckButton then 
+        G.call('收藏_新建卡组')
+    elseif self.currentEditDeck ~= nil and tar == self.endDeckEditButton then 
+        self:EndDeckEdit()
+    elseif self.currentEditDeck ~= nil and tar.parent == self.deckInfoParent then
+        if tar.data ~= nil and tar.data ~= 0 then 
+            local cardID = math.floor(tar.data)
+            local cardData = G.QueryName(cardID)
+            G.call('收藏_移除卡组卡片', self.currentEditDeck, cardData)
+        end
+    elseif self.currentEditDeck == nil and tar.parent == self.deckInfoParent then
+        if tar.data ~= nil and tar.data ~= 0 then 
+            local deckID = math.floor(tar.data)
+            local deckData = G.QueryName(deckID)
+            self:EditDeck(deckData)
+        end
     end
 end
 
@@ -95,6 +127,7 @@ end
 
 function t:UpdateCardCollection()
     local _o_card_卡片列表 = G.call('收藏_通过范围获取卡片列表', self.cardProfession, self.startCardIndex, 8)
+    self.cardDataList = {}
     for i = 1, 8 do 
         local o_card_卡片 = _o_card_卡片列表[i]
         if o_card_卡片 == nil then 
@@ -103,8 +136,76 @@ function t:UpdateCardCollection()
             self.cardNodeList[i].visible = true
             local o_node_卡片 = self.cardNodeList[i].getChildByName('Card')
             o_node_卡片.c_card_manager:setData(o_card_卡片)
+            self.cardDataList[i] = o_card_卡片
         end
     end
+end
+
+function t:UpdateDeckInfo()
+    if self.currentEditDeck == nil then 
+        self:ShowAllDeck()
+    else
+        self:ShowDeckCard()
+    end
+end
+
+function t:ShowAllDeck()
+    local _o_deck_卡组列表 = G.call('收藏_获取所有卡组')
+    self.deckInfoParent.removeAllChildren()
+    for _, o_deck_卡组 in ipairs(_o_deck_卡组列表) do
+        self:AddDeckInfoButton(o_deck_卡组)
+    end
+    self.deckInfoParent.addChild(self.newDeckButton)
+end
+
+function t:ShowDeckCard()
+    self.deckInfoParent.removeAllChildren()
+    self:AddDeckInfoButton(self.currentEditDeck, false)
+    local any_卡片字典 = {}
+    for _, o_card_卡片 in ipairs(self.currentEditDeck.卡牌列表) do
+        any_卡片字典[o_card_卡片.name] = any_卡片字典[o_card_卡片.name] or 0
+        any_卡片字典[o_card_卡片.name] = any_卡片字典[o_card_卡片.name] + 1
+    end
+    for i_card_卡片ID, int_数量 in pairs(any_卡片字典) do
+        self:AddDeckCardButton(i_card_卡片ID, int_数量)
+    end
+    self.deckInfoParent.addChild(self.endDeckEditButton)
+end
+
+function t:AddDeckInfoButton(o_deck, mouseEnabled)
+    if o_deck == nil then 
+        return
+    end
+    local deckButton = G.Clone(self.newDeckButton)
+    local deckNameNode = deckButton.getChildByName('DeckName')
+    if mouseEnabled ~= nil then 
+        deckButton.mouseEnabled = mouseEnabled
+    end
+    deckButton.data = o_deck.name
+    deckButton.height = self.DeckButtonHeight
+    deckNameNode.color = self.DeckButtonColor
+    deckNameNode.text = o_deck.卡组名称
+    self.deckInfoParent.addChild(deckButton)
+end
+
+function t:AddDeckCardButton(i_card, cardCount)
+    local o_card_卡片 = G.QueryName(i_card)
+    if o_card_卡片 == nil then 
+        return
+    end
+    local deckCardButton = G.Clone(self.newDeckButton)
+    local cardNameNode = deckCardButton.getChildByName('DeckName')
+    deckCardButton.height = self.DeckCardButtonHeight
+    deckCardButton.data = i_card
+
+    local cardColor = 0xffffff
+    if o_card_卡片.品质 ~= nil then
+        local o_rank_品质 = G.QueryName(o_card_卡片.品质)
+        cardColor = o_rank_品质.品质颜色 or cardColor
+    end
+    cardNameNode.color = cardColor
+    cardNameNode.text = o_card_卡片.showname .. '(' .. tostring(cardCount) .. ')'
+    self.deckInfoParent.addChild(deckCardButton)
 end
 
 function t:GoToLastPage()
@@ -121,6 +222,35 @@ function t:GoToNextPage()
     end
     self.startCardIndex = self.startCardIndex + 8
     self:UpdateCardCollection()
+end
+
+function t:GetCardNodeIndex(node)
+    if self.cardNodeList == nil then 
+        return 0
+    end
+    for index, cardNode in ipairs(self.cardNodeList) do 
+        if cardNode == node then 
+            return index
+        end
+    end
+    return 0
+end
+
+function t:EditDeck(o_deck)
+    if o_deck == nil then 
+        return
+    end
+    self.currentEditDeck = o_deck
+    local textNode = self.endDeckEditButton.getChildByName('DeckName')
+    textNode.text = '结束编辑'
+    self:UpdateDeckInfo()
+end
+
+function t:EndDeckEdit()
+    self.currentEditDeck = nil
+    local textNode = self.endDeckEditButton.getChildByName('DeckName')
+    textNode.text = '新建卡组'
+    self:UpdateDeckInfo()
 end
 
 return t
