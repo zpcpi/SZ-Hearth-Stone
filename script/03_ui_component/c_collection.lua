@@ -33,6 +33,14 @@ function t:init()
     self.newDeckButton = self.deckInfoParent.getChildByName('DeckInfo')
     self.endDeckEditButton = self.newDeckButton
 
+    
+    self.profScrollView = self.obj.getChildByName('ProfessionScrollView')
+    self.newDeckNameNode = self.profScrollView.getChildByName('DeckName').getChildByName('Text')
+    self.profChoiceButtonParent = self.profScrollView.getChildByName('content')
+    self.profChoiceButtonTemplate = self.profChoiceButtonParent.getChildByName('ProfessionInfo')
+    self.profChoiceButtonTemplate.visible = false
+    self.profScrollView.visible = false
+
     self.currentEditDeck = nil
     self.startCardIndex = 1
     self.cardProfession = nil
@@ -59,8 +67,14 @@ function t:click(tar)
         if o_card_卡片 ~= nil then 
             G.call('收藏_添加卡组卡片', self.currentEditDeck, o_card_卡片)
         end
+    elseif tar.parent == self.profChoiceButtonParent then
+        if tar.data ~= nil and tar.data ~= 0 then 
+            local professID = math.floor(tar.data)
+            G.call('收藏_新建卡组', {professID}, self.newDeckNameNode.text or '新卡组')
+            self:HideProfessionList()
+        end
     elseif self.currentEditDeck == nil and tar == self.newDeckButton then 
-        G.call('收藏_新建卡组')
+        self:ShowProfessionList()        
     elseif self.currentEditDeck ~= nil and tar == self.endDeckEditButton then 
         self:EndDeckEdit()
     elseif self.currentEditDeck ~= nil and tar.parent == self.deckInfoParent then
@@ -101,20 +115,22 @@ function t:OnClickProfessionButton(professionMarkButton)
 end
 
 function t:UpdateProfessionMark()
-    local _o_profession_职业表 = G.DBTable('o_profession') or {}
+    local _o_profession_职业表 = self:GetProfessionList() 
     local image_默认图标 = 0x560d000a
     self.professionMarkParent.removeAllChildren()
     self.professionMarkList = {}
     for _, o_profession_职业 in ipairs(_o_profession_职业表) do 
-        local professionMark = G.Clone(self.professionMarkTemplate)
-        professionMark.visible = true
-        local image_职业图标 = o_profession_职业.职业图标
-        local string_职业名称 = o_profession_职业.showname
-        professionMark.c_button.img_normal = image_职业图标 or image_默认图标
-        professionMark.c_button.text = string_职业名称
-        self.professionMarkParent.addChild(professionMark)
-        table.insert(self.professionMarkList, professionMark)
-        professionMark.c_button.profession = o_profession_职业
+        if o_profession_职业.是否可选 ~= false then 
+            local professionMark = G.Clone(self.professionMarkTemplate)
+            professionMark.visible = true
+            local image_职业图标 = o_profession_职业.职业图标
+            local string_职业名称 = o_profession_职业.showname
+            professionMark.c_button.img_normal = image_职业图标 or image_默认图标
+            professionMark.c_button.text = string_职业名称
+            self.professionMarkParent.addChild(professionMark)
+            table.insert(self.professionMarkList, professionMark)
+            professionMark.c_button.profession = o_profession_职业
+        end
     end
     self:OnClickProfessionButton(self.professionMarkList[1])
 end
@@ -184,7 +200,19 @@ function t:AddDeckInfoButton(o_deck, mouseEnabled)
     deckButton.data = o_deck.name
     deckButton.height = self.DeckButtonHeight
     deckNameNode.color = self.DeckButtonColor
-    deckNameNode.text = o_deck.卡组名称
+    local deckName = o_deck.卡组名称
+    local professionName = ''
+    for _, i_profession in ipairs(o_deck.职业) do 
+        local o_profession = G.QueryName(i_profession)
+        if o_profession ~= nil then 
+            if professionName ~= '' then 
+                professionName = professionName .. ','
+            end
+            professionName = professionName .. o_profession.showname
+        end
+    end
+    
+    deckNameNode.text = deckName .. '(' .. professionName .. ')'
     self.deckInfoParent.addChild(deckButton)
 end
 
@@ -244,6 +272,7 @@ function t:EditDeck(o_deck)
     local textNode = self.endDeckEditButton.getChildByName('DeckName')
     textNode.text = '结束编辑'
     self:UpdateDeckInfo()
+    self:UpdateProfessionMark()
 end
 
 function t:EndDeckEdit()
@@ -251,6 +280,41 @@ function t:EndDeckEdit()
     local textNode = self.endDeckEditButton.getChildByName('DeckName')
     textNode.text = '新建卡组'
     self:UpdateDeckInfo()
+    self:UpdateProfessionMark()
+end
+
+function t:ShowProfessionList()
+    self.profScrollView.visible = true
+    self.profChoiceButtonParent.removeAllChildren()
+    
+    local _o_profession_职业表 = G.DBTable('o_profession') or {}
+    for _, o_profession_职业 in ipairs(_o_profession_职业表) do 
+        if o_profession_职业.是否可选 ~= false then 
+            local o_node_职业 = G.Clone(self.profChoiceButtonTemplate)
+            o_node_职业.visible = true
+            self.profChoiceButtonParent.addChild(o_node_职业)
+            local textNode = o_node_职业.getChildByName('Name')
+            textNode.text = o_profession_职业.showname
+            o_node_职业.data = o_profession_职业.name
+        end
+    end
+end
+
+function t:HideProfessionList()
+    self.profScrollView.visible = false
+end
+
+function t:GetProfessionList()
+    if self.currentEditDeck == nil then 
+        return G.DBTable('o_profession') or {}
+    end
+    local _o_profession_职业列表 = {}
+    local o_profession_中立 = G.QueryName(0x10080001)
+    for _, i_profession in ipairs(self.currentEditDeck.职业) do 
+        table.insert(_o_profession_职业列表, G.QueryName(i_profession))
+    end
+    table.insert(_o_profession_职业列表, o_profession_中立)
+    return _o_profession_职业列表
 end
 
 return t

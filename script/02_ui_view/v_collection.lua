@@ -2,13 +2,13 @@
 
 ]]
 local G = require 'gf'
-local c_collection = require 'c_collection'
-local c_button = require 'c_button'
 local c_card_manager = require 'c_card_manager'
-local c_scrollview = require 'c_scrollview'
-local c_perfectsize = require 'c_perfectsize'
-local c_layout_v = require 'c_layout_v'
+local c_collection = require 'c_collection'
 local c_layout_h = require 'c_layout_h'
+local c_layout_v = require 'c_layout_v'
+local c_button = require 'c_button'
+local c_perfectsize = require 'c_perfectsize'
+local c_scrollview = require 'c_scrollview'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -1047,6 +1047,233 @@ tp = tc
 	com['img_toggle'] =nil
 	com['color_toggle'] =nil
 	com['img_togEx'] =nil
+	tp = tp.parent
+	--end
+	tc = G.Quad()
+	tp.addChild(tc)
+	tc.name = 'ProfessionScrollView'
+	tc.left = -125.000
+	tc.right = 125.000
+	tc.bottom = -275.000
+	tc.top = 275.000
+	tc.mouseEnabled = true
+	tc.visible = false
+	tp = tc
+		tc = G.Entity()
+		tp.addChild(tc)
+		tc.name = 'DeckName'
+		tc.pivotY = 0.000
+		tc.right = 0.000
+		tc.top = 60.000
+		tc.anchor = 0x64646400
+		tp = tc
+			tc = G.Quad()
+			tp.addChild(tc)
+			tc.name = 'Background'
+			tc.pivotY = 0.000
+			tc.right = 0.000
+			tc.top = 0.000
+			tc.anchor = 0x64006400
+			tc.color = 0x575757
+			tc.img = 0x56000001
+			tp = tc
+			tp = tp.parent
+			--end
+			tc = G.TextQuad()
+			tp.addChild(tc)
+			tc.name = 'Text'
+			tc.right = 0.000
+			tc.top = 0.000
+			tc.anchor = 0x64006400
+			tc.mouseEnabled = true
+			tc.text = '新卡组'
+			tc.readOnly = false
+			tc.font = 0x651f0000
+			tp = tc
+			tp = tp.parent
+			--end
+		tp = tp.parent
+		--end
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = 'Background'
+		tc.right = 0.000
+		tc.top = 0.000
+		tc.anchor = 0x64006400
+		tc.color = 0xc9c9c9
+		tc.img = 0x56000001
+		tp = tc
+		tp = tp.parent
+		--end
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = 'mask'
+		tc.right = 0.000
+		tc.top = 0.000
+		tc.anchor = 0x64006400
+		tc.mouseEnabled = true
+		tc.mask = 128
+		tc.img = 0x56060001
+		tp = tc
+		tp = tp.parent
+		--end
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = 'content'
+		tc.pivotX = 0.000
+		tc.pivotY = 1.000
+		tc.right = 250.000
+		tc.top = 0.000
+		tc.anchor = 0x64640000
+		tp = tc
+			tc = G.Entity()
+			tp.addChild(tc)
+			tc.name = 'ProfessionInfo'
+			tc.pivotX = 0.000
+			tc.pivotY = 1.000
+			tc.left = 2.500
+			tc.right = 247.500
+			tc.bottom = -60.000
+			tc.top = 0.000
+			tc.anchor = 0x64640000
+			tc.mouseEnabled = true
+			tc.visible = false
+			tp = tc
+				tc = G.Quad()
+				tp.addChild(tc)
+				tc.name = 'Background'
+				tc.right = 0.000
+				tc.top = 0.000
+				tc.anchor = 0x64006400
+				tc.color = 0x767676
+				tc.img = 0x56000001
+				tp = tc
+				tp = tp.parent
+				--end
+				tc = G.TextQuad()
+				tp.addChild(tc)
+				tc.name = 'Name'
+				tc.left = -1.000
+				tc.right = -1.000
+				tc.top = 0.000
+				tc.anchor = 0x64006400
+				tc.text = '新建卡组'
+				tc.font = 0x651e0000
+				tp = tc
+				tp = tp.parent
+				--end
+			tp = tp.parent
+			--end
+		tp.c_perfectsize = setmetatable({}, c_perfectsize)
+		com = tp.c_perfectsize
+		com['height'] =true
+		com['expheight'] =0.000
+		com['minheight'] =nil
+		com['width'] =false
+		com['expwidth'] =nil
+		com['minwidth'] =nil
+		tp.c_layout_v = setmetatable({}, c_layout_v)
+		com = tp.c_layout_v
+		com['alignment_h'] =1.000
+		com['alignment_v'] =0.000
+		com['ColSpace'] =10.000
+		com['startSpaceX'] =0.000
+		com['startSpaceY'] =0.000
+		com['changePivot'] =false
+		com['changeAnchor'] =false
+		tp = tp.parent
+		--end
+		tc = G.Entity()
+		tp.addChild(tc)
+		tc.name = 'slider'
+		tc.pivotX = 0.000
+		tc.pivotY = 0.000
+		tc.right = 6.000
+		tc.top = 0.000
+		tc.anchor = 0x64006464
+		tc.visible = false
+		tp = tc
+			tc = G.Quad()
+			tp.addChild(tc)
+			tc.name = '背景'
+			tc.right = 0.000
+			tc.top = 0.000
+			tc.anchor = 0x64006400
+			tc.img = 0x5622007f
+			tp = tc
+			tp = tp.parent
+			--end
+			tc = G.Entity()
+			tp.addChild(tc)
+			tc.name = '按钮'
+			tc.pivotY = 1.000
+			tc.right = 0.000
+			tc.bottom = -97.000
+			tc.top = 0.000
+			tc.anchor = 0x64646400
+			tc.mouseEnabled = true
+			tp = tc
+				tc = G.Quad()
+				tp.addChild(tc)
+				tc.name = 'img_ex'
+				tc.right = 0.000
+				tc.top = 0.000
+				tc.anchor = 0x64006400
+				tc.visible = false
+				tp = tc
+				tp = tp.parent
+				--end
+				tc = G.Quad()
+				tp.addChild(tc)
+				tc.name = 'img'
+				tc.right = 0.000
+				tc.top = 0.000
+				tc.anchor = 0x64006400
+				tc.img = 0x56220080
+				tp = tc
+				tp = tp.parent
+				--end
+				tc = G.TextQuad()
+				tp.addChild(tc)
+				tc.name = 'text'
+				tc.right = 0.000
+				tc.top = 0.000
+				tc.anchor = 0x64006400
+				tc.color = 0x0
+				tp = tc
+				tp = tp.parent
+				--end
+			tp.c_button = setmetatable({}, c_button)
+			com = tp.c_button
+			com['text'] =nil
+			com['btn_class'] =nil
+			com['customsize'] =true
+			com['img_normal'] =1445068928.000
+			com['color_normal'] =0.000
+			com['img_hover'] =1445068929.000
+			com['color_hover'] =nil
+			com['audio_hover'] =nil
+			com['img_press'] =1445068928.000
+			com['frameList_press'] =nil
+			com['color_press'] =nil
+			com['audio_press'] =nil
+			com['img_disable'] =nil
+			com['color_disable'] =nil
+			com['img_toggle'] =nil
+			com['color_toggle'] =nil
+			com['img_togEx'] =nil
+			tp = tp.parent
+			--end
+		tp = tp.parent
+		--end
+	tp.c_scrollview = setmetatable({}, c_scrollview)
+	com = tp.c_scrollview
+	com['Horizontal'] =false
+	com['Vertical'] =true
+	com['Sensitivity'] =10.000
+	com['type'] =0.000
+	com['autoMove'] =false
+	com['hideSlider'] =true
 	tp = tp.parent
 	--end
 tp.c_collection = setmetatable({}, c_collection)

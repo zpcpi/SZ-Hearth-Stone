@@ -19,9 +19,21 @@ t['收藏_初始化卡片收藏'] = function()
         if o_card_卡片.可收集 then 
             table.insert(G['收藏卡片列表'], o_card_卡片)
             if o_card_卡片.职业 ~= nil then 
-                local string_键名称 = '收藏卡片列表' .. o_card_卡片.职业
-                G[string_键名称] = G[string_键名称] or {}
-                table.insert(G[string_键名称], o_card_卡片)
+                G.call('收藏_记录职业卡片', o_card_卡片, o_card_卡片.职业)
+            end
+        end
+    end
+end
+
+t['收藏_记录职业卡片'] = function(o_card_卡片, i_profession_职业ID)
+    local o_profession_职业 = G.QueryName(i_profession_职业ID)
+    if o_profession_职业 then 
+        local string_键名称 = '收藏卡片列表' .. i_profession_职业ID
+        G[string_键名称] = G[string_键名称] or {}
+        table.insert(G[string_键名称], o_card_卡片)
+        if o_profession_职业.子职业 ~= nil then 
+            for _, i_profession_子职业ID in ipairs(o_profession_职业.子职业) do 
+                G.call('收藏_记录职业卡片', o_card_卡片, i_profession_子职业ID)
             end
         end
     end
@@ -61,24 +73,33 @@ t['收藏_获取卡组列表'] = function()
     -- TODO: 获取卡组列表
 end
 
-t['收藏_新建卡组'] = function(o_profession_职业, string_卡组名称)
+t['收藏_新建卡组'] = function(_i_profession_职业, string_卡组名称)
     string_卡组名称 = string_卡组名称 or '新卡组'
     local o_deck_新卡组 = G.NewInst('o_deck')
     o_deck_新卡组.卡牌列表 = {}
     o_deck_新卡组.卡组名称 = string_卡组名称
+    o_deck_新卡组.职业 = {}
+    for _, i_profession_职业 in ipairs(_i_profession_职业) do 
+        table.insert(o_deck_新卡组.职业, i_profession_职业)
+    end
     return o_deck_新卡组
 end
 
-t['收藏_添加卡组卡片'] = function(o_deck_卡组, o_card_卡片, boolean_无视上限)
+t['收藏_添加卡组卡片'] = function(o_deck_卡组, o_card_卡片, boolean_无视单卡上限, boolean_无视卡片总数量上限)
     if not (type(o_deck_卡组) == 'table' and type(o_card_卡片) == 'table') then 
         return
     end
     local int_卡片数量上限 = G.call('收藏_获取卡片数量上限')
-    if boolean_无视上限 == nil then 
-        boolean_无视上限 = false
+    local int_卡片总数量上限 = G.call('收藏_获取卡片总数量上限')
+    if boolean_无视单卡上限 == nil then 
+        boolean_无视单卡上限 = false
     end
-    if (not boolean_无视上限) and G.call('收藏_获取卡片数量', o_deck_卡组, o_card_卡片) >= int_卡片数量上限 then 
+    if (not boolean_无视单卡上限) and G.call('收藏_获取卡片数量', o_deck_卡组, o_card_卡片) >= int_卡片数量上限 then 
         G.call('提示_添加提示', '卡牌数量已经达到上限 ' .. int_卡片数量上限)
+        return
+    end
+    if (not boolean_无视卡片总数量上限) and G.call('收藏_获取卡片总数量', o_deck_卡组) >= int_卡片总数量上限 then 
+        G.call('提示_添加提示', '卡牌总数量已经达到上限 ' .. int_卡片总数量上限)
         return
     end
     o_deck_卡组.卡牌列表 = o_deck_卡组.卡牌列表 or {}
@@ -114,6 +135,27 @@ end
 t['收藏_获取卡片数量上限'] = function()
     -- TODO: 以后改为可以修改的配置
     return 2
+end
+
+t['收藏_获取卡片总数量上限'] = function()
+    -- TODO: 通过配置读取
+    return 30
+end
+
+t['收藏_获取卡片总数量下限'] = function()
+    -- TODO: 通过配置读取
+    return 30
+end
+
+t['收藏_获取卡片总数量'] = function(o_deck_卡组)
+    if not (type(o_deck_卡组) == 'table' and type(o_deck_卡组.卡牌列表) == 'table') then 
+        return 0
+    end
+    local int_卡片数量 = 0
+    for _, o_card_卡组卡片 in ipairs(o_deck_卡组.卡牌列表) do 
+        int_卡片数量 = int_卡片数量 + 1
+    end
+    return int_卡片数量
 end
 
 t['收藏_获取所有卡组'] = function()
