@@ -5,9 +5,12 @@ local G = require "gf"
 local L = {}
 local t = G.api
 
-t['收藏_进入收藏界面'] = function()
+t['收藏_初始化收藏'] = function()
     G.call('收藏_初始化卡片收藏')
     G.call('系统_读取卡组列表')
+end
+
+t['收藏_进入收藏界面'] = function()
 end
 
 t['收藏_退出收藏界面'] = function()
@@ -140,12 +143,12 @@ end
 
 t['收藏_获取卡片总数量上限'] = function()
     -- TODO: 通过配置读取
-    return 30
+    return 10
 end
 
 t['收藏_获取卡片总数量下限'] = function()
     -- TODO: 通过配置读取
-    return 30
+    return 10
 end
 
 t['收藏_获取卡片总数量'] = function(o_deck_卡组)
@@ -170,4 +173,29 @@ t['收藏_获取所有卡组'] = function()
         table.insert(_o_deck_卡组列表, o_deck_卡组)
     end
     return _o_deck_卡组列表
+end
+
+t['收藏_卡组是否有效'] = function(o_deck_卡组)
+    local int_卡片数量 = G.call('收藏_获取卡片总数量', o_deck_卡组)
+    local int_卡片总数量上限 = G.call('收藏_获取卡片总数量上限', o_deck_卡组) 
+    if int_卡片数量 == int_卡片总数量上限 then 
+        return true
+    end
+    return false
+end
+
+t['收藏_获取卡组全称'] = function(o_deck_卡组)
+    local string_卡组名称 = o_deck_卡组.卡组名称
+    local string_职业名称 = ''
+    for _, i_profession_职业ID in ipairs(o_deck_卡组.职业) do 
+        local o_profession_职业 = G.QueryName(i_profession_职业ID)
+        if o_profession_职业 ~= nil then 
+            if string_职业名称 ~= '' then 
+                string_职业名称 = string_职业名称 .. ','
+            end
+            string_职业名称 = string_职业名称 .. o_profession_职业.showname
+        end
+    end
+    
+    return string_卡组名称 .. '(' .. string_职业名称 .. ')'
 end
