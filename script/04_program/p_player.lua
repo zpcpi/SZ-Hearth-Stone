@@ -46,10 +46,12 @@ t['角色_抽取随机卡牌'] = function(estr_player_抽牌者相对身份, est
     end
     if #_o_card_牌库 == 0 then 
         -- TODO: 牌库没有卡牌的处理
+        G.call('提示_添加提示', '你的牌库已经没有卡牌了')
         return 
     end
     local int_随机数 = G.random(1, #_o_card_牌库)
-    G.call('角色_添加手牌', estr_player_抽牌者相对身份, _o_card_牌库[int_随机数])
+    local o_card_卡片 = table.remove(_o_card_牌库, int_随机数)
+    G.call('角色_添加手牌', estr_player_抽牌者相对身份, o_card_卡片)
 end
 
 --hide=true

@@ -45,21 +45,21 @@ function noti.房间_更新玩家信息(o_room_player_对决玩家)
 
     local v_room = G.getUI('v_room')
     if v_room then 
-        v_room.c_room:UpdateRoomMember()
+        v_room.c_room:UpdateRoom()
     end
 end
 
 function noti.房间_清空玩家列表()
     local v_room = G.getUI('v_room')
     if v_room then 
-        v_room.c_room:UpdateRoomMember()
+        v_room.c_room:UpdateRoom()
     end
 end
 
 function noti.房间_删除玩家信息()
     local v_room = G.getUI('v_room')
     if v_room then 
-        v_room.c_room:UpdateRoomMember()
+        v_room.c_room:UpdateRoom()
     end
 end
 
