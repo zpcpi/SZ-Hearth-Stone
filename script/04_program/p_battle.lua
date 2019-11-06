@@ -16,7 +16,6 @@ end
 
 t['对决_开始'] = function()
     if not G.call('房间_是否满足开始条件') then 
-        G.call('系统_输出信息', '人数不足， 无法开始游戏！')
         return 
     end
     if not G.call('房间_是否所有玩家准备就绪') then 
@@ -29,6 +28,7 @@ t['对决_开始'] = function()
         G.call('网络通用_广播消息', '对决_开始')
     end
     G.call('对决_初始化战场', G.misc().对决类型)
+    G.call('对决_初始化我方对决牌库')
     G.start_program('对决_决定初始卡牌')
     G.start_program('对决_流程控制')
 end
@@ -49,12 +49,6 @@ t['对决_决定初始卡牌'] = function()
         
         -- 后手添加硬币
         G.call('角色_添加手牌', '我方', o_card_硬币)
-        
-        -- 测试用卡牌
-        G.call('角色_添加手牌', '我方', G.QueryName(0x10060061))
-    else
-        -- 测试用卡牌
-        G.call('角色_添加手牌', '我方', G.QueryName(0x10060061))
     end
 end
 
@@ -147,4 +141,32 @@ t['对决_当前是否是我方回合'] = function()
         return true
     end
     return false
+end
+
+--ret=o_deck
+t['对决_获取对决卡组'] = function()
+    return G['对决卡组']
+end
+
+t['对决_设置对决卡组'] = function(o_deck_卡组)
+    G['对决卡组'] = o_deck_卡组
+end
+
+--ret=o_deck
+t['对决_初始化我方对决牌库'] = function()
+    local o_deck_卡组 = G.call('对决_获取对决卡组')
+    G['对决牌库'] = {}
+    if type(o_deck_卡组) ~= 'table' then 
+        G.call('提示_添加提示', '卡组模板数据不正确')
+        return 
+    end
+    for _, o_card_卡片模板 in ipairs(o_deck_卡组['卡牌列表']) do 
+        local o_card_卡片实例 = G.CopyInst(o_card_卡片模板)
+        table.insert(G['对决牌库'], o_card_卡片实例)
+    end
+end
+
+--ret=o_deck
+t['对决_获取我方对决牌库'] = function()
+    return G['对决牌库']
 end

@@ -200,19 +200,7 @@ function t:AddDeckInfoButton(o_deck, mouseEnabled)
     deckButton.data = o_deck.name
     deckButton.height = self.DeckButtonHeight
     deckNameNode.color = self.DeckButtonColor
-    local deckName = o_deck.卡组名称
-    local professionName = ''
-    for _, i_profession in ipairs(o_deck.职业) do 
-        local o_profession = G.QueryName(i_profession)
-        if o_profession ~= nil then 
-            if professionName ~= '' then 
-                professionName = professionName .. ','
-            end
-            professionName = professionName .. o_profession.showname
-        end
-    end
-    
-    deckNameNode.text = deckName .. '(' .. professionName .. ')'
+    deckNameNode.text = G.call('收藏_获取卡组全称', o_deck)
     self.deckInfoParent.addChild(deckButton)
 end
 

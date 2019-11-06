@@ -11,5 +11,6 @@ t['初始化'] = function()
 	G.call('系统_初始化玩家信息')
 	G.start_program("作弊系统_初始化作弊系统")
 	G.call('提示_初始化')
+	G.call('收藏_初始化收藏')
 	-- G.call('card_create')
 end

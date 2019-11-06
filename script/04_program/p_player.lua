@@ -11,11 +11,10 @@ t['角色_添加手牌'] = function(estr_player_相对身份, o_card_卡牌)
     local int_当前手牌数量 = G.call('角色_获取手牌数量_绝对身份', estr_absolute_id_type_绝对身份)
 
     if (o_card_卡牌 ~= nil) and (int_当前手牌数量 < HANDCARDS_MAX_COUNT) then
-        if (o_card_卡牌.name == o_card_卡牌.root) then
-            local i_card_卡牌 = o_card_卡牌.name
-            G.call('角色_添加手牌_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
-            G.call('网络通用_广播消息', '角色_添加手牌_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
-        end
+        -- local i_card_卡牌 = o_card_卡牌.name
+        local i_card_卡牌 = o_card_卡牌.root
+        G.call('角色_添加手牌_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
+        G.call('网络通用_广播消息', '角色_添加手牌_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
     end
 end
 
@@ -38,21 +37,21 @@ end
 
 --hide=true
 t['角色_抽取随机卡牌'] = function(estr_player_抽牌者相对身份, estr_player_牌库所属相对身份)
-    -- TODO: 从指定牌库中抽取随机卡牌
-    local _o_card_牌库 = G.call('角色_获取牌库', estr_player_牌库所属相对身份)
+    local _o_card_牌库
+    if estr_player_牌库所属相对身份 == '我方' then
+        _o_card_牌库 = G.call('对决_获取我方对决牌库', estr_player_牌库所属相对身份)
+    else
+        -- TODO: 如果要从别人的牌库抽取卡牌, 需要通过网络通知别人, 因为本地只有自己牌库的信息
+        _o_card_牌库 = {}
+    end
     if #_o_card_牌库 == 0 then 
         -- TODO: 牌库没有卡牌的处理
+        G.call('提示_添加提示', '你的牌库已经没有卡牌了')
         return 
     end
-    _o_card_牌库 = G.call('array_find', _o_card_牌库, '可收集', true)
     local int_随机数 = G.random(1, #_o_card_牌库)
-    G.call('角色_添加手牌', estr_player_抽牌者相对身份, _o_card_牌库[int_随机数])
-end
-
---hide=true
-t['角色_获取牌库'] = function(estr_player_牌库所属相对身份)
-    -- TODO: 获取玩家身份
-    return G.DBTable('o_card')
+    local o_card_卡片 = table.remove(_o_card_牌库, int_随机数)
+    G.call('角色_添加手牌', estr_player_抽牌者相对身份, o_card_卡片)
 end
 
 --hide=true
@@ -144,4 +143,10 @@ t['角色_设置水晶数据_回合开始'] = function(estr_player_相对身份)
         G.call('角色_设置水晶数据_回合开始_绝对身份', estr_absolute_id_type_绝对身份)
         G.call('网络通用_广播消息', '角色_设置水晶数据_回合开始_绝对身份', estr_absolute_id_type_绝对身份)
     end
+end
+
+--hide=true
+t['角色_获取卡组'] = function(estr_player_相对身份)
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份) 
+    return G.call('角色_获取卡组_绝对身份', estr_absolute_id_type_绝对身份)
 end

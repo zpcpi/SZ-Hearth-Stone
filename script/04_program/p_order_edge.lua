@@ -338,8 +338,51 @@ t['卡牌确认使用_修改数据'] = function (o_order_info_当前指令信息
     -- 完成使用
 end
 
+--==========================================================
+-- 卡牌确认使用_随从中途
+-- 0x10050016
+--==========================================================
 
+t['卡牌确认使用_随从中途_条件'] = function (o_order_info_当前指令信息)
+    -- TODO，判断下符合条件的目标是否存在
+    return true
+end
 
+t['卡牌确认使用_随从中途_修改数据'] = function (o_order_info_当前指令信息)
+    local o_misc = G.misc()
+    local script_动画系统 = o_misc.主动画系统
+    local script_战场 = o_misc.主战场系统
+
+    -- 停止鼠标跟随
+    script_动画系统:clear_animquest()
+
+    -- 显示用卡牌隐藏
+    local copy_obj = o_order_info_当前指令信息['CasterObj_Clone']
+    copy_obj.visible = false
+
+    -- 战场随从设置
+    local script_己方战场随从 = script_战场.selfBattleminion.c_battleminion_self
+    local Caster = o_order_info_当前指令信息['Caster']
+    local index = o_order_info_当前指令信息['MinionPos']
+    script_战场:move_state(false)
+    script_己方战场随从:showcard_state(false)
+    script_己方战场随从:removeBlank()
+    script_己方战场随从:addMinion(Caster, index)
+    script_己方战场随从:set_minion_pos()
+
+    -- 注册随从控件
+    local obj_minion = script_己方战场随从:get_cardobj_byindex(index)
+    o_order_info_当前指令信息['CurPlayMinionObj'] = obj_minion
+    script_动画系统:push_quote('::CurPickMinion', obj_minion)
+
+    -- 注册动画
+    local obj_line = script_战场:add_popline()
+    script_动画系统:push_quote('::PopLine', obj_line)
+    script_动画系统:add_animquest(
+        -- 注册连线动画
+        G.call('动画系统_创建quest', script_动画系统, G.QueryName(0x1001001c))
+    )
+end
 
 
 
@@ -391,6 +434,7 @@ t['卡牌注册指令_完成'] = function (o_order_info_当前指令信息)
     local script_战场 = o_misc.主战场系统
 
     script_动画系统:pop_quote('::CurPickCard')
+    script_动画系统:pop_quote('::CurPickMinion')
     script_动画系统:clear_animquest()
 
     -- 水晶预览取消
@@ -433,6 +477,12 @@ t['卡牌注册指令_完成'] = function (o_order_info_当前指令信息)
     script_己方战场随从:pickcard_state(false)
     script_己方战场随从:showcard_state(false)
     script_己方战场随从:removeBlank()
+
+    if o_order_info_当前指令信息['CurPlayMinionObj'] then
+        -- TODO，不应该直接删除，而是在后续添加时额外判断一次
+        script_己方战场随从:removeCard(o_order_info_当前指令信息['MinionPos'])
+    end
+
     script_己方战场随从:set_minion_pos()
     
     -- 播放复位动画
@@ -451,6 +501,7 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
     local script_战场 = o_misc.主战场系统
 
     script_动画系统:pop_quote('::CurPickCard')
+    script_动画系统:pop_quote('::CurPickMinion')
     script_动画系统:clear_animquest()
 
     -- 水晶预览取消
@@ -480,12 +531,19 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
     script_己方战场随从:pickcard_state(false)
     script_己方战场随从:showcard_state(false)
     script_己方战场随从:removeBlank()
+
+    if o_order_info_当前指令信息['CurPlayMinionObj'] then
+        script_己方战场随从:removeCard(o_order_info_当前指令信息['MinionPos'])
+    end
+
     script_己方战场随从:set_minion_pos()
     
     -- 控件父级设置
     local obj = o_order_info_当前指令信息['CasterObj']
     local copy_obj = o_order_info_当前指令信息['CasterObj_Clone']
     local orgx, orgy = copy_obj.localToGlobal(0, 0)
+
+    -- TODO，如果有随从，播放随从变卡动画
     obj.x, obj.y = obj.parent.globalToLocal(orgx, orgy)
     obj.rotation = 0
     obj.visible = true

@@ -133,3 +133,11 @@ t['角色_设置水晶数据_回合开始_绝对身份'] = function(estr_absolut
     G.call('角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, '锁定值', 锁定值)
     G.call('角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, '下回锁定值', 0)
 end
+
+--hide=true
+t['角色_获取卡组_绝对身份'] = function(estr_absolute_id_type_绝对身份)
+    if G['对决卡组'] == nil then 
+        return nil
+    end
+    return G['对决卡组'][estr_absolute_id_type_绝对身份]
+end

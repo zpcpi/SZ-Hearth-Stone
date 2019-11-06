@@ -80,6 +80,12 @@ t['房间_是否满足开始条件'] = function()
     local o_misc = G.misc()
 
     if type(o_misc.房间玩家列表) ~= 'table' then 
+        G.call('系统_输出信息', '人数不足， 无法开始游戏！')
+        return false
+    end
+    local o_deck_卡组 = G.call('对决_获取对决卡组')
+    if not G.call('收藏_卡组是否有效', o_deck_卡组) then 
+        G.call('系统_输出信息', '需要选择一副有效卡组')
         return false
     end
     if G.misc().对决类型 == '1v1' then 
@@ -87,6 +93,7 @@ t['房间_是否满足开始条件'] = function()
     elseif G.misc().对决类型 == '2v2' then 
         return #o_misc.房间玩家列表 == 4
     else
+        G.call('系统_输出信息', '请选择游戏模式')
         return false
     end
 end
@@ -205,3 +212,4 @@ t['房间_退出房间'] = function()
     G.tcpServerSocket = nil
     G.tcpClientSocket = nil
 end
+
