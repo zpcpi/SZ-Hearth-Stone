@@ -90,7 +90,12 @@ t['角色_战场_添加随从_绝对身份'] = function(estr_absolute_id_type_�
 
     local o_card_卡牌 = G.QueryName(i_card_卡牌)
     misc_attr_check('随从信息', estr_absolute_id_type_绝对身份)
-    table.insert(o_misc.随从信息[estr_absolute_id_type_绝对身份], int_随从编号, o_card_卡牌)
+
+    local 随从信息 = o_misc.随从信息[estr_absolute_id_type_绝对身份]
+    if int_随从编号 > #随从信息 then
+        int_随从编号 = #随从信息 + 1
+    end
+    table.insert(随从信息, int_随从编号, o_card_卡牌)
 end
 
 --hide=true

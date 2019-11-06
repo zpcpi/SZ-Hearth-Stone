@@ -96,7 +96,15 @@ function t:get_cardindex_byobj(obj)
     return 0
 end
 
+function t:get_cardobj_byindex(index)
+    return (self.minions or {})[index]
+end
+
 function t:removeCard(del_count)
+    if type(del_count) ~= 'number' then
+        return
+    end
+
     local count = self.ShowCount
     if count < del_count then
         return
