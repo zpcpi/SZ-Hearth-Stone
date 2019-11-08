@@ -1,0 +1,81 @@
+local c = require 'editor.c'
+local L = require '_lang'
+local d = require '_data'
+local id = require 'type/id'
+local t = d.new_type('array')
+
+t.is_mod = nil
+
+function t.type_match(od)
+    return d.is_table(od.obj)
+end
+
+function t.edit(od)
+	local doc = d.doc
+	local item_v = od.obj
+	local station = {}
+	for j=1,5 do 
+		station[j] = {}
+	end 
+	for index,value in ipairs(item_v) do
+		local od = d.gen_odata(item_v, index)
+		value.__index =index
+		value.x = value.x or 1
+		value.y = value.y or 1
+		if not station[value.y] then 
+			station[value.y] = {}
+		end
+		station[value.y][value.x] = value
+	end 
+	local cw = 150
+	local ch = 70
+
+	local bw = 100
+	imgui.NewLine()
+	for j=1,5 do
+		for i=1,8 do 
+			local id = j*8+i
+			local name = ""
+			local value = station[j][i]
+			imgui.BeginChild(id,cw, ch,true)
+			if value then
+				value.__角色 = value.__角色 or 0x10010001
+				value.阵营 = value.阵营 or 3
+				local sub_od = d.gen_odata(value, '角色')
+				local side_od = d.gen_odata(value, '阵营')
+				name = string.format('%s(%s)',c.T(value.__角色), side_od.mod.to_str(side_od))
+				sub_od.mod.edit(sub_od,bw,0)
+				if imgui.Button(L.delete) then 
+					table.remove( item_v,value.__index )
+					d.step(doc)
+				end
+				imgui.SameLine()
+				side_od.mod.edit(side_od, bw)
+			else
+				if imgui.Button(L.new, bw + 30,0) then
+					table.insert(item_v, {x = i ,y = j})
+					d.step(doc)
+				end
+			end 
+
+			imgui.EndChild()
+			if i~=8 then 
+				imgui.SameLine()
+			end 
+		end  
+		
+	end
+end
+t.sub_desc = function(sod, sub_key)
+    return {type = 'o_rolepos'}
+end
+
+local super_save = t.save
+function t.save(od, l, indent)
+	super_save(od, l, indent)
+end
+
+-- function t.to_str(od)
+-- 	return '布阵'
+-- end
+return t
