@@ -209,7 +209,7 @@ t['卡牌进入功能区_随从_修改数据'] = function (o_order_info_当前�
 
     -- 随从站位记录
     o_order_info_当前指令信息['MinionPos'] = index
-    
+
     -- TODO，根据随从的目标选择方式，来显示额外的信息
 end
 

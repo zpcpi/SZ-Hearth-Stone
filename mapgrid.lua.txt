@@ -1,0 +1,146 @@
+local c = require 'editor.c'
+local L = require '_lang'
+local d = require '_data'
+local id = require 'type/id'
+local t = d.new_type('array')
+
+t.is_mod = nil
+
+function t.type_match(od)
+    return d.is_table(od.obj)
+end
+
+function t.edit(od)
+	local doc = d.doc
+	local map_obj = od.obj
+	local map_data
+	local row_count
+	local column_count
+
+	if od.pod.obj.行 and od.pod.obj.列 then 
+		row_count = od.pod.obj.行
+		column_count = od.pod.obj.列
+	elseif od.pod.obj.模块行数 and od.pod.obj.模块列数 then 
+		row_count = od.pod.obj.模块行数
+		column_count = od.pod.obj.模块列数
+	else
+		return 
+	end
+
+	map_data = get_map_data(od)
+
+	local cw = 150
+	local ch = 80
+	local bw = 100
+	imgui.BeginChild('mapgrid', 1280, 720, true, 1 << 11)
+	for i = row_count, 1, -1 do
+		if i ~= 1 then 
+			imgui.NewLine()
+		end
+		for j = 1, column_count do 
+			if j ~= 1 then 
+				imgui.SameLine()
+			end
+			local id = i .. '-' .. j
+			local value = map_data[i][j]
+			imgui.BeginChild(id, cw, ch, true)
+			if value then
+				value.类型 = value.类型 or '通路'
+				value.__卡片 = value.__卡片 or 0x10520001
+				local type_od = d.gen_odata(value, '类型')
+				local card_od = d.gen_odata(value, '卡片')
+				local color = get_type_color(value.类型)
+				imgui.Text(color .. id)
+				imgui.SameLine()
+				type_od.mod.edit(type_od, bw, 0)
+				card_od.mod.edit(card_od, bw)
+			end 
+			imgui.EndChild()
+		end  
+	end
+	imgui.EndChild()
+end
+
+t.sub_desc = function(sod, sub_key)
+    return {type = 'o_new_maze_terrain_block'}
+end
+
+local super_save = t.save
+
+function t.save(od, l, indent)
+	super_save(od, l, indent)
+end
+
+function get_map_data(map_od)
+	local map_obj = map_od.obj
+	local map_data = {}
+	local row_count
+	local column_count
+
+	if map_od.pod.obj.行 and map_od.pod.obj.列 then 
+		row_count = map_od.pod.obj.行
+		column_count = map_od.pod.obj.列
+	elseif map_od.pod.obj.模块行数 and map_od.pod.obj.模块列数 then 
+		row_count = map_od.pod.obj.模块行数
+		column_count = map_od.pod.obj.模块列数
+	else
+		return 
+	end
+
+	for i = 1, row_count do 
+		map_data[i] = {}
+	end
+
+	for i = #map_obj, 1, -1 do 
+		local child_od = d.gen_odata(map_obj, i)
+		local value = map_obj[i]
+		if value.行 > row_count or value.列 > column_count then 
+			table.remove(map_obj, i)
+			d.step(d.doc)
+		else
+			map_data[value.行][value.列] = value
+		end
+	end
+
+	for i = 1, row_count do 
+		for j = 1, column_count do 
+			if map_data[i][j] == nil then 
+				local grid = {}
+				grid.行 = i
+				grid.列 = j
+				table.insert(map_obj, grid)
+				d.step(d.doc)
+			end
+		end
+	end
+
+	return map_data
+end
+
+function get_type_color(grid_type)
+	local color = ''
+	if grid_type == '空白' then 
+		color = '<00>'
+	elseif grid_type == '通路' then 
+		color = '<07>'
+	elseif grid_type == '怪物' then 
+		color = '<01>'
+	elseif grid_type == '宝箱' then 
+		color = '<06>'
+	elseif grid_type == '增益' then 
+		color = '<02>'
+	elseif grid_type == '陷阱' then 
+		color = '<05>'
+	elseif grid_type == '天赋卡点' then 
+		color = '<08>'
+	elseif grid_type == '楼梯' then 
+		color = '<04>'
+	elseif grid_type == '任务事件' then 
+		color = '<09>'
+	elseif grid_type == '角色事件' then 
+		color = '<09>'
+	end
+	return color
+end
+
+return t
