@@ -11,7 +11,7 @@ function t.type_match(od)
     return d.is_table(od.obj)
 end
 
-t.sub_desc = function(sod, sub_key)
+function t.sub_desc(sod, sub_key)
     return {type = 'int'}
 end
 
@@ -24,23 +24,25 @@ function get_data(od)
 	local data = od.obj
 	local flaglist = {}
 
-	for index,t in ipairs(CARD_FLAGS) do
-		local value = data[index] or 0
-		local flags = flaglist[index] or {}
-		data[index] = value
-		flaglist[index] = flags
+	if data then
+		for index,t in ipairs(CARD_FLAGS) do
+			local value = data[index] or 0
+			local flags = flaglist[index] or {}
+			data[index] = value
+			flaglist[index] = flags
 
-		for flag, v in pairs(t) do
-			if (value & (1 << v)) > 0 then
-				flags[v+1] = {
-					['key'] = flag,
-					['value'] = true,
-				}
-			else
-				flags[v+1] = {
-					['key'] = flag,
-					['value'] = false,
-				}
+			for flag, v in pairs(t) do
+				if (value & (1 << v)) > 0 then
+					flags[v+1] = {
+						['key'] = flag,
+						['value'] = true,
+					}
+				else
+					flags[v+1] = {
+						['key'] = flag,
+						['value'] = false,
+					}
+				end
 			end
 		end
 	end
@@ -74,12 +76,33 @@ function t.edit(od)
 	local bh = 30
 
 	imgui.NewLine()
+	do -- 选择框添加
+		local emun_iter = function()
+			local flags = {}
+			for _,t in ipairs(data) do
+				for _, flag in ipairs(t) do
+					if not flag['value'] then
+						table.insert(flags, {name = flag['key']})
+					end
+				end
+			end
+			return flags
+		end
+
+		local nv,idx = d.combopopup('flag list', emun_iter, {'name'}, od.pobj, d.tab_w, nil)
+		if nv then
+			set_data(od, nv, true)
+			d.step(doc)
+		end
+		imgui.NewLine()
+	end
 
 	for i, t in ipairs(data) do
 		local zw = cw * 5
 		local zh_count = (#t - 1) // 5 + 1
-		local zh = ch * zh_count
-
+		local zh = ch * zh_count + 5
+		
+		local count = 0
 		imgui.BeginChild(i, zw, zh, false)
 		for j, flag in ipairs(t) do
 			if flag then
@@ -94,9 +117,12 @@ function t.edit(od)
 						d.step(doc)
 					end
 				end
+				count = count + 1
 			end
 
-			if (j % 5) ~= 0 then 
+			::next::
+
+			if (count % 5) ~= 0 then 
 				imgui.SameLine()
 			end 
 		end
