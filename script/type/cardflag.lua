@@ -71,9 +71,9 @@ function t.edit(od)
 	local doc = d.doc
 	local data = get_data(od)
 
-	local cw = 150
+	local cw = 100
 	local ch = 35
-	local bw = 140
+	local bw = 90
 	local bh = 30
 
 	imgui.NewLine()
