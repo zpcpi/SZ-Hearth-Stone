@@ -6,6 +6,7 @@ local t = d.new_type('array')
 local G = require "gf"
 
 t.is_mod = nil
+local flags_data = CARD_FLAGS
 
 function t.type_match(od)
     return d.is_table(od.obj)
@@ -25,7 +26,7 @@ function get_data(od)
 	local flaglist = {}
 
 	if data then
-		for index,t in ipairs(CARD_FLAGS) do
+		for index,t in ipairs(flags_data) do
 			local value = data[index] or 0
 			local flags = flaglist[index] or {}
 			data[index] = value
@@ -100,10 +101,17 @@ function t.edit(od)
 	for i, t in ipairs(data) do
 		local zw = cw * 5
 		local zh_count = (#t - 1) // 5 + 1
-		local zh = ch * zh_count + 5
+		local zh = ch * zh_count + bh + 10
 		
 		local count = 0
 		imgui.BeginChild(i, zw, zh, false)
+
+		-- 显示标题
+		if flags_data['type'] and flags_data['type'][i] then
+			imgui.Text(flags_data['type'][i])
+			imgui.NewLine()
+		end
+
 		for j, flag in ipairs(t) do
 			if flag then
 				if flag['value'] then
