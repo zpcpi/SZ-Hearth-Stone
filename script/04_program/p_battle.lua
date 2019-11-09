@@ -170,3 +170,14 @@ end
 t['对决_获取我方对决牌库'] = function()
     return G['对决牌库']
 end
+
+t['对决_结算_相对身份'] = function(estr_player_相对身份, boolean_是否胜利)
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
+
+    G.call('网络通用_广播消息', '对决_结算_绝对身份', estr_absolute_id_type_绝对身份, boolean_是否胜利)
+end
+
+t['对决_投降'] = function()
+    G.call('对决_结算_相对身份', '我方', false)
+    -- TODO: 投降碎裂的动画接入, 界面显示也需要进入动画队列
+end
