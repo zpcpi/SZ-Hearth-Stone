@@ -174,6 +174,30 @@ t['房间_获取相对身份'] = function(estr_absolute_id_type_绝对身份)
     return ''
 end
 
+t['房间_是否同一阵营_绝对身份'] = function(estr_absolute_id_type_绝对身份1, estr_absolute_id_type_绝对身份2)
+    if estr_absolute_id_type_绝对身份1 == estr_absolute_id_type_绝对身份2 then 
+        return true
+    elseif estr_absolute_id_type_绝对身份1 == '红1' and estr_absolute_id_type_绝对身份2 == '红2' or
+    estr_absolute_id_type_绝对身份1 == '红2' and estr_absolute_id_type_绝对身份2 == '红1' or
+    estr_absolute_id_type_绝对身份1 == '蓝1' and estr_absolute_id_type_绝对身份2 == '蓝2' or
+    estr_absolute_id_type_绝对身份1 == '蓝2' and estr_absolute_id_type_绝对身份2 == '蓝1' then 
+        return true
+    else
+        return false
+    end
+end
+
+t['房间_是否同一阵营_相对身份'] = function(estr_player_相对身份1, estr_player_相对身份2)
+    if estr_player_相对身份1 == estr_player_相对身份2 then 
+        return true
+    elseif estr_player_相对身份1 == '我方' and estr_player_相对身份2 == '友方' or
+    estr_player_相对身份1 == '友方' and estr_player_相对身份2 == '我方' then 
+        return true
+    else
+        return false
+    end
+end
+
 t['房间_当前玩家准备'] = function()
     local any_当前玩家信息 = G.call('系统_获取当前玩家信息')
     any_当前玩家信息.准备就绪 = not any_当前玩家信息.准备就绪
@@ -212,4 +236,3 @@ t['房间_退出房间'] = function()
     G.tcpServerSocket = nil
     G.tcpClientSocket = nil
 end
-

@@ -30,13 +30,6 @@ function noti.主机_连接建立成功回调()
     end
 end
 
-function noti.对决_设置对决卡组()
-    local v_room = G.getUI('v_room')
-    if v_room then 
-        v_room.c_room:UpdateDeckInfo()
-    end
-end
-
 function noti.房间_更新玩家信息(o_room_player_对决玩家)
     local playerName = o_room_player_对决玩家.玩家名称
     if o_room_player_对决玩家.是主机 then 
@@ -74,17 +67,7 @@ function noti.客机_输出连接信息(string_信息)
 end
 
 function noti.客机_连接成功回调()
-    G.addUI('v_room')    
-    G.removeUI('v_main_menu')
-    G.removeUI('v_connect')
-end
-
-function noti.对决_初始化战场(estr_battle_type_对决类型)
-    if estr_battle_type_对决类型 == '1v1' then 
-        G.addUI('v_battle_1v1')
-    elseif estr_battle_type_对决类型 == '2v2' then 
-    end
-    G.removeUI('v_room')
+    G.changeUI('v_room')    
 end
 
 function noti.提示_播放提示(string_提示内容)
