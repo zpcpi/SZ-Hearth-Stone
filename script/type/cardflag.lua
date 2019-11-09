@@ -54,7 +54,7 @@ end
 function set_data(od, key, value)
 	local data = od.obj
 
-	for index,t in ipairs(CARD_FLAGS) do
+	for index,t in ipairs(flags_data) do
 		local v = t[key]
 		if v then
 			if value then
