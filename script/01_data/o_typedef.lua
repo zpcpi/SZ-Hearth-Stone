@@ -839,5 +839,22 @@ local t = {
 			},
 		},
 	},
+	{
+		['name']='o_imgui_draw',
+		['define']={
+			[1]={
+				['name']='布局定义',
+				['type']='imgui_define',
+			},
+			[2]={
+				['name']='布局展示',
+				['type']='int',
+			},
+			[3]={
+				['name']='布局数据',
+				['type']='imgui_data',
+			},
+		},
+	},
 }}
 return t
