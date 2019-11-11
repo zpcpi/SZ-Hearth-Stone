@@ -848,7 +848,7 @@ local t = {
 			},
 			[2]={
 				['name']='布局展示',
-				['type']='int',
+				['type']='imgui_show',
 			},
 			[3]={
 				['name']='布局数据',
