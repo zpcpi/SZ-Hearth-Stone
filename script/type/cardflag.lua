@@ -114,17 +114,19 @@ function t.edit(od)
 
 		for j, flag in ipairs(t) do
 			if flag then
+				--imgui.PushID((i-1)*32+j)
 				if flag['value'] then
-					if imgui.Button('<04>' .. flag['key'], bw, bh) then
+					if imgui.Selectable('<04>' .. flag['key'], true, 0, bw, bh) then
 						set_data(od, flag['key'], false)
 						d.step(doc)
 					end
 				else
-					if imgui.Button('<07>' .. flag['key'], bw, bh) then
+					if imgui.Selectable('<07>' .. flag['key'], false, 0, bw, bh) then
 						set_data(od, flag['key'], true)
 						d.step(doc)
 					end
 				end
+				--imgui.PopID()
 				count = count + 1
 			end
 
