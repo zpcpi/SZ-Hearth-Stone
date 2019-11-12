@@ -177,7 +177,7 @@ function t:hidetips()
     self.TipsCard.visible = false
 end
 
-function t:move_state(moving)
+function t:can_move_state(moving)
     self.can_move = moving
 end
 

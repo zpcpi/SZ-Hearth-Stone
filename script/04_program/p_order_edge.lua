@@ -208,7 +208,7 @@ t['卡牌进入功能区_随从_修改数据'] = function (o_order_info_当前�
     -- 控件状态更改
     local script_战场 = o_misc.主战场系统
     local script_己方战场随从 = script_战场.selfBattleminion.c_battleminion_self
-    script_战场:move_state(true)
+    script_战场:can_move_state(true)
 
     -- 添加一个占位
     local index = script_己方战场随从:get_minion_index(G.MousePos())
@@ -372,7 +372,7 @@ t['卡牌确认使用_随从中途_修改数据'] = function (o_order_info_当�
     local script_己方战场随从 = script_战场.selfBattleminion.c_battleminion_self
     local Caster = o_order_info_当前指令信息['Caster']
     local index = o_order_info_当前指令信息['MinionPos']
-    script_战场:move_state(false)
+    script_战场:can_move_state(false)
     script_己方战场随从:can_show_state(true)
     script_己方战场随从:removeBlank()
     script_己方战场随从:addMinion(Caster, index)
@@ -485,7 +485,7 @@ t['卡牌注册指令_完成'] = function (o_order_info_当前指令信息)
     script_战场.enemyBattlehero.c_battlehero_enemy:can_show_state(true)
     
     -- 战场随从恢复
-    script_战场:move_state(false)
+    script_战场:can_move_state(false)
     local script_己方战场随从 = script_战场.selfBattleminion.c_battleminion_self
     script_己方战场随从:can_pick_state(true)
     script_己方战场随从:can_show_state(true)
@@ -542,7 +542,7 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
     script_战场.enemyBattlehero.c_battlehero_enemy:can_show_state(true)
     
     -- 战场随从恢复
-    script_战场:move_state(false)
+    script_战场:can_move_state(false)
     local script_己方战场随从 = script_战场.selfBattleminion.c_battleminion_self
     script_己方战场随从:can_pick_state(true)
     script_己方战场随从:can_show_state(true)
