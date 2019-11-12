@@ -107,13 +107,17 @@ t['抓取卡牌_修改数据'] = function (o_order_info_当前指令信息)
 
     -- 控件状态更改
     local script_战场 = o_misc.主战场系统
-    script_战场.selfHandcard.c_handcards_self:pickcard_state(obj, true)
-    script_战场.enemyHandcard.c_handcards_enemy:pickcard_state(true)
-    script_战场.selfBattlehero.c_battlehero_self:pickcard_state(true)
+    script_战场.selfHandcard.c_handcards_self:pickcard(obj)
+    script_战场.enemyHandcard.c_handcards_enemy:can_show_state(false)
 
-    script_战场.selfBattleminion.c_battleminion_self:pickcard_state(true)
+    script_战场.selfBattlehero.c_battlehero_self:can_pick_state(false)
+    script_战场.selfBattlehero.c_battlehero_self:can_show_state(false)
+    script_战场.enemyBattlehero.c_battlehero_enemy:can_show_state(false)
 
-    script_战场.selfBattleminion.c_battleminion_self:showcard_state(true)
+    script_战场.selfBattleminion.c_battleminion_self:can_pick_state(false)
+    script_战场.selfBattleminion.c_battleminion_self:can_show_state(false)
+    script_战场.enemyBattleminion.c_battleminion_enemy:can_show_state(false)
+
     script_战场.InFuncArea = false
 end
 
@@ -180,7 +184,11 @@ t['卡牌进入功能区_单目标法术_修改数据'] = function (o_order_info
     )
 
     -- 控件状态更改
-    script_战场.selfBattleminion.c_battleminion_self:showcard_state(false)
+    script_战场.selfBattlehero.c_battlehero_self:can_show_state(true)
+    script_战场.enemyBattlehero.c_battlehero_enemy:can_show_state(true)
+
+    script_战场.selfBattleminion.c_battleminion_self:can_show_state(true)
+    script_战场.enemyBattleminion.c_battleminion_enemy:can_show_state(true)
 end
 
 --==========================================================
@@ -365,10 +373,13 @@ t['卡牌确认使用_随从中途_修改数据'] = function (o_order_info_当�
     local Caster = o_order_info_当前指令信息['Caster']
     local index = o_order_info_当前指令信息['MinionPos']
     script_战场:move_state(false)
-    script_己方战场随从:showcard_state(false)
+    script_己方战场随从:can_show_state(true)
     script_己方战场随从:removeBlank()
     script_己方战场随从:addMinion(Caster, index)
     script_己方战场随从:set_minion_pos()
+    script_战场.enemyBattleminion.c_battleminion_enemy:can_show_state(true)
+    script_战场.selfBattlehero.c_battlehero_self:can_show_state(true)
+    script_战场.enemyBattlehero.c_battlehero_enemy:can_show_state(true)
 
     -- 注册随从控件
     local obj_minion = script_己方战场随从:get_cardobj_byindex(index)
@@ -467,16 +478,19 @@ t['卡牌注册指令_完成'] = function (o_order_info_当前指令信息)
     end
 
     -- 手牌状态恢复
-    script_手牌组件:pickcard_state(nil, false)
-    script_战场.enemyHandcard.c_handcards_enemy:pickcard_state(false)
-	script_战场.selfBattlehero.c_battlehero_self:pickcard_state(false)
+    script_手牌组件:pickcard(nil)
+    script_战场.enemyHandcard.c_handcards_enemy:can_show_state(true)
+	script_战场.selfBattlehero.c_battlehero_self:can_pick_state(true)
+	script_战场.selfBattlehero.c_battlehero_self:can_show_state(true)
+    script_战场.enemyBattlehero.c_battlehero_enemy:can_show_state(true)
     
     -- 战场随从恢复
     script_战场:move_state(false)
     local script_己方战场随从 = script_战场.selfBattleminion.c_battleminion_self
-    script_己方战场随从:pickcard_state(false)
-    script_己方战场随从:showcard_state(false)
+    script_己方战场随从:can_pick_state(true)
+    script_己方战场随从:can_show_state(true)
     script_己方战场随从:removeBlank()
+    script_战场.enemyBattleminion.c_battleminion_enemy:can_show_state(true)
 
     if o_order_info_当前指令信息['CurPlayMinionObj'] then
         -- TODO，不应该直接删除，而是在后续添加时额外判断一次
@@ -521,16 +535,19 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
     local script_手牌组件 = script_战场.selfHandcard.c_handcards_self
 
     -- 手牌状态恢复
-    script_手牌组件:pickcard_state(nil, false)
-    script_战场.enemyHandcard.c_handcards_enemy:pickcard_state(false)
-	script_战场.selfBattlehero.c_battlehero_self:pickcard_state(false)
+    script_手牌组件:pickcard(nil)
+    script_战场.enemyHandcard.c_handcards_enemy:can_show_state(true)
+	script_战场.selfBattlehero.c_battlehero_self:can_pick_state(true)
+	script_战场.selfBattlehero.c_battlehero_self:can_show_state(true)
+    script_战场.enemyBattlehero.c_battlehero_enemy:can_show_state(true)
     
     -- 战场随从恢复
     script_战场:move_state(false)
     local script_己方战场随从 = script_战场.selfBattleminion.c_battleminion_self
-    script_己方战场随从:pickcard_state(false)
-    script_己方战场随从:showcard_state(false)
+    script_己方战场随从:can_pick_state(true)
+    script_己方战场随从:can_show_state(true)
     script_己方战场随从:removeBlank()
+    script_战场.enemyBattleminion.c_battleminion_enemy:can_show_state(true)
 
     if o_order_info_当前指令信息['CurPlayMinionObj'] then
         script_己方战场随从:removeCard(o_order_info_当前指令信息['MinionPos'])
