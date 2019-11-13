@@ -144,39 +144,46 @@ end
 
 function t:rollOut(tar)
     if tar.parent == self.布局点 then
-        self.CurCard = nil
-        self.主战场:hidetips()
+        if self.can_show then
+            self.CurCard = nil
+            self.主战场:hidetips()
+        end
     end
 end
 
 function t:mouseDown(tar)
+    if tar.parent == self.布局点 then
+        if self.can_pick then
+            local o_card_picked = tar.getChildByName('卡牌框').c_battle_minion:getData()
 
-
+            if o_card_picked then
+                G.trig_event('UI_抓取卡牌', o_card_picked, tar)
+            end
+        end
+    end
 end
 
 function t:mouseUp(tar)
-    if tar.parent ~= self.布局点 then
-        G.trig_event('UI_卡牌确认使用', '我方')
-    elseif tar.parent == self.布局点 then
-        local o_card_picked = tar.getChildByName('卡牌框').c_battle_minion:getData()
-        G.trig_event('UI_卡牌选择目标', o_card_picked, tar)
-    end
-end
-
-function t:pickcard_state(picking)
-    if picking then
-        self.can_pick = false
+    if self.can_pick then
     else
-        self.can_pick = true
+        if tar.parent ~= self.布局点 then
+            G.trig_event('UI_卡牌确认使用', '我方')
+        elseif tar.parent == self.布局点 then
+            local o_card_picked = tar.getChildByName('卡牌框').c_battle_minion:getData()
+            G.trig_event('UI_卡牌选择目标', o_card_picked, tar)
+        end
     end
 end
 
-function t:showcard_state(picking)
-    if picking then
-        self.can_show = false
+function t:can_pick_state(state)
+    self.can_pick = state
+end
+
+function t:can_show_state(state)
+    self.can_show = state
+    if state then
+    else
         self.主战场:hidetips()
-    else
-        self.can_show = true
     end
 end
 

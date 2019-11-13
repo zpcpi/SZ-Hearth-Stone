@@ -21,6 +21,7 @@ function t:start()
     self.TipsCard = nil
 
     self.can_pick = true
+    self.can_show = true
 
     self:initTipsCard()
 end
@@ -91,7 +92,7 @@ function t:click(tar)
 end
 
 function t:rollOver(tar)
-    if self.can_pick then
+    if self.can_show then
         tar.alpha = 0
         self.CurCard = tar
 
@@ -105,7 +106,7 @@ function t:rollOver(tar)
 end
 
 function t:rollOut(tar)
-    if self.can_pick then
+    if self.can_show then
         tar.alpha = 255
         self.CurCard = nil
 
@@ -117,24 +118,28 @@ function t:rollOut(tar)
 end
 
 function t:mouseDown(tar)
-    local o_card_picked = tar.c_card_manager:getData()
-    if o_card_picked then
-        G.trig_event('UI_抓取卡牌', o_card_picked, tar)
+    if self.can_pick then
+        local o_card_picked = tar.c_card_manager:getData()
+        if o_card_picked then
+            G.trig_event('UI_抓取卡牌', o_card_picked, tar)
+        end
     end
 end
 
 function t:mouseUp(tar)
 end
 
-function t:pickcard_state(tar, picking)
-    if picking then
+function t:pickcard(tar)
+    if tar then
         tar.alpha = 255
         self.CurCard = nil
         self.TipsCard.visible = false
 
         self.can_pick = false
+        self.can_show = false
     else
         self.can_pick = true
+        self.can_show = true
     end
 end
 

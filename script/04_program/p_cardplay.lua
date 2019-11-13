@@ -39,3 +39,47 @@ t['卡牌使用_法力值消耗'] = function (estr_player_相对身份, o_order_
     local 下回锁定值 = G.call('角色_获取水晶数据', estr_player_相对身份, '下回锁定值')
     G.call('角色_设置水晶数据', estr_player_相对身份, '下回锁定值', 下回锁定值 + 过载费用)
 end
+
+
+
+
+-- ============================================
+-- ============================================
+-- ============================================
+-- 卡牌条件相关接口
+-- ============================================
+-- ============================================
+-- ============================================
+local cardflag_iter = function (data, flag)
+    local flags_data = CARD_FLAGS
+    for index, t in ipairs(flags_data) do
+        if t[flag] then
+            local value = data[index] or 0
+            return (value & (1 << t[flag])) > 0
+        end
+    end
+    return false
+end
+
+t['卡牌条件_卡牌特性判断'] = function (o_card_当前卡牌, _string_满足特性, _string_排除特性)
+    local data = o_card_当前卡牌['卡牌特性'] or {}
+
+    for _,flag in ipairs(_string_满足特性 or {}) do
+        if cardflag_iter(data, flag) then
+        else
+            return false
+        end
+    end
+
+    for _,flag in ipairs(_string_排除特性 or {}) do
+        if cardflag_iter(data, flag) then
+            return false
+        end
+    end
+
+    return true
+end
+
+
+
+

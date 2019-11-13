@@ -14,6 +14,12 @@ function t:init()
     self.cur_card_list = {}
 
     self.can_pick = true
+    self.can_show = true
+end
+
+function t:start()
+    self.主战场 = G.misc().主战场系统
+    self.CurCard = nil
 end
 
 function t:setData(o_card_卡片数据)
@@ -109,6 +115,30 @@ function t:getClickData_pick(tar)
     end
 end
 
+function t:rollOver(tar)
+    if self.can_show then
+        local o_card_picked = self:getClickData(tar)
+
+        if o_card_picked then
+            self.CurCard = tar
+
+            local posx, posy = tar.localToGlobal(0, 0)
+            self.主战场:showtips(o_card_picked, posx + 160, posy)
+        end
+    end
+end
+
+function t:rollOut(tar)
+    if self.can_show then
+        local o_card_picked = self:getClickData(tar)
+
+        if o_card_picked then
+            self.CurCard = nil
+            self.主战场:hidetips()
+        end
+    end
+end
+
 function t:mouseUp(tar)
     local o_card_picked
 
@@ -121,14 +151,16 @@ function t:mouseUp(tar)
     end
 end
 
-function t:pickcard_state(picking)
-    if picking then
-        self.can_pick = false
-    else
-        self.can_pick = true
-    end
+function t:can_pick_state(state)
+    self.can_pick = state
 end
 
-
+function t:can_show_state(state)
+    self.can_show = state
+    if state then
+    else
+        self.主战场:hidetips()
+    end
+end
 
 return t
