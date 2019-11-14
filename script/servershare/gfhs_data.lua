@@ -9,6 +9,6 @@ function GF.NewInst(dbname)
 		itm = {}
 		itm.name = inst_id
 		GF.newinst_cache[dbname][inst_id] = itm
-	end 
+	end
 	return itm
 end
