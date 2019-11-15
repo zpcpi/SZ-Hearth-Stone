@@ -6,16 +6,18 @@ local L = {}
 local t = G.api
 
 --hide=true
-t['角色_添加手牌'] = function(estr_player_相对身份, o_card_卡牌)
-    -- TODO，添加的手牌一定是实例，需要调整逻辑
+t['角色_添加手牌'] = function(estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
     local int_当前手牌数量 = G.call('角色_获取手牌数量_绝对身份', estr_absolute_id_type_绝对身份)
 
     if (o_card_卡牌 ~= nil) and (int_当前手牌数量 < HANDCARDS_MAX_COUNT) then
-        -- local i_card_卡牌 = o_card_卡牌.name
-        local i_card_卡牌 = o_card_卡牌.root
+        local i_card_卡牌 = o_card_卡牌.name
         G.call('角色_添加手牌_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
         G.call('网络通用_广播消息', '角色_添加手牌_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
+
+        if boolean_是否明牌 then
+            G.call('网络通用_广播消息', '卡牌实例化_信息更新', i_card_卡牌, 'root', o_card_卡牌.root)
+        end
     end
 end
 

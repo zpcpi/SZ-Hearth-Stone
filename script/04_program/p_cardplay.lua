@@ -48,21 +48,50 @@ end
 -- ============================================
 -- ============================================
 -- ============================================
+t['卡牌实例表_初始化'] = function ()
+    G.newinst_cache['o_card_redplayer1'] = {}
+    G.newinst_cache['o_card_redplayer2'] = {}
+    G.newinst_cache['o_card_blueplayer1'] = {}
+    G.newinst_cache['o_card_blueplayer2'] = {}
+
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', '我方')
+    local dbname
+    if estr_absolute_id_type_绝对身份 == '红1' then
+        dbname = 'o_card_redplayer1'
+    elseif estr_absolute_id_type_绝对身份 == '红2' then
+        dbname = 'o_card_redplayer2'
+    elseif estr_absolute_id_type_绝对身份 == '蓝1' then
+        dbname = 'o_card_blueplayer1'
+    elseif estr_absolute_id_type_绝对身份 == '蓝2' then
+        dbname = 'o_card_blueplayer2'
+    end
+    if dbname then
+        G.misc().卡牌实例表 = dbname
+    end
+end
+
 t['卡牌实例化'] = function (o_card_卡片模板)
-    -- TODO，这里需要每个玩家独占一个id
-    -- player1 100e
-    -- player2 1010
-    local key = 0x100e
-    local dbname = G.GetTextOwner(key)
-    local newid = G.NewTextID(dbname)
+    local dbname = G.misc().卡牌实例表
+    if dbname then
+        local new_id = G.NewTextID(dbname)
+        local o_card_卡片实例 = G.CopyInst(o_card_卡片模板, {}, {['name'] = new_id,})
+        G.newinst_cache[dbname][new_id] = o_card_卡片实例
+        return o_card_卡片实例
+    else
+        return G.CopyInst(o_card_卡片模板)
+    end
+end
 
-    local o_card_新卡实例 = {
-        ['name'] = newid,
-    }
+t['卡牌实例化_信息更新'] = function (i_card_卡牌, string_attr, value)
+    local o_card_卡牌 = G.QueryName(i_card_卡牌)
+    if o_card_卡牌 and string_attr then
+        o_card_卡牌[string_attr] = value
+        if string_attr == 'root' then
+            setmetatable(o_card_卡牌, getmetatable(G.QueryName(value)))
+        end
 
-    -- 因为玩家间id不会冲突，因此可以在创建卡牌后将id传给其他玩家
-    -- 后续可依据id来获取更多数据
-    G.CopyInst(o_card_卡片模板, {}, o_card_新卡实例)
+        G.trig_event('卡牌实例_信息更新', i_card_卡牌)
+    end
 end
 -- ============================================
 -- ============================================

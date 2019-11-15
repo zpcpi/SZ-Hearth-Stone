@@ -19,6 +19,20 @@ function t:setData(o_card_卡片数据)
     if not o_card_卡片数据 then 
         return 
     end
+
+    -- 注册卡牌更新监听
+    do
+        local update_data = function ()
+            print(1, tostring(self))
+            self:setData(self.cur_card)
+        end
+    
+        local key = 'c_card_manager|' .. tostring(self)
+        G.removeListener(key, '卡牌实例_信息更新')
+        G.api[key] = update_data
+        G.addListener(key, {'卡牌实例_信息更新', o_card_卡片数据.name})
+    end
+
     local i_cardtype_卡片类型 = o_card_卡片数据.类型
     if not i_cardtype_卡片类型 then 
         return 
@@ -47,6 +61,12 @@ end
 
 function t:getData()
     return self.cur_card
+end
+
+-- 控件删除
+function t:delete()
+    local key = 'c_card_manager|' .. tostring(self)
+    G.removeListener(key, '卡牌实例_信息更新')
 end
 
 return t

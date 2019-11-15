@@ -27,6 +27,9 @@ t['对决_开始'] = function()
         G.call('房间_分配绝对身份')
         G.call('网络通用_广播消息', '对决_开始')
     end
+    -- 初始化卡牌实例表
+    G.call('卡牌实例表_初始化')
+
     G.call('对决_初始化战场', G.misc().对决类型)
     G.call('对决_初始化我方对决牌库')
     G.start_program('对决_决定初始卡牌')
@@ -35,7 +38,7 @@ end
 
 t['对决_决定初始卡牌'] = function()
     -- TODO：设置英雄
-    G.call('角色_战场_设置英雄', '我方', G.QueryName(0x10060079))
+    G.call('角色_战场_设置英雄', '我方', G.QueryName(0x100600a7))
 
     -- TODO: 先抽 3(?) 张
     for i = 1, 3 do 
@@ -45,10 +48,9 @@ t['对决_决定初始卡牌'] = function()
     -- TODO: 等待换牌结束
     -- TODO: 换牌
     if not G.call('对决_我方是否是先手') then 
-        local o_card_硬币 = G.QueryName(0x1006000e)
-        
         -- 后手添加硬币
-        G.call('角色_添加手牌', '我方', o_card_硬币)
+        local o_card_硬币 = G.call('卡牌实例化', G.QueryName(0x1006000e))
+        G.call('角色_添加手牌', '我方', o_card_硬币, true)
     end
 end
 
@@ -161,7 +163,7 @@ t['对决_初始化我方对决牌库'] = function()
         return 
     end
     for _, o_card_卡片模板 in ipairs(o_deck_卡组['卡牌列表']) do 
-        local o_card_卡片实例 = G.CopyInst(o_card_卡片模板)
+        local o_card_卡片实例 = G.call('卡牌实例化', o_card_卡片模板)
         table.insert(G['对决牌库'], o_card_卡片实例)
     end
 end
