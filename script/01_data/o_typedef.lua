@@ -847,5 +847,44 @@ local t = {
 			},
 		},
 	},
+	{
+		['name']='o_skill',
+		['define']={
+			[1]={
+				['name']='描述',
+				['type']='string',
+			},
+			[2]={
+				['name']='目标筛选',
+				['type']='_fargo_target_filter',
+			},
+			[3]={
+				['name']='逻辑功能',
+				['type']='_o_skill_trigger',
+			},
+		},
+	},
+	{
+		['name']='o_skill_trigger',
+		['define']={
+			[1]={
+				['name']='触发时机',
+				['type']='even',
+			},
+			[2]={
+				['name']='触发条件',
+				['type']='anonfunc',
+			},
+			[3]={
+				['name']='触发逻辑',
+				['type']='anonfunc',
+			},
+		},
+	},
+	{
+		['name']='o_target_filter',
+		['define']={
+		}
+	},
 }}
 return t
