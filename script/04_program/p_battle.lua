@@ -27,6 +27,7 @@ t['对决_开始'] = function()
         G.call('房间_分配绝对身份')
         G.call('网络通用_广播消息', '对决_开始')
     end
+    G.call('对决_初始化对决角色', '我方')
     -- 初始化卡牌实例表
     G.call('卡牌实例表_初始化')
 
@@ -154,11 +155,47 @@ t['对决_设置对决卡组'] = function(o_deck_卡组)
     G['对决卡组'] = o_deck_卡组
 end
 
+--ret=o_battle_role
+t['对决_初始化对决角色'] = function(estr_player_相对身份)
+    local o_deck_卡组 = G.call('对决_获取对决卡组')
+    if not G.call('对决_卡组模板是否有效', o_deck_卡组) then 
+        G.call('提示_添加提示', '卡组模板数据不正确')
+        return 
+    end
+    -- TODO: 暂时读取卡组的第一职业作为角色职业
+    local i_profession_职业 = o_deck_卡组.职业[1]
+    local o_battle_role_对决角色 = {}
+    o_battle_role_对决角色.生命值 = G.call('对决_获取初始生命值')
+    o_battle_role_对决角色.职业 = i_profession_职业
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
+    G['对决角色'] = G['对决角色'] or {}
+    G['对决角色'][estr_absolute_id_type_绝对身份] = o_battle_role_对决角色
+    return o_battle_role_对决角色
+end
+
+--ret=int
+t['对决_获取对决角色生命值'] = function(estr_player_相对身份)
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
+    return G.call('对决_获取对决角色生命值_绝对身份', estr_absolute_id_type_绝对身份)
+end
+
+--ret=o_battle_role
+t['对决_获取对决角色'] = function(estr_player_相对身份)
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
+    return G.call('对决_获取对决角色_绝对身份', estr_absolute_id_type_绝对身份)
+end
+
+--ret=int
+t['对决_获取初始生命值'] = function()
+    -- TODO: 应该做成可配置可修改的
+    return 30
+end
+
 --ret=o_deck
 t['对决_初始化我方对决牌库'] = function()
     local o_deck_卡组 = G.call('对决_获取对决卡组')
     G['对决牌库'] = {}
-    if type(o_deck_卡组) ~= 'table' then 
+    if not G.call('对决_卡组模板是否有效', o_deck_卡组) then 
         G.call('提示_添加提示', '卡组模板数据不正确')
         return 
     end
@@ -166,6 +203,11 @@ t['对决_初始化我方对决牌库'] = function()
         local o_card_卡片实例 = G.call('卡牌实例化', o_card_卡片模板)
         table.insert(G['对决牌库'], o_card_卡片实例)
     end
+end
+
+--ret=boolean
+t['对决_卡组模板是否有效'] = function(o_deck_卡组)
+    return type(o_deck_卡组) == 'table' and type(o_deck_卡组.职业) == 'table' and #o_deck_卡组.职业 > 1 
 end
 
 --ret=o_deck

@@ -886,5 +886,26 @@ local t = {
 		['define']={
 		}
 	},
+	{
+		['name']='o_battle_role',
+		['define']={
+			[1]={
+				['name']='职业',
+				['type']='i_profession',
+			},
+			[2]={
+				['name']='生命值',
+				['type']='int',
+			},
+			[3]={
+				['name']='护甲',
+				['type']='int',
+			},
+			[4]={
+				['name']='英雄卡片',
+				['type']='i_card',
+			},
+		}
+	},
 }}
 return t
