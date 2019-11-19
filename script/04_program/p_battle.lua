@@ -158,7 +158,7 @@ end
 --ret=o_battle_role
 t['对决_初始化对决角色'] = function(estr_player_相对身份)
     local o_deck_卡组 = G.call('对决_获取对决卡组')
-    if not G.call('对决_卡组模板是否有效', o_deck_卡组) then 
+    if not G.call('对决_卡组模板是否有效', o_deck_卡组) then
         G.call('提示_添加提示', '卡组模板数据不正确')
         return 
     end
@@ -207,7 +207,7 @@ end
 
 --ret=boolean
 t['对决_卡组模板是否有效'] = function(o_deck_卡组)
-    return type(o_deck_卡组) == 'table' and type(o_deck_卡组.职业) == 'table' and #o_deck_卡组.职业 > 1 
+    return type(o_deck_卡组) == 'table' and type(o_deck_卡组.职业) == 'table' and #o_deck_卡组.职业 > 0
 end
 
 --ret=o_deck

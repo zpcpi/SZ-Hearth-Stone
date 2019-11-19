@@ -67,3 +67,6 @@ require 'servershare/const'
 c.SetTextRecording(true)
 G.SetDefaultAnim('prepare')
 c.SetMainloop(G.main)
+
+c.SetWinName(c.UtfToGbk('山寨炉石')) 
+require("LuaPanda")
