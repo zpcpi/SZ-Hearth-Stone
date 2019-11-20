@@ -12,6 +12,8 @@ local t = {
 			[1]={
 				['触发时机']='UI_卡牌确认使用',
 				['触发条件']=function (a, b, c) 
+		local d = 3
+		return a + b + c + d
 	end,
 				['触发逻辑']=function () 
 	end,
