@@ -74,5 +74,4 @@ function t.save(od, l, indent)
 	table.insert(l, t.get_code(od))
 end
 
-
 return t
