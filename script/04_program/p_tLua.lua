@@ -149,12 +149,6 @@ local tovariable = function(t)
     end
     return t
 end
-local tovariable_arg = function(var)
-    if var then
-
-    end
-    print(var)
-end
 
 -- grammar
 local Gr = {'tLua',
