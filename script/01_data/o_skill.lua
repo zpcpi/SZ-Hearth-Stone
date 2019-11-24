@@ -15,7 +15,7 @@ local t = {
 				['触发时机']='UI_卡牌确认使用',
 				['触发逻辑']={
 t = [===[
-{'function', {{ 1,2}, { 1,2}}, 2}]===],
+{'function', {{'a',2}, {'b',3}}, 2}]===],
 lua = function ()
 	local G = require "gf"
 	local t = G.api

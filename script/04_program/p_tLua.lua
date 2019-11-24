@@ -71,6 +71,9 @@ local split = P','
 local kw = function(patt)
     return sp^0 * P(patt) * sp^0
 end
+function empty(p)
+    return C(p)/''
+end
 local str_kw = function(patt)
     local q1 = P'"'
     local q2 = P"'"
@@ -137,6 +140,15 @@ local type_number = function()
     local exp = S'eE'
     return (maybe(mp) * digits * maybe(dot*digits) * maybe(exp*maybe(mp)*digits)) / tonumber
 end
+local tovariable = function(t)
+    local var = t.variable
+    local pos = t.pos
+
+    if var and type(var) == 'string' and pos then
+        t[var] = var .. '_' .. pos
+    end
+    return t
+end
 
 -- grammar
 local Gr = {'tLua',
@@ -173,9 +185,17 @@ local Gr = {'tLua',
         {tag = 'action', patt = V'atom', count = -1},
     }),
     expression_variable = list_ex(nil, {
-        {tag = 'variable', patt = V'atom', no_split = true},
+        {tag = 'variable', patt = V'Name', no_split = true},
         {tag = 'value', patt = V'atom'},
-    }),
+    })/tovariable,
+
+    Name      = str_kw(-V"Reserved" * C(V"Ident")),
+    Reserved  = V"Keywords" * -V"IdRest",
+    Keywords  = P"+" + "-" + "*" + "/" + "if" + "while" + 
+                "repeat" + "block" + "function",
+    Ident     = V"IdStart" * V"IdRest"^0,
+    IdStart   = alpha + P"_" + unicode,
+    IdRest    = alnum + P"_" + unicode,
 
     expression_wait = P'',
 
@@ -183,7 +203,7 @@ local Gr = {'tLua',
     atom = str_kw(V'atom_op') +
            V'atom_number' +
            V'atom_bool' +
-           str_kw(V'atom_str') +
+           V'atom_str' +
            V'tLua' +
            tag_s('nil'),
 
@@ -193,7 +213,7 @@ local Gr = {'tLua',
               P'/'/'tLua_DIV',
     atom_number = type_number(),
     atom_bool = (kw('true') + kw('false'))/toboolean,
-    atom_str = C(type_str()),
+    atom_str = str_kw(C(type_str())),
 
 
     tLua = V't_begin' * V'expression' * V't_end',
