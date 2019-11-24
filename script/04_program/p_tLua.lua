@@ -149,6 +149,12 @@ local tovariable = function(t)
     end
     return t
 end
+local tovariable_arg = function(var)
+    if var then
+
+    end
+    print(var)
+end
 
 -- grammar
 local Gr = {'tLua',
@@ -181,13 +187,15 @@ local Gr = {'tLua',
         {patt = V'atom', count = 1},
     }),
     expression_function = list_ex('function', {
+        {tag = 'variables_arg', patt = V't_begin' * list(V'expression_variable_arg') * V't_end'},
         {tag = 'variables', patt = V't_begin' * list(V't_begin' * V'expression_variable' * V't_end') * V't_end'},
         {tag = 'action', patt = V'atom', count = -1},
     }),
     expression_variable = list_ex(nil, {
         {tag = 'variable', patt = V'Name', no_split = true},
-        {tag = 'value', patt = V'atom'},
+        {tag = 'value', patt = V'atom', count = -1},
     })/tovariable,
+    expression_variable_arg = Ct(Cg(Cp(), "pos") * Cg(Cc('arg'), 'tag') * Cg(V'Name', 'variable'))/tovariable,
 
     Name      = str_kw(-V"Reserved" * C(V"Ident")),
     Reserved  = V"Keywords" * -V"IdRest",
@@ -337,6 +345,23 @@ code_iter = function (ast)
                 tlt('return _\n')
             tabc = tabc - 1
             tlt('end)()')
+        elseif ast.tag == 'function' then
+            tl('(function(')
+            for k,v in ipairs(ast['variables_arg'] or {}) do
+                if k > 1 then
+                    tl(',' .. v[v['variable']])
+                else
+                    tl(v[v['variable']])
+                end
+            end
+            tl(')\n')
+                tabc = tabc + 1
+                for k,v in ipairs(ast['variables'] or {}) do
+                    tlt('local ' .. v[v['variable']] .. ' = ') value_iter(v['value']) tl('\n')
+                end
+                tlt('return ') value_iter(ast.action) tl('\n')
+            tabc = tabc - 1
+            tlt('end)')
         end
     elseif api_test(ast[1]) then
         func_iter(table.unpack(ast))

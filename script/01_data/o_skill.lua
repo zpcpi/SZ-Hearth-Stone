@@ -15,11 +15,15 @@ local t = {
 				['触发时机']='UI_卡牌确认使用',
 				['触发逻辑']={
 t = [===[
-{'function', {{'a',2}, {'b',3}}, 2}]===],
+{'function', {'c', 'd'},{{'a',2}, {'b',3}}, {'+',1,2,3,4}} ]===],
 lua = function ()
 	local G = require "gf"
 	local t = G.api
-	return 
+	return (function(c_15,d_20)
+		local a_27 = 2
+		local b_36 = 3
+		return t["tLua_ADD"](1,2,3,4)
+	end)
 end
 ,
 },
