@@ -90,13 +90,28 @@ local tag_s = function(tag)
     return Ct(Cg(Cp(), "pos") * Cg(Cc(tag), 'tag'))
 end
 local list_ex = function(key, tags)
-    local patt = Cg(Cp(), "pos") * Cg(Cc(key), 'tag') * str_kw(key)
+    local patt
+    if key then
+        patt = Cg(Cp(), "pos") * Cg(Cc(key), 'tag') * str_kw(key)
+    else
+        patt = Cg(Cp(), "pos")
+    end
+    local sp = kw(split)
     for k,v in ipairs(tags) do
-        if v.count then
-            patt = patt * (kw(split) * v.patt)^v.count
+        local p
+        if v.tag then
+            p = Cg(v.patt, v.tag)
         else
-            patt = patt * kw(split) * v.patt
+            p = v.patt
         end
+        if v.no_split then
+        else
+            p = sp * p
+        end
+        if v.count then
+            p = p^v.count
+        end
+        patt = patt * p
     end
     return Ct(patt)
 end
@@ -130,6 +145,9 @@ local Gr = {'tLua',
 
     expression = V'expression_if' + 
                  V'expression_while' + 
+                 V'expression_repeat' + 
+                 V'expression_block' + 
+                 V'expression_function' + 
                  V'atom_list',
 
     expression_if = list_ex('if', {
@@ -141,8 +159,24 @@ local Gr = {'tLua',
         {tag = 'condition', patt = V'atom'},
         {tag = 'action', patt = V'atom'},
     }),
-    expression_block = P'',
-    expression_function = P'',
+    expression_repeat = list_ex('repeat', {
+        {tag = 'start', patt = V'atom'},
+        {tag = 'end', patt = V'atom'},
+        {tag = 'step', patt = V'atom'},
+        {tag = 'action', patt = V'atom', count = -1},
+    }),
+    expression_block = list_ex('block', {
+        {patt = V'atom', count = 1},
+    }),
+    expression_function = list_ex('function', {
+        {tag = 'variables', patt = V't_begin' * list(V't_begin' * V'expression_variable' * V't_end') * V't_end'},
+        {tag = 'action', patt = V'atom', count = -1},
+    }),
+    expression_variable = list_ex(nil, {
+        {tag = 'variable', patt = V'atom', no_split = true},
+        {tag = 'value', patt = V'atom'},
+    }),
+
     expression_wait = P'',
 
     atom_list = list(V'atom'),
@@ -231,17 +265,21 @@ end
 
 code_iter = function (ast)
     if ast.tag then
-        if ast.tag == 'if' then
+        if ast.tag == 'nil' then
+            tl('nil')
+        elseif ast.tag == 'if' then
             tl('(function ()\n')
                 tabc = tabc + 1
-                tlt('if(') value_iter(ast[1]) tl(')then\n')
+                tlt('if(') value_iter(ast['condition']) tl(')then\n')
                     tabc = tabc + 1
-                    tlt('return ') value_iter(ast[2]) tl('\n')
+                    tlt('return ') value_iter(ast['if_action']) tl('\n')
                 tabc = tabc - 1
-                tlt('else\n')
-                    tabc = tabc + 1
-                    tlt('return ') value_iter(ast[3]) tl('\n')
-                tabc = tabc - 1
+                if ast['else_action'] then
+                    tlt('else\n')
+                        tabc = tabc + 1
+                        tlt('return ') value_iter(ast['else_action']) tl('\n')
+                    tabc = tabc - 1
+                end
                 tlt('end\n')
             tabc = tabc - 1
             tlt('end)()')
@@ -249,12 +287,34 @@ code_iter = function (ast)
             tl('(function()\n')
                 tabc = tabc + 1
                 tlt('local _ = nil\n')
-                tlt('while(') value_iter(ast[1]) tl(')do\n')
+                tlt('while(') value_iter(ast['condition']) tl(')do\n')
                     tabc = tabc + 1
-                    tlt('_ = ') value_iter(ast[2]) tl('\n')
+                    tlt('_ = ') value_iter(ast['action']) tl('\n')
                 tabc = tabc - 1
-                tlt('return _\n')
                 tlt('end\n')
+                tlt('return _\n')
+            tabc = tabc - 1
+            tlt('end)()')
+        elseif ast.tag == 'repeat' then
+            tl('(function()\n')
+                tabc = tabc + 1
+                tlt('local _ = nil\n')
+                tlt('for i = ') value_iter(ast['start']) tl(',') value_iter(ast['end']) tl(',') value_iter(ast['step']) tl(' do\n')
+                    tabc = tabc + 1
+                    tlt('_ = ') value_iter(ast['action']) tl('\n')
+                tabc = tabc - 1
+                tlt('end\n')
+                tlt('return _\n')
+            tabc = tabc - 1
+            tlt('end)()')
+        elseif ast.tag == 'block' then
+            tl('(function()\n')
+                tabc = tabc + 1
+                tlt('local _ = nil\n')
+                for k,v in ipairs(ast or {}) do
+                    tlt('_ = ') value_iter(v) tl('\n')
+                end
+                tlt('return _\n')
             tabc = tabc - 1
             tlt('end)()')
         end

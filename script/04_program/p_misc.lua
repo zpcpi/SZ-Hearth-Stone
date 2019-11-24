@@ -41,6 +41,6 @@ end
 
 t['zpc_test'] = function ()
     local skill = G.QueryName(0x10130001)
-    local code = skill.逻辑功能[1].功能测试.lua
+    local code = skill.逻辑功能[1].触发逻辑.lua
     G.show_table(code())
 end
