@@ -14,20 +14,42 @@ local t = {
 			[1]={
 				['触发时机']='UI_卡牌确认使用',
 				['触发逻辑']={
-t = [===[
-{'listener', {'asd', 1}, {'function', {'a'}, {{'b',1}}, {'block', {'function' , {'a'}, {{'b', 3}}, 'b'}, 'b'}}}]===],
+t = 
+{
+    'listener',
+    {'$asd',1},
+    {
+        'function',
+        {'a'},
+        {
+            {'b',1}
+        },
+        {
+            'block',
+            {
+                'function',
+                {'a'},
+                {
+                    {'b',3}
+                },
+                'b'
+            },
+            'b'
+        }
+    }
+} ,
 lua = function ()
 	local G = require "gf"
 	local t = G.api
-	return t["tLua_add_listener"](nil,{"asd",1},(function(a_40)
-		local b_48 = 1
+	return t["tLua_add_listener"](nil,{"asd",1},(function(a_71)
+		local b_100 = 1
 		return (function()
 			local _ = nil
-			_ = (function(a_82)
-				local b_90 = 3
-				return b_90
+			_ = (function(a_208)
+				local b_253 = 3
+				return b_253
 			end)
-			_ = b_48
+			_ = b_100
 			return _
 		end)()
 	end))

@@ -227,13 +227,14 @@ local Gr = {'tLua',
     atom_number = type_number(),
     atom_bool = (kw('true') + kw('false'))/toboolean,
     aton_var = Ct(Cg(Cp(), "pos") * Cg(Cc('var'), 'tag') * Cg(V'Name', 'variable'))/tovariable,
-    atom_str = str_kw(C(type_str())),
+    atom_str = str_kw(P'$' * C(type_str())),
 
 
     tLua = V't_begin' * V'expression' * V't_end',
 }
 
 t['tLua_parse'] = function (exp)
+    local d = require '_data'
     local ast, label, sfail = match(Gr, exp)
     print(ast, label, sfail)
     G.show_table(ast)
@@ -346,14 +347,17 @@ variable_iter = {
     end,
 }
 
-
 code_iter = function (ast)
     if ast.tag then
         if ast.tag == 'nil' then
             tl('nil')
         elseif ast.tag == 'var' then
             local name = variable_iter.variable_get(ast)
-            tl(name)
+            if name then
+                tl(name)
+            else
+                tl(ast.variable)
+            end
         elseif ast.tag == 'if' then
             tl('(function ()\n')
                 tabc = tabc + 1
