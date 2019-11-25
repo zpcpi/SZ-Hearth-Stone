@@ -160,6 +160,7 @@ local Gr = {'tLua',
                  V'expression_repeat' + 
                  V'expression_block' + 
                  V'expression_function' + 
+                 V'expression_wait' + 
                  V'atom_list',
 
     expression_if = list_ex('if', {
@@ -181,8 +182,8 @@ local Gr = {'tLua',
         {patt = V'atom', count = 1},
     }),
     expression_function = list_ex('function', {
-        {tag = 'variables_arg', patt = V't_begin' * list(V'expression_variable_arg') * V't_end'},
-        {tag = 'variables', patt = V't_begin' * list(V't_begin' * V'expression_variable' * V't_end') * V't_end'},
+        {tag = 'variables_arg', patt = V't_begin' * (list(V'expression_variable_arg') + Ct(Cc())) * V't_end'},
+        {tag = 'variables', patt = V't_begin' * (list(V't_begin' * V'expression_variable' * V't_end') + Ct(Cc())) * V't_end'},
         {tag = 'action', patt = V'atom', count = -1},
     }),
     expression_variable = list_ex(nil, {
@@ -194,12 +195,15 @@ local Gr = {'tLua',
     Name      = str_kw(-V"Reserved" * C(V"Ident")),
     Reserved  = V"Keywords" * -V"IdRest",
     Keywords  = P"+" + "-" + "*" + "/" + "if" + "while" + 
-                "repeat" + "block" + "function",
+                "repeat" + "block" + "function" + "wait",
     Ident     = V"IdStart" * V"IdRest"^0,
     IdStart   = alpha + P"_" + unicode,
     IdRest    = alnum + P"_" + unicode,
 
-    expression_wait = P'',
+    expression_wait = list_ex('wait', {
+        {tag = 'earg', patt = V't_begin' * V'atom_list' * V't_end'},
+        {tag = 'action_func', patt = V't_begin' * V'expression_function' * V't_end'},
+    }),
 
     atom_list = list(V'atom'),
     atom = str_kw(V'atom_op') +
@@ -228,6 +232,13 @@ t['tLua_parse'] = function (exp)
     return ast
 end
 
+--=================================================
+--=================================================
+--=================================================
+--code
+--=================================================
+--=================================================
+--=================================================
 
 local code = {}
 local tabc = 0
@@ -356,6 +367,8 @@ code_iter = function (ast)
                 tlt('return ') value_iter(ast.action) tl('\n')
             tabc = tabc - 1
             tlt('end)')
+        elseif ast.tag == 'wait' then
+            tl('t["tLua_add_listener"](nil,') value_iter(ast['earg']) tl(',') value_iter(ast['action_func']) tl(')\n')
         end
     elseif api_test(ast[1]) then
         func_iter(table.unpack(ast))
@@ -379,4 +392,33 @@ t['tLua_code'] = function(ast)
 
     G.show_table(table.concat(code, ''))
     return table.concat(code, '')
+end
+
+--=================================================
+--=================================================
+--=================================================
+--wait
+--=================================================
+--=================================================
+--=================================================
+
+local tLua_listener_list = {}
+local create_listener_name = function (event)
+    local count = (tLua_listener_list[event] or 0) + 1
+    tLua_listener_list[event] = count
+
+    return '|#tLua_listener#|#' .. event .. '#|' .. count
+end
+
+t['tLua_add_listener'] = function (o_order_info_当前指令信息, earg_注册事件, func_执行函数)
+    if earg_注册事件 and type(earg_注册事件[1]) == 'string' then
+        local event_name = earg_注册事件[1]
+        local key = create_listener_name(event_name)
+        t[key] = function ()
+            G.removeListener(key, event_name)
+            func_执行函数()
+        end
+        G.addListener(key, earg_注册事件)
+        return key
+    end
 end
