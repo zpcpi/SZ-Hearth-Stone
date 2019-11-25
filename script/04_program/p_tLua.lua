@@ -160,7 +160,7 @@ local Gr = {'tLua',
                  V'expression_repeat' + 
                  V'expression_block' + 
                  V'expression_function' + 
-                 V'expression_wait' + 
+                 V'expression_listener' + 
                  V'atom_list',
 
     expression_if = list_ex('if', {
@@ -195,20 +195,27 @@ local Gr = {'tLua',
     Name      = str_kw(-V"Reserved" * C(V"Ident")),
     Reserved  = V"Keywords" * -V"IdRest",
     Keywords  = P"+" + "-" + "*" + "/" + "if" + "while" + 
-                "repeat" + "block" + "function" + "wait",
+                "repeat" + "block" + "function" + "listener" +
+                "true" + "false",
     Ident     = V"IdStart" * V"IdRest"^0,
     IdStart   = alpha + P"_" + unicode,
     IdRest    = alnum + P"_" + unicode,
 
-    expression_wait = list_ex('wait', {
-        {tag = 'earg', patt = V't_begin' * V'atom_list' * V't_end'},
+    expression_listener = list_ex('listener', {
+        {tag = 'earg', patt = V't_begin' * V'expression_listener_earg' * V't_end'},
         {tag = 'action_func', patt = V't_begin' * V'expression_function' * V't_end'},
     }),
+    expression_listener_earg = list_ex(nil, {
+        {tag = 'event', patt = V'atom_str', no_split = true},
+        {patt = V'atom', count = 0},
+    }),
+
 
     atom_list = list(V'atom'),
     atom = str_kw(V'atom_op') +
            V'atom_number' +
            V'atom_bool' +
+           V'aton_var' +
            V'atom_str' +
            V'tLua' +
            tag_s('nil'),
@@ -219,6 +226,7 @@ local Gr = {'tLua',
               P'/'/'tLua_DIV',
     atom_number = type_number(),
     atom_bool = (kw('true') + kw('false'))/toboolean,
+    aton_var = Ct(Cg(Cp(), "pos") * Cg(Cc('var'), 'tag') * Cg(V'Name', 'variable'))/tovariable,
     atom_str = str_kw(C(type_str())),
 
 
@@ -241,6 +249,7 @@ end
 --=================================================
 
 local code = {}
+local func = nil
 local tabc = 0
 local tl = function(v)
     table.insert(code, v)
@@ -295,11 +304,56 @@ table_iter = function (...)
     end
     tl('}')
 end
+variable_iter = {
+    func_posh = function (ast)
+        if func then
+            local cur = {
+                up = func,
+                varlist = {},
+            }
+            func = cur
+        else
+            func = {
+                up = nil,
+                varlist = {},
+            }
+        end
+    end,
+    func_pop = function ()
+        if func then
+            local cur = func
+            func = cur.up
+            return cur
+        end
+    end,
+    variable_posh = function (var)
+        if func then
+            local name = var.variable
+            local real_name = var[name]
+            func.varlist[name] = real_name
+        end
+    end,
+    variable_get = function (var)
+        local cur = func
+        local name = var.variable
+        while cur do
+            if cur.varlist[name] then
+                return cur.varlist[name]
+            else
+                cur = cur.up
+            end
+        end
+    end,
+}
+
 
 code_iter = function (ast)
     if ast.tag then
         if ast.tag == 'nil' then
             tl('nil')
+        elseif ast.tag == 'var' then
+            local name = variable_iter.variable_get(ast)
+            tl(name)
         elseif ast.tag == 'if' then
             tl('(function ()\n')
                 tabc = tabc + 1
@@ -352,7 +406,9 @@ code_iter = function (ast)
             tlt('end)()')
         elseif ast.tag == 'function' then
             tl('(function(')
+            variable_iter.func_posh(ast)
             for k,v in ipairs(ast['variables_arg'] or {}) do
+                variable_iter.variable_posh(v)
                 if k > 1 then
                     tl(',' .. v[v['variable']])
                 else
@@ -362,13 +418,19 @@ code_iter = function (ast)
             tl(')\n')
                 tabc = tabc + 1
                 for k,v in ipairs(ast['variables'] or {}) do
+                    variable_iter.variable_posh(v)
                     tlt('local ' .. v[v['variable']] .. ' = ') value_iter(v['value']) tl('\n')
                 end
                 tlt('return ') value_iter(ast.action) tl('\n')
             tabc = tabc - 1
             tlt('end)')
-        elseif ast.tag == 'wait' then
-            tl('t["tLua_add_listener"](nil,') value_iter(ast['earg']) tl(',') value_iter(ast['action_func']) tl(')\n')
+            variable_iter.func_pop()
+        elseif ast.tag == 'listener' then
+            tl('t["tLua_add_listener"](nil,{"' .. ast['earg']['event'] .. '"') 
+            for k,v in ipairs(ast['earg'] or {}) do
+                tl(',') value_iter(v)
+            end
+            tl('},') value_iter(ast['action_func']) tl(')')
         end
     elseif api_test(ast[1]) then
         func_iter(table.unpack(ast))
@@ -379,15 +441,17 @@ end
 
 t['tLua_code'] = function(ast)
     code = {}
+    func = nil
+    tabc = 0
     assert(type(ast) == "table")
 
     tl('function ()\n')
-        tabc = 1
+        tabc = tabc + 1
         tlt('local G = require "gf"\n')
         tlt('local t = G.api\n')
         tlt('return ')
         code_iter(ast)
-        tabc = 0
+        tabc = tabc - 1
     tlt('\nend\n')
 
     G.show_table(table.concat(code, ''))
@@ -416,7 +480,7 @@ t['tLua_add_listener'] = function (o_order_info_当前指令信息, earg_注册�
         local key = create_listener_name(event_name)
         t[key] = function ()
             G.removeListener(key, event_name)
-            func_执行函数()
+            return func_执行函数()
         end
         G.addListener(key, earg_注册事件)
         return key
