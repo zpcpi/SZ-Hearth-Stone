@@ -845,6 +845,10 @@ local t = {
 				['name']='职业',
 				['type']='_i_profession',
 			},
+			[4]={
+				['name']='英雄',
+				['type']='i_card',
+			},
 		},
 	},
 	{
