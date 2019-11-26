@@ -877,11 +877,11 @@ local t = {
 			},
 			[2]={
 				['name']='触发条件',
-				['type']='anonfunc',
+				['type']='tlua',
 			},
 			[3]={
 				['name']='触发逻辑',
-				['type']='anonfunc',
+				['type']='tlua',
 			},
 		},
 	},

@@ -40,6 +40,11 @@ t['asdasd'] = function ()
 end
 
 t['zpc_test'] = function ()
+    local skill = G.QueryName(0x10130001)
+    local code = skill.逻辑功能[1].触发逻辑.lua
+    G.show_table(code())
+end
 
-    
+t['zpc_test2'] = function (a)
+    G.trig_event('asd', a)
 end
