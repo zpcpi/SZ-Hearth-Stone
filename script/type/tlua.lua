@@ -13,8 +13,23 @@ end
 
 function t.edit(od)
 	local w = imgui.GetAvailWidthLua() / 2
+
 	imgui.NewLine()
-	
+	if imgui.Button('format', 200, 50) then
+		if type(od.obj.t) == 'string' then
+			local code = load('return (function () return ' .. od.obj.t .. 'end)()')()
+			od.obj.t = code
+			t.get_table(od)
+
+			local ast = G.call('tLua_parse', od.obj.t)
+			if ast then
+				local code = G.call('tLua_code', ast)
+				od.obj.lua = code
+			end
+		end
+	end
+
+	imgui.NewLine()
 	local edit_text =  t.get_table(od)
 	local ret, ok = imgui.InputTextSimple('table', edit_text, w, 1000)
 	if ret and ret ~= edit_text then
@@ -117,15 +132,15 @@ function t.get_table(od)
 
 		code = {}
 		tabc = 0
-		tl('\n')
 		iter(tup(table))
-		print(tc(code))
-		return tc(code)
+		table = tc(code)
+		od.obj.t = table
+		return table
 	end
 end
 
 function t.save(od, l, indent)
-	local str_tlua = string.format('{\nt = %s,\nlua = %s,\n}', t.get_table(od), t.get_code(od) or '')
+	local str_tlua = string.format('{\nt =\n%s,\nlua = %s,\n}', t.get_table(od), t.get_code(od) or '')
 	table.insert(l, str_tlua)
 end
 

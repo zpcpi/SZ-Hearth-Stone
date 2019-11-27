@@ -41,6 +41,27 @@ t['tLua_DIV'] = function (result, ...)
     return result
 end
 
+local function reverse(t, idx, ...)
+    local result = {}
+    for i = 1, select('#', ...), 1 do
+        local v = (select(i, ...) or {})[idx]
+        if v ~= nil then
+            table.insert(result, v)
+        else
+            return t
+        end
+    end
+    table.insert(t, result)
+    return reverse(t, idx + 1, ...)
+end
+t['tLua_MAP'] = function (func, ...)
+    local t = reverse({}, 1, ...)
+    for k,v in ipairs(t) do
+        t[k] = func(table.unpack(v))
+    end
+    return t
+end
+
 --=================================================
 --=================================================
 --=================================================
@@ -140,12 +161,31 @@ local type_number = function()
     local exp = S'eE'
     return (maybe(mp) * digits * maybe(dot*digits) * maybe(exp*maybe(mp)*digits)) / tonumber
 end
+local string_apitest = function(name)
+    if type(t[name]) == 'function' then
+        return {
+            value = 't["' .. name .. '"]',
+            tag = 'funccall',
+        }
+    elseif type(G[name]) == 'function' then
+        return {
+            value = 'G.' .. name,
+            tag = 'funccall',
+        }
+    end
+    return false
+end
 local tovariable = function(t)
     local var = t.variable
     local pos = t.pos
 
     if var and type(var) == 'string' and pos then
-        t[var] = var .. '_' .. pos
+        local api = string_apitest(var)
+        if api then
+            return api
+        else
+            t[var] = var .. '_' .. pos
+        end
     end
     return t
 end
@@ -159,8 +199,10 @@ local Gr = {'tLua',
                  V'expression_while' + 
                  V'expression_repeat' + 
                  V'expression_block' + 
-                 V'expression_function' + 
+                 V'expression_anonfunction' + 
                  V'expression_listener' + 
+                 V'expression_map' + 
+                 V'expression_funccall' + 
                  V'atom_list',
 
     expression_if = list_ex('if', {
@@ -181,7 +223,7 @@ local Gr = {'tLua',
     expression_block = list_ex('block', {
         {patt = V'atom', count = 1},
     }),
-    expression_function = list_ex('function', {
+    expression_anonfunction = list_ex('function', {
         {tag = 'variables_arg', patt = V't_begin' * (list(V'expression_variable_arg') + Ct(Cc())) * V't_end'},
         {tag = 'variables', patt = V't_begin' * (list(V't_begin' * V'expression_variable' * V't_end') + Ct(Cc())) * V't_end'},
         {tag = 'action', patt = V'atom', count = -1},
@@ -196,6 +238,7 @@ local Gr = {'tLua',
     Reserved  = V"Keywords" * -V"IdRest",
     Keywords  = P"+" + "-" + "*" + "/" + "if" + "while" + 
                 "repeat" + "block" + "function" + "listener" +
+                "map" + 
                 "true" + "false",
     Ident     = V"IdStart" * V"IdRest"^0,
     IdStart   = alpha + P"_" + unicode,
@@ -203,30 +246,42 @@ local Gr = {'tLua',
 
     expression_listener = list_ex('listener', {
         {tag = 'earg', patt = V't_begin' * V'expression_listener_earg' * V't_end'},
-        {tag = 'action_func', patt = V't_begin' * V'expression_function' * V't_end'},
+        {tag = 'action_func', patt = V'expression_function'},
     }),
     expression_listener_earg = list_ex(nil, {
         {tag = 'event', patt = V'atom_str', no_split = true},
         {patt = V'atom', count = 0},
     }),
-
+    expression_funccall = list_ex(nil, {
+        {tag = 'func', patt = V'expression_function', no_split = true},
+        {patt = V'atom', count = 0},
+    }),
+    expression_function = ((V't_begin' * V'expression_anonfunction' * V't_end') + 
+                           V'atom_op' + 
+                           V'atom_var'
+                          ),
+    expression_map = list_ex('map', {
+        {tag = 'func', patt = V'expression_function'},
+        {patt = (V't_begin' * V'atom_list' * V't_end') + V'atom_var', count = 1},
+    }),
 
     atom_list = list(V'atom'),
-    atom = str_kw(V'atom_op') +
+    atom = V'atom_op' +
            V'atom_number' +
            V'atom_bool' +
-           V'aton_var' +
+           V'atom_var' +
            V'atom_str' +
            V'tLua' +
            tag_s('nil'),
 
-    atom_op = P'+'/'tLua_ADD' + 
-              P'-'/'tLua_SUB' +
-              P'*'/'tLua_MULT' +
-              P'/'/'tLua_DIV',
+    atom_op = str_kw(P'+'/'tLua_ADD' + 
+                     P'-'/'tLua_SUB' +
+                     P'*'/'tLua_MULT' +
+                     P'/'/'tLua_DIV' 
+                     )/string_apitest,
     atom_number = type_number(),
     atom_bool = (kw('true') + kw('false'))/toboolean,
-    aton_var = Ct(Cg(Cp(), "pos") * Cg(Cc('var'), 'tag') * Cg(V'Name', 'variable'))/tovariable,
+    atom_var = Ct(Cg(Cp(), "pos") * Cg(Cc('var'), 'tag') * Cg(V'Name', 'variable'))/tovariable,
     atom_str = str_kw(P'$' * C(type_str())),
 
 
@@ -236,8 +291,8 @@ local Gr = {'tLua',
 t['tLua_parse'] = function (exp)
     local d = require '_data'
     local ast, label, sfail = match(Gr, exp)
-    print(ast, label, sfail)
-    G.show_table(ast)
+    --print(ast, label, sfail)
+    --G.show_table(ast)
     return ast
 end
 
@@ -262,9 +317,6 @@ local value_iter
 local func_iter
 local table_iter
 local code_iter
-local function api_test(name)
-    return t[name]
-end
 
 value_iter = function (v)
     if type(v) == 'table' then
@@ -278,14 +330,14 @@ value_iter = function (v)
     elseif type(v) == 'number' then
         tl(tostring(v))
     elseif type(v) == 'string' then
-        tl(v)
+        tl('"' .. v .. '"')
     else
         tl('')
     end
 end
 
 func_iter = function (func, ...)
-    tl('t["' .. func .. '"](')
+    value_iter(func) tl('(')
     for i = 1, select('#', ...), 1 do
         if i > 1 then
             tl(',')
@@ -358,6 +410,8 @@ code_iter = function (ast)
             else
                 tl(ast.variable)
             end
+        elseif ast.tag == 'funccall' then
+            tl(ast.value)
         elseif ast.tag == 'if' then
             tl('(function ()\n')
                 tabc = tabc + 1
@@ -435,9 +489,15 @@ code_iter = function (ast)
                 tl(',') value_iter(v)
             end
             tl('},') value_iter(ast['action_func']) tl(')')
+        elseif ast.tag == 'map' then
+            tl('t["tLua_MAP"](') value_iter(ast['func'])
+            for k,v in ipairs(ast or {}) do
+                tl(',') value_iter(v)
+            end
+            tl(')')
         end
-    elseif api_test(ast[1]) then
-        func_iter(table.unpack(ast))
+    elseif ast['func'] then
+        func_iter(ast['func'], table.unpack(ast))
     else
         table_iter(table.unpack(ast))
     end
@@ -458,7 +518,7 @@ t['tLua_code'] = function(ast)
         tabc = tabc - 1
     tlt('\nend\n')
 
-    G.show_table(table.concat(code, ''))
+    --G.show_table(table.concat(code, ''))
     return table.concat(code, '')
 end
 
