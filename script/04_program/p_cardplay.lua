@@ -73,10 +73,7 @@ end
 t['卡牌实例化'] = function (o_card_卡片模板)
     local dbname = G.misc().卡牌实例表
     if dbname then
-        local new_id = G.NewTextID(dbname)
-        local o_card_卡片实例 = G.CopyInst(o_card_卡片模板, {}, {['name'] = new_id,})
-        G.newinst_cache[dbname][new_id] = o_card_卡片实例
-        return o_card_卡片实例
+        return  G.CopyInst(o_card_卡片模板, {}, G.NewInst(dbname))
     else
         return G.CopyInst(o_card_卡片模板)
     end
