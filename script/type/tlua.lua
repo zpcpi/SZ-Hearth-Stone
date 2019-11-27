@@ -26,6 +26,7 @@ function t.edit(od)
 				local code = G.call('tLua_code', ast)
 				od.obj.lua = code
 			end
+			d.step(d.doc)
 		end
 	end
 

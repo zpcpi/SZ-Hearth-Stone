@@ -41,6 +41,13 @@ t['tLua_DIV'] = function (result, ...)
     return result
 end
 
+t['tLua_bg'] = function (a, b)
+    return a > b
+end
+
+
+
+
 local function reverse(t, idx, ...)
     local result = {}
     for i = 1, select('#', ...), 1 do
@@ -252,6 +259,15 @@ local Gr = {'tLua',
         {tag = 'event', patt = V'atom_str', no_split = true},
         {patt = V'atom', count = 0},
     }),
+    expression_map = list_ex('map', {
+        {tag = 'func', patt = V'expression_function'},
+        {patt = (V't_begin' * V'atom_list' * V't_end') + V'atom_var', count = 1},
+    }),
+    expression_list = P'',
+    expression_apply = P'',
+
+
+
     expression_funccall = list_ex(nil, {
         {tag = 'func', patt = V'expression_function', no_split = true},
         {patt = V'atom', count = 0},
@@ -260,10 +276,6 @@ local Gr = {'tLua',
                            V'atom_op' + 
                            V'atom_var'
                           ),
-    expression_map = list_ex('map', {
-        {tag = 'func', patt = V'expression_function'},
-        {patt = (V't_begin' * V'atom_list' * V't_end') + V'atom_var', count = 1},
-    }),
 
     atom_list = list(V'atom'),
     atom = V'atom_op' +
@@ -315,6 +327,7 @@ local tlt = function(v)
 end
 local value_iter
 local func_iter
+local localfunction_iter
 local table_iter
 local code_iter
 
@@ -345,6 +358,44 @@ func_iter = function (func, ...)
         value_iter(select(i, ...))
     end
     tl(')')
+end
+
+localfunction_iter = function (name, ast)
+    print(name)
+    if name then
+        tlt('local function ' .. name .. ' (')
+    else
+        tl('(function(')
+    end
+    variable_iter.func_posh(ast)
+    for k,v in ipairs(ast['variables_arg'] or {}) do
+        variable_iter.variable_posh(v)
+        if k > 1 then
+            tl(',' .. v[v['variable']])
+        else
+            tl(v[v['variable']])
+        end
+    end
+    tl(')\n')
+        tabc = tabc + 1
+        for k,v in ipairs(ast['variables'] or {}) do
+            variable_iter.variable_posh(v)
+
+            if type(v['value']) == 'table' and v['value'].tag == 'function' then
+                local ast = v['value']
+                localfunction_iter(v[v['variable']], ast)
+            else
+                tlt('local ' .. v[v['variable']] .. ' = ') value_iter(v['value']) tl('\n')
+            end
+        end
+        tlt('return ') value_iter(ast.action) tl('\n')
+    tabc = tabc - 1
+    if name then
+        tlt('end\n')
+    else
+        tlt('end)')
+    end
+    variable_iter.func_pop()
 end
 
 table_iter = function (...)
@@ -463,26 +514,7 @@ code_iter = function (ast)
             tabc = tabc - 1
             tlt('end)()')
         elseif ast.tag == 'function' then
-            tl('(function(')
-            variable_iter.func_posh(ast)
-            for k,v in ipairs(ast['variables_arg'] or {}) do
-                variable_iter.variable_posh(v)
-                if k > 1 then
-                    tl(',' .. v[v['variable']])
-                else
-                    tl(v[v['variable']])
-                end
-            end
-            tl(')\n')
-                tabc = tabc + 1
-                for k,v in ipairs(ast['variables'] or {}) do
-                    variable_iter.variable_posh(v)
-                    tlt('local ' .. v[v['variable']] .. ' = ') value_iter(v['value']) tl('\n')
-                end
-                tlt('return ') value_iter(ast.action) tl('\n')
-            tabc = tabc - 1
-            tlt('end)')
-            variable_iter.func_pop()
+            localfunction_iter(nil, ast)
         elseif ast.tag == 'listener' then
             tl('t["tLua_add_listener"](nil,{"' .. ast['earg']['event'] .. '"') 
             for k,v in ipairs(ast['earg'] or {}) do

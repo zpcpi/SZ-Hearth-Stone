@@ -18,25 +18,49 @@ t =
 {
     {
         'function',
-        {'a','b'},
         {},
         {
-            'map',
-            '+',
-            'a',
-            'b',
-            {1,2,3}
-        }
-    },
-    {1,2,3},
-    {3,2,1}
+            {'f',3},
+            {
+                'a',
+                {
+                    'function',
+                    {'b','c'},
+                    {},
+                    {
+                        'if',
+                        {'tLua_bg','c',0},
+                        {
+                            'a',
+                            {'+','b',1},
+                            {'-','c',1}
+                        },
+                        'b'
+                    }
+                }
+            },
+            {'d',2}
+        },
+        {'a',0,10}
+    }
 },
 lua = function ()
 	local G = require "gf"
 	local t = G.api
-	return (function(a_38,b_42)
-		return t["tLua_MAP"](t["tLua_ADD"],a_38,b_42,{1,2,3})
-	end)({1,2,3},{3,2,1})
+	return (function()
+		local f_64 = 3
+		local function a_102 (b_178,c_182)
+			return (function ()
+				if(t["tLua_bg"](c_182,0))then
+					return a_102(t["tLua_ADD"](b_178,1),t["tLua_SUB"](c_182,1))
+				else
+					return b_178
+				end
+			end)()
+		end
+		local d_570 = 2
+		return a_102(0,10)
+	end)()
 end
 ,
 },
