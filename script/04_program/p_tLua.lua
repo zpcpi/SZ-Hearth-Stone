@@ -41,6 +41,8 @@ t['tLua_DIV'] = function (result, ...)
     return result
 end
 
+-- == >= <= > < ~=
+-- and or not
 t['tLua_bg'] = function (a, b)
     return a > b
 end
@@ -243,9 +245,10 @@ local Gr = {'tLua',
 
     Name      = str_kw(-V"Reserved" * C(V"Ident")),
     Reserved  = V"Keywords" * -V"IdRest",
-    Keywords  = P"+" + "-" + "*" + "/" + "if" + "while" + 
-                "repeat" + "block" + "function" + "listener" +
+    Keywords  = P"+" + "-" + "*" + "/" + 
                 "map" + 
+                "if" + "while" + "repeat" + "block" + "function" +
+                "listener" +
                 "true" + "false",
     Ident     = V"IdStart" * V"IdRest"^0,
     IdStart   = alpha + P"_" + unicode,
@@ -259,12 +262,19 @@ local Gr = {'tLua',
         {tag = 'event', patt = V'atom_str', no_split = true},
         {patt = V'atom', count = 0},
     }),
+
+    expression_set = P'',
+    expression_list = P'',
+    expression_append = P'',
+
+    expression_apply = P'',
     expression_map = list_ex('map', {
         {tag = 'func', patt = V'expression_function'},
         {patt = (V't_begin' * V'atom_list' * V't_end') + V'atom_var', count = 1},
     }),
-    expression_list = P'',
-    expression_apply = P'',
+    expression_filter = P'',
+    expression_foldl = P'',
+    expression_foldr = P'',
 
 
 
@@ -302,6 +312,7 @@ local Gr = {'tLua',
 
 t['tLua_parse'] = function (exp)
     local d = require '_data'
+    -- todo,先执行一次代码替换
     local ast, label, sfail = match(Gr, exp)
     --print(ast, label, sfail)
     --G.show_table(ast)
