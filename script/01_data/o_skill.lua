@@ -16,15 +16,14 @@ local t = {
 				['触发逻辑']={
 t =
 {
-    'foldr',
-    '-',
-    20,
-    {1,2,3,4}
+    {'/',100,3,5},
+    {'//',100,3,5},
+    {'%',100,30,7}
 },
 lua = function ()
 	local G = require "gf"
 	local t = G.api
-	return t["tLua_FOLDR"](t["tLua_SUB"],20,{1,2,3,4})
+	return {t["tLua_DIV"](100,3,5),t["tLua_EXACT_DIV"](100,3,5),t["tLua_MOD"](100,30,7)}
 end
 ,
 },

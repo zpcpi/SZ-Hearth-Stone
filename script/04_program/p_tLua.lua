@@ -13,52 +13,120 @@ local t = G.api
 --=================================================
 --=================================================
 -- +-*/
-t['tLua_ADD'] = function (result, ...)
-    for i = 1, select('#', ...), 1 do
-        result = result + select(i, ...)
+local function op_iter(f, a, b, ...)
+    if b ~= nil then
+        return op_iter(f, f(a,b), ...)
+    else
+        return a
+    end
+end
+local function comp_op_iter(f, result, a, b, ...)
+    if result and (b ~= nil) then
+        return comp_op_iter(f, f(a,b), b, ...)
     end
     return result
 end
 
-t['tLua_SUB'] = function (result, ...)
-    for i = 1, select('#', ...), 1 do
-        result = result - select(i, ...)
+t['tLua_ADD'] = function (...)
+    local iter = function (a,b)
+        return a+b
     end
-    return result
+    return op_iter(iter, ...) or 0
 end
 
-t['tLua_MULT'] = function (result, ...)
-    for i = 1, select('#', ...), 1 do
-        result = result * select(i, ...)
+t['tLua_SUB'] = function (...)
+    local iter = function (a,b)
+        return a-b
     end
-    return result
+    return op_iter(iter, ...) or 0
 end
 
-t['tLua_DIV'] = function (result, ...)
-    for i = 1, select('#', ...), 1 do
-        result = result / select(i, ...)
+t['tLua_MULT'] = function (...)
+    local iter = function (a,b)
+        return a*b
     end
-    return result
+    return op_iter(iter, ...) or 0
+end
+
+t['tLua_DIV'] = function (...)
+    local iter = function (a,b)
+        return a/b
+    end
+    return op_iter(iter, ...) or 0
+end
+
+t['tLua_EXACT_DIV'] = function (...)
+    local iter = function (a,b)
+        return a//b
+    end
+    return op_iter(iter, ...) or 0
+end
+
+t['tLua_MOD'] = function (...)
+    local iter = function (a,b)
+        return a%b
+    end
+    return op_iter(iter, ...) or 0
 end
 
 t['tLua_EQUAL'] = function (...)
-    local a = select(1, ...)
-    for i = 2, select('#', ...), 1 do
-        if a == select(i, ...) then
+    local iter = function (a,b)
+        return a==b
+    end
+    return comp_op_iter(iter, true, ...)
+end
+
+t['tLua_GT'] = function (...)
+    local iter = function (a,b)
+        return a>b
+    end
+    return comp_op_iter(iter, true, ...)
+end
+
+t['tLua_LT'] = function (...)
+    local iter = function (a,b)
+        return a<b
+    end
+    return comp_op_iter(iter, true, ...)
+end
+
+t['tLua_GE'] = function (...)
+    local iter = function (a,b)
+        return a>=b
+    end
+    return comp_op_iter(iter, true, ...)
+end
+
+t['tLua_LE'] = function (...)
+    local iter = function (a,b)
+        return a<=b
+    end
+    return comp_op_iter(iter, true, ...)
+end
+
+t['tLua_AND'] = function (...)
+    for i = 1, select('#', ...), 1 do
+        if select(i, ...) then
         else
             return false
         end
     end
     return true
 end
--- == >= <= > < ~=
--- and or not
-t['tLua_bg'] = function (a, b)
-    return a > b
+
+t['tLua_OR'] = function (...)
+    local count = select('#', ...)
+    for i = 1, count, 1 do
+        if select(i, ...) then
+            return true
+        end
+    end
+    return (count == 0) and true or false
 end
 
-
-
+t['tLua_NOT'] = function (...)
+    return not t['tLua_AND'](...)
+end
 
 local function reverse(t, idx, ...)
     local result = {}
@@ -282,7 +350,8 @@ local Gr = {'tLua',
 
     Name      = str_kw(-V"Reserved" * C(V"Ident")),
     Reserved  = V"Keywords" * -V"IdRest",
-    Keywords  = P"+" + "-" + "*" + "/" + "==" + 
+    Keywords  = P"+" + "-" + "*" + "/" + "//" + 
+                "==" + ">" + "<" + ">=" + "<=" + 'and' + 'or' + 'not' + 
                 "map" + 'append' + 'apply' + 'filter' + 'foldl' + 'foldr' + 
                 "if" + "while" + "repeat" + "block" + "function" + 'set' + 'table' + 
                 "listener" +
@@ -362,22 +431,35 @@ local Gr = {'tLua',
     atom_op = str_kw(P'+'/'tLua_ADD' + 
                      P'-'/'tLua_SUB' +
                      P'*'/'tLua_MULT' +
+                     P'//'/'tLua_EXACT_DIV' +
                      P'/'/'tLua_DIV' +
-                     P'=='/'tLua_EQUAL'
+                     P'%'/'tLua_MOD' +
+                     P'=='/'tLua_EQUAL' + 
+                     P'>'/'tLua_GT' + 
+                     P'<'/'tLua_LT' + 
+                     P'>='/'tLua_GE' + 
+                     P'<='/'tLua_LE' + 
+                     P'and'/'tLua_AND' + 
+                     P'or'/'tLua_OR' + 
+                     P'not'/'tLua_NOT' 
 
                      -- if
                      -- while
                      -- repeat
                      -- block
-                     -- listener
-                     -- map
                      -- table
-                     -- append
                      -- apply
+
+
+
+                     
                      -- map
                      -- filter
+                     -- append
                      -- foldl
                      -- foldr
+                     -- listener
+
                      )/string_apitest,
     atom_number = type_number(),
     atom_bool = (kw('true') * tag_s('true')) + (kw('false') * tag_s('false')),
