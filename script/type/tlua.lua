@@ -34,6 +34,41 @@ function t.edit(od)
 	local edit_text =  t.get_table(od)
 	local ret, ok = imgui.InputTextSimple('table', edit_text, w, 1000)
 	if ret and ret ~= edit_text then
+		local need_update = true
+		ret = string.gsub(ret, '@([^%s(),]*)', function(w)
+			if w == 'if' then
+				return "{'if',true,'$if_action','$else_action'}"
+			elseif w == 'function' then
+				return "{'function',{},{},'$block'}"
+			elseif w == 'while' then
+				return "{'while',true,'$block'}"
+			elseif w == 'repeat' then
+				return "{'repeat',1,10,1,'$block'}"
+			elseif w == 'block' then
+				return "{'block','$action'}"
+			elseif w == 'table' then
+				return "{'table',1}"
+			elseif w == 'append' then
+				return "{'append',{},{}}"
+			elseif w == 'map' then
+				return "{'map','+',{}}"
+			elseif w == 'filter' then
+				return "{'filter',{'function',{'a'},{},true},{}}"
+			elseif w == 'foldl' then
+				return "{'foldl','+',0,{}}"
+			elseif w == 'foldr' then
+				return "{'foldr','+',0,{}}"
+			elseif w == 'lis' then
+				return "{'listener',{},'+'}"
+			else
+				need_update = false
+			end
+		end) or ret
+		if need_update then
+			d.update_value(od, {t = ret, lua = od.obj.lua})
+		end
+    	-- todo,先执行一次代码替换
+		
 		local ast = G.call('tLua_parse', ret)
 
 		if ast then

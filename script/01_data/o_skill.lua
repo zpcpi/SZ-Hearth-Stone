@@ -16,14 +16,12 @@ local t = {
 				['触发逻辑']={
 t =
 {
-    {'/',100,3,5},
-    {'//',100,3,5},
-    {'%',100,30,7}
+    {'table',1}
 },
 lua = function ()
 	local G = require "gf"
 	local t = G.api
-	return {t["tLua_DIV"](100,3,5),t["tLua_EXACT_DIV"](100,3,5),t["tLua_MOD"](100,30,7)}
+	return {{1}}
 end
 ,
 },

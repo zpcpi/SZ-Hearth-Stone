@@ -128,6 +128,21 @@ t['tLua_NOT'] = function (...)
     return not t['tLua_AND'](...)
 end
 
+t['tLua_TABLE'] = function (...)
+    return {...}
+end
+
+t['tLua_APPEND'] = function (t1, t2)
+    local t = {}
+    for k,v in ipairs(t1 or {}) do
+        table.insert(t, v)
+    end
+    for k,v in ipairs(t2 or {}) do
+        table.insert(t, v)
+    end
+    return t
+end
+
 local function reverse(t, idx, ...)
     local result = {}
     for i = 1, select('#', ...), 1 do
@@ -154,17 +169,6 @@ t['tLua_FILTER'] = function (func, t)
     return t_filter(t, func)
 end
 
-t['tLua_APPEND'] = function (t1, t2)
-    local t = {}
-    for k,v in ipairs(t1 or {}) do
-        table.insert(t, v)
-    end
-    for k,v in ipairs(t2 or {}) do
-        table.insert(t, v)
-    end
-    return t
-end
-
 t['tLua_FOLDL'] = function (func, base, t)
     for k,v in ipairs(t) do
         base = func(base, v)
@@ -178,6 +182,36 @@ t['tLua_FOLDR'] = function (func, base, t)
     end
     return base
 end
+
+--=================================================
+--=================================================
+--=================================================
+--wait
+--=================================================
+--=================================================
+--=================================================
+
+local tLua_listener_list = {}
+local create_listener_name = function (event)
+    local count = (tLua_listener_list[event] or 0) + 1
+    tLua_listener_list[event] = count
+
+    return '|#tLua_listener#|#' .. event .. '#|' .. count
+end
+
+t['tLua_add_listener'] = function (o_order_info_当前指令信息, earg_注册事件, func_执行函数)
+    if earg_注册事件 and type(earg_注册事件[1]) == 'string' then
+        local event_name = earg_注册事件[1]
+        local key = create_listener_name(event_name)
+        t[key] = function ()
+            G.removeListener(key, event_name)
+            return func_执行函数()
+        end
+        G.addListener(key, earg_注册事件)
+        return key
+    end
+end
+
 --=================================================
 --=================================================
 --=================================================
@@ -441,24 +475,21 @@ local Gr = {'tLua',
                      P'<='/'tLua_LE' + 
                      P'and'/'tLua_AND' + 
                      P'or'/'tLua_OR' + 
-                     P'not'/'tLua_NOT' 
+                     P'not'/'tLua_NOT' +
 
                      -- if
                      -- while
                      -- repeat
                      -- block
-                     -- table
-                     -- apply
 
-
-
-                     
-                     -- map
-                     -- filter
-                     -- append
-                     -- foldl
-                     -- foldr
-                     -- listener
+                     P'apply'/'call' +
+                     P'table'/'tLua_TABLE' +
+                     P'append'/'tLua_APPEND' +
+                     P'map'/'tLua_MAP' +
+                     P'filter'/'tLua_FILTER' +
+                     P'foldl'/'tLua_FOLDL' +
+                     P'foldr'/'tLua_FOLDR' +
+                     P'listener'/'tLua_add_listener'
 
                      )/string_apitest,
     atom_number = type_number(),
@@ -472,7 +503,6 @@ local Gr = {'tLua',
 
 t['tLua_parse'] = function (exp)
     local d = require '_data'
-    -- todo,先执行一次代码替换
     local ast, label, sfail = match(Gr, exp)
     --print(ast, label, sfail)
     --G.show_table(ast)
@@ -752,33 +782,4 @@ t['tLua_code'] = function(ast)
 
     --G.show_table(table.concat(code, ''))
     return table.concat(code, '')
-end
-
---=================================================
---=================================================
---=================================================
---wait
---=================================================
---=================================================
---=================================================
-
-local tLua_listener_list = {}
-local create_listener_name = function (event)
-    local count = (tLua_listener_list[event] or 0) + 1
-    tLua_listener_list[event] = count
-
-    return '|#tLua_listener#|#' .. event .. '#|' .. count
-end
-
-t['tLua_add_listener'] = function (o_order_info_当前指令信息, earg_注册事件, func_执行函数)
-    if earg_注册事件 and type(earg_注册事件[1]) == 'string' then
-        local event_name = earg_注册事件[1]
-        local key = create_listener_name(event_name)
-        t[key] = function ()
-            G.removeListener(key, event_name)
-            return func_执行函数()
-        end
-        G.addListener(key, earg_注册事件)
-        return key
-    end
 end
