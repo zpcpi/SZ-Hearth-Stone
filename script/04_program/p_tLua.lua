@@ -41,6 +41,16 @@ t['tLua_DIV'] = function (result, ...)
     return result
 end
 
+t['tLua_EQUAL'] = function (...)
+    local a = select(1, ...)
+    for i = 2, select('#', ...), 1 do
+        if a == select(i, ...) then
+        else
+            return false
+        end
+    end
+    return true
+end
 -- == >= <= > < ~=
 -- and or not
 t['tLua_bg'] = function (a, b)
@@ -71,6 +81,35 @@ t['tLua_MAP'] = function (func, ...)
     return t
 end
 
+local t_filter = t['array_filter']
+t['tLua_FILTER'] = function (func, t)
+    return t_filter(t, func)
+end
+
+t['tLua_APPEND'] = function (t1, t2)
+    local t = {}
+    for k,v in ipairs(t1 or {}) do
+        table.insert(t, v)
+    end
+    for k,v in ipairs(t2 or {}) do
+        table.insert(t, v)
+    end
+    return t
+end
+
+t['tLua_FOLDL'] = function (func, base, t)
+    for k,v in ipairs(t) do
+        base = func(base, v)
+    end
+    return base
+end
+
+t['tLua_FOLDR'] = function (func, base, t)
+    for i = #t, 1, -1 do
+        base = func(t[i], base)
+    end
+    return base
+end
 --=================================================
 --=================================================
 --=================================================
@@ -151,15 +190,6 @@ end
 local maybe = function(patt)
     return P(patt)^-1
 end
-local toboolean = function(v)
-    if v == 'true' then
-        return true
-    elseif v == 'false' then
-        return false
-    else
-        return tag_s('nil')
-    end
-end
 local type_str = function()
     return (alpha + unicode + S'_.() ')^0
 end
@@ -174,12 +204,12 @@ local string_apitest = function(name)
     if type(t[name]) == 'function' then
         return {
             value = 't["' .. name .. '"]',
-            tag = 'funccall',
+            tag = 'funcname',
         }
     elseif type(G[name]) == 'function' then
         return {
             value = 'G.' .. name,
-            tag = 'funccall',
+            tag = 'funcname',
         }
     end
     return false
@@ -210,9 +240,16 @@ local Gr = {'tLua',
                  V'expression_block' + 
                  V'expression_anonfunction' + 
                  V'expression_listener' + 
+                 V'expression_set' + 
+                 V'expression_table' + 
+                 V'expression_append' + 
+                 V'expression_apply' + 
                  V'expression_map' + 
+                 V'expression_filter' + 
+                 V'expression_foldl' + 
+                 V'expression_foldr' + 
                  V'expression_funccall' + 
-                 V'atom_list',
+                 list(V'atom'),
 
     expression_if = list_ex('if', {
         {tag = 'condition', patt = V'atom'},
@@ -245,9 +282,9 @@ local Gr = {'tLua',
 
     Name      = str_kw(-V"Reserved" * C(V"Ident")),
     Reserved  = V"Keywords" * -V"IdRest",
-    Keywords  = P"+" + "-" + "*" + "/" + 
-                "map" + 
-                "if" + "while" + "repeat" + "block" + "function" +
+    Keywords  = P"+" + "-" + "*" + "/" + "==" + 
+                "map" + 'append' + 'apply' + 'filter' + 'foldl' + 'foldr' + 
+                "if" + "while" + "repeat" + "block" + "function" + 'set' + 'table' + 
                 "listener" +
                 "true" + "false",
     Ident     = V"IdStart" * V"IdRest"^0,
@@ -263,20 +300,46 @@ local Gr = {'tLua',
         {patt = V'atom', count = 0},
     }),
 
-    expression_set = P'',
-    expression_list = P'',
-    expression_append = P'',
+    expression_set = list_ex('set', {
+        {tag = 'variable', patt = V'atom_var'},
+        {tag = 'value', patt = V'atom', count = -1},
+    }),
 
-    expression_apply = P'',
+    expression_table = list_ex('table', {
+        {patt = V'atom', count = 0},
+    }),
+
+    expression_append = list_ex('append', {
+        {tag = 't1', patt = V'atom_list'},
+        {tag = 't2', patt = V'atom_list'},
+    }),
+
+    expression_apply = list_ex('apply', {
+        {tag = 'func', patt = V'expression_function'},
+        {patt = V'atom', count = 0},
+    }),
+
     expression_map = list_ex('map', {
         {tag = 'func', patt = V'expression_function'},
-        {patt = (V't_begin' * V'atom_list' * V't_end') + V'atom_var', count = 1},
+        {patt = V'atom_list', count = 1},
     }),
-    expression_filter = P'',
-    expression_foldl = P'',
-    expression_foldr = P'',
 
+    expression_filter = list_ex('filter', {
+        {tag = 'func', patt = V'expression_function'},
+        {tag = 'tabl', patt = V'atom_list'},
+    }),
 
+    expression_foldl = list_ex('foldl', {
+        {tag = 'func', patt = V'expression_function'},
+        {tag = 'base', patt = V'atom'},
+        {tag = 'tabl', patt = V'atom_list'},
+    }),
+
+    expression_foldr = list_ex('foldr', {
+        {tag = 'func', patt = V'expression_function'},
+        {tag = 'base', patt = V'atom'},
+        {tag = 'tabl', patt = V'atom_list'},
+    }),
 
     expression_funccall = list_ex(nil, {
         {tag = 'func', patt = V'expression_function', no_split = true},
@@ -287,7 +350,7 @@ local Gr = {'tLua',
                            V'atom_var'
                           ),
 
-    atom_list = list(V'atom'),
+    atom_list = (V't_begin' * (V'expression_table' + list(V'atom')) * V't_end') + V'atom_var',
     atom = V'atom_op' +
            V'atom_number' +
            V'atom_bool' +
@@ -299,10 +362,25 @@ local Gr = {'tLua',
     atom_op = str_kw(P'+'/'tLua_ADD' + 
                      P'-'/'tLua_SUB' +
                      P'*'/'tLua_MULT' +
-                     P'/'/'tLua_DIV' 
+                     P'/'/'tLua_DIV' +
+                     P'=='/'tLua_EQUAL'
+
+                     -- if
+                     -- while
+                     -- repeat
+                     -- block
+                     -- listener
+                     -- map
+                     -- table
+                     -- append
+                     -- apply
+                     -- map
+                     -- filter
+                     -- foldl
+                     -- foldr
                      )/string_apitest,
     atom_number = type_number(),
-    atom_bool = (kw('true') + kw('false'))/toboolean,
+    atom_bool = (kw('true') * tag_s('true')) + (kw('false') * tag_s('false')),
     atom_var = Ct(Cg(Cp(), "pos") * Cg(Cc('var'), 'tag') * Cg(V'Name', 'variable'))/tovariable,
     atom_str = str_kw(P'$' * C(type_str())),
 
@@ -372,7 +450,6 @@ func_iter = function (func, ...)
 end
 
 localfunction_iter = function (name, ast)
-    print(name)
     if name then
         tlt('local function ' .. name .. ' (')
     else
@@ -465,15 +542,19 @@ code_iter = function (ast)
     if ast.tag then
         if ast.tag == 'nil' then
             tl('nil')
+        elseif ast.tag == 'true' then
+            tl('true')
+        elseif ast.tag == 'false' then
+            tl('false')
         elseif ast.tag == 'var' then
             local name = variable_iter.variable_get(ast)
             if name then
                 tl(name)
             else
-                tl(ast.variable)
+                tl(ast['variable'])
             end
-        elseif ast.tag == 'funccall' then
-            tl(ast.value)
+        elseif ast.tag == 'funcname' then
+            tl(ast['value'])
         elseif ast.tag == 'if' then
             tl('(function ()\n')
                 tabc = tabc + 1
@@ -481,7 +562,7 @@ code_iter = function (ast)
                     tabc = tabc + 1
                     tlt('return ') value_iter(ast['if_action']) tl('\n')
                 tabc = tabc - 1
-                if ast['else_action'] then
+                if ast['else_action'] ~= nil then
                     tlt('else\n')
                         tabc = tabc + 1
                         tlt('return ') value_iter(ast['else_action']) tl('\n')
@@ -538,6 +619,32 @@ code_iter = function (ast)
                 tl(',') value_iter(v)
             end
             tl(')')
+        elseif ast.tag == 'filter' then
+            tl('t["tLua_FILTER"](') value_iter(ast['func']) tl(',') value_iter(ast['tabl']) tl(')')
+        elseif ast.tag == 'set' then
+            local name = variable_iter.variable_get(ast['variable']) or ast['variable']
+            tl('(function() ') tl(name) tl(' = ') value_iter(ast['value']) tl(' return ') tl(name) tl(' end)()')
+        elseif ast.tag == 'table' then
+            tl('{')
+            for k,v in ipairs(ast or {}) do
+                if k > 1 then
+                    tl(',')
+                end
+                value_iter(v)
+            end
+            tl('}')
+        elseif ast.tag == 'append' then
+            tl('t["tLua_APPEND"](') value_iter(ast['t1']) tl(',') value_iter(ast['t2']) tl(')')
+        elseif ast.tag == 'apply' then
+            tl('G.call(') value_iter(ast['func'])
+            for k,v in ipairs(ast or {}) do
+                tl(',') value_iter(v)
+            end
+            tl(')')
+        elseif ast.tag == 'foldl' then
+            tl('t["tLua_FOLDL"](') value_iter(ast['func']) tl(',') value_iter(ast['base']) tl(',') value_iter(ast['tabl']) tl(')')
+        elseif ast.tag == 'foldr' then
+            tl('t["tLua_FOLDR"](') value_iter(ast['func']) tl(',') value_iter(ast['base']) tl(',') value_iter(ast['tabl']) tl(')')
         end
     elseif ast['func'] then
         func_iter(ast['func'], table.unpack(ast))

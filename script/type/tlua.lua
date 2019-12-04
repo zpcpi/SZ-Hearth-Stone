@@ -113,6 +113,13 @@ function t.get_table(od)
 
 				if type(v) == 'table' then
 					tl(sq) st('') iter(tup(v))
+				elseif type(v) == 'boolean' then
+					tl(sq)
+					if v == true then
+						st('true')
+					elseif v == false then
+						st('false')
+					end
 				elseif v then
 					if type(v) == 'string' then
 						tl(sq) st("'" .. v .. "'")
