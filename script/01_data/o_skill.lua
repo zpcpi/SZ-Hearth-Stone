@@ -5,42 +5,18 @@ local t = {
 'o_skill',
 {
 	{
-		['name']=0x10130002,
+		['name']=0x10130001,
 		['showname']='月火术-伤害',
 		['逻辑功能']={
 			[1]={
-				['触发时机']='逻辑_卡牌使用',
+				['注册时机']='使用',
 				['触发逻辑']={
 t =
-{},
+{'技能效果_法伤伤害_群体',1},
 lua = function ()
 	local G = require "gf"
 	local t = G.api
-	return {nil}
-end
-,
-},
-			},
-		},
-	},
-	{
-		['name']=0x10130001,
-		['showname']='测试用任务',
-		['id']=1,
-		['class']={n=0,[1] = '测试用函数',
-		},
-		['逻辑功能']={
-			[1]={
-				['触发时机']='UI_卡牌确认使用',
-				['触发逻辑']={
-t =
-{
-    {'table',1}
-},
-lua = function ()
-	local G = require "gf"
-	local t = G.api
-	return {{1}}
+	return t["技能效果_法伤伤害_群体"](1)
 end
 ,
 },

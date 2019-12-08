@@ -190,6 +190,10 @@ local t = {
 				['name']='卡牌实例表',
 				['type']='string',
 			},
+			[19]={
+				['name']='当前效果堆栈',
+				['type']='any',
+			},
 		},
 	},
 	{
@@ -872,14 +876,22 @@ local t = {
 		['name']='o_skill_trigger',
 		['define']={
 			[1]={
-				['name']='触发时机',
-				['type']='even',
+				['name']='注册时机',
+				['type']='estr_cardevent_inittype',
 			},
 			[2]={
+				['name']='是否重复触发',
+				['type']='boolean',
+			},
+			[3]={
+				['name']='触发时机',
+				['type']='tlua',
+			},
+			[4]={
 				['name']='触发条件',
 				['type']='tlua',
 			},
-			[3]={
+			[5]={
 				['name']='触发逻辑',
 				['type']='tlua',
 			},
@@ -888,7 +900,7 @@ local t = {
 	{
 		['name']='o_target_filter',
 		['define']={
-		}
+		},
 	},
 	{
 		['name']='o_battle_role',
@@ -909,7 +921,7 @@ local t = {
 				['name']='英雄卡片',
 				['type']='i_card',
 			},
-		}
+		},
 	},
 	{
 		['name']='o_skill_info',
@@ -931,12 +943,44 @@ local t = {
 				['type']='o_skill_info',
 			},
 			[5]={
+				['name']='Stack',
+				['type']='any',
+			},
+			[6]={
 				['name']='费用',
 				['type']='int',
 			},
-			[6]={
+			[7]={
 				['name']='过载费用',
 				['type']='int',
+			},
+			[8]={
+				['name']='是否使用成功',
+				['type']='int',
+			},
+			[9]={
+				['name']='原始伤害数值',
+				['type']='int',
+			},
+			[10]={
+				['name']='中间伤害数值',
+				['type']='int',
+			},
+			[11]={
+				['name']='逐个伤害数值',
+				['type']='int',
+			},
+			[12]={
+				['name']='逐个伤害目标',
+				['type']='o_card',
+			},
+			[13]={
+				['name']='伤害类型',
+				['type']='string',
+			},
+			[14]={
+				['name']='伤害数值',
+				['type']='_int',
 			},
 		},
 	},
