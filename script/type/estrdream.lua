@@ -11,4 +11,6 @@ t.estr_ui_layer_type = {'一级界面', '二级界面'}
 
 t.estr_ui_battlehero_type = {'英雄', '英雄技能', '武器'}
 
+
+
 return t

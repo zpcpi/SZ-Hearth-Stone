@@ -5,6 +5,25 @@ local t = {
 'o_skill',
 {
 	{
+		['name']=0x10130002,
+		['showname']='月火术-伤害',
+		['逻辑功能']={
+			[1]={
+				['触发时机']='逻辑_卡牌使用',
+				['触发逻辑']={
+t =
+{},
+lua = function ()
+	local G = require "gf"
+	local t = G.api
+	return {nil}
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130001,
 		['showname']='测试用任务',
 		['id']=1,

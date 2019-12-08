@@ -911,5 +911,34 @@ local t = {
 			},
 		}
 	},
+	{
+		['name']='o_skill_info',
+		['define']={
+			[1]={
+				['name']='Player',
+				['type']='estr_player',
+			},
+			[2]={
+				['name']='Caster',
+				['type']='o_card',
+			},
+			[3]={
+				['name']='Target',
+				['type']='_o_card',
+			},
+			[4]={
+				['name']='Parent',
+				['type']='o_skill_info',
+			},
+			[5]={
+				['name']='费用',
+				['type']='int',
+			},
+			[6]={
+				['name']='过载费用',
+				['type']='int',
+			},
+		},
+	},
 }}
 return t

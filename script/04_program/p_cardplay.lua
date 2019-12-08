@@ -5,12 +5,20 @@ local G = require "gf"
 local L = {}
 local t = G.api
 
-
 t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
-    
-    -- 法力值消耗
-    G.call('卡牌使用_法力值消耗', estr_player_相对身份, o_order_info_当前指令信息)
+    local effect_stack = G.call('create_stack')
+    local root_info = {
+        ['Player'] = estr_player_相对身份,
+        ['Caster'] = o_order_info_当前指令信息['Caster'],
+        ['Target'] = o_order_info_当前指令信息['Target'],
+        ['Parent'] = nil,
+    }
+    effect_stack.push(root_info)
 
+    -- 法力值消耗
+    G.call('卡牌使用_法力值消耗', root_info)
+
+    -- 卡牌使用前
 
     -- 逐个触发相关事件
 
@@ -22,22 +30,31 @@ t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_�
         G.call('角色_战场_添加随从', estr_player_相对身份, Caster, index)
     end
 
-
-
 end
 
 
-t['卡牌使用_法力值消耗'] = function (estr_player_相对身份, o_order_info_当前指令信息)
-    local Caster = o_order_info_当前指令信息['Caster']
+t['卡牌使用_法力值消耗'] = function (o_skill_info_效果信息)
+    local Caster = o_skill_info_效果信息['Caster']
 
-    local 费用 = Caster['费用'] or 0
-    local 过载费用 = Caster['过载费用'] or 0
+    o_skill_info_效果信息['费用'] = Caster['费用'] or 0
+    o_skill_info_效果信息['过载费用'] = Caster['过载费用'] or 0
+
+    -- 触发“前”事件，修改数据
+    G.trig_event('卡牌使用_法力值消耗前', o_skill_info_效果信息)
+
+    -- 最终效果
+    local 费用 = o_skill_info_效果信息['费用'] or 0
+    local 过载费用 = o_skill_info_效果信息['过载费用'] or 0
+    local estr_player_相对身份 = o_skill_info_效果信息['Player']
 
     local 当前值 = G.call('角色_获取水晶数据', estr_player_相对身份, '当前值')
     G.call('角色_设置水晶数据', estr_player_相对身份, '当前值', 当前值 - 费用)
 
     local 下回锁定值 = G.call('角色_获取水晶数据', estr_player_相对身份, '下回锁定值')
     G.call('角色_设置水晶数据', estr_player_相对身份, '下回锁定值', 下回锁定值 + 过载费用)
+
+    -- 触发事件，相应改变
+    G.trig_event('卡牌使用_法力值消耗', o_skill_info_效果信息)
 end
 
 
@@ -73,7 +90,7 @@ end
 t['卡牌实例化'] = function (o_card_卡片模板)
     local dbname = G.misc().卡牌实例表
     if dbname then
-        return  G.CopyInst(o_card_卡片模板, {}, G.NewInst(dbname))
+        return G.CopyInst(o_card_卡片模板, {}, G.NewInst(dbname))
     else
         return G.CopyInst(o_card_卡片模板)
     end
