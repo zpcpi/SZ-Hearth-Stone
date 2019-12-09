@@ -174,6 +174,25 @@ t['技能效果_法伤伤害'] = function (int_伤害值)
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_法伤伤害', init, action)
 end
 
+t['技能效果_直接伤害'] = function (int_伤害值)
+    -- 
+
+end
+
+t['技能效果_效果树_执行子效果'] = function (skill_info, action)
+    -- 效果挂钩，入栈
+    local effect_stack = G.misc().当前效果堆栈
+    local o_skill_info_效果信息 = effect_stack.top()
+    effect_stack.push(skill_info)
+    skill_info['Parent'] = o_skill_info_效果信息
+
+    -- 执行效果
+    action()
+
+    -- 效果出栈
+    effect_stack.pop()
+end
+
 -- ============================================
 -- ============================================
 -- ============================================
