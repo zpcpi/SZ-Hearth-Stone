@@ -146,7 +146,7 @@ local single_damage = function ()
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_直接伤害', init, action)
 end
 
-t['技能效果_法伤伤害_群体'] = function (int_伤害值)
+t['技能效果_法伤伤害'] = function (int_伤害值)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else

@@ -12,11 +12,11 @@ local t = {
 				['注册时机']='使用',
 				['触发逻辑']={
 t =
-{'技能效果_法伤伤害_群体',1},
+{'技能效果_法伤伤害',1},
 lua = function ()
 	local G = require "gf"
 	local t = G.api
-	return t["技能效果_法伤伤害_群体"](1)
+	return t["技能效果_法伤伤害"](1)
 end
 ,
 },
