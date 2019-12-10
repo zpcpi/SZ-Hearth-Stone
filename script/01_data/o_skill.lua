@@ -16,7 +16,7 @@ t =
 lua = function ()
 	local G = require "gf"
 	local t = G.api
-	return t["技能效果_法伤伤害"](1)
+	return G.call("技能效果_法伤伤害",1)
 end
 ,
 },

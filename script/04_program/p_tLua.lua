@@ -316,6 +316,16 @@ local string_apitest = function(name)
     end
     return false
 end
+local string_gapitest = function(ast)
+    local name = ast.variable
+    if type(t[name]) == 'function' then
+        return {
+            value = name,
+            tag = 'gname',
+        }
+    end
+    return false
+end
 local tovariable = function(t)
     local var = t.variable
     local pos = t.pos
@@ -350,6 +360,7 @@ local Gr = {'tLua',
                  V'expression_filter' + 
                  V'expression_foldl' + 
                  V'expression_foldr' + 
+                 V'expression_gcall' + 
                  V'expression_funccall' + 
                  list(V'atom'),
 
@@ -452,6 +463,11 @@ local Gr = {'tLua',
                            V'atom_op' + 
                            V'atom_var'
                           ),
+
+    expression_gcall = list_ex(nil, {
+        {tag = 'gfunc', patt = Ct(Cg(Cp(), "pos") * Cg(Cc('var'), 'tag') * Cg(V'Name', 'variable'))/string_gapitest, no_split = true},
+        {patt = V'atom', count = 0},
+    }),
 
     atom_list = (V't_begin' * (V'expression_table' + list(V'atom')) * V't_end') + V'atom_var',
     atom = V'atom_op' +
@@ -557,6 +573,14 @@ func_iter = function (func, ...)
             tl(',')
         end
         value_iter(select(i, ...))
+    end
+    tl(')')
+end
+
+gfunc_iter = function (func, ...)
+    tl('G.call(') value_iter(func['value'])
+    for i = 1, select('#', ...), 1 do
+        tl(',') value_iter(select(i, ...))
     end
     tl(')')
 end
@@ -758,6 +782,8 @@ code_iter = function (ast)
         elseif ast.tag == 'foldr' then
             tl('t["tLua_FOLDR"](') value_iter(ast['func']) tl(',') value_iter(ast['base']) tl(',') value_iter(ast['tabl']) tl(')')
         end
+    elseif ast['gfunc'] then
+        gfunc_iter(ast['gfunc'], table.unpack(ast))
     elseif ast['func'] then
         func_iter(ast['func'], table.unpack(ast))
     else
