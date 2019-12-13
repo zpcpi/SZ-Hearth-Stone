@@ -199,15 +199,16 @@ local create_listener_name = function (event)
     return '|#tLua_listener#|#' .. event .. '#|' .. count
 end
 
-t['tLua_add_listener'] = function (o_order_info_当前指令信息, earg_注册事件, func_执行函数)
+t['tLua_add_listener'] = function (o_order_info_当前指令信息, earg_注册事件, func_执行函数, cond, prior, group)
     if earg_注册事件 and type(earg_注册事件[1]) == 'string' then
         local event_name = earg_注册事件[1]
         local key = create_listener_name(event_name)
         t[key] = function ()
             G.removeListener(key, event_name)
+            t[key] = nil
             return func_执行函数()
         end
-        G.addListener(key, earg_注册事件)
+        G.addListener(key, earg_注册事件, cond, prior, group)
         return key
     end
 end
@@ -808,7 +809,7 @@ t['tLua_code'] = function(ast)
     tabc = 0
     assert(type(ast) == "table")
 
-    tl('function ()\n')
+    tl('function (self, info)\n')
         tabc = tabc + 1
         tlt('local G = require "gf"\n')
         tlt('local t = G.api\n')

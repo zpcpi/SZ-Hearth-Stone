@@ -174,8 +174,13 @@ t['技能效果_法伤伤害'] = function (int_伤害值)
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_法伤伤害', init, action)
 end
 
-t['技能效果_直接伤害'] = function (int_伤害值)
+t['技能效果_攻击伤害'] = function (int_伤害值)
     -- 
+
+end
+
+t['技能效果_技能伤害'] = function (int_伤害值)
+
 
 end
 
@@ -201,7 +206,100 @@ end
 -- ============================================
 -- ============================================
 -- 法强、吸血等
+local trigger_list = {}
+local create_trigger_name = function (event)
+    local count = (trigger_list[event] or 0) + 1
+    trigger_list[event] = count
 
+    return '|#trigger#|#' .. event .. '#|' .. count
+end
+
+local trigger_iter = function (estr_cardevent_inittype_类型, card, info)
+    local iter = function (trigger)
+        local 是否重复触发 = trigger['是否重复触发']
+        local 触发时机 = (trigger['触发时机'] or {})['lua']
+        local 触发条件 = (trigger['触发条件'] or {})['lua']
+        local 触发逻辑 = (trigger['触发逻辑'] or {})['lua']
+
+        local earg = nil
+        local condi = nil
+        if type(触发时机) == 'function' then
+            earg = 触发时机(card, info)
+        end
+        if earg and type(触发条件) == 'function' then
+            condi = function ()
+                return 触发条件(card, info)
+            end
+        end
+        if earg and type(触发逻辑) == 'function' then
+            local event_name = earg[1]
+            local key = create_trigger_name(event_name)
+            if 是否重复触发 then
+                t[key] = function ()
+                    return 触发逻辑(card, info)
+                end
+            else
+                t[key] = function ()
+                    G.removeListener(key, event_name)
+                    t[key] = nil
+                    return 触发逻辑(card, info)
+                end
+            end
+
+            -- 绑定到卡牌信息上
+        end
+    end
+
+    if card and card['卡牌效果'] then
+        for _,s in ipairs(card['卡牌效果']) do
+            local skill = G.QueryName(s)
+            if skill and skill['逻辑功能'] then
+                for _,trigger in ipairs(skill['逻辑功能']) do
+                    if trigger['注册时机'] == estr_cardevent_inittype_类型 then
+                        iter(trigger)
+                    end
+                end
+            end
+        end
+    end
+end
+
+t['逻辑注册_初始化'] = function ()
+    -- 初始化时传card
+    local card = G.event_info()
+    trigger_iter('初始化', card)
+end
+
+t['逻辑注册_上场'] = function ()
+    local info = G.event_info()
+    local card = info['Caster']
+    trigger_iter('上场', card, info)
+end
+
+t['逻辑注册_上手'] = function ()
+    local info = G.event_info()
+    local card = info['Caster']
+    trigger_iter('上手', card, info)
+end
+
+t['逻辑注册_使用'] = function ()
+    local info = G.event_info()
+    local card = info['Caster']
+    trigger_iter('使用', card, info)
+end
+
+t['通用逻辑_默认流程注册'] = function ()
+    local prior = 0
+    local group = 'system'
+    
+    -- trigger注册
+    G.addListener('逻辑注册_初始化', {''}, cond, prior, group)
+    G.addListener('逻辑注册_上场', {''}, cond, prior, group)
+    G.addListener('逻辑注册_上手', {''}, cond, prior, group)
+    G.addListener('逻辑注册_使用', {'逻辑_卡牌使用'}, cond, prior, group)
+
+
+end
 
 
 -- ============================================
