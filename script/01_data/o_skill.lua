@@ -5,6 +5,31 @@ local t = {
 'o_skill',
 {
 	{
+		['name']=0x10130002,
+		['showname']='新建',
+		['逻辑功能']={
+			[1]={
+				['触发逻辑']={
+t =
+{
+    1,
+    2,
+    3,
+    4,
+    ['asd'] = 2,
+    ['dsa'] = 4
+},
+lua = function ()
+	local G = require "gf"
+	local t = G.api
+	return {1,2,3,4,["asd"] = 2,["dsa"] = 4}
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130001,
 		['showname']='月火术-伤害',
 		['逻辑功能']={

@@ -362,7 +362,7 @@ local Gr = {'tLua',
                  V'expression_foldr' + 
                  V'expression_gcall' + 
                  V'expression_funccall' + 
-                 list(V'atom'),
+                 list(V'atom_tableset' + V'atom'),
 
     expression_if = list_ex('if', {
         {tag = 'condition', patt = V'atom'},
@@ -468,6 +468,15 @@ local Gr = {'tLua',
         {tag = 'gfunc', patt = Ct(Cg(Cp(), "pos") * Cg(Cc('var'), 'tag') * Cg(V'Name', 'variable'))/string_gapitest, no_split = true},
         {patt = V'atom', count = 0},
     }),
+
+    atom_tableset = Ct(Cg(Cp(), "pos") * 
+                       Cg(Cc('tset'), 'tag') * 
+                       (kw('[') * 
+                        Cg(str_kw(C(type_str())) + V'atom_var', 'key') * 
+                        kw(']') * 
+                        kw('=') * 
+                        Cg(V'atom', 'value'))
+                    ),
 
     atom_list = (V't_begin' * (V'expression_table' + list(V'atom')) * V't_end') + V'atom_var',
     atom = V'atom_op' +
@@ -689,6 +698,8 @@ code_iter = function (ast)
             else
                 tl(ast['variable'])
             end
+        elseif ast.tag == 'tset' then
+            tl('[') value_iter(ast['key']) tl('] = ') value_iter(ast['value'])
         elseif ast.tag == 'funcname' then
             tl(ast['value'])
         elseif ast.tag == 'if' then

@@ -112,17 +112,17 @@ local tlt = function(v)
 end
 local tup = table.unpack
 local tc = table.concat
+local ti = table.insert
+local ts = table.sort
 function t.get_table(od)
 	local table = od.obj.t
 	if type(table) == 'string' then
 		return table
 	elseif type(table) == 'table' then
-		local function iter(...)
-			local count = select('#', ...)
+		local function iter(tb)
 			local no_t = true
-			for i = 1, count, 1 do
-				local v = select(i, ...)
-				if type(v) == 'table' then
+			for k,v in pairs(tb) do
+				if (type(v) == 'table') or (type(k) == 'string') then
 					no_t = false
 					goto next
 				end
@@ -139,31 +139,63 @@ function t.get_table(od)
 
 			tl('{')
 			tabc = tabc + 1
-			for i = 1, count, 1 do
-				local v = select(i, ...)
+
+			-- key排序
+			local keylist = {}
+			for k,v in pairs(tb) do
+				ti(keylist, k)
+			end
+			ts(keylist, function (a, b)
+				if type(a) == 'number' then
+					if type(b) == 'number' then
+						return a < b
+					else
+						return true
+					end
+				else
+					if type(b) == 'number' then
+						return false
+					else
+						return a < b
+					end
+				end
+			end)
+
+			local i = 1
+			for _,k in ipairs(keylist) do
+				local v = tb[k]
 				local sq = sq
 				if i > 1 then
 					sq = ',' .. sq
 				end
 
-				if type(v) == 'table' then
-					tl(sq) st('') iter(tup(v))
-				elseif type(v) == 'boolean' then
+				if type(v) ~= 'nil' then
 					tl(sq)
-					if v == true then
-						st('true')
-					elseif v == false then
-						st('false')
-					end
-				elseif v then
-					if type(v) == 'string' then
-						tl(sq) st("'" .. v .. "'")
-					else
-						tl(sq) st(v)
-					end
 				else
 					st(sq)
 				end
+				if type(k) == 'string' then
+					st("['") tl(k) tl("'] = ")
+				else
+					st('')
+				end
+
+				if type(v) == 'table' then
+					iter(tup(v))
+				elseif type(v) == 'boolean' then
+					if v == true then
+						tl('true')
+					elseif v == false then
+						tl('false')
+					end
+				elseif v then
+					if type(v) == 'string' then
+						tl("'" .. v .. "'")
+					else
+						tl(v)
+					end
+				end
+				i = i + 1
 			end
 			tabc = tabc - 1
 			if no_t then
@@ -175,7 +207,7 @@ function t.get_table(od)
 
 		code = {}
 		tabc = 0
-		iter(tup(table))
+		iter(table)
 		table = tc(code)
 		od.obj.t = table
 		return table
