@@ -22,21 +22,44 @@ t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_�
     G.call('卡牌使用_消耗法力')
 
     -- 卡牌使用，生效判断
-    G.call('卡牌使用_生效前')
+    G.call('卡牌使用_生效判断')
     if root_info['是否使用成功'] then
     else
         -- 判定不能执行，直接返回
         return
     end
 
-    -- 逐个触发相关事件
-
-    -- 如果是随从，则召唤随从
+    -- 不同类型，加下来的事件并不一致
     local Caster = o_order_info_当前指令信息['Caster']
-    if Caster['类型'] == 0x10090004 then
+    local cardtype = Caster['类型']
+
+    if cardtype == 0x10090001 then
+        -- 英雄
+        -- 直接替换英雄，修改当前血量
+    elseif cardtype == 0x10090002 then
+        -- 英雄卡
+
+    elseif cardtype == 0x10090003 then
+        -- 英雄技能，一般不能直接使用
+
+
+    elseif cardtype == 0x10090004 then
+        -- 随从卡，召唤随从
         local index = o_order_info_当前指令信息['MinionPos']
         G.call('角色_战场_添加随从', estr_player_相对身份, Caster, index)
+
+        --上场，战吼，召唤自身
+
+    elseif cardtype == 0x10090005 then
+        -- 法术卡，执行使用逻辑
+        G.call('卡牌使用_使用')
+
+    elseif cardtype == 0x10090006 then
+        -- 武器卡
+
     end
+
+    -- 逐个触发相关事件
 
     -- 执行完毕
     effect_stack.pop()
@@ -104,7 +127,22 @@ t['卡牌使用_消耗法力'] = function ()
     effect_action_iter(o_skill_info_效果信息, '逻辑_卡牌使用_消耗法力', init, action)
 end
 
-t['卡牌使用_生效前'] = function ()
+t['卡牌使用_生效判断'] = function ()
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+        o_skill_info_效果信息['是否使用成功'] = true
+    end
+    local action = function ()
+    end
+    effect_action_iter(o_skill_info_效果信息, '逻辑_卡牌生效', init, action)
+end
+
+t['卡牌使用_上场'] = function ()
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -114,6 +152,32 @@ t['卡牌使用_生效前'] = function ()
     local init = function ()
     end
     local action = function ()
+    end
+    effect_action_iter(o_skill_info_效果信息, '逻辑_卡牌上场', init, action)
+end
+
+t['卡牌使用_使用'] = function ()
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+    end
+    local action = function ()
+        local Caster = o_skill_info_效果信息['Caster']
+        local cardtype = Caster['类型']
+
+        if cardtype == 0x10090004 then
+            -- 随从
+
+        elseif cardtype == 0x10090005 then
+            -- 法术
+            G.trig_event('逻辑_法术牌打出', Caster)
+        end
+
+        -- todo，记录
     end
     effect_action_iter(o_skill_info_效果信息, '逻辑_卡牌使用', init, action)
 end
@@ -215,20 +279,22 @@ local create_trigger_name = function (event)
 end
 
 local trigger_iter = function (estr_cardevent_inittype_类型, card, info)
-    local iter = function (trigger)
+    local iter = function (skill, trigger)
         local 是否重复触发 = trigger['是否重复触发']
         local 触发时机 = (trigger['触发时机'] or {})['lua']
         local 触发条件 = (trigger['触发条件'] or {})['lua']
         local 触发逻辑 = (trigger['触发逻辑'] or {})['lua']
+        local 优先级 = trigger['优先级'] or 0
+        local 分组 = trigger['分组']
 
         local earg = nil
         local condi = nil
         if type(触发时机) == 'function' then
-            earg = 触发时机(card, info)
+            earg = 触发时机(skill, info, card)
         end
         if earg and type(触发条件) == 'function' then
             condi = function ()
-                return 触发条件(card, info)
+                return 触发条件(skill, info, card)
             end
         end
         if earg and type(触发逻辑) == 'function' then
@@ -236,17 +302,21 @@ local trigger_iter = function (estr_cardevent_inittype_类型, card, info)
             local key = create_trigger_name(event_name)
             if 是否重复触发 then
                 t[key] = function ()
-                    return 触发逻辑(card, info)
+                    return 触发逻辑(skill, info, card)
                 end
             else
                 t[key] = function ()
                     G.removeListener(key, event_name)
                     t[key] = nil
-                    return 触发逻辑(card, info)
+                    card['动态数据']['当前注册事件'][key] = nil
+                    return 触发逻辑(skill, info, card)
                 end
             end
+            G.addListener(key, earg, condi, 优先级, 分组)
 
             -- 绑定到卡牌信息上
+            local card_trglist = card['动态数据']['当前注册事件']
+            card_trglist[key] = event_name
         end
     end
 
@@ -256,7 +326,7 @@ local trigger_iter = function (estr_cardevent_inittype_类型, card, info)
             if skill and skill['逻辑功能'] then
                 for _,trigger in ipairs(skill['逻辑功能']) do
                     if trigger['注册时机'] == estr_cardevent_inittype_类型 then
-                        iter(trigger)
+                        iter(skill, trigger)
                     end
                 end
             end
@@ -265,39 +335,59 @@ local trigger_iter = function (estr_cardevent_inittype_类型, card, info)
 end
 
 t['逻辑注册_初始化'] = function ()
-    -- 初始化时传card
     local card = G.event_info()
-    trigger_iter('初始化', card)
+    card['动态数据'] = {
+        ['当前注册事件'] = {},
+    }
+    trigger_iter('初始', card)
 end
 
 t['逻辑注册_上场'] = function ()
-    local info = G.event_info()
-    local card = info['Caster']
-    trigger_iter('上场', card, info)
+    local card = G.event_info()
+    trigger_iter('上场', card)
 end
 
 t['逻辑注册_上手'] = function ()
-    local info = G.event_info()
-    local card = info['Caster']
-    trigger_iter('上手', card, info)
+    local card = G.event_info()
+    trigger_iter('上手', card)
 end
 
-t['逻辑注册_使用'] = function ()
+t['逻辑注册_生效'] = function ()
     local info = G.event_info()
     local card = info['Caster']
-    trigger_iter('使用', card, info)
+
+    -- 判断是否能够生效
+    trigger_iter('生效', card, info)
+end
+
+t['逻辑反注册_沉默'] = function ()
+    -- 沉默或者移除时传card
+    local card = G.event_info()
+
+    local card_trglist = card['动态数据']['当前注册事件']
+    for key,event_name in pairs(card_trglist or {}) do
+        G.removeListener(key, event_name)
+        t[key] = nil
+    end
+    card['动态数据']['当前注册事件'] = {}
+    card['卡牌效果'] = {}
+
+    -- 其他修改
 end
 
 t['通用逻辑_默认流程注册'] = function ()
+    local cond = nil
     local prior = 0
     local group = 'system'
     
     -- trigger注册
-    G.addListener('逻辑注册_初始化', {''}, cond, prior, group)
-    G.addListener('逻辑注册_上场', {''}, cond, prior, group)
-    G.addListener('逻辑注册_上手', {''}, cond, prior, group)
-    G.addListener('逻辑注册_使用', {'逻辑_卡牌使用'}, cond, prior, group)
+    G.addListener('逻辑注册_初始化', {'逻辑_卡牌初始化'}, cond, prior, group)
+    G.addListener('逻辑注册_上场', {'逻辑_卡牌上场前'}, cond, prior, group)
+    G.addListener('逻辑注册_上手', {'逻辑_卡牌上手前'}, cond, prior, group)
+    G.addListener('逻辑注册_生效', {'逻辑_卡牌生效'}, cond, prior, group)
 
+    -- 沉默
+    G.addListener('逻辑反注册_沉默', {''}, cond, prior, group)
 
 end
 
@@ -339,17 +429,22 @@ t['卡牌实例表_初始化'] = function ()
     if dbname then
         G.misc().卡牌实例表 = dbname
     end
+    
+    -- 机制启用
+    G.call('通用逻辑_默认流程注册')
 end
 
 t['卡牌实例化'] = function (o_card_卡片模板)
     local dbname = G.misc().卡牌实例表
+    local card = nil
     if dbname then
-        return G.CopyInst(o_card_卡片模板, {}, G.NewInst(dbname))
+        card = G.CopyInst(o_card_卡片模板, {}, G.NewInst(dbname))
     else
-        return G.CopyInst(o_card_卡片模板)
+        card = G.CopyInst(o_card_卡片模板)
     end
 
-    -- todo，事件注册
+    G.trig_event('逻辑_卡牌初始化', card)
+    return card
 end
 
 t['卡牌实例化_信息更新'] = function (i_card_卡牌, string_attr, value)

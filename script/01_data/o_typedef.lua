@@ -384,112 +384,124 @@ local t = {
 				['type']='int',
 			},
 			[8]={
+				['name']='法术伤害',
+				['type']='int',
+			},
+			[9]={
+				['name']='英雄技能伤害',
+				['type']='int',
+			},
+			[10]={
 				['name']='职业',
 				['type']='i_profession',
 			},
-			[9]={
+			[11]={
 				['name']='品质',
 				['type']='i_rank',
 			},
-			[10]={
+			[12]={
 				['name']='种族',
 				['type']='i_race',
 			},
-			[11]={
+			[13]={
 				['name']='是精英',
 				['type']='boolean',
 			},
-			[12]={
+			[14]={
 				['name']='描述',
 				['type']='string',
 			},
-			[13]={
+			[15]={
 				['name']='描述字号',
 				['type']='int',
 			},
-			[14]={
+			[16]={
 				['name']='原画',
 				['type']='image',
 			},
-			[15]={
+			[17]={
 				['name']='原画缩放X',
 				['type']='number',
 			},
-			[16]={
+			[18]={
 				['name']='原画缩放Y',
 				['type']='number',
 			},
-			[17]={
+			[19]={
 				['name']='画家',
 				['type']='string',
 			},
-			[18]={
+			[20]={
 				['name']='趣味描述',
 				['type']='string',
 			},
-			[19]={
+			[21]={
 				['name']='扩展包',
 				['type']='i_category',
 			},
-			[20]={
+			[22]={
 				['name']='可收集',
 				['type']='boolean',
 			},
-			[21]={
+			[23]={
 				['name']='延伸卡',
 				['type']='_i_card',
 			},
-			[22]={
+			[24]={
 				['name']='原画偏移X',
 				['type']='dragint',
 			},
-			[23]={
+			[25]={
 				['name']='原画偏移Y',
 				['type']='dragint',
 			},
-			[24]={
+			[26]={
 				['name']='原画旋转',
 				['type']='dragnumber',
 			},
-			[25]={
+			[27]={
 				['name']='提示标签',
 				['type']='_string',
 			},
-			[26]={
+			[28]={
 				['name']='局内描述',
 				['type']='string',
 			},
-			[27]={
+			[29]={
 				['name']='卡牌指令',
 				['type']='i_order',
 			},
-			[28]={
+			[30]={
 				['name']='卡牌特性',
 				['type']='cardflag',
 			},
-			[29]={
+			[31]={
 				['name']='卡牌效果',
 				['type']='_i_skill',
 			},
-			[30]={
+			[32]={
 				['name']='可使用条件',
 				['type']='fargboolean',
 			},
-			[31]={
+			[33]={
 				['name']='高亮条件',
 				['type']='fargboolean',
 			},
-			[32]={
+			[34]={
 				['name']='目标条件',
 				['type']='_fargboolean',
 			},
-			[33]={
+			[35]={
 				['name']='目标指向文本',
 				['type']='_string',
 			},
-			[34]={
+			[36]={
 				['name']='抉择卡',
 				['type']='_i_card',
+			},
+			[37]={
+				['name']='动态数据',
+				['type']='o_dynamic_data',
 			},
 		},
 	},
@@ -908,6 +920,15 @@ local t = {
 	{
 		['name']='o_target_filter',
 		['define']={
+		},
+	},
+	{
+		['name']='o_dynamic_data',
+		['define']={
+			[1]={
+				['name']='当前注册事件',
+				['type']='any',
+			},
 		},
 	},
 	{

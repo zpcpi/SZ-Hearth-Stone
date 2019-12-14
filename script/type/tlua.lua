@@ -8,7 +8,11 @@ function t.type_match(od)
 end
 
 function t.to_str(od)
-	return ''
+	if od.obj then
+		return 'data done'
+	else
+		return ''
+	end
 end
 
 function t.edit(od)
