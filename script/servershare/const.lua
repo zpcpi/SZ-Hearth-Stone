@@ -64,3 +64,12 @@ CARD_FLAGS = {
         ['动物伙伴'] = 1, 
     }
 }
+
+function CARD_GET_ATTR(odata, key, ...)
+    if key then
+        if type(odata) == 'table' then
+            return CARD_GET_ATTR(odata[key], ...)
+        end
+    end
+    return odata
+end

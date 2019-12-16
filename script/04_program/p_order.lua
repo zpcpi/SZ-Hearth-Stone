@@ -56,7 +56,7 @@ end
 --hide=true
 --ret=o_order
 t['卡牌注册指令'] = function (o_card_使用卡牌, i_order_当前指令)
-    i_order_当前指令 = i_order_当前指令 or o_card_使用卡牌['卡牌指令']
+    i_order_当前指令 = i_order_当前指令 or CARD_GET_ATTR(o_card_使用卡牌, '逻辑数据', '卡牌指令')
     local o_order_当前指令 = G.QueryName(i_order_当前指令)
 
     if o_order_当前指令 and o_order_当前指令['状态列表'] then

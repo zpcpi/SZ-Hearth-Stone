@@ -6,6 +6,8 @@ local L = {}
 local t = G.api
 
 t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
+    local get_attr = CARD_GET_ATTR
+
     local effect_stack = G.call('create_stack')
     G.misc().当前效果堆栈 = effect_stack
 
@@ -31,7 +33,7 @@ t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_�
 
     -- 不同类型，加下来的事件并不一致
     local Caster = o_order_info_当前指令信息['Caster']
-    local cardtype = Caster['类型']
+    local cardtype = get_attr(Caster, '逻辑数据', '类型')
 
     if cardtype == 0x10090001 then
         -- 英雄
@@ -108,16 +110,18 @@ t['卡牌使用_消耗法力'] = function ()
         return
     end
 
+    local get_attr = CARD_GET_ATTR
+
     local init = function ()
         local Caster = o_skill_info_效果信息['Caster']
-        o_skill_info_效果信息['费用'] = Caster['费用'] or 0
-        o_skill_info_效果信息['过载费用'] = Caster['过载费用'] or 0
+        o_skill_info_效果信息['费用'] = get_attr(Caster, '卡牌属性', '费用') or 0
+        o_skill_info_效果信息['过载费用'] = get_attr(Caster, '卡牌属性', '过载费用') or 0
     end
     local action = function ()
         local 费用 = o_skill_info_效果信息['费用'] or 0
         local 过载费用 = o_skill_info_效果信息['过载费用'] or 0
         local estr_player_相对身份 = o_skill_info_效果信息['Player']
-    
+
         local 当前值 = G.call('角色_获取水晶数据', estr_player_相对身份, '当前值')
         G.call('角色_设置水晶数据', estr_player_相对身份, '当前值', 当前值 - 费用)
     
@@ -163,11 +167,13 @@ t['卡牌使用_使用'] = function ()
         return
     end
 
+    local get_attr = CARD_GET_ATTR
+
     local init = function ()
     end
     local action = function ()
         local Caster = o_skill_info_效果信息['Caster']
-        local cardtype = Caster['类型']
+        local cardtype = get_attr(Caster, '逻辑数据', '类型')
 
         if cardtype == 0x10090004 then
             -- 随从
@@ -320,8 +326,10 @@ local trigger_iter = function (estr_cardevent_inittype_类型, card, info)
         end
     end
 
-    if card and card['卡牌效果'] then
-        for _,s in ipairs(card['卡牌效果']) do
+    local get_attr = CARD_GET_ATTR
+    local 卡牌效果 = get_attr(card, '逻辑数据', '卡牌效果')
+    if card and 卡牌效果 then
+        for _,s in ipairs(卡牌效果) do
             local skill = G.QueryName(s)
             if skill and skill['逻辑功能'] then
                 for _,trigger in ipairs(skill['逻辑功能']) do

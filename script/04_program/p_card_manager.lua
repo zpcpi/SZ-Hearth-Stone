@@ -5,6 +5,7 @@ local G = require "gf"
 local L = {}
 local t = G.api
 
+
 t['CardCom_SetData'] = function (com, o_card)
     local query_iter
     if G.is_editor then 
@@ -13,25 +14,26 @@ t['CardCom_SetData'] = function (com, o_card)
     else
         query_iter = G.QueryName
     end
+    local get_attr = CARD_GET_ATTR
 
     -- 卡牌类型
-    local o_card_type = query_iter(o_card.类型)
+    local o_card_type = query_iter(get_attr(o_card, '逻辑数据', '类型'))
 
     -- 原画信息
     do
         local o_card_curcard
-        if o_card.原画 then
+        if get_attr(o_card, '美术数据', '原画') then
             o_card_curcard = o_card
         else
             o_card_curcard = query_iter(o_card_type.默认原画配置)
         end
 
-        local image_原画 = o_card_curcard.原画
-        local number_原画偏移X = o_card_curcard.原画偏移X or 0
-        local number_原画偏移Y = o_card_curcard.原画偏移Y or 0
-        local number_原画旋转 = o_card_curcard.原画旋转 or 0
-        local number_原画缩放X = (o_card_curcard.原画缩放X or 1) * 0.58
-        local number_原画缩放Y = (o_card_curcard.原画缩放Y or 1) * 0.58
+        local image_原画 = get_attr(o_card_curcard, '美术数据', '原画')
+        local number_原画偏移X = get_attr(o_card_curcard, '美术数据', '原画偏移X') or 0
+        local number_原画偏移Y = get_attr(o_card_curcard, '美术数据', '原画偏移Y') or 0
+        local number_原画旋转 = get_attr(o_card_curcard, '美术数据', '原画旋转') or 0
+        local number_原画缩放X = (get_attr(o_card_curcard, '美术数据', '原画缩放X') or 1) * 0.58
+        local number_原画缩放Y = (get_attr(o_card_curcard, '美术数据', '原画缩放Y') or 1) * 0.58
 
         com.原画.img = image_原画
         com.原画.x = number_原画偏移X
@@ -42,7 +44,7 @@ t['CardCom_SetData'] = function (com, o_card)
     end
 
     -- 职业信息
-    local o_profession_卡牌职业 = query_iter(o_card.职业 or 0x10080001)
+    local o_profession_卡牌职业 = query_iter(get_attr(o_card, '逻辑数据', '职业') or 0x10080001)
     if com.职业边框 then
         com.职业边框.img = o_profession_卡牌职业[o_card_type.职业边框]
     end
@@ -52,7 +54,7 @@ t['CardCom_SetData'] = function (com, o_card)
     
     -- 品质信息
     if com.品质板 then
-        local o_rank_卡牌品质 = query_iter(o_card.品质 or 0x10070001)
+        local o_rank_卡牌品质 = query_iter(get_attr(o_card, '逻辑数据', '品质') or 0x10070001)
         local image_宝石图片 = o_rank_卡牌品质.宝石图片
         if image_宝石图片 then
             com.品质板.visible = true
@@ -64,7 +66,7 @@ t['CardCom_SetData'] = function (com, o_card)
 
     -- 精英标志
     if com.精英板 then
-        local boolean_是精英 = o_card.是精英
+        local boolean_是精英 = get_attr(o_card, '逻辑数据', '是精英')
         if boolean_是精英 then
             com.精英板.visible = true
         else
@@ -82,12 +84,13 @@ t['CardCom_SetData'] = function (com, o_card)
         end
     end
     if com.描述字符 then
-        local string_卡片描述 = o_card.描述
+        local string_卡片描述 = get_attr(o_card, '美术数据', '描述')
         com.描述字符.text = string_卡片描述 or ''
     end
     if com.种族字符 then
-        if o_card.种族 then
-            local o_race_种族 = query_iter(o_card.种族)
+        local 种族 = get_attr(o_card, '逻辑数据', '种族')
+        if 种族 then
+            local o_race_种族 = query_iter(种族)
             com.种族字符.text = o_race_种族.showname
             com.种族板.visible = true
         else
@@ -97,19 +100,19 @@ t['CardCom_SetData'] = function (com, o_card)
 
     -- 卡牌数据
     if com.费用数值 then
-        local int_卡片费用 = o_card.费用
+        local int_卡片费用 = get_attr(o_card, '卡牌属性', '费用')
         com.cost = int_卡片费用
     end
     if com.攻击力数值 then
-        local int_卡片攻击力 = o_card.攻击
+        local int_卡片攻击力 = get_attr(o_card, '卡牌属性', '攻击')
         com.atk = int_卡片攻击力
     end
     if com.生命值数值 then
-        local int_卡片生命值 = o_card.生命
+        local int_卡片生命值 = get_attr(o_card, '卡牌属性', '生命')
         com.hp = int_卡片生命值
     end
     if com.护甲值数值 then
-        local int_卡片护甲值 = o_card.护甲
+        local int_卡片护甲值 = get_attr(o_card, '卡牌属性', '护甲')
         com.ap = int_卡片护甲值
     end
 

@@ -33,7 +33,7 @@ function t:setData(o_card_卡片数据)
         G.addListener(key, {'卡牌实例_信息更新', o_card_卡片数据.name})
     end
 
-    local i_cardtype_卡片类型 = o_card_卡片数据.类型
+    local i_cardtype_卡片类型 = CARD_GET_ATTR(o_card_卡片数据, '逻辑数据', '类型')
     if not i_cardtype_卡片类型 then 
         return 
     end
