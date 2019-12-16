@@ -82,27 +82,25 @@ end
 
 function t:rollOver(tar)
     if self.can_show then
-        local o_card_卡片数据 = tar.c_card_manager:getData()
-        if o_card_卡片数据.类型 then
-            tar.alpha = 0
-            self.CurCard = tar
+        tar.alpha = 0
+        self.CurCard = tar
 
-            self.TipsCard.visible = true
-            self.TipsCard.x = tar.x
-            self.TipsCard.c_card_manager:setData(o_card_卡片数据)
-        end
+        local o_card_picked = tar.c_card_manager:getData()
+
+        self.TipsCard.visible = true
+        self.TipsCard.x = tar.x
+        self.TipsCard.c_card_manager:setData(o_card_picked)
     end
 end
 
 function t:rollOut(tar)
     if self.can_show then
-        local o_card_卡片数据 = tar.c_card_manager:getData()
-        if o_card_卡片数据.类型 then
-            tar.alpha = 255
-            self.CurCard = nil
+        tar.alpha = 255
+        self.CurCard = nil
 
-            self.TipsCard.visible = false
-        end
+        local o_card_picked = tar.c_card_manager:getData()
+        
+        self.TipsCard.visible = false
     end
 end
 

@@ -326,10 +326,8 @@ local trigger_iter = function (estr_cardevent_inittype_类型, card, info)
         end
     end
 
-    local get_attr = CARD_GET_ATTR
-    local 卡牌效果 = get_attr(card, '逻辑数据', '卡牌效果')
-    if card and 卡牌效果 then
-        for _,s in ipairs(卡牌效果) do
+    local for_skill_list = function (skill_list)
+        for _,s in ipairs(skill_list or {}) do
             local skill = G.QueryName(s)
             if skill and skill['逻辑功能'] then
                 for _,trigger in ipairs(skill['逻辑功能']) do
@@ -340,6 +338,10 @@ local trigger_iter = function (estr_cardevent_inittype_类型, card, info)
             end
         end
     end
+
+    local get_attr = CARD_GET_ATTR
+    local 卡牌效果 = get_attr(card, '逻辑数据', '卡牌效果')
+    for_skill_list(卡牌效果)
 end
 
 t['逻辑注册_初始化'] = function ()

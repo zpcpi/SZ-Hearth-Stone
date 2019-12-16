@@ -358,6 +358,7 @@ local t = {
 			[1]={
 				['name']='卡牌属性',
 				['type']='o_card_attr',
+				['needcopy']=true,
 			},
 			[2]={
 				['name']='美术数据',
@@ -366,6 +367,7 @@ local t = {
 			[3]={
 				['name']='逻辑数据',
 				['type']='o_card_logicinfo',
+				['needcopy']=true,
 			},
 			[4]={
 				['name']='局外数据',
