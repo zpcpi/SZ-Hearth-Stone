@@ -17,7 +17,8 @@ function t:init()
     self.职业边框 = self.obj.getChildByName('背景')
     self.职业图标 = self.obj.getChildByName('职业图标')
 
-    self.名称字符 = self.obj.getChildByName('名称字符')
+    self.名称板 = self.obj.getChildByName('名称板')
+    self.名称字符 = self.名称板.getChildByName('名称字符')
 
     self.属性值组合 = self.obj.getChildByName('属性值组合')
     self.生命值 = self.属性值组合.getChildByName('生命值')
