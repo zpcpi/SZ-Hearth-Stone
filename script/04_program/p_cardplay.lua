@@ -348,6 +348,7 @@ t['逻辑注册_初始化'] = function ()
     local card = G.event_info()
     card['动态数据'] = {
         ['当前注册事件'] = {},
+        ['浮动属性'] = {},
     }
     trigger_iter('初始', card)
 end
@@ -387,17 +388,17 @@ end
 
 t['通用逻辑_默认流程注册'] = function ()
     local cond = nil
-    local prior = 0
-    local group = 'system'
+    local prior_base = EVENT_PRIOR.base
+    local group_system = EVENT_GROUP.system
     
     -- trigger注册
-    G.addListener('逻辑注册_初始化', {'逻辑_卡牌初始化'}, cond, prior, group)
-    G.addListener('逻辑注册_上场', {'逻辑_卡牌上场前'}, cond, prior, group)
-    G.addListener('逻辑注册_上手', {'逻辑_卡牌上手前'}, cond, prior, group)
-    G.addListener('逻辑注册_生效', {'逻辑_卡牌生效'}, cond, prior, group)
+    G.addListener('逻辑注册_初始化', {'逻辑_卡牌初始化'}, cond, EVENT_PRIOR.first, group_system)
+    G.addListener('逻辑注册_上场', {'逻辑_卡牌上场前'}, cond, prior_base, group_system)
+    G.addListener('逻辑注册_上手', {'逻辑_卡牌上手前'}, cond, prior_base, group_system)
+    G.addListener('逻辑注册_生效', {'逻辑_卡牌生效'}, cond, prior_base, group_system)
 
     -- 沉默
-    G.addListener('逻辑反注册_沉默', {''}, cond, prior, group)
+    G.addListener('逻辑反注册_沉默', {''}, cond, prior_base, group_system)
 
 end
 

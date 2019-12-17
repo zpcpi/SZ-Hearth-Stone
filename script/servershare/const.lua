@@ -55,7 +55,7 @@ CARD_FLAGS = {
         ['沉默'] = 0, -- 被沉默，需要清空技能和buff
         ['冻结'] = 1, -- 被冻结，在回合结束时，有攻击次数剩余解冻
         ['等待死亡'] = 2, -- 被消灭，或者负血被检测到
-        ['首回合召唤'] = 3, -- 首回合登场，突袭免疫可以用到
+        ['首回合召唤'] = 3, -- 首回合登场，无法攻击，突袭免疫也会用到
         ['已经登场'] = 4, -- 已经算是场面的随从了，解决随从召唤动画问题
         ['未知'] = 5, -- 不完全清楚卡牌的信息
     },
@@ -65,6 +65,24 @@ CARD_FLAGS = {
     }
 }
 
+EVENT_PRIOR = {
+    first = 99999999,
+
+
+
+
+
+    base = 0,
+
+
+    last = -99999999,
+}
+
+EVENT_GROUP = {
+    system = 'system',
+}
+
+
 function CARD_GET_ATTR(odata, key, ...)
     if key then
         if type(odata) == 'table' then
@@ -73,3 +91,4 @@ function CARD_GET_ATTR(odata, key, ...)
     end
     return odata
 end
+
