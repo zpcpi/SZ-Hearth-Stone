@@ -48,3 +48,30 @@ end
 t['zpc_test2'] = function (a)
     G.trig_event('asd', a)
 end
+
+--ret=o_excel
+t['card数据处理'] = function(o_excel_xxxx)
+    local function o_save(typedict_GetTable)
+        local d = require "_data"
+        local code = d._t_obj.save(d._t_obj.doc_file[typedict_GetTable], 2)
+        local path = G.GetScriptPath(typedict_GetTable)
+        G.WriteFile(path, code)
+    end
+    local cardlist = G.DBTable('o_card')
+
+    for k,v in ipairs(cardlist) do
+        if v['逻辑数据'] then
+            local t = v['逻辑数据']
+
+            if t['职业'] then
+                t['职业xx'] = {
+                    t['职业']
+                }
+                t['职业'] = nil
+            end
+        end
+    end
+
+    o_save('o_card')
+    return o_excel_xxxx
+end

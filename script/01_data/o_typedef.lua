@@ -469,7 +469,7 @@ local t = {
 			},
 			[2]={
 				['name']='职业',
-				['type']='i_profession',
+				['type']='_i_profession',
 			},
 			[3]={
 				['name']='品质',

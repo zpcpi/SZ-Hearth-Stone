@@ -69,11 +69,26 @@ tp = tc
 		--end
 		tc = G.Quad()
 		tp.addChild(tc)
-		tc.name = '职业图标'
+		tc.name = '职业图标2 '
+		tc.left = 14.500
+		tc.right = 105.500
+		tc.bottom = -277.000
+		tc.top = -185.000
+		tc.visible = false
+		tc.scaleX = 0.800
+		tc.scaleY = 0.800
+		tc.img = 0x560d0002
+		tp = tc
+		tp = tp.parent
+		--end
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = '职业图标1'
 		tc.left = -45.500
 		tc.right = 45.500
 		tc.bottom = -265.000
 		tc.top = -173.000
+		tc.visible = false
 		tc.img = 0x560d0002
 		tp = tc
 		tp = tp.parent

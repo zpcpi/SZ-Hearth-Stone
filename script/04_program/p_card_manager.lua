@@ -44,12 +44,20 @@ t['CardCom_SetData'] = function (com, o_card)
     end
 
     -- 职业信息
-    local o_profession_卡牌职业 = query_iter(get_attr(o_card, '逻辑数据', '职业') or 0x10080001)
-    if com.职业边框 then
-        com.职业边框.img = o_profession_卡牌职业[o_card_type.职业边框]
-    end
-    if com.职业图标 then
-        com.职业图标.img = o_profession_卡牌职业.职业图标
+    local i_proflist = get_attr(o_card, '逻辑数据', '职业')
+    for index, pro in ipairs(i_proflist or {0x10080001}) do
+        local o_profession_卡牌职业 = query_iter(pro)
+
+        if index == 1 then
+            if com.职业边框 then
+                com.职业边框.img = o_profession_卡牌职业[o_card_type.职业边框]
+            end
+        end
+        local iconpath = '职业图标' .. index
+        if com[iconpath] then
+            com[iconpath].img = o_profession_卡牌职业.职业图标
+            com[iconpath].visible = true
+        end
     end
     
     -- 品质信息
