@@ -460,20 +460,30 @@ t['卡牌实例化'] = function (o_card_卡片模板)
     return card
 end
 
-t['卡牌实例化_信息更新'] = function (i_card_卡牌, string_attr, value)
+t['卡牌实例化_信息更新'] = function (i_card_卡牌, _string_attr, _value)
     local o_card_卡牌 = G.QueryName(i_card_卡牌)
     if o_card_卡牌 then
     else
         o_card_卡牌 = {['name']=i_card_卡牌,}
         G.DBAdd(o_card_卡牌, get_card_dbname(i_card_卡牌))
     end
-    if string_attr then
-        o_card_卡牌[string_attr] = value
-        if string_attr == 'root' then
-            setmetatable(o_card_卡牌, getmetatable(G.QueryName(value)))
+    for k,attr in ipairs(_string_attr or {}) do
+        local v = _value[k]
+        o_card_卡牌[attr] = v
+        if attr == 'root' then
+            setmetatable(o_card_卡牌, getmetatable(G.QueryName(v)))
         end
+    end
+    G.trig_event('卡牌实例_信息更新', i_card_卡牌)
+end
 
-        G.trig_event('卡牌实例_信息更新', i_card_卡牌)
+t['卡牌实例化_信息更新_预处理'] = function (o_card_卡牌, _string_attr)
+    if o_card_卡牌 then
+        local _value = {}
+        for k,attr in ipairs(_string_attr or {}) do
+            _value[k] = o_card_卡牌[attr]
+        end
+        G.call('网络通用_广播消息', '卡牌实例化_信息更新', o_card_卡牌.name, _string_attr, _value)
     end
 end
 -- ============================================
