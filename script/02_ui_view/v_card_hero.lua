@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_card_hero = require 'c_card_hero'
 local c_mintextquadsize = require 'c_mintextquadsize'
+local c_card_hero = require 'c_card_hero'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -70,10 +70,10 @@ tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '职业图标'
-		tc.left = -133.500
-		tc.right = -42.500
-		tc.bottom = -93.000
-		tc.top = -1.000
+		tc.left = -45.500
+		tc.right = 45.500
+		tc.bottom = -276.000
+		tc.top = -184.000
 		tc.img = 0x560d0002
 		tp = tc
 		tp = tp.parent
@@ -131,13 +131,12 @@ tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '生命值数值'
-				tc.left = -28.842
-				tc.right = 29.158
+				tc.left = 0.158
+				tc.right = 0.158
 				tc.bottom = -16.658
 				tc.top = 18.342
 				tc.scaleX = 1.400
 				tc.scaleY = 1.400
-				tc.text = '30'
 				tc.font = 0x63410000
 				tc.style = 14
 				tp = tc
@@ -153,5 +152,6 @@ tp = tc
 		--end
 	tp.c_card_hero = setmetatable({}, c_card_hero)
 	com = tp.c_card_hero
+	com['hp'] =nil
 	tp = tp.parent
 	--end

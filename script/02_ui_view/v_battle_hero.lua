@@ -2,12 +2,12 @@
 
 ]]
 local G = require 'gf'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local c_battle_hero = require 'c_battle_hero'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
-tc.name = 'v_card_hero'
+tc.name = 'v_battle_hero'
 tc.right = 0.000
 tc.top = 0.000
 tp = tc
@@ -124,6 +124,7 @@ tp = tc
 			tc.right = -98.500
 			tc.bottom = -139.500
 			tc.top = -26.500
+			tc.visible = false
 			tc.scaleX = 1.200
 			tc.scaleY = 1.200
 			tc.img = 0x560b0003
@@ -186,6 +187,7 @@ tp = tc
 			tc.right = 215.500
 			tc.bottom = -34.895
 			tc.top = 75.105
+			tc.visible = false
 			tc.scaleX = 1.200
 			tc.scaleY = 1.200
 			tc.img = 0x560b0004
