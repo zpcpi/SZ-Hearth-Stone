@@ -23,6 +23,16 @@ local t = {
 		['color']=0x7226f9,
 	},
 	{
+		['name']=0x1f05000f,
+		['showname']='属性红色',
+		['color']=0x2060d0,
+	},
+	{
+		['name']=0x1f050010,
+		['showname']='属性绿色',
+		['color']=0x00ff00,
+	},
+	{
 		['name']=0x1f050004,
 		['showname']='蓝色',
 		['id']=4,

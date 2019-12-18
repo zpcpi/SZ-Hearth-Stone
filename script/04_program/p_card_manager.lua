@@ -161,8 +161,8 @@ local function com_color_mode_费用 (estr_cardattr_enum_属性名)
     -- 当前值比原始值大，显示红色
     -- 当前值比原始值小，显示绿色
     -- 否则显示白色
-    local red = G.QueryName(0x1f050003)['color']
-    local green = G.QueryName(0x1f050006)['color']
+    local red = G.QueryName(0x1f05000f)['color']
+    local green = G.QueryName(0x1f050010)['color']
     local white = 0xffffff
 
     return function (self, objname)
@@ -173,17 +173,20 @@ local function com_color_mode_费用 (estr_cardattr_enum_属性名)
 
         if curv > oriv then
             self[objname].color = red
+            self[objname].outColor = 1
         elseif curv < oriv then
             self[objname].color = green
+            self[objname].outColor = 1
         else
             self[objname].color = 0xffffff
+            self[objname].outColor = 1
         end
     end
 end
 local function com_color_mode_攻击 (estr_cardattr_enum_属性名)
     -- 当前值比原始值大，显示绿色
     -- 否则显示白色
-    local green = G.QueryName(0x1f050006)['color']
+    local green = G.QueryName(0x1f050010)['color']
     local white = 0xffffff
 
     return function (self, objname)
@@ -194,8 +197,10 @@ local function com_color_mode_攻击 (estr_cardattr_enum_属性名)
 
         if curv > oriv then
             self[objname].color = green
+            self[objname].outColor = 1
         else
             self[objname].color = white
+            self[objname].outColor = 1
         end
     end
 end
@@ -203,8 +208,8 @@ local function com_color_mode_生命 (estr_cardattr_enum_属性名)
     -- 当前值比最大值小，显示红色（受伤）
     -- 当前值等于最大值，最大值大于原始值，显示绿色
     -- 否则显示白色
-    local red = G.QueryName(0x1f050003)['color']
-    local green = G.QueryName(0x1f050006)['color']
+    local red = G.QueryName(0x1f05000f)['color']
+    local green = G.QueryName(0x1f050010)['color']
     local white = 0xffffff
 
     return function (self, objname)
@@ -215,10 +220,13 @@ local function com_color_mode_生命 (estr_cardattr_enum_属性名)
 
         if curv < maxv then
             self[objname].color = red
+            self[objname].outColor = 1
         elseif (curv == maxv) and (maxv > oriv) then
             self[objname].color = green
+            self[objname].outColor = 1
         else
             self[objname].color = white
+            self[objname].outColor = 1
         end
     end
 end

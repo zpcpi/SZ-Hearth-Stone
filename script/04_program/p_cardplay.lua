@@ -460,6 +460,10 @@ t['卡牌实例化'] = function (o_card_卡片模板)
     return card
 end
 
+local function get_card_dbname(i_card_卡牌)
+    return G.GetTextOwner((i_card_卡牌 >> 16) - 0x7000)
+end
+
 t['卡牌实例化_信息更新'] = function (i_card_卡牌, _string_attr, _value)
     local o_card_卡牌 = G.QueryName(i_card_卡牌)
     if o_card_卡牌 then
