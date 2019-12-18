@@ -249,6 +249,23 @@ local t = {
 		['name']='UI_鼠标进入手牌区',
 	},
 	{
+		['name']='UI_卡牌属性更新',
+		['arg']={
+			[1]={
+				['id']='Caster',
+				['type']='o_card',
+			},
+			[2]={
+				['id']='Attr',
+				['type']='estr_cardattr_enum',
+			},
+			[2]={
+				['id']='Value',
+				['type']='int',
+			},
+		},
+	},
+	{
 		['name']='UI_鼠标切换站位',
 		['arg']={
 			[1]={

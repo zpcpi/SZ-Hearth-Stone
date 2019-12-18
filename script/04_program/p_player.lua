@@ -62,11 +62,10 @@ t['角色_战场_设置英雄'] = function(estr_player_相对身份, o_card_卡�
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
 
     if o_card_卡牌 ~= nil then
-        if (o_card_卡牌.name == o_card_卡牌.root) then
-            local i_card_卡牌 = o_card_卡牌.name
-            G.call('角色_战场_设置英雄_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
-            G.call('网络通用_广播消息', '角色_战场_设置英雄_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
-        end
+        local i_card_卡牌 = o_card_卡牌.name
+        G.call('角色_战场_设置英雄_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
+        G.call('网络通用_广播消息', '角色_战场_设置英雄_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
+        G.call('网络通用_广播消息', '卡牌实例化_信息更新', i_card_卡牌, 'root', o_card_卡牌.root)
     end
 end
 

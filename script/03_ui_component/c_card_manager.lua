@@ -23,7 +23,6 @@ function t:setData(o_card_卡片数据)
     -- 注册卡牌更新监听
     do
         local update_data = function ()
-            print(1, tostring(self))
             self:setData(self.cur_card)
         end
     
@@ -67,6 +66,7 @@ end
 function t:delete()
     local key = 'c_card_manager|' .. tostring(self)
     G.removeListener(key, '卡牌实例_信息更新')
+    G.api[key] = nil
 end
 
 return t

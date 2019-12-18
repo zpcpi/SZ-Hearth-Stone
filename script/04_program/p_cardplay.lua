@@ -211,7 +211,7 @@ local single_damage = function ()
         TargetList[index] = Target
 
         -- 造成伤害
-        print(int_伤害值)
+        G.call('card_造成伤害', Target, int_伤害值)
     end
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_直接伤害', init, action)
 end
@@ -349,6 +349,7 @@ t['逻辑注册_初始化'] = function ()
     card['动态数据'] = {
         ['当前注册事件'] = {},
         ['浮动属性'] = {},
+        ['当前属性'] = {},
     }
     trigger_iter('初始', card)
 end
@@ -488,7 +489,7 @@ local cardflag_iter = function (data, flag)
 end
 
 t['卡牌条件_卡牌特性判断'] = function (o_card_当前卡牌, _string_满足特性, _string_排除特性)
-    local data = o_card_当前卡牌['卡牌特性'] or {}
+    local data = (o_card_当前卡牌['逻辑数据'] or {})['卡牌特性'] or {}
 
     for _,flag in ipairs(_string_满足特性 or {}) do
         if cardflag_iter(data, flag) then
@@ -505,7 +506,87 @@ t['卡牌条件_卡牌特性判断'] = function (o_card_当前卡牌, _string_�
 
     return true
 end
+-- ============================================
+-- ============================================
+-- ============================================
+-- 卡牌属性相关接口
+-- ============================================
+-- ============================================
+-- ============================================
+t['卡牌属性_获取'] = function (o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型)
+    if not o_card_当前卡牌 then
+        return 
+    end
 
+    local dyn_data = nil
+    local tattr = nil
+    local result = nil
 
+    local value_iter = function (v)
+        if type(v) == 'number' then
+            if v < 0 then
+                v = 0
+            elseif v > (1 << 31) then
+                v = 0
+            end
+        end
+        return v
+    end
 
+    if estr_cardattr_type_属性类型 == '当前值' then
+        dyn_data = o_card_当前卡牌['动态数据'] or {}
+        tattr = dyn_data['当前属性'] or {}
+        return value_iter(tattr[estr_cardattr_enum_属性名]) or 
+               G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '最大值') or 
+               G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '原始值')
+    elseif estr_cardattr_type_属性类型 == '最大值' then
+        dyn_data = o_card_当前卡牌['动态数据'] or {}
+        tattr = dyn_data['浮动属性'] or {}
+        return value_iter(tattr[estr_cardattr_enum_属性名]) or 
+               G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '原始值')
+    elseif estr_cardattr_type_属性类型 == '原始值' then
+        tattr = o_card_当前卡牌['卡牌属性']
+        return value_iter(tattr[estr_cardattr_enum_属性名])
+    end
 
+    return result
+end
+
+t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value)
+    if not o_card_当前卡牌 then
+        return 
+    end
+
+    local dyn_data = nil
+    local tattr = nil
+
+    local value_iter = function (v)
+        if type(v) == 'number' then
+            if v < 0 then
+                v = 0
+            elseif v > (1 << 31) then
+                v = 0
+            end
+        end
+        return v
+    end
+
+    if estr_cardattr_type_属性类型 == '当前值' then
+        dyn_data = o_card_当前卡牌['动态数据']
+        tattr = dyn_data['当前属性']
+        
+        local cur_value = value_iter(int_value)
+        tattr[estr_cardattr_enum_属性名] = cur_value
+        
+        -- 临时，应该加入动画队列中
+        G.trig_event('UI_卡牌属性更新', o_card_当前卡牌.name, estr_cardattr_enum_属性名, cur_value)
+    elseif estr_cardattr_type_属性类型 == '最大值' then
+        dyn_data = o_card_当前卡牌['动态数据']
+        tattr = dyn_data['浮动属性']
+        tattr[estr_cardattr_enum_属性名] = value_iter(int_value)
+    elseif estr_cardattr_type_属性类型 == '原始值' then
+        tattr = o_card_当前卡牌['卡牌属性']
+        tattr[estr_cardattr_enum_属性名] = value_iter(int_value)
+    end
+
+end

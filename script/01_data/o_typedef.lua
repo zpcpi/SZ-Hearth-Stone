@@ -555,8 +555,12 @@ local t = {
 				['name']='当前注册事件',
 				['type']='any',
 			},
-			[1]={
+			[2]={
 				['name']='浮动属性',
+				['type']='o_card_attr',
+			},
+			[3]={
+				['name']='当前属性',
 				['type']='o_card_attr',
 			},
 		},

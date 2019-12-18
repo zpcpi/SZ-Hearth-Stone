@@ -7,6 +7,9 @@ local t = G.api
 
 
 t['CardCom_SetData'] = function (com, o_card)
+    -- 记录当前关联卡牌
+    com.cur_card = o_card
+
     local query_iter
     if G.is_editor then 
         local d = require '_data'
@@ -108,19 +111,19 @@ t['CardCom_SetData'] = function (com, o_card)
 
     -- 卡牌数据
     if com.费用数值 then
-        local int_卡片费用 = get_attr(o_card, '卡牌属性', '费用')
+        local int_卡片费用 = G.call('卡牌属性_获取', o_card, '费用', '当前值')
         com.cost = int_卡片费用
     end
     if com.攻击力数值 then
-        local int_卡片攻击力 = get_attr(o_card, '卡牌属性', '攻击')
+        local int_卡片攻击力 = G.call('卡牌属性_获取', o_card, '攻击', '当前值')
         com.atk = int_卡片攻击力
     end
     if com.生命值数值 then
-        local int_卡片生命值 = get_attr(o_card, '卡牌属性', '生命')
+        local int_卡片生命值 = G.call('卡牌属性_获取', o_card, '生命', '当前值')
         com.hp = int_卡片生命值
     end
     if com.护甲值数值 then
-        local int_卡片护甲值 = get_attr(o_card, '卡牌属性', '护甲')
+        local int_卡片护甲值 = G.call('卡牌属性_获取', o_card, '护甲', '当前值')
         com.ap = int_卡片护甲值
     end
 
@@ -128,11 +131,110 @@ t['CardCom_SetData'] = function (com, o_card)
     if com.嘲讽框 then
         -- todo...
     end
+
+    -- 临时，追加属性改变监听
+    -- 应该做成动画
+
+    -- 注册卡牌更新监听
+    do
+        local update_data = function ()
+            local _, attr, value = G.event_info()
+
+            if attr == '费用' then
+                attr = 'cost'
+            elseif attr == '攻击' then
+                attr = 'atk'
+            elseif attr == '生命' then
+                attr = 'hp'
+            end
+            com[attr] = value
+        end
+    
+        local key = 'card_attrchange|' .. tostring(com)
+        G.removeListener(key, 'UI_卡牌属性更新')
+        G.api[key] = update_data
+        G.addListener(key, {'UI_卡牌属性更新', o_card.name})
+    end
+end
+
+local function com_color_mode_费用 (estr_cardattr_enum_属性名)
+    -- 当前值比原始值大，显示红色
+    -- 当前值比原始值小，显示绿色
+    -- 否则显示白色
+    local red = G.QueryName(0x1f050003)['color']
+    local green = G.QueryName(0x1f050006)['color']
+    local white = 0xffffff
+
+    return function (self, objname)
+        local o_card = self.cur_card
+        local curv = G.call('卡牌属性_获取', o_card, estr_cardattr_enum_属性名, '当前值') or 0
+        local maxv = G.call('卡牌属性_获取', o_card, estr_cardattr_enum_属性名, '最大值') or 0
+        local oriv = G.call('卡牌属性_获取', o_card, estr_cardattr_enum_属性名, '原始值') or 0
+
+        if curv > oriv then
+            self[objname].color = red
+        elseif curv < oriv then
+            self[objname].color = green
+        else
+            self[objname].color = 0xffffff
+        end
+    end
+end
+local function com_color_mode_攻击 (estr_cardattr_enum_属性名)
+    -- 当前值比原始值大，显示绿色
+    -- 否则显示白色
+    local green = G.QueryName(0x1f050006)['color']
+    local white = 0xffffff
+
+    return function (self, objname)
+        local o_card = self.cur_card
+        local curv = G.call('卡牌属性_获取', o_card, estr_cardattr_enum_属性名, '当前值') or 0
+        local maxv = G.call('卡牌属性_获取', o_card, estr_cardattr_enum_属性名, '最大值') or 0
+        local oriv = G.call('卡牌属性_获取', o_card, estr_cardattr_enum_属性名, '原始值') or 0
+
+        if curv > oriv then
+            self[objname].color = green
+        else
+            self[objname].color = white
+        end
+    end
+end
+local function com_color_mode_生命 (estr_cardattr_enum_属性名)
+    -- 当前值比最大值小，显示红色（受伤）
+    -- 当前值等于最大值，最大值大于原始值，显示绿色
+    -- 否则显示白色
+    local red = G.QueryName(0x1f050003)['color']
+    local green = G.QueryName(0x1f050006)['color']
+    local white = 0xffffff
+
+    return function (self, objname)
+        local o_card = self.cur_card
+        local curv = G.call('卡牌属性_获取', o_card, estr_cardattr_enum_属性名, '当前值') or 0
+        local maxv = G.call('卡牌属性_获取', o_card, estr_cardattr_enum_属性名, '最大值') or 0
+        local oriv = G.call('卡牌属性_获取', o_card, estr_cardattr_enum_属性名, '原始值') or 0
+
+        if curv < maxv then
+            self[objname].color = red
+        elseif (curv == maxv) and (maxv > oriv) then
+            self[objname].color = green
+        else
+            self[objname].color = white
+        end
+    end
+end
+local function com_mode_select (objname)
+    if objname == '攻击力数值' then
+        return com_color_mode_攻击('攻击')
+    elseif objname == '生命值数值' then
+        return com_color_mode_生命('生命')
+    elseif objname == '护甲值数值' then
+    elseif objname == '费用数值' then
+        return com_color_mode_费用('费用')
+    end
 end
 
 t['CardCom_SetAttr'] = function (attrA, objname, attrB)
-    -- todo...
-    -- 追加颜色设置
+    local color_iter = com_mode_select(objname)
 
     return function (com, old_value)
         local value = com[attrA]
@@ -141,12 +243,14 @@ t['CardCom_SetAttr'] = function (attrA, objname, attrB)
         else
             com[objname][attrB] = ''
         end
+        if color_iter then
+            color_iter(com, objname)
+        end
     end
 end
 
 t['CardCom_SetAttr_hide'] = function (attrA, objname, attrB, hide_objname)
-    -- todo...
-    -- 追加颜色设置
+    local color_iter = com_mode_select(objname)
 
     if objname then
         return function (com, old_value)
@@ -157,6 +261,9 @@ t['CardCom_SetAttr_hide'] = function (attrA, objname, attrB, hide_objname)
             else
                 com[objname][attrB] = ''
                 com[hide_objname].visible = false
+            end
+            if color_iter then
+                color_iter(com, objname)
             end
         end
     else
