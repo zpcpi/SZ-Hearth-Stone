@@ -92,6 +92,7 @@ tp = tc
 		tc.right = 99.500
 		tc.bottom = -90.000
 		tc.top = 120.000
+		tc.visible = false
 		tc.scaleX = 0.900
 		tc.scaleY = 0.900
 		tc.img = 0x56250009
@@ -137,5 +138,7 @@ tp = tc
 		--end
 	tp.c_battle_herospell = setmetatable({}, c_battle_herospell)
 	com = tp.c_battle_herospell
+	com['cost'] =nil
+	com['used'] =nil
 	tp = tp.parent
 	--end

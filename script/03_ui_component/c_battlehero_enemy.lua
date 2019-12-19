@@ -52,7 +52,7 @@ function t:setData(o_card_卡片数据)
         o_node_界面 = self.武器
         self.cur_card_list['武器'] = o_card_卡片数据
     end
-    o_node_界面.c_card_manager:setData(o_card_卡片数据)
+    o_node_界面.c_card_manager:setData(o_card_卡片数据, true)
 end
 
 function t:getData()
