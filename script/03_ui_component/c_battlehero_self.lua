@@ -53,6 +53,7 @@ function t:setData(o_card_卡片数据)
         self.cur_card_list['武器'] = o_card_卡片数据
     end
     o_node_界面.c_card_manager:setData(o_card_卡片数据, true)
+    o_node_界面.visible = true
 end
 
 function t:getData()
@@ -65,16 +66,19 @@ function t:delData(boolean_英雄, boolean_英雄技能, boolean_武器)
     if boolean_英雄 then
         o_node_界面 = self.英雄
         o_node_界面.c_card_manager:setData(nil)
+        o_node_界面.visible = false
         self.cur_card_list['英雄'] = nil
-        end
+    end
     if boolean_英雄技能 then
         o_node_界面 = self.英雄技能
         o_node_界面.c_card_manager:setData(nil)
+        o_node_界面.visible = false
         self.cur_card_list['英雄技能'] = nil
     end
     if boolean_武器 then
         o_node_界面 = self.武器
         o_node_界面.c_card_manager:setData(nil)
+        o_node_界面.visible = false
         self.cur_card_list['武器'] = nil
     end
 end

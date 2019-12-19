@@ -17,9 +17,7 @@ function t:setData(o_card_卡片数据, boolean_isbattle)
     self.卡背框.visible = true
     self.cur_card = o_card_卡片数据
     if not o_card_卡片数据 then 
-        if boolean_isbattle then
-            self.obj.visible = false
-        end
+        self:delete()
         return 
     end
 
@@ -58,7 +56,6 @@ function t:setData(o_card_卡片数据, boolean_isbattle)
     local o_node_界面 = G.loadUI(string_uipath)
     if o_node_界面 then 
         self.卡背框.visible = false
-        self.obj.visible = true
         self.卡片实例.addChild(o_node_界面)
         local script_界面组件 = 'c_' .. string.sub(string_uipath, 3)
         local o_node_卡牌框 = o_node_界面.getChildByName('卡牌框')
@@ -77,7 +74,6 @@ function t:delete()
     local key = 'c_card_manager|' .. tostring(self)
     G.removeListener(key, '卡牌实例_信息更新')
     G.api[key] = nil
-    print(self, key)
 end
 
 return t
