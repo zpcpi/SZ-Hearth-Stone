@@ -210,6 +210,7 @@ function t:get_minion_index(posx, posy)
 
     local count = math.max(self.ShowCount or 0, 0)
     local cur_point_list = self:pos计算(count)
+    local d_spacex = UI_BATTLEMINIONS_POSX['spacex'] * 0.45
 
     -- print(self.ShowCount, self.MinionCount, count, self.随从占位编号)
     -- print(posx, posy)
@@ -220,31 +221,33 @@ function t:get_minion_index(posx, posy)
         if self.随从占位编号 > 0 then
             -- 往左找
             for i = 1, self.随从占位编号 - 1, 1 do
-                if posx <= cur_point_list[i] then
+                if posx <= cur_point_list[i] + d_spacex then
                     return i
                 end
             end
             -- 往右找
             for i = count, self.随从占位编号 + 1, -1 do
-                if posx > cur_point_list[i] then
+                if posx > cur_point_list[i] - d_spacex then
                     return i + 1
                 end
             end
             return self.随从占位编号
         else
             -- 没有空位的情况下
-            if posx <= cur_point_list[1] then
+            if posx <= cur_point_list[1] + d_spacex then
                 return 1
-            elseif posx > cur_point_list[count] then
+            elseif posx > cur_point_list[count] - d_spacex then
                 return count + 1
             else
                 for i = 1, count - 1, 1 do
-                    if (posx > cur_point_list[i]) and (posx <= cur_point_list[i+1]) then
+                    if (posx > cur_point_list[i] - d_spacex) and (posx <= cur_point_list[i+1] + d_spacex) then
                         return i+1
                     end
                 end
             end
         end
+    else
+        return 1
     end
 end
 
