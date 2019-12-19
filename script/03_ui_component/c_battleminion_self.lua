@@ -258,10 +258,16 @@ function t:set_minion_pos()
                 G.call('动画系统_创建quest_自定义', self.actor, false, 300, {
                     [1] = {
                         n=4,
-                        [1] = '动画系统_属性设置', 
+                        [1] = '动画系统_多属性设置', 
                         [2] = '::Self.minions[' .. i .. ']', 
-                        [3] = 'x',
-                        [4] = cur_point_list[i], 
+                        [3] = {
+                            [1] = 'x',
+                            [2] = 'y',
+                        },
+                        [4] = {
+                            [1] = cur_point_list[i],
+                            [2] = 0,
+                        }, 
                         [5] = {
                                 ['x1']=0,
                                 ['y1']=0.5,
