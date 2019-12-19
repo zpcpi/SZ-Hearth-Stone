@@ -44,16 +44,14 @@ function t:addMinion(o_card_卡牌, count)
     end
 
     if o_card_卡牌 then
-        local ui_card = G.loadUI('v_battle_minion')
+        local ui_card = G.loadUI('v_card_manager')
         self.布局点.addChild(ui_card)
     
         ui_card.mouseEnabled = true
         ui_card.scaleX = 0.3
         ui_card.scaleY = 0.3
+        ui_card.c_card_manager:setData(o_card_卡牌, true)
     
-        local script_界面组件 = ui_card.getChildByName('卡牌框').c_battle_minion
-        script_界面组件:setData(o_card_卡牌)
-
         -- 随从的攻击指令
         G.call('卡牌注册指令', o_card_卡牌, 0x10040008)
 
@@ -134,7 +132,7 @@ function t:rollOver(tar)
         if self.can_show then
             self.CurCard = tar
 
-            local o_card_picked = tar.getChildByName('卡牌框').c_battle_minion:getData()
+            local o_card_picked = tar.c_card_manager:getData()
 
             local posx, posy = tar.localToGlobal(0, 0)
             self.主战场:showtips(o_card_picked, posx + 160, posy)
@@ -154,7 +152,7 @@ end
 function t:mouseDown(tar)
     if tar.parent == self.布局点 then
         if self.can_pick then
-            local o_card_picked = tar.getChildByName('卡牌框').c_battle_minion:getData()
+            local o_card_picked = tar.c_card_manager:getData()
 
             if o_card_picked then
                 G.trig_event('UI_抓取卡牌', o_card_picked, tar)
@@ -169,7 +167,7 @@ function t:mouseUp(tar)
         if tar.parent ~= self.布局点 then
             G.trig_event('UI_卡牌确认使用', '我方')
         elseif tar.parent == self.布局点 then
-            local o_card_picked = tar.getChildByName('卡牌框').c_battle_minion:getData()
+            local o_card_picked = tar.c_card_manager:getData()
             G.trig_event('UI_卡牌选择目标', o_card_picked, tar)
         end
     end

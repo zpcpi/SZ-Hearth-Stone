@@ -26,7 +26,7 @@ function t:setData(o_card_卡片数据, boolean_isbattle)
     -- 注册卡牌更新监听
     do
         local update_data = function ()
-            self:setData(self.cur_card)
+            self:setData(self.cur_card, boolean_isbattle)
         end
     
         local key = 'c_card_manager|' .. tostring(self)
