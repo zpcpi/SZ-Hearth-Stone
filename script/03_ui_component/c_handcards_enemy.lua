@@ -71,6 +71,7 @@ function t:removeCard(del_count)
 
     local ui_card = self.handCards[del_count]
     table.remove(self.handCards, del_count)
+    ui_card.c_card_manager:delete()
     ui_card.parent:removeChild(ui_card)
 
     ui_card.visible = false

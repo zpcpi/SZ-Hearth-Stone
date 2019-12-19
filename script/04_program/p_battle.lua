@@ -39,7 +39,7 @@ end
 
 t['对决_决定初始卡牌'] = function()
     -- TODO：设置英雄
-    G.call('角色_战场_设置英雄', '我方', G.call('卡牌实例化', G.QueryName(0x100600a7)))
+    G.call('角色_战场_设置英雄', '我方', G.call('卡牌实例化', G.QueryName(0x100600aa)))
 
     -- TODO: 先抽 3(?) 张
     for i = 1, 3 do 

@@ -473,11 +473,28 @@ t['卡牌实例化_信息更新'] = function (i_card_卡牌, _string_attr, _valu
     end
     for k,attr in ipairs(_string_attr or {}) do
         local v = _value[k]
-        o_card_卡牌[attr] = v
         if attr == 'root' then
+            o_card_卡牌[attr] = v
             setmetatable(o_card_卡牌, getmetatable(G.QueryName(v)))
+        elseif type(attr) == 'string' then
+            o_card_卡牌[attr] = v
+        elseif type(attr) == 'table' then
+            local t = o_card_卡牌
+            local count = #attr
+            for index,sub_attr in ipairs(attr) do
+                if index < count then
+                    if type(t[sub_attr]) == 'table' then
+                    else
+                        t[sub_attr] = {}
+                    end
+                    t = t[sub_attr]
+                else
+                    t[sub_attr] = v
+                end
+            end
         end
     end
+
     G.trig_event('卡牌实例_信息更新', i_card_卡牌)
 end
 
@@ -485,8 +502,24 @@ t['卡牌实例化_信息更新_预处理'] = function (o_card_卡牌, _string_a
     if o_card_卡牌 then
         local _value = {}
         for k,attr in ipairs(_string_attr or {}) do
-            _value[k] = o_card_卡牌[attr]
+            if type(attr) == 'string' then
+                _value[k] = o_card_卡牌[attr]
+            elseif type(attr) == 'table' then
+                local t = o_card_卡牌
+                local v
+                for _,sub_attr in ipairs(attr) do
+                    if type(t) == 'table' then
+                        v = t[sub_attr]
+                        t = v
+                    else
+                        v = nil
+                        break
+                    end
+                end
+                _value[k] = v
+            end
         end
+
         G.call('网络通用_广播消息', '卡牌实例化_信息更新', o_card_卡牌.name, _string_attr, _value)
     end
 end
