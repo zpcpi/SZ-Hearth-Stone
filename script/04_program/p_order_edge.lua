@@ -88,6 +88,8 @@ t['抓取卡牌_修改数据'] = function (o_order_info_当前指令信息)
     copy_obj.mouseEnabled = false
     obj.visible = false
 
+    print('clone', obj, copy_obj)
+
     -- 控件父级设置
     local script_战场 = o_misc.主战场系统
     script_战场.跨界面操作框.addChild(copy_obj)
