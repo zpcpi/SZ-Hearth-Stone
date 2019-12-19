@@ -196,15 +196,31 @@ end
 --ret=o_deck
 t['对决_初始化我方对决牌库'] = function()
     local o_deck_卡组 = G.call('对决_获取对决卡组')
-    G['对决牌库'] = {}
     if not G.call('对决_卡组模板是否有效', o_deck_卡组) then 
         G.call('提示_添加提示', '卡组模板数据不正确')
         return 
     end
+
+    local o_randomlib_牌库顶 = G.call('Create_Randomlib', G.QueryName(0x100c0004)) -- 顺序选取
+    local o_randomlib_随机牌库 = G.call('Create_Randomlib', G.QueryName(0x100c0002)) -- 抽取随机
+    local o_randomlib_牌库底 = G.call('Create_Randomlib', G.QueryName(0x100c0004)) -- 顺序选取
+
     for _, o_card_卡片模板 in ipairs(o_deck_卡组['卡牌列表']) do 
+        -- todo，需要判断模板是否双方一致，比如自创卡
         local o_card_卡片实例 = G.call('卡牌实例化', o_card_卡片模板)
-        table.insert(G['对决牌库'], o_card_卡片实例)
+
+        o_randomlib_随机牌库:添加数据({o_card_卡片实例, 1})
     end
+    
+    o_randomlib_牌库顶:初始化(false, true)
+    o_randomlib_随机牌库:初始化(false, true)
+    o_randomlib_牌库底:初始化(false, true)
+
+    G.misc()['我方牌库'] = {
+        o_randomlib_牌库顶,
+        o_randomlib_随机牌库,
+        o_randomlib_牌库底,
+    }
 end
 
 --ret=boolean

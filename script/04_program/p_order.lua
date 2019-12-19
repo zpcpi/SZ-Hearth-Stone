@@ -82,8 +82,6 @@ t['卡牌注册指令'] = function (o_card_使用卡牌, i_order_当前指令)
                         else
                             next = t2
                         end
-                        print(G.event_info())
-                        print('asd', string.format('0x%x', o_card_使用卡牌.name), edge.showname, state, next)
                         if next ~= 0 then
                             state = next
                             init_order_edge()

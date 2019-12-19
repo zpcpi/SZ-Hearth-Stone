@@ -42,20 +42,20 @@ end
 
 --hide=true
 t['角色_抽取随机卡牌'] = function(estr_player_抽牌者相对身份, estr_player_牌库所属相对身份)
-    local _o_card_牌库
+    local _o_randomlib_抽牌牌库
     if estr_player_牌库所属相对身份 == '我方' then
-        _o_card_牌库 = G.call('对决_获取我方对决牌库', estr_player_牌库所属相对身份)
+        _o_randomlib_抽牌牌库 = G.misc()['我方牌库']
     else
         -- TODO: 如果要从别人的牌库抽取卡牌, 需要通过网络通知别人, 因为本地只有自己牌库的信息
-        _o_card_牌库 = {}
+        -- 交换下身份，通过网络发送该函数
+        return
     end
-    if #_o_card_牌库 == 0 then 
-        -- TODO: 牌库没有卡牌的处理
-        G.call('提示_添加提示', '你的牌库已经没有卡牌了')
-        return 
-    end
-    local int_随机数 = G.random(1, #_o_card_牌库)
-    local o_card_卡片 = table.remove(_o_card_牌库, int_随机数)
+
+    local o_card_卡片 = _o_randomlib_抽牌牌库[1](1)[1] or -- 为空，说明牌库顶里面没有卡牌
+                        _o_randomlib_抽牌牌库[2](1)[1] or -- 为空，说明随机牌库里面没有卡牌
+                        _o_randomlib_抽牌牌库[3](1)[1] or -- 为空，说明牌库底里面没有卡牌
+                        G.call('卡牌实例化', G.QueryName(0x100600b5)) -- 为空，抽疲劳卡
+                   
     G.call('角色_添加手牌', estr_player_抽牌者相对身份, o_card_卡片)
 end
 

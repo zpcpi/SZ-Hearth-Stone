@@ -200,7 +200,7 @@ local rlib_查找数据 = function (self, weight_cur)
 end
 
 local rlib_终止判断 = function (self)
-    local weight_max = self.tree[self.int_最大深度][1]['cur_weight']
+    local weight_max = (self.tree[self.int_最大深度][1] or {})['cur_weight'] or 0
 
     if weight_max > 0 then
         -- 还有数据，直接返回权重总值
