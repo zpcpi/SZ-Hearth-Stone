@@ -52,15 +52,7 @@ function t:setData(o_card_卡片数据)
         o_node_界面 = self.武器
         self.cur_card_list['武器'] = o_card_卡片数据
     end
-    local script_界面组件 = 'c_' .. string.sub(o_cardtype_卡片类型.战斗界面控件, 3)
-    
-    if o_node_界面 then
-        local o_node_卡牌框 = o_node_界面.getChildByName('卡牌框')
-        if o_node_卡牌框 and o_node_卡牌框[script_界面组件] and o_node_卡牌框[script_界面组件].setData then
-            o_node_卡牌框[script_界面组件]:setData(o_card_卡片数据)
-            o_node_界面.visible = true
-        end
-    end
+    o_node_界面.c_card_manager:setData(o_card_卡片数据, true)
 end
 
 function t:getData()
@@ -69,28 +61,20 @@ end
 
 function t:delData(boolean_英雄, boolean_英雄技能, boolean_武器)
     local o_node_界面
-    local script_界面组件
-
-    local iter = function ()
-        if o_node_界面 and o_node_界面[script_界面组件] and o_node_界面[script_界面组件].setData then
-            o_node_界面[script_界面组件]:setData(nil)
-            o_node_界面.visible = true
-        end
-    end
 
     if boolean_英雄 then
         o_node_界面 = self.英雄
-        script_界面组件 = 'c_battle_hero'
+        o_node_界面.c_card_manager:setData(nil)
         self.cur_card_list['英雄'] = nil
-    end
+        end
     if boolean_英雄技能 then
         o_node_界面 = self.英雄技能
-        script_界面组件 = 'c_battle_herospell'
+        o_node_界面.c_card_manager:setData(nil)
         self.cur_card_list['英雄技能'] = nil
     end
     if boolean_武器 then
         o_node_界面 = self.武器
-        script_界面组件 = 'c_battle_weapon'
+        o_node_界面.c_card_manager:setData(nil)
         self.cur_card_list['武器'] = nil
     end
 end
@@ -123,7 +107,7 @@ function t:rollOver(tar)
             self.CurCard = tar
 
             local posx, posy = tar.localToGlobal(0, 0)
-            self.主战场:showtips(o_card_picked, posx + 200, posy + 20)
+            self.主战场:showtips(o_card_picked, posx + 200, posy + 15)
         end
     end
 end
