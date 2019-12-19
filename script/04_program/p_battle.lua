@@ -221,6 +221,7 @@ t['对决_初始化我方对决牌库'] = function()
         o_randomlib_随机牌库,
         o_randomlib_牌库底,
     }
+    G.trig_event('UI_牌库更新')
 end
 
 --ret=boolean

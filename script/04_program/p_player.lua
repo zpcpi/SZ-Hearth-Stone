@@ -57,6 +57,7 @@ t['角色_抽取随机卡牌'] = function(estr_player_抽牌者相对身份, est
                         G.call('卡牌实例化', G.QueryName(0x100600b5)) -- 为空，抽疲劳卡
                    
     G.call('角色_添加手牌', estr_player_抽牌者相对身份, o_card_卡片)
+    G.trig_event('UI_牌库更新')
 end
 
 --hide=true
