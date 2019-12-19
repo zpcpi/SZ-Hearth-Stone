@@ -71,7 +71,8 @@ function t:init()
         o_misc.技能动画系统 = skill_actor
 
         -- 动画系统引用注册
-
+        skill_actor:push_quote('::HandCards_Self', self.selfHandcard.c_handcards_self)
+        skill_actor:push_quote('::HandCards_Enemy', self.enemyHandcard.c_handcards_enemy)
 
     end
 end

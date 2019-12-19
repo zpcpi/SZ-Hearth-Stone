@@ -4,7 +4,7 @@ local noti = G.notify
 function noti.角色_添加手牌_绝对身份(estr_absolute_id_type_绝对身份, i_card_卡牌)
     local o_misc = G.misc()
     local script_战场 = o_misc.主战场系统
-    local script_动画系统 = o_misc.主动画系统
+    local script_动画系统 = o_misc.技能动画系统
     local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
 
     local script_手牌组件
@@ -32,7 +32,7 @@ end
 function noti.角色_移除手牌_绝对身份(estr_absolute_id_type_绝对身份, int_手牌序号)
     local o_misc = G.misc()
     local script_战场 = o_misc.主战场系统
-    local script_动画系统 = o_misc.主动画系统
+    local script_动画系统 = o_misc.技能动画系统
     local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
 
     local script_手牌组件
@@ -62,7 +62,7 @@ end
 function noti.角色_战场_设置英雄_绝对身份(estr_absolute_id_type_绝对身份, i_card_卡牌)
     local o_misc = G.misc()
     local script_战场 = o_misc.主战场系统
-    local script_动画系统 = o_misc.主动画系统
+    local script_动画系统 = o_misc.技能动画系统
     local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
 
     local script_战场英雄组件
@@ -84,7 +84,7 @@ end
 function noti.角色_战场_设置英雄技能_绝对身份(estr_absolute_id_type_绝对身份, i_card_卡牌)
     local o_misc = G.misc()
     local script_战场 = o_misc.主战场系统
-    local script_动画系统 = o_misc.主动画系统
+    local script_动画系统 = o_misc.技能动画系统
     local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
 
     local script_战场英雄组件
@@ -106,7 +106,7 @@ end
 function noti.角色_战场_设置武器_绝对身份(estr_absolute_id_type_绝对身份, i_card_卡牌)
     local o_misc = G.misc()
     local script_战场 = o_misc.主战场系统
-    local script_动画系统 = o_misc.主动画系统
+    local script_动画系统 = o_misc.技能动画系统
     local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
 
     local script_战场英雄组件
@@ -146,7 +146,7 @@ end
 function noti.角色_设置水晶数据_绝对身份(estr_absolute_id_type_绝对身份, estr_mana_type_修改类型, int_value)
     local o_misc = G.misc()
     local script_战场 = o_misc.主战场系统
-    local script_动画系统 = o_misc.主动画系统
+    local script_动画系统 = o_misc.技能动画系统
     local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
 
     local script_水晶组件
