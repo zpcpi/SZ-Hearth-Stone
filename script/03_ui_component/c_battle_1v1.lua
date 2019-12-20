@@ -46,6 +46,11 @@ function t:init()
     self.selfBattleminion = self.obj.getChildByName('SelfBattleMinion')
     self.enemyBattleminion = self.obj.getChildByName('EnemyBattleMinion')
 
+    self.Record = self.obj.getChildByName('Record')
+    self.Record_功能区 = self.Record.getChildByName('功能区')
+    self.carddeckPanel = self.Record_功能区.getChildByName('我方牌库面签')
+    self.carddeck = self.carddeckPanel.getChildByName('容器')
+
     self.tips版 = self.obj.getChildByName('全局Tips版')
     self:initTipsCard()
 

@@ -25,6 +25,9 @@ function t:init()
 end
 
 function t:start()
+    self.can_pick = false
+    self.can_show = true
+
     local get_cardinfo_iter = function (index)
         if index > #self.卡牌信息列表 then
             for i = (#self.卡牌信息列表 + 1), index, 1 do
@@ -79,27 +82,47 @@ function t:start()
 end
 
 function t:rollOver(tar)
-    local index = tonumber(tar.name)
-    if index > 0 then
-        local card = self.卡牌列表[index]
-        local posx, posy = tar.localToGlobal(0, 0)
+    if self.can_show then
+        local index = tonumber(tar.name)
+        if index > 0 then
+            local card = self.卡牌列表[index]
+            local posx, posy = tar.localToGlobal(0, 0)
 
-        posy = posy - 30
-        if posy > 530 then
-            posy = 530
-        elseif posy < 100 then
-            posy = 100
+            posy = posy - 30
+            if posy > 530 then
+                posy = 530
+            elseif posy < 100 then
+                posy = 100
+            end
+
+            self.主战场:showtips(card, posx - 120, posy)
         end
-
-        self.主战场:showtips(card, posx - 120, posy)
     end
 end
 
 function t:rollOut(tar)
-    local index = tonumber(tar.name)
-    if index > 0 then
-        self.主战场:hidetips()
+    if self.can_show then
+        local index = tonumber(tar.name)
+        if index > 0 then
+            self.主战场:hidetips()
+        end
     end
+end
+
+function t:mouseDown(tar)
+    if self.can_pick then
+    else
+        if (tar.parent == self.牌库容器[1]) or (tar.parent == self.牌库容器[2]) or (tar.parent == self.牌库容器[3]) then
+            local index = tonumber(tar.name)
+            if index > 0 then
+                local o_card_picked = self.卡牌列表[index]
+                G.trig_event('UI_卡牌选择目标', o_card_picked, tar)
+            end
+        end
+    end
+end
+
+function t:mouseUp(tar)
 end
 
 return t
