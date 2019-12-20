@@ -44,6 +44,11 @@ function t:addMinion(o_card_卡牌, count)
     end
 
     if o_card_卡牌 then
+        local ui_before = self:get_obj_bycard(o_card_卡牌)
+        if ui_before then
+            return ui_before, self:get_cardindex_byobj(ui_before)
+        end
+
         local ui_card = G.loadUI('v_card_manager')
         self.布局点.addChild(ui_card)
     
@@ -65,6 +70,7 @@ function t:addMinion(o_card_卡牌, count)
         if cur_point_list then
             ui_card.x = cur_point_list[count]
         end
+        return ui_card, count
     else
         -- 空的，只是占位用的
         table.insert(self.minions, count, self.随从占位)
@@ -82,6 +88,15 @@ function t:addMinion(o_card_卡牌, count)
                 self.随从占位编号 = count - 1
             end
         end
+        return self.随从占位, self.随从占位编号
+    end
+end
+
+function t:replaceBlank(o_card_卡牌)
+    if o_card_卡牌 then
+        local count = self.随从占位编号
+        self:removeBlank()
+        return self:addMinion(o_card_卡牌, count)
     end
 end
 
@@ -96,6 +111,14 @@ end
 
 function t:get_cardobj_byindex(index)
     return (self.minions or {})[index]
+end
+
+function t:get_obj_bycard(card)
+    for k,v in ipairs(self.minions or {}) do
+        if v.c_card_manager:getData() == card then
+            return v
+        end
+    end
 end
 
 function t:removeCard(del_count)
@@ -121,7 +144,7 @@ function t:removeCard(del_count)
     end
 end
 
-function t:removeBlank(del_count)
+function t:removeBlank()
     if self.随从占位编号 > 0 then
         self:removeCard(self.随从占位编号)
     end
@@ -212,10 +235,6 @@ function t:get_minion_index(posx, posy)
     local cur_point_list = self:pos计算(count)
     local d_spacex = UI_BATTLEMINIONS_POSX['spacex'] * 0.45
 
-    -- print(self.ShowCount, self.MinionCount, count, self.随从占位编号)
-    -- print(posx, posy)
-    -- G.show_table(cur_point_list)
-
     local result = nil
     if count > 0 then
         if self.随从占位编号 > 0 then
@@ -231,6 +250,7 @@ function t:get_minion_index(posx, posy)
                     return i + 1
                 end
             end
+            -- 说明还在本位置
             return self.随从占位编号
         else
             -- 没有空位的情况下
