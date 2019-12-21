@@ -32,7 +32,6 @@ function t:init()
     self.deckInfoParent = self.obj.getChildByName('DeckList').getChildByName('DeckScrollView').getChildByName('content')
     self.newDeckButton = self.deckInfoParent.getChildByName('DeckInfo')
     self.endDeckEditButton = self.newDeckButton
-
     
     self.profScrollView = self.obj.getChildByName('ProfessionScrollView')
     self.newDeckNameNode = self.profScrollView.getChildByName('DeckName').getChildByName('Text')
