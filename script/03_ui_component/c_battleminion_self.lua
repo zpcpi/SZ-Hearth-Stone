@@ -178,7 +178,7 @@ function t:mouseDown(tar)
             local o_card_picked = tar.c_card_manager:getData()
 
             if o_card_picked then
-                G.trig_event('UI_抓取卡牌', o_card_picked, tar)
+                G.trig_event('UI_抓取卡牌_战场', o_card_picked, tar)
             end
         end
     end

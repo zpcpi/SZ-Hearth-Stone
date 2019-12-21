@@ -404,6 +404,57 @@ t['卡牌确认使用_随从中途_修改数据'] = function (o_order_info_当�
     )
 end
 
+--==========================================================
+-- 抓取卡牌_随从
+-- 0x10050017
+--==========================================================
+
+t['抓取卡牌_随从_事件'] = function (o_order_info_当前指令信息)
+    local Caster = o_order_info_当前指令信息['Caster']
+    return {'UI_抓取卡牌_战场', Caster}
+end
+
+t['抓取卡牌_随从_条件'] = function (o_order_info_当前指令信息)
+    local Caster = o_order_info_当前指令信息['Caster']
+    if Caster['动态数据'] and (Caster['动态数据']['卡牌位置'] == '战场') then
+        return true
+    end
+    return false
+end
+
+t['抓取卡牌_战场_修改数据'] = function (o_order_info_当前指令信息)
+    local o_misc = G.misc()
+    local _, obj = G.event_info()
+
+    -- 控件状态切换
+    local script_战场 = o_misc.主战场系统
+    script_战场.selfHandcard.c_handcards_self:can_pick_state(false)
+    script_战场.selfHandcard.c_handcards_self:can_show_state(false)
+    script_战场.enemyBattlehero.c_battlehero_enemy:can_show_state(false)
+
+    script_战场.selfBattlehero.c_battlehero_self:can_pick_state(false)
+    script_战场.selfBattlehero.c_battlehero_self:can_show_state(true)
+    script_战场.enemyBattlehero.c_battlehero_enemy:can_show_state(true)
+
+    script_战场.selfBattleminion.c_battleminion_self:can_pick_state(false)
+    script_战场.selfBattleminion.c_battleminion_self:can_show_state(true)
+    script_战场.enemyBattleminion.c_battleminion_enemy:can_show_state(true)
+
+    -- 动画系统控制
+    local script_动画系统 = o_misc.主动画系统
+    script_动画系统:clear_animquest()
+    script_动画系统:push_quote('::CurPickMinion', obj)
+
+    -- 注册动画
+    local obj_line = script_战场:add_popline()
+    script_动画系统:push_quote('::PopLine', obj_line)
+    script_动画系统:add_animquest(
+        -- 注册连线动画
+        G.call('动画系统_创建quest', script_动画系统, G.QueryName(0x1001001c))
+    )
+
+    print('asd3')
+end
 
 
 
@@ -473,8 +524,10 @@ t['卡牌注册指令_完成'] = function (o_order_info_当前指令信息)
     
     -- 显示用卡牌删除
     local copy_obj = o_order_info_当前指令信息['CasterObj_Clone']
-    copy_obj.visible = false
-    copy_obj.parent:removeChild(copy_obj)
+    if copy_obj then
+        copy_obj.visible = false
+        copy_obj.parent:removeChild(copy_obj)
+    end
 
     -- 手牌中删除
     local script_手牌组件 = script_战场.selfHandcard.c_handcards_self
@@ -489,9 +542,6 @@ t['卡牌注册指令_完成'] = function (o_order_info_当前指令信息)
     -- 手牌状态恢复
     script_手牌组件:pickcard(nil)
     script_战场.enemyHandcard.c_handcards_enemy:can_show_state(true)
-	script_战场.selfBattlehero.c_battlehero_self:can_pick_state(true)
-	script_战场.selfBattlehero.c_battlehero_self:can_show_state(true)
-    script_战场.enemyBattlehero.c_battlehero_enemy:can_show_state(true)
     
     -- 战场随从恢复
     script_战场:can_move_state(false)
@@ -499,6 +549,9 @@ t['卡牌注册指令_完成'] = function (o_order_info_当前指令信息)
     script_己方战场随从:can_pick_state(true)
     script_己方战场随从:can_show_state(true)
     script_己方战场随从:removeBlank()
+    script_战场.selfBattlehero.c_battlehero_self:can_pick_state(true)
+	script_战场.selfBattlehero.c_battlehero_self:can_show_state(true)
+    script_战场.enemyBattlehero.c_battlehero_enemy:can_show_state(true)
     script_战场.enemyBattleminion.c_battleminion_enemy:can_show_state(true)
 
     -- 播放复位动画
@@ -539,9 +592,6 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
     -- 手牌状态恢复
     script_手牌组件:pickcard(nil)
     script_战场.enemyHandcard.c_handcards_enemy:can_show_state(true)
-	script_战场.selfBattlehero.c_battlehero_self:can_pick_state(true)
-	script_战场.selfBattlehero.c_battlehero_self:can_show_state(true)
-    script_战场.enemyBattlehero.c_battlehero_enemy:can_show_state(true)
     
     -- 战场随从恢复
     script_战场:can_move_state(false)
@@ -549,6 +599,9 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
     script_己方战场随从:can_pick_state(true)
     script_己方战场随从:can_show_state(true)
     script_己方战场随从:removeBlank()
+    script_战场.selfBattlehero.c_battlehero_self:can_pick_state(true)
+	script_战场.selfBattlehero.c_battlehero_self:can_show_state(true)
+    script_战场.enemyBattlehero.c_battlehero_enemy:can_show_state(true)
     script_战场.enemyBattleminion.c_battleminion_enemy:can_show_state(true)
 
     if o_order_info_当前指令信息['CurPlayMinionObj'] then
@@ -560,14 +613,16 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
     -- 控件父级设置
     local obj = o_order_info_当前指令信息['CasterObj']
     local copy_obj = o_order_info_当前指令信息['CasterObj_Clone']
-    local orgx, orgy = copy_obj.localToGlobal(0, 0)
+    if copy_obj then
+        local orgx, orgy = copy_obj.localToGlobal(0, 0)
 
-    -- TODO，如果有随从，播放随从变卡动画
-    obj.x, obj.y = obj.parent.globalToLocal(orgx, orgy)
-    obj.rotation = 0
-    obj.visible = true
-    copy_obj.visible = false
-    copy_obj.parent:removeChild(copy_obj)
+        -- TODO，如果有随从，播放随从变卡动画
+        obj.x, obj.y = obj.parent.globalToLocal(orgx, orgy)
+        obj.rotation = 0
+        obj.visible = true
+        copy_obj.visible = false
+        copy_obj.parent:removeChild(copy_obj)
+    end
     
     -- 播放复位动画
     local int_当前手牌数量 =  G.call('角色_获取手牌数量', '我方')

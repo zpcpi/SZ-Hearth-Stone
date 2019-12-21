@@ -144,4 +144,16 @@ function t:pickcard(tar)
     end
 end
 
+function t:can_pick_state(state)
+    self.can_pick = state
+end
+
+function t:can_show_state(state)
+    self.can_show = state
+    if state then
+    else
+        self.TipsCard.visible = false
+    end
+end
+
 return t

@@ -567,6 +567,10 @@ local t = {
 				['name']='当前属性',
 				['type']='o_card_attr',
 			},
+			[4]={
+				['name']='卡牌位置',
+				['type']='estr_cardpos_type',
+			},
 		},
 	},
 	{
