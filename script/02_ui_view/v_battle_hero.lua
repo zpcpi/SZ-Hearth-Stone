@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_battle_hero = require 'c_battle_hero'
 local c_mintextquadsize = require 'c_mintextquadsize'
+local c_battle_hero = require 'c_battle_hero'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -137,8 +137,8 @@ tp = tc
 			tc.name = '攻击力'
 			tc.left = -197.500
 			tc.right = -98.500
-			tc.bottom = -139.500
-			tc.top = -26.500
+			tc.bottom = -130.500
+			tc.top = -17.500
 			tc.visible = false
 			tc.scaleX = 1.200
 			tc.scaleY = 1.200
@@ -155,6 +155,7 @@ tp = tc
 				tc.scaleY = 1.400
 				tc.font = 0x63500000
 				tc.style = 14
+				tc.outColor = 0x1
 				tp = tc
 				tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
 				com = tp.c_mintextquadsize
@@ -186,6 +187,7 @@ tp = tc
 				tc.scaleY = 1.400
 				tc.font = 0x63410000
 				tc.style = 14
+				tc.outColor = 0x1
 				tp = tc
 				tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
 				com = tp.c_mintextquadsize

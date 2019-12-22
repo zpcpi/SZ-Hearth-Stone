@@ -176,7 +176,16 @@ end
 function t:showtips(o_card, posx, posy)
     self.TipsCard.visible = true
     self.TipsCard.x, self.TipsCard.y = self.TipsCard.parent.globalToLocal(posx, posy)
-    self.TipsCard.c_card_manager:setData(o_card)
+
+    local get_attr = CARD_GET_ATTR
+    local cardtype = get_attr(o_card, '逻辑数据', '类型')
+    local pos = get_attr(o_card, '动态数据', '卡牌位置')
+    if (cardtype == 0x10090001) and (pos == '战场') then
+        -- 是英雄卡，并且在战场
+        self.TipsCard.c_card_manager:setData(o_card, true)
+    else
+        self.TipsCard.c_card_manager:setData(o_card)
+    end
 end
 
 function t:hidetips()

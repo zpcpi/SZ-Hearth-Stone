@@ -75,6 +75,12 @@ t['角色_战场_设置英雄'] = function(estr_player_相对身份, o_card_卡�
 end
 
 --hide=true
+t['角色_战场_获取英雄'] = function(estr_player_相对身份)
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
+    return G.call('角色_战场_获取英雄_绝对身份', estr_absolute_id_type_绝对身份)
+end
+
+--hide=true
 t['角色_战场_设置英雄技能'] = function(estr_player_相对身份, o_card_卡牌)
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
 

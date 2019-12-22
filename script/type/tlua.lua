@@ -185,7 +185,7 @@ function t.get_table(od)
 				end
 
 				if type(v) == 'table' then
-					iter(tup(v))
+					iter(v)
 				elseif type(v) == 'boolean' then
 					if v == true then
 						tl('true')

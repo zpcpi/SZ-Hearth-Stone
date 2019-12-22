@@ -67,6 +67,14 @@ t['角色_战场_设置英雄_绝对身份'] = function(estr_absolute_id_type_�
 end
 
 --hide=true
+t['角色_战场_获取英雄_绝对身份'] = function(estr_absolute_id_type_绝对身份)
+    local o_misc = G.misc()
+
+    misc_attr_check('英雄信息')
+    return o_misc.英雄信息[estr_absolute_id_type_绝对身份]
+end
+
+--hide=true
 t['角色_战场_设置英雄技能_绝对身份'] = function(estr_absolute_id_type_绝对身份, i_card_卡牌)
     local o_misc = G.misc()
 

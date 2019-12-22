@@ -146,6 +146,8 @@ t['CardCom_SetData'] = function (com, o_card)
                 attr = 'atk'
             elseif attr == '生命' then
                 attr = 'hp'
+            elseif attr == '护甲' then
+                attr = 'ap'
             end
             com[attr] = value
         end
@@ -299,7 +301,7 @@ t['CardCom_SetAttr_hide'] = function (attrA, objname, attrB, hide_objname)
     if objname then
         return function (com, old_value)
             local value = com[attrA]
-            if value then
+            if value and (value > 0) then
                 com[objname][attrB] = value_iter(value)
                 com[hide_objname].visible = true
             else

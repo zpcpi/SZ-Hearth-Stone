@@ -402,13 +402,17 @@ local Gr = {'tLua',
                 "if" + "while" + "repeat" + "block" + "function" + 'set' + 'table' + 
                 "listener" +
                 "true" + "false",
-    Ident     = V"IdStart" * V"IdRest"^0,
+    Ident     = V"IdStart" * V"IdMid"^0 * V"IdRest"^0,
     IdStart   = alpha + P"_" + unicode,
+    IdMid     = alnum + P"_" + unicode + P".",
     IdRest    = alnum + P"_" + unicode,
 
     expression_listener = list_ex('listener', {
         {tag = 'earg', patt = V't_begin' * V'expression_listener_earg' * V't_end'},
         {tag = 'action_func', patt = V'expression_function'},
+        {tag = 'condition_func', patt = V'expression_function' + tag_s('nil')},
+        {tag = 'prior', patt = V'atom_number' + V'atom_var' + tag_s('nil')},
+        {tag = 'group', patt = V'atom_str' + V'atom_var' + tag_s('nil')},
     }),
     expression_listener_earg = list_ex(nil, {
         {tag = 'event', patt = V'atom_str', no_split = true},
@@ -760,7 +764,11 @@ code_iter = function (ast)
             for k,v in ipairs(ast['earg'] or {}) do
                 tl(',') value_iter(v)
             end
-            tl('},') value_iter(ast['action_func']) tl(')')
+            tl('},') value_iter(ast['action_func']) 
+            tl(',') value_iter(ast['condition_func'])
+            tl(',') value_iter(ast['prior'])
+            tl(',') value_iter(ast['group'])
+            tl(')')
         elseif ast.tag == 'map' then
             tl('t["tLua_MAP"](') value_iter(ast['func'])
             for k,v in ipairs(ast or {}) do

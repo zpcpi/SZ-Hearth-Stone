@@ -504,7 +504,57 @@ end
 -- ============================================
 -- ============================================
 
+t['技能效果_本回合当前水晶'] = function (estr_player_相对身份, int_变动值)
+    -- TODO，事件没有抛，需要的时候加一下
+    if estr_player_相对身份 and int_变动值 then
+        local cur_value = G.call('角色_获取水晶数据', estr_player_相对身份, '当前值') or 0
+        G.call('角色_设置水晶数据', estr_player_相对身份, '当前值', cur_value + int_变动值)
+        G.call('tLua_add_listener', 
+                nil,
+                {"对决事件_回合结束"},
+                function ()
+                    cur_value = G.call('角色_获取水晶数据', estr_player_相对身份, '当前值') or 0
+                    G.call('角色_设置水晶数据', estr_player_相对身份, '当前值', cur_value - int_变动值)
+                end,
+                nil,
+                EVENT_PRIOR.last,
+                nil
+              )
+    end
+end
 
+t['技能效果_本回合英雄攻击'] = function (estr_player_相对身份, int_变动值)
+    -- TODO，事件没有抛，需要的时候加一下
+    if estr_player_相对身份 and int_变动值 then
+        local hero = G.call('角色_战场_获取英雄', estr_player_相对身份)
+        if hero then
+            local cur_value = G.call('卡牌属性_获取', hero, '攻击', '当前值') or 0
+            G.call('卡牌属性_设置', hero, '攻击', '当前值', cur_value + int_变动值)
+            G.call('tLua_add_listener', 
+                    nil,
+                    {"对决事件_回合结束"},
+                    function ()
+                        cur_value = G.call('卡牌属性_获取', hero, '攻击', '当前值') or 0
+                        G.call('卡牌属性_设置', hero, '攻击', '当前值', cur_value - int_变动值)
+                    end,
+                    nil,
+                    EVENT_PRIOR.last,
+                    nil
+                )
+        end
+    end
+end
+
+t['技能效果_英雄护甲'] = function (estr_player_相对身份, int_变动值)
+    -- TODO，事件没有抛，需要的时候加一下
+    if estr_player_相对身份 and int_变动值 then
+        local hero = G.call('角色_战场_获取英雄', estr_player_相对身份)
+        if hero then
+            local cur_value = G.call('卡牌属性_获取', hero, '护甲', '当前值') or 0
+            G.call('卡牌属性_设置', hero, '护甲', '当前值', cur_value + int_变动值)
+        end
+    end
+end
 
 -- ============================================
 -- ============================================
