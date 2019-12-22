@@ -192,12 +192,16 @@ function t.get_table(od)
 					elseif v == false then
 						tl('false')
 					end
-				elseif v then
-					if type(v) == 'string' then
+				elseif type(v) == 'string' then
 						tl("'" .. v .. "'")
+				elseif type(v) == 'number' then
+					if v > 0x10010000 then
+						tl(string.format('0x%x', v))
 					else
 						tl(v)
 					end
+				else
+					tl(v)
 				end
 				i = i + 1
 			end

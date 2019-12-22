@@ -303,6 +303,11 @@ local type_number = function()
     local exp = S'eE'
     return (maybe(mp) * digits * maybe(dot*digits) * maybe(exp*maybe(mp)*digits)) / tonumber
 end
+local type_hex = function()
+    local digits = digit^1
+    local hex = P'0x'
+    return (hex * digits) / tonumber
+end
 local string_apitest = function(name)
     if type(t[name]) == 'function' then
         return {
@@ -485,6 +490,7 @@ local Gr = {'tLua',
 
     atom_list = (V't_begin' * (V'expression_table' + list(V'atom')) * V't_end') + V'atom_var',
     atom = V'atom_op' +
+           V'atom_hex' +
            V'atom_number' +
            V'atom_bool' +
            V'atom_var' +
@@ -523,6 +529,7 @@ local Gr = {'tLua',
 
                      )/string_apitest,
     atom_number = type_number(),
+    atom_hex = type_hex(),
     atom_bool = (kw('true') * tag_s('true')) + (kw('false') * tag_s('false')),
     atom_var = Ct(Cg(Cp(), "pos") * Cg(Cc('var'), 'tag') * Cg(V'Name', 'variable'))/tovariable,
     atom_str = str_kw(P'$' * C(type_str())),

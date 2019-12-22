@@ -129,7 +129,11 @@ t['CardCom_SetData'] = function (com, o_card)
 
     -- 战场随从数据
     if com.嘲讽框 then
-        -- todo...
+        if G.call('卡牌条件_卡牌特性判断', o_card, {'嘲讽'}) then
+            com.嘲讽框.visible = true
+        else
+            com.嘲讽框.visible = false
+        end
     end
 
     -- 临时，追加属性改变监听

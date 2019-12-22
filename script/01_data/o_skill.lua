@@ -80,11 +80,40 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_法伤伤害',1},
+{'技能效果_添加BUFF',0x10130005},
 lua = function (self, info, card)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_法伤伤害",1)
+	return G.call("技能效果_添加BUFF",269680645)
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130006,
+		['showname']='治疗之触-治疗',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {nil}
 end
 ,
 },
@@ -94,6 +123,45 @@ end
 	{
 		['name']=0x10130005,
 		['showname']='野性印记-buff',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='添加',
+				['触发时机']={
+t =
+{'$逻辑_技能添加','nil','self'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_技能添加",nil,self}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能效果_生命',2},
+    {'技能效果_攻击',2},
+    {
+        '技能效果_特性',
+        {'$嘲讽'}
+    }
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能效果_生命",2)
+		_ = G.call("技能效果_攻击",2)
+		_ = G.call("技能效果_特性",{"嘲讽"})
+		return _
+	end)()
+end
+,
+},
+			},
+		},
 	},
 	{
 		['name']=0x10130003,
