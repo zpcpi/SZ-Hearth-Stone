@@ -8,7 +8,7 @@ local t = G.api
 t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
     local get_attr = CARD_GET_ATTR
 
-    local effect_stack = G.call('create_stack')
+    local effect_stack = G.misc().当前效果堆栈 or G.call('create_stack')
     G.misc().当前效果堆栈 = effect_stack
 
     local root_info = {
@@ -67,6 +67,27 @@ t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_�
     effect_stack.pop()
 end
 
+t['卡牌攻击_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
+    local get_attr = CARD_GET_ATTR
+
+    local effect_stack = G.misc().当前效果堆栈 or G.call('create_stack')
+    G.misc().当前效果堆栈 = effect_stack
+
+    local root_info = {
+        ['Player'] = estr_player_相对身份,
+        ['Caster'] = o_order_info_当前指令信息['Caster'],
+        ['Target'] = o_order_info_当前指令信息['Target'],
+        ['Parent'] = nil,
+        ['Stack'] = effect_stack,
+    }
+    effect_stack.push(root_info)
+
+    G.call('卡牌使用_攻击')
+
+    -- 执行完毕
+    effect_stack.pop()
+end
+
 -- ============================================
 -- ============================================
 -- ============================================
@@ -114,8 +135,8 @@ t['卡牌使用_消耗法力'] = function ()
 
     local init = function ()
         local Caster = o_skill_info_效果信息['Caster']
-        o_skill_info_效果信息['费用'] = get_attr(Caster, '卡牌属性', '费用') or 0
-        o_skill_info_效果信息['过载费用'] = get_attr(Caster, '卡牌属性', '过载费用') or 0
+        o_skill_info_效果信息['费用'] = math.max(G.call('卡牌属性_获取', Caster, '费用', '当前值') or 0, 0)
+        o_skill_info_效果信息['过载费用'] = math.max(G.call('卡牌属性_获取', Caster, '过载费用', '当前值') or 0, 0)
     end
     local action = function ()
         local 费用 = o_skill_info_效果信息['费用'] or 0
@@ -188,6 +209,26 @@ t['卡牌使用_使用'] = function ()
     effect_action_iter(o_skill_info_效果信息, '逻辑_卡牌使用', init, action)
 end
 
+t['卡牌使用_攻击'] = function ()
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+    end
+    local action = function ()
+        local Caster = o_skill_info_效果信息['Caster']
+        local Target = o_skill_info_效果信息['Target']
+
+        if Caster and (type(Target) == 'table') and (#Target == 1) then
+            G.call('技能效果_攻击流程')
+        end
+    end
+    effect_action_iter(o_skill_info_效果信息, '逻辑_卡牌攻击', init, action)
+end
+
 local single_damage = function ()
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
@@ -202,7 +243,7 @@ local single_damage = function ()
         local Target = o_skill_info_效果信息['逐个伤害目标']
 
         local _int_伤害数值 = o_skill_info_效果信息['伤害数值']
-        local TargetList = o_skill_info_效果信息['Target']
+        local TargetList = o_skill_info_效果信息['最终伤害目标']
 
         local index = #_int_伤害数值 + 1
 
@@ -232,7 +273,7 @@ t['技能效果_法伤伤害'] = function (int_伤害值)
         local TargetList = o_skill_info_效果信息['Target'] or {}
         local _int_伤害数值 = {}
 
-        o_skill_info_效果信息['Target'] = TargetList
+        o_skill_info_效果信息['最终伤害目标'] = {}
         o_skill_info_效果信息['伤害数值'] = _int_伤害数值
 
         for k,Target in ipairs(TargetList) do
@@ -244,12 +285,60 @@ t['技能效果_法伤伤害'] = function (int_伤害值)
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_法伤伤害', init, action)
 end
 
-t['技能效果_攻击伤害'] = function (int_伤害值)
-    -- 
+t['技能效果_攻击流程'] = function ()
+    local effect_stack = G.misc().当前效果堆栈 
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
 
+    local init = function ()
+        local o_skill_info_效果信息 = get_cur_effect_info()
+        local Caster = o_skill_info_效果信息['Caster']
+        o_skill_info_效果信息['原始伤害数值'] = G.call('卡牌属性_获取', Caster, '攻击', '当前值') or 0
+        o_skill_info_效果信息['伤害类型'] = '攻击'
+    end
+    local action = function ()
+        local o_skill_info_效果信息 = get_cur_effect_info()
+        local int_中间伤害值 = o_skill_info_效果信息['中间伤害数值'] or o_skill_info_效果信息['原始伤害数值']
+        local TargetList = o_skill_info_效果信息['Target'] or {}
+        local _int_伤害数值 = {}
+
+        o_skill_info_效果信息['最终伤害目标'] = {}
+        o_skill_info_效果信息['伤害数值'] = _int_伤害数值
+
+        for k,Target in ipairs(TargetList) do
+            o_skill_info_效果信息['逐个伤害数值'] = int_中间伤害值
+            o_skill_info_效果信息['逐个伤害目标'] = Target
+            single_damage()
+        end
+    end
+
+    -- 攻击者流程
+    local attack_info = {
+        ['Player'] = o_skill_info_效果信息['Player'],
+        ['Caster'] = o_skill_info_效果信息['Caster'],
+        ['Target'] = o_skill_info_效果信息['Target'],
+        ['Parent'] = o_skill_info_效果信息,
+        ['Stack'] = effect_stack,
+    }
+    effect_stack.push(attack_info)
+    effect_action_iter(attack_info, '逻辑_技能效果_攻击伤害', init, action)
+    -- 反击者流程
+    effect_stack.pop()
+    local beatback_info = {
+        ['Player'] = o_skill_info_效果信息['Player'],
+        ['Caster'] = o_skill_info_效果信息['Target'][1],
+        ['Target'] = {o_skill_info_效果信息['Caster']},
+        ['Parent'] = o_skill_info_效果信息,
+        ['Stack'] = effect_stack, 
+    }
+    effect_stack.push(beatback_info)
+    effect_action_iter(beatback_info, '逻辑_技能效果_反击伤害', init, action)
 end
 
-t['技能效果_技能伤害'] = function (int_伤害值)
+t['技能效果_英雄技能伤害'] = function (int_伤害值)
 
 
 end
@@ -576,13 +665,6 @@ t['卡牌属性_获取'] = function (o_card_当前卡牌, estr_cardattr_enum_属
     local result = nil
 
     local value_iter = function (v)
-        if type(v) == 'number' then
-            if v < 0 then
-                v = 0
-            elseif v > (1 << 31) then
-                v = 0
-            end
-        end
         return v
     end
 
@@ -614,13 +696,6 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
     local tattr = nil
 
     local value_iter = function (v)
-        if type(v) == 'number' then
-            if v < 0 then
-                v = 0
-            elseif v > (1 << 31) then
-                v = 0
-            end
-        end
         return v
     end
 
@@ -641,5 +716,4 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
         tattr = o_card_当前卡牌['卡牌属性']
         tattr[estr_cardattr_enum_属性名] = value_iter(int_value)
     end
-
 end

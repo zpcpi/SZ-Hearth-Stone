@@ -1068,11 +1068,15 @@ local t = {
 			},
 			[13]={
 				['name']='伤害类型',
-				['type']='string',
+				['type']='estr_damage_type',
 			},
 			[14]={
 				['name']='伤害数值',
 				['type']='_int',
+			},
+			[15]={
+				['name']='最终伤害目标',
+				['type']='_o_card',
 			},
 		},
 	},

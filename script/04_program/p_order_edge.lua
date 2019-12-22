@@ -35,8 +35,8 @@ t['法力消耗预览_修改数据'] = function (o_order_info_当前指令信息
     local Caster = o_order_info_当前指令信息['Caster']
     local get_attr = CARD_GET_ATTR
 
-    local 预览值 = get_attr(Caster, '卡牌属性', '费用') or 0
-    local 预览锁定值 =  get_attr(Caster, '卡牌属性', '过载费用') or 0
+    local 预览值 = math.max(G.call('卡牌属性_获取', Caster, '费用', '当前值') or 0, 0)
+    local 预览锁定值 = math.max(G.call('卡牌属性_获取', Caster, '过载费用', '当前值') or 0, 0)
 
     G.call('角色_设置水晶数据', '我方', '预览值', 预览值)
     G.call('角色_设置水晶数据', '我方', '预览锁定值', 预览锁定值)
@@ -394,6 +394,7 @@ t['卡牌确认使用_随从中途_修改数据'] = function (o_order_info_当�
     o_order_info_当前指令信息['MinionPos'] = index
     o_order_info_当前指令信息['CurPlayMinionObj'] = obj_minion
     script_动画系统:push_quote('::CurPickMinion', obj_minion)
+    obj_minion.mouseEnabled = false
 
     -- 注册动画
     local obj_line = script_战场:add_popline()
@@ -444,6 +445,7 @@ t['抓取卡牌_战场_修改数据'] = function (o_order_info_当前指令信�
     local script_动画系统 = o_misc.主动画系统
     script_动画系统:clear_animquest()
     script_动画系统:push_quote('::CurPickMinion', obj)
+    obj.mouseEnabled = false
 
     -- 注册动画
     local obj_line = script_战场:add_popline()
@@ -452,8 +454,6 @@ t['抓取卡牌_战场_修改数据'] = function (o_order_info_当前指令信�
         -- 注册连线动画
         G.call('动画系统_创建quest', script_动画系统, G.QueryName(0x1001001c))
     )
-
-    print('asd3')
 end
 
 
@@ -505,7 +505,10 @@ t['卡牌注册指令_完成'] = function (o_order_info_当前指令信息)
     local script_战场 = o_misc.主战场系统
 
     script_动画系统:pop_quote('::CurPickCard')
-    script_动画系统:pop_quote('::CurPickMinion')
+    local minion_obj = script_动画系统:pop_quote('::CurPickMinion')
+    if minion_obj then
+        minion_obj.mouseEnabled = true
+    end
     script_动画系统:clear_animquest()
 
     -- 水晶预览取消
@@ -570,7 +573,10 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
     local script_战场 = o_misc.主战场系统
 
     script_动画系统:pop_quote('::CurPickCard')
-    script_动画系统:pop_quote('::CurPickMinion')
+    local minion_obj = script_动画系统:pop_quote('::CurPickMinion')
+    if minion_obj then
+        minion_obj.mouseEnabled = true
+    end
     script_动画系统:clear_animquest()
 
     -- 水晶预览取消

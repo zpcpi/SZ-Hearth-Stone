@@ -241,13 +241,48 @@ local function com_mode_select (objname)
     end
 end
 
+local function com_value_mode_生命 ()
+    return function (v)
+        if type(v) == 'number' then
+            if v > (1 << 31) then
+                v = 0
+            end
+            tostring(math.floor(v))
+        end
+        return v
+    end
+end
+
+local function com_value_mode_最小0 ()
+    return function (v)
+        if type(v) == 'number' then
+            if v < 0 then
+                v = 0
+            elseif v > (1 << 31) then
+                v = 0
+            end
+            tostring(math.floor(v))
+        end
+        return v
+    end
+end
+
+local function com_value_select (objname)
+    if objname == '生命值数值' then
+        return com_value_mode_生命()
+    else
+        return com_value_mode_最小0()
+    end
+end
+
 t['CardCom_SetAttr'] = function (attrA, objname, attrB)
     local color_iter = com_mode_select(objname)
+    local value_iter = com_value_select(objname)
 
     return function (com, old_value)
         local value = com[attrA]
         if value then
-            com[objname][attrB] = tostring(math.floor(value))
+            com[objname][attrB] = value_iter(value)
         else
             com[objname][attrB] = ''
         end
@@ -259,12 +294,13 @@ end
 
 t['CardCom_SetAttr_hide'] = function (attrA, objname, attrB, hide_objname)
     local color_iter = com_mode_select(objname)
+    local value_iter = com_value_select(objname)
 
     if objname then
         return function (com, old_value)
             local value = com[attrA]
             if value then
-                com[objname][attrB] = tostring(math.floor(value))
+                com[objname][attrB] = value_iter(value)
                 com[hide_objname].visible = true
             else
                 com[objname][attrB] = ''
