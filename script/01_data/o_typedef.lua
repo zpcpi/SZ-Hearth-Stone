@@ -492,38 +492,42 @@ local t = {
 				['type']='i_order',
 			},
 			[7]={
+				['name']='战场卡牌指令',
+				['type']='i_order',
+			},
+			[8]={
 				['name']='卡牌特性',
 				['type']='cardflag',
 			},
-			[8]={
+			[9]={
 				['name']='卡牌效果',
 				['type']='_i_skill',
 			},
-			[9]={
+			[10]={
 				['name']='可使用条件',
 				['type']='fargboolean',
 			},
-			[10]={
+			[11]={
 				['name']='高亮条件',
 				['type']='fargboolean',
 			},
-			[11]={
+			[12]={
 				['name']='目标条件',
 				['type']='_fargboolean',
 			},
-			[12]={
+			[13]={
 				['name']='目标指向文本',
 				['type']='_string',
 			},
-			[13]={
+			[14]={
 				['name']='抉择卡',
 				['type']='_i_card',
 			},
-			[14]={
+			[15]={
 				['name']='提示标签',
 				['type']='_string',
 			},
-			[15]={
+			[16]={
 				['name']='局内描述',
 				['type']='string',
 			},

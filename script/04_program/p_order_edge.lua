@@ -257,9 +257,13 @@ end
 t['卡牌选择目标_条件'] = function (o_order_info_当前指令信息)
     local Target, tar_obj = G.event_info()
 
+    -- 肯定不能自己选自己
+    local Caster = o_order_info_当前指令信息['Caster']
+    if Caster == Target then
+        return false
+    end
+
     -- 条件判断
-
-
 
 
     return true

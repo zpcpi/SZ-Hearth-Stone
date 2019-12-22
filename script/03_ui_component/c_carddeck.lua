@@ -110,6 +110,9 @@ function t:rollOut(tar)
 end
 
 function t:mouseDown(tar)
+end
+
+function t:mouseUp(tar)
     if self.can_pick then
     else
         if (tar.parent == self.牌库容器[1]) or (tar.parent == self.牌库容器[2]) or (tar.parent == self.牌库容器[3]) then
@@ -120,9 +123,6 @@ function t:mouseDown(tar)
             end
         end
     end
-end
-
-function t:mouseUp(tar)
 end
 
 return t

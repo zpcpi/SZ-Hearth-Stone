@@ -42,11 +42,13 @@ t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_�
         -- 英雄卡
 
     elseif cardtype == 0x10090003 then
-        -- 英雄技能，一般不能直接使用
+        -- 英雄技能
+        -- 判断下是否在战场
 
 
     elseif cardtype == 0x10090004 then
         -- 随从卡，召唤随从
+        -- 可能不对，需要判断下
         local index = o_order_info_当前指令信息['MinionPos']
         G.call('角色_战场_添加随从', estr_player_相对身份, Caster, index)
 
@@ -680,7 +682,7 @@ t['卡牌属性_获取'] = function (o_card_当前卡牌, estr_cardattr_enum_属
         return value_iter(tattr[estr_cardattr_enum_属性名]) or 
                G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '原始值')
     elseif estr_cardattr_type_属性类型 == '原始值' then
-        tattr = o_card_当前卡牌['卡牌属性']
+        tattr = o_card_当前卡牌['卡牌属性'] or {}
         return value_iter(tattr[estr_cardattr_enum_属性名])
     end
 

@@ -40,11 +40,15 @@ function t:setData(o_card_卡片数据)
     end
     local o_cardtype_卡片类型 = query_iter(i_cardtype_卡片类型)
     local string_卡片类型名称 = o_cardtype_卡片类型['showname']
+    local get_attr = CARD_GET_ATTR
 
     local o_node_界面
     if string_卡片类型名称 == '英雄' then
         o_node_界面 = self.英雄
         self.cur_card_list['英雄'] = o_card_卡片数据
+
+        -- 随从的攻击指令
+        G.call('卡牌注册指令', o_card_卡片数据, get_attr(o_card_卡片数据, '逻辑数据', '战场卡牌指令') or 0x10040008)
     elseif string_卡片类型名称 == '英雄技能' then
         o_node_界面 = self.英雄技能
         self.cur_card_list['英雄技能'] = o_card_卡片数据
@@ -95,11 +99,11 @@ end
 
 function t:getClickData_pick(tar)
     if tar == self.英雄 then
-        return self.cur_card_list['英雄']
+        return self.cur_card_list['英雄'], self.英雄
     elseif tar == self.英雄技能 then
-        return self.cur_card_list['英雄技能']
+        return self.cur_card_list['英雄技能'], self.英雄技能
     elseif tar == self.武器 then
-        return self.cur_card_list['英雄']
+        return self.cur_card_list['英雄'], self.英雄
     end
 end
 
@@ -127,12 +131,21 @@ function t:rollOut(tar)
     end
 end
 
+function t:mouseDown(tar)
+    local o_card_picked
+    if self.can_pick then
+        o_card_picked, tar = self:getClickData_pick(tar)
+
+        if o_card_picked then
+            G.trig_event('UI_抓取卡牌_战场', o_card_picked, tar)
+        end
+    end
+end
+
 function t:mouseUp(tar)
     local o_card_picked
 
     if self.can_pick then
-        o_card_picked = self:getClickData_pick(tar)
-        G.trig_event('UI_抓取卡牌', o_card_picked, self.英雄)
     else
         o_card_picked = self:getClickData(tar)
         G.trig_event('UI_卡牌选择目标', o_card_picked, tar)
