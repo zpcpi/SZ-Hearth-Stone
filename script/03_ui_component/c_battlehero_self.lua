@@ -52,6 +52,12 @@ function t:setData(o_card_卡片数据)
     elseif string_卡片类型名称 == '英雄技能' then
         o_node_界面 = self.英雄技能
         self.cur_card_list['英雄技能'] = o_card_卡片数据
+
+        -- 英雄技能战场指令
+        local i_order_当前指令 = get_attr(o_card_卡片数据, '逻辑数据', '战场卡牌指令')
+        if i_order_当前指令 then
+            G.call('卡牌注册指令', o_card_卡片数据, i_order_当前指令)
+        end
     elseif string_卡片类型名称 == '武器卡' then
         o_node_界面 = self.武器
         self.cur_card_list['武器'] = o_card_卡片数据
@@ -114,6 +120,10 @@ function t:rollOver(tar)
         if o_card_picked then
             self.CurCard = tar
 
+            if tar == self.英雄技能 then
+                G.trig_event('UI_鼠标覆盖卡牌', o_card_picked)
+            end
+
             local posx, posy = tar.localToGlobal(0, 0)
             self.主战场:showtips(o_card_picked, posx + 200, posy + 15)
         end
@@ -125,6 +135,10 @@ function t:rollOut(tar)
         local o_card_picked = self:getClickData(tar)
 
         if o_card_picked then
+            if tar == self.英雄技能 then
+                G.trig_event('UI_鼠标离开卡牌', o_card_picked)
+            end
+
             self.CurCard = nil
             self.主战场:hidetips()
         end
