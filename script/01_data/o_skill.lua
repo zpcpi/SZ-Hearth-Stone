@@ -51,16 +51,49 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_本回合当前水晶','info.Player',1},
+{'技能效果_本回合当前水晶',1},
 lua = function (self, info, card)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_本回合当前水晶",info.Player,1)
+	return G.call("技能效果_本回合当前水晶",1)
 end
 ,
 },
 			},
 		},
+	},
+	{
+		['name']=0x10130004,
+		['showname']='野性印记-添加buff',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_法伤伤害',1},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_法伤伤害",1)
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130005,
+		['showname']='野性印记-buff',
 	},
 	{
 		['name']=0x10130003,
@@ -82,16 +115,18 @@ end
 t =
 {
     'block',
-    {'技能效果_英雄护甲','info.Player',2},
-    {'技能效果_本回合英雄攻击','info.Player',2}
+    {'技能效果_选取我方英雄'},
+    {'技能效果_护甲',2},
+    {'技能效果_本回合攻击',2}
 },
 lua = function (self, info, card)
 	local G = require "gf"
 	local t = G.api
 	return (function()
 		local _ = nil
-		_ = G.call("技能效果_英雄护甲",info.Player,2)
-		_ = G.call("技能效果_本回合英雄攻击",info.Player,2)
+		_ = G.call("技能效果_选取我方英雄")
+		_ = G.call("技能效果_护甲",2)
+		_ = G.call("技能效果_本回合攻击",2)
 		return _
 	end)()
 end

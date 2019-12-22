@@ -99,14 +99,21 @@ end
 -- ============================================
 
 local effect_action_iter = function (skill_info, event, init, action)
-    -- 功能初始化
-    init()
-    -- 触发“前”事件，修改数据
-    G.trig_event(event .. '前', skill_info)
-    -- 制定
-    action()
-    -- 触发事件，响应改变
-    G.trig_event(event, skill_info)
+    if event then
+        -- 功能初始化
+        init()
+        -- 触发“前”事件，修改数据
+        G.trig_event(event .. '前', skill_info)
+        -- 执行
+        action()
+        -- 触发事件，响应改变
+        G.trig_event(event, skill_info)
+    else
+        -- 功能初始化
+        init()
+        -- 执行
+        action()
+    end
 end
 
 local get_cur_effect_info = function ()
@@ -322,22 +329,27 @@ t['技能效果_攻击流程'] = function ()
         ['Player'] = o_skill_info_效果信息['Player'],
         ['Caster'] = o_skill_info_效果信息['Caster'],
         ['Target'] = o_skill_info_效果信息['Target'],
-        ['Parent'] = o_skill_info_效果信息,
         ['Stack'] = effect_stack,
     }
-    effect_stack.push(attack_info)
-    effect_action_iter(attack_info, '逻辑_技能效果_攻击伤害', init, action)
+    G.call('技能效果_效果树_执行子效果', 
+            attack_info, 
+            function ()
+                effect_action_iter(attack_info, '逻辑_技能效果_攻击伤害', init, action)
+            end
+          )
     -- 反击者流程
-    effect_stack.pop()
     local beatback_info = {
         ['Player'] = o_skill_info_效果信息['Player'],
         ['Caster'] = o_skill_info_效果信息['Target'][1],
         ['Target'] = {o_skill_info_效果信息['Caster']},
-        ['Parent'] = o_skill_info_效果信息,
         ['Stack'] = effect_stack, 
     }
-    effect_stack.push(beatback_info)
-    effect_action_iter(beatback_info, '逻辑_技能效果_反击伤害', init, action)
+    G.call('技能效果_效果树_执行子效果', 
+            beatback_info, 
+            function ()
+                effect_action_iter(beatback_info, '逻辑_技能效果_反击伤害', init, action)
+            end
+          )
 end
 
 t['技能效果_英雄技能伤害'] = function (int_伤害值)
@@ -504,17 +516,34 @@ end
 -- ============================================
 -- ============================================
 
-t['技能效果_本回合当前水晶'] = function (estr_player_相对身份, int_变动值)
-    -- TODO，事件没有抛，需要的时候加一下
+t['技能效果_本回合当前水晶'] = function (int_变动值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local estr_player_相对身份 = o_skill_info_效果信息['Player']
+
     if estr_player_相对身份 and int_变动值 then
-        local cur_value = G.call('角色_获取水晶数据', estr_player_相对身份, '当前值') or 0
-        G.call('角色_设置水晶数据', estr_player_相对身份, '当前值', cur_value + int_变动值)
+        local init = function (v)
+            return function ()
+                o_skill_info_效果信息['当前水晶变化'] = v
+            end
+        end
+        local action = function ()
+            estr_player_相对身份 = o_skill_info_效果信息['Player']
+            int_变动值 = o_skill_info_效果信息['当前水晶变化']
+            local cur_value = G.call('角色_获取水晶数据', estr_player_相对身份, '当前值') or 0
+            G.call('角色_设置水晶数据', estr_player_相对身份, '当前值', cur_value + int_变动值)
+        end
+
+        effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_当前水晶变化', init(int_变动值), action)
         G.call('tLua_add_listener', 
                 nil,
                 {"对决事件_回合结束"},
                 function ()
-                    cur_value = G.call('角色_获取水晶数据', estr_player_相对身份, '当前值') or 0
-                    G.call('角色_设置水晶数据', estr_player_相对身份, '当前值', cur_value - int_变动值)
+                    effect_action_iter(o_skill_info_效果信息, nil, init(-int_变动值), action)
                 end,
                 nil,
                 EVENT_PRIOR.last,
@@ -523,38 +552,110 @@ t['技能效果_本回合当前水晶'] = function (estr_player_相对身份, in
     end
 end
 
-t['技能效果_本回合英雄攻击'] = function (estr_player_相对身份, int_变动值)
-    -- TODO，事件没有抛，需要的时候加一下
-    if estr_player_相对身份 and int_变动值 then
-        local hero = G.call('角色_战场_获取英雄', estr_player_相对身份)
-        if hero then
-            local cur_value = G.call('卡牌属性_获取', hero, '攻击', '当前值') or 0
-            G.call('卡牌属性_设置', hero, '攻击', '当前值', cur_value + int_变动值)
-            G.call('tLua_add_listener', 
-                    nil,
-                    {"对决事件_回合结束"},
-                    function ()
-                        cur_value = G.call('卡牌属性_获取', hero, '攻击', '当前值') or 0
-                        G.call('卡牌属性_设置', hero, '攻击', '当前值', cur_value - int_变动值)
-                    end,
-                    nil,
-                    EVENT_PRIOR.last,
-                    nil
-                )
+t['技能效果_本回合攻击'] = function (int_变动值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function (v)
+        return function ()
+            o_skill_info_效果信息['当前攻击变化'] = v
         end
     end
+    local action = function ()
+        int_变动值 = o_skill_info_效果信息['当前攻击变化']
+        local TargetList = o_skill_info_效果信息['Target'] or {}
+
+        for _, Target in ipairs(TargetList) do
+            local cur_value = G.call('卡牌属性_获取', Target, '攻击', '当前值') or 0
+            G.call('卡牌属性_设置', Target, '攻击', '当前值', cur_value + int_变动值)
+        end
+    end
+
+    effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_当前攻击变化', init(int_变动值), action)
+    G.call('tLua_add_listener', 
+            nil,
+            {"对决事件_回合结束"},
+            function ()
+                effect_action_iter(o_skill_info_效果信息, nil, init(-int_变动值), action)
+            end,
+            nil,
+            EVENT_PRIOR.last,
+            nil
+          )
 end
 
-t['技能效果_英雄护甲'] = function (estr_player_相对身份, int_变动值)
-    -- TODO，事件没有抛，需要的时候加一下
-    if estr_player_相对身份 and int_变动值 then
-        local hero = G.call('角色_战场_获取英雄', estr_player_相对身份)
-        if hero then
-            local cur_value = G.call('卡牌属性_获取', hero, '护甲', '当前值') or 0
-            G.call('卡牌属性_设置', hero, '护甲', '当前值', cur_value + int_变动值)
+t['技能效果_护甲'] = function (int_变动值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+        o_skill_info_效果信息['当前护甲变化'] = int_变动值
+    end
+    local action = function ()
+        int_变动值 = o_skill_info_效果信息['当前护甲变化']
+        local TargetList = o_skill_info_效果信息['Target'] or {}
+
+        for _, Target in ipairs(TargetList) do
+            local cur_value = G.call('卡牌属性_获取', Target, '护甲', '当前值') or 0
+            G.call('卡牌属性_设置', Target, '护甲', '当前值', cur_value + int_变动值)
         end
     end
+
+    effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_当前护甲变化', init, action)
 end
+
+t['技能效果_添加BUFF'] = function (o_card_目标卡牌, i_skill_buffID)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+    end
+    local action = function ()
+        local TargetList = o_skill_info_效果信息['Target'] or {}
+
+        for _, Target in ipairs(TargetList) do
+            
+        end
+    end
+
+
+
+
+
+
+end
+
+-- ============================================
+-- ============================================
+-- ============================================
+-- 卡牌选取相关接口
+-- ============================================
+-- ============================================
+-- ============================================
+
+t['技能效果_选取我方英雄'] = function ()
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local TargetList = o_skill_info_效果信息['Target'] or {}
+    table.insert(TargetList, G.call('角色_战场_获取英雄', '我方'))
+    o_skill_info_效果信息['Target'] = TargetList
+end
+
+
+
 
 -- ============================================
 -- ============================================

@@ -15,11 +15,11 @@ t['角色_添加手牌'] = function(estr_player_相对身份, o_card_卡牌, boo
         o_card_卡牌['动态数据']['卡牌位置'] = '手牌'
         G.call('角色_添加手牌_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
         
-        if boolean_是否明牌 then
-            G.call('卡牌实例化_信息更新_预处理', o_card_卡牌, {'root', '卡牌属性', '逻辑数据', '动态数据'})
-        else
+        -- if boolean_是否明牌 then
+        --     G.call('卡牌实例化_信息更新_预处理', o_card_卡牌, {'root', '卡牌属性', '逻辑数据', '动态数据'})
+        -- else
             G.call('卡牌实例化_信息更新_预处理', o_card_卡牌)
-        end
+        -- end
         G.call('网络通用_广播消息', '角色_添加手牌_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
     end
 end
@@ -69,7 +69,7 @@ t['角色_战场_设置英雄'] = function(estr_player_相对身份, o_card_卡�
         local i_card_卡牌 = o_card_卡牌.name
         o_card_卡牌['动态数据']['卡牌位置'] = '战场'
         G.call('角色_战场_设置英雄_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
-        G.call('卡牌实例化_信息更新_预处理', o_card_卡牌, {'root', '卡牌属性', '逻辑数据', '动态数据'})
+        -- G.call('卡牌实例化_信息更新_预处理', o_card_卡牌, {'root', '卡牌属性', '逻辑数据', '动态数据'})
         G.call('网络通用_广播消息', '角色_战场_设置英雄_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
     end
 end
@@ -88,7 +88,7 @@ t['角色_战场_设置英雄技能'] = function(estr_player_相对身份, o_car
         local i_card_卡牌 = o_card_卡牌.name
         o_card_卡牌['动态数据']['卡牌位置'] = '战场'
         G.call('角色_战场_设置英雄技能_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
-        G.call('卡牌实例化_信息更新_预处理', o_card_卡牌, {'root', '卡牌属性', '逻辑数据', '动态数据'})
+        -- G.call('卡牌实例化_信息更新_预处理', o_card_卡牌, {'root', '卡牌属性', '逻辑数据', '动态数据'})
         G.call('网络通用_广播消息', '角色_战场_设置英雄技能_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
     end
 end
@@ -101,7 +101,7 @@ t['角色_战场_设置武器'] = function(estr_player_相对身份, o_card_卡�
         local i_card_卡牌 = o_card_卡牌.name
         o_card_卡牌['动态数据']['卡牌位置'] = '战场'
         G.call('角色_战场_设置武器_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
-        G.call('卡牌实例化_信息更新_预处理', o_card_卡牌, {'root', '卡牌属性', '逻辑数据', '动态数据'})
+        -- G.call('卡牌实例化_信息更新_预处理', o_card_卡牌, {'root', '卡牌属性', '逻辑数据', '动态数据'})
         G.call('网络通用_广播消息', '角色_战场_设置武器_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
     end
 end
@@ -117,7 +117,7 @@ t['角色_战场_添加随从'] = function(estr_player_相对身份, o_card_卡�
         local i_card_卡牌 = o_card_卡牌.name
         o_card_卡牌['动态数据']['卡牌位置'] = '战场'
         G.call('角色_战场_添加随从_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌, int_随从编号)
-        G.call('卡牌实例化_信息更新_预处理', o_card_卡牌, {'root', '卡牌属性', '逻辑数据', '动态数据'})
+        -- G.call('卡牌实例化_信息更新_预处理', o_card_卡牌, {'root', '卡牌属性', '逻辑数据', '动态数据'})
         G.call('网络通用_广播消息', '角色_战场_添加随从_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌, int_随从编号)
     end
 end
