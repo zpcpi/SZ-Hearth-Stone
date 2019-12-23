@@ -920,6 +920,28 @@ t['技能效果_抽牌'] = function ()
     end
 end
 
+t['技能效果_创建手牌'] = function (i_card_创建卡牌ID, boolean_是否明牌)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local estr_player_相对身份 = o_skill_info_效果信息['Player']
+
+    if estr_player_相对身份 then
+        local init = function ()
+        end
+        local action = function ()
+            estr_player_相对身份 = o_skill_info_效果信息['Player']
+
+            -- TODO，缺少处理
+            G.call('角色_添加手牌', estr_player_相对身份, G.call('卡牌实例化', G.QueryName(i_card_创建卡牌ID)), boolean_是否明牌)
+        end
+        effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_创建手牌', init, action)
+    end
+end
+
 -- ============================================
 -- ============================================
 -- ============================================
@@ -1133,6 +1155,7 @@ t['卡牌条件_卡牌特性判断'] = function (o_card_当前卡牌, _string_�
 
     return true
 end
+
 -- ============================================
 -- ============================================
 -- ============================================

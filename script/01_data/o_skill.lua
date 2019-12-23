@@ -237,11 +237,37 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_最大水晶',1},
+{
+    {
+        'function',
+        {},
+        {
+            {
+                'max_mana',
+                {'角色_获取水晶数据','$我方','$最大值'}
+            }
+        },
+        {
+            'if',
+            {'<','max_mana',10},
+            {'技能效果_最大水晶',1},
+            {'技能效果_创建手牌',0x1006000d,true}
+        }
+    }
+},
 lua = function (self, info, card)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_最大水晶",1)
+	return (function()
+		local max_mana_81 = G.call("角色_获取水晶数据","我方","最大值")
+		return (function ()
+			if(t["tLua_LT"](max_mana_81,10))then
+				return G.call("技能效果_最大水晶",1)
+			else
+				return G.call("技能效果_创建手牌",268828685,true)
+			end
+		end)()
+	end)()
 end
 ,
 },

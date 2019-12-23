@@ -304,7 +304,7 @@ local type_number = function()
     return (maybe(mp) * digits * maybe(dot*digits) * maybe(exp*maybe(mp)*digits)) / tonumber
 end
 local type_hex = function()
-    local digits = digit^1
+    local digits = (digit + S'abcdefABCDEF')^1
     local hex = P'0x'
     return (hex * digits) / tonumber
 end
