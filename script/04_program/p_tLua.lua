@@ -294,7 +294,7 @@ local maybe = function(patt)
     return P(patt)^-1
 end
 local type_str = function()
-    return (alpha + unicode + S'_.() ')^0
+    return (alnum + unicode + S'_.() ')^0
 end
 local type_number = function()
     local digits = digit^1

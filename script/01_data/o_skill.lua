@@ -5,6 +5,105 @@ local t = {
 'o_skill',
 {
 	{
+		['name']=0x1013000d,
+		['showname']='变形-护甲、本回合攻击',
+		['postfix']='英雄技能',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_英雄技能使用','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_英雄技能使用",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能目标_选取英雄','$我方'},
+    {'技能效果_护甲',1},
+    {'技能效果_本回合攻击',1}
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能目标_选取英雄","我方")
+		_ = G.call("技能效果_护甲",1)
+		_ = G.call("技能效果_本回合攻击",1)
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x1013000c,
+		['showname']='法力过剩-抽牌',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_抽牌'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_抽牌")
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x1013000b,
+		['showname']='幸运币-本回合水晶',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_本回合当前水晶',1},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_本回合当前水晶",1)
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130001,
 		['showname']='月火术-伤害',
 		['逻辑功能']={
@@ -121,6 +220,35 @@ end
 		},
 	},
 	{
+		['name']=0x10130008,
+		['showname']='野性成长-最大水晶',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_最大水晶',1},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_最大水晶",1)
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130007,
 		['showname']='野蛮咆哮-本回合攻击',
 		['逻辑功能']={
@@ -140,8 +268,8 @@ end
 t =
 {
     'block',
-    {'技能效果_选取随从','$我方'},
-    {'技能效果_选取英雄','$我方'},
+    {'技能目标_选取随从','$我方'},
+    {'技能目标_选取英雄','$我方'},
     {'技能效果_本回合攻击',2}
 },
 lua = function (self, info, card)
@@ -149,9 +277,113 @@ lua = function (self, info, card)
 	local t = G.api
 	return (function()
 		local _ = nil
-		_ = G.call("技能效果_选取随从","我方")
-		_ = G.call("技能效果_选取英雄","我方")
+		_ = G.call("技能目标_选取随从","我方")
+		_ = G.call("技能目标_选取英雄","我方")
 		_ = G.call("技能效果_本回合攻击",2)
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130009,
+		['showname']='横扫-主副伤害',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能效果_法伤伤害',4},
+    {
+        '技能效果_效果树_执行子效果',
+        {
+            ['Caster'] = 'info.Caster',
+            ['Player'] = 'info.Player',
+            ['Stack'] = 'info.Stack'
+        },
+        {
+            'function',
+            {},
+            {},
+            {
+                'block',
+                {'技能目标_选取英雄','$敌方1'},
+                {'技能目标_选取随从','$敌方1'},
+                {'技能目标_剔除目标','info.Target'},
+                {'技能效果_法伤伤害',1}
+            }
+        }
+    }
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能效果_法伤伤害",4)
+		_ = G.call("技能效果_效果树_执行子效果",{["Caster"] = info.Caster,["Player"] = info.Player,["Stack"] = info.Stack},(function()
+			return (function()
+				local _ = nil
+				_ = G.call("技能目标_选取英雄","敌方1")
+				_ = G.call("技能目标_选取随从","敌方1")
+				_ = G.call("技能目标_剔除目标",info.Target)
+				_ = G.call("技能效果_法伤伤害",1)
+				return _
+			end)()
+		end))
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x1013000a,
+		['showname']='星火术-伤害、抽牌',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能效果_法伤伤害',5},
+    {'技能效果_抽牌'}
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能效果_法伤伤害",5)
+		_ = G.call("技能效果_抽牌")
 		return _
 	end)()
 end
@@ -223,7 +455,7 @@ end
 t =
 {
     'block',
-    {'技能效果_选取英雄','$我方'},
+    {'技能目标_选取英雄','$我方'},
     {'技能效果_护甲',2},
     {'技能效果_本回合攻击',2}
 },
@@ -232,7 +464,7 @@ lua = function (self, info, card)
 	local t = G.api
 	return (function()
 		local _ = nil
-		_ = G.call("技能效果_选取英雄","我方")
+		_ = G.call("技能目标_选取英雄","我方")
 		_ = G.call("技能效果_护甲",2)
 		_ = G.call("技能效果_本回合攻击",2)
 		return _

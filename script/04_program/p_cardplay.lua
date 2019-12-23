@@ -44,8 +44,12 @@ t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_�
     elseif cardtype == 0x10090003 then
         -- 英雄技能
         -- 判断下是否在战场
-
-
+        if get_attr(Caster, '动态数据', '卡牌位置') == '战场' then
+            G.trig_event('逻辑_英雄技能使用', Caster)
+        else
+            -- 不在战场，那么可能是在手牌使用的
+            G.call('卡牌使用_使用')
+        end
     elseif cardtype == 0x10090004 then
         -- 随从卡，召唤随从
         -- 可能不对，需要判断下
@@ -205,7 +209,10 @@ t['卡牌使用_使用'] = function ()
         local Caster = o_skill_info_效果信息['Caster']
         local cardtype = get_attr(Caster, '逻辑数据', '类型')
 
-        if cardtype == 0x10090004 then
+        if cardtype == 0x10090003 then
+            -- 英雄技能
+            G.trig_event('逻辑_英雄技能使用', Caster)
+        elseif cardtype == 0x10090004 then
             -- 随从
 
         elseif cardtype == 0x10090005 then
@@ -390,7 +397,7 @@ local create_trigger_name = function (event)
     return '|#trigger#|#' .. event .. '#|' .. count
 end
 
-local trigger_iter = function (estr_cardevent_inittype_类型, card, info, skill)
+local trigger_iter = function (estr_cardevent_inittype_类型, card, skill)
     local iter = function (skill, trigger)
         local 是否重复触发 = trigger['是否重复触发']
         local 触发时机 = (trigger['触发时机'] or {})['lua']
@@ -402,11 +409,11 @@ local trigger_iter = function (estr_cardevent_inittype_类型, card, info, skill
         local earg = nil
         local condi = nil
         if type(触发时机) == 'function' then
-            earg = 触发时机(skill, info, card)
+            earg = 触发时机(skill, get_cur_effect_info(), card)
         end
         if earg and type(触发条件) == 'function' then
             condi = function ()
-                return 触发条件(skill, info, card)
+                return 触发条件(skill, get_cur_effect_info(), card)
             end
         end
         if earg and type(触发逻辑) == 'function' then
@@ -414,14 +421,14 @@ local trigger_iter = function (estr_cardevent_inittype_类型, card, info, skill
             local key = create_trigger_name(event_name)
             if 是否重复触发 then
                 t[key] = function ()
-                    return 触发逻辑(skill, info, card)
+                    return 触发逻辑(skill, get_cur_effect_info(), card)
                 end
             else
                 t[key] = function ()
                     G.removeListener(key, event_name)
                     t[key] = nil
                     card['动态数据']['当前注册事件'][key] = nil
-                    return 触发逻辑(skill, info, card)
+                    return 触发逻辑(skill, get_cur_effect_info(), card)
                 end
             end
             G.addListener(key, earg, condi, 优先级, 分组)
@@ -480,14 +487,14 @@ t['逻辑注册_生效'] = function ()
     local card = info['Caster']
 
     -- 判断是否能够生效
-    trigger_iter('生效', card, info)
+    trigger_iter('生效', card)
 end
 
 t['逻辑注册_添加'] = function ()
     local card, skill = G.event_info()
 
     -- 判断是否能够生效
-    trigger_iter('添加', card, nil, skill.name)
+    trigger_iter('添加', card, skill.name)
 end
 
 t['逻辑反注册_沉默'] = function ()
@@ -651,6 +658,52 @@ t['技能效果_本回合当前水晶'] = function (int_变动值)
                 EVENT_PRIOR.last,
                 nil
               )
+    end
+end
+
+t['技能效果_最大水晶'] = function (int_变动值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local estr_player_相对身份 = o_skill_info_效果信息['Player']
+
+    if estr_player_相对身份 and int_变动值 then
+        local init = function ()
+            o_skill_info_效果信息['最大水晶变化'] = int_变动值
+        end
+        local action = function ()
+            estr_player_相对身份 = o_skill_info_效果信息['Player']
+            int_变动值 = o_skill_info_效果信息['最大水晶变化']
+            local cur_value = G.call('角色_获取水晶数据', estr_player_相对身份, '最大值') or 0
+            G.call('角色_设置水晶数据', estr_player_相对身份, '最大值', cur_value + int_变动值)
+        end
+        effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_最大水晶变化', init, action)
+    end
+end
+
+t['技能效果_当前水晶'] = function (int_变动值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local estr_player_相对身份 = o_skill_info_效果信息['Player']
+
+    if estr_player_相对身份 and int_变动值 then
+        local init = function ()
+            o_skill_info_效果信息['当前水晶变化'] = int_变动值
+        end
+        local action = function ()
+            estr_player_相对身份 = o_skill_info_效果信息['Player']
+            int_变动值 = o_skill_info_效果信息['当前水晶变化']
+            local cur_value = G.call('角色_获取水晶数据', estr_player_相对身份, '当前值') or 0
+            G.call('角色_设置水晶数据', estr_player_相对身份, '当前值', cur_value + int_变动值)
+        end
+        effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_当前水晶变化', init, action)
     end
 end
 
@@ -845,6 +898,28 @@ t['技能效果_添加BUFF'] = function (i_skill_buffID)
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_添加Buff', init, action)
 end
 
+t['技能效果_抽牌'] = function ()
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local estr_player_相对身份 = o_skill_info_效果信息['Player']
+
+    if estr_player_相对身份 then
+        local init = function ()
+        end
+        local action = function ()
+            estr_player_相对身份 = o_skill_info_效果信息['Player']
+
+            -- TODO，缺少处理，默认自己抽自己
+            G.call('角色_抽取随机卡牌', estr_player_相对身份, estr_player_相对身份)
+        end
+        effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_牌库抽牌', init, action)
+    end
+end
+
 -- ============================================
 -- ============================================
 -- ============================================
@@ -853,7 +928,7 @@ end
 -- ============================================
 -- ============================================
 
-t['技能效果_选取英雄'] = function (estr_player_相对身份)
+t['技能目标_选取英雄'] = function (estr_player_相对身份)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -867,7 +942,7 @@ t['技能效果_选取英雄'] = function (estr_player_相对身份)
     o_skill_info_效果信息['Target'] = TargetList
 end
 
-t['技能效果_选取随从'] = function (estr_player_相对身份, filter)
+t['技能目标_选取随从'] = function (estr_player_相对身份, filter)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -890,6 +965,29 @@ t['技能效果_选取随从'] = function (estr_player_相对身份, filter)
     o_skill_info_效果信息['Target'] = TargetList
 end
 
+t['技能目标_剔除目标'] = function (o_card_delTargetList)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local TargetList = o_skill_info_效果信息['Target'] or {}
+
+    if type(o_card_delTargetList) == 'table' then
+        for i = #TargetList, 1, -1 do
+            local Target = TargetList[i]
+            for _,v in ipairs(o_card_delTargetList) do
+                if v.name == Target.name then
+                    table.remove(TargetList, i)
+                    break
+                end
+            end
+        end
+    end
+
+    o_skill_info_效果信息['Target'] = TargetList
+end
 
 -- ============================================
 -- ============================================

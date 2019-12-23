@@ -160,6 +160,10 @@ function t:mouseUp(tar)
     local o_card_picked
 
     if self.can_pick then
+        if tar == self.英雄技能 then
+            o_card_picked = self:getClickData(tar)
+            G.trig_event('UI_抓取卡牌_英雄技能', o_card_picked, tar)
+        end
     else
         o_card_picked = self:getClickData(tar)
         G.trig_event('UI_卡牌选择目标', o_card_picked, tar)
