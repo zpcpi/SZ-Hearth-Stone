@@ -241,9 +241,41 @@ local single_damage = function ()
         TargetList[index] = Target
 
         -- 造成伤害
-        G.call('card_造成伤害', Target, int_伤害值)
+        if int_伤害值 then
+            G.call('card_造成伤害', Target, int_伤害值)
+        end
     end
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_直接伤害', init, action)
+end
+
+local single_heal = function ()
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+    end
+    local action = function ()
+        local int_治疗值 = o_skill_info_效果信息['逐个治疗数值']
+        local Target = o_skill_info_效果信息['逐个治疗目标']
+
+        local _int_治疗数值 = o_skill_info_效果信息['治疗数值']
+        local TargetList = o_skill_info_效果信息['最终治疗目标']
+
+        local index = #_int_治疗数值 + 1
+
+        -- 治疗值记录下来
+        _int_治疗数值[index] = int_治疗值
+        TargetList[index] = Target
+
+        -- 造成治疗
+        if int_治疗值 then
+            G.call('card_造成治疗', Target, int_治疗值)
+        end
+    end
+    effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_直接治疗', init, action)
 end
 
 local single_add_buff = function ()
@@ -558,6 +590,34 @@ t['技能效果_法伤伤害'] = function (int_伤害值)
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_法伤伤害', init, action)
 end
 
+t['技能效果_法术治疗'] = function (int_治疗值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+        o_skill_info_效果信息['原始治疗数值'] = int_治疗值
+        o_skill_info_效果信息['治疗类型'] = '法术'
+    end
+    local action = function ()
+        local int_中间治疗值 = o_skill_info_效果信息['中间治疗数值'] or o_skill_info_效果信息['原始治疗数值']
+        local TargetList = o_skill_info_效果信息['Target'] or {}
+        local _int_治疗数值 = {}
+
+        o_skill_info_效果信息['最终治疗目标'] = {}
+        o_skill_info_效果信息['治疗数值'] = _int_治疗数值
+
+        for k,Target in ipairs(TargetList) do
+            o_skill_info_效果信息['逐个治疗数值'] = int_中间治疗值
+            o_skill_info_效果信息['逐个治疗目标'] = Target
+            single_heal()
+        end
+    end
+    effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_法术治疗', init, action)
+end
+
 t['技能效果_本回合当前水晶'] = function (int_变动值)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
@@ -800,8 +860,10 @@ t['技能效果_选取英雄'] = function (estr_player_相对身份)
         return
     end
 
+    local info_player = o_skill_info_效果信息['Player']
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份, info_player)
     local TargetList = o_skill_info_效果信息['Target'] or {}
-    table.insert(TargetList, G.call('角色_战场_获取英雄', estr_player_相对身份))
+    table.insert(TargetList, G.call('角色_战场_获取英雄_绝对身份', estr_absolute_id_type_绝对身份))
     o_skill_info_效果信息['Target'] = TargetList
 end
 
@@ -812,8 +874,10 @@ t['技能效果_选取随从'] = function (estr_player_相对身份, filter)
         return
     end
 
+    local info_player = o_skill_info_效果信息['Player']
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份, info_player)
     local TargetList = o_skill_info_效果信息['Target'] or {}
-    local FindList = G.call('角色_获取随从列表', estr_player_相对身份)
+    local FindList = G.call('角色_获取随从列表_绝对身份', estr_absolute_id_type_绝对身份)
 
     if filter then
         FindList = G.call('array_filter', FindList, filter)

@@ -109,11 +109,11 @@ end
 },
 				['触发逻辑']={
 t =
-{},
+{'技能效果_法术治疗',8},
 lua = function (self, info, card)
 	local G = require "gf"
 	local t = G.api
-	return {nil}
+	return G.call("技能效果_法术治疗",8)
 end
 ,
 },
@@ -140,8 +140,8 @@ end
 t =
 {
     'block',
-    {'技能效果_选取随从','info.Player'},
-    {'技能效果_选取英雄','info.Player'},
+    {'技能效果_选取随从','$我方'},
+    {'技能效果_选取英雄','$我方'},
     {'技能效果_本回合攻击',2}
 },
 lua = function (self, info, card)
@@ -149,8 +149,8 @@ lua = function (self, info, card)
 	local t = G.api
 	return (function()
 		local _ = nil
-		_ = G.call("技能效果_选取随从",info.Player)
-		_ = G.call("技能效果_选取英雄",info.Player)
+		_ = G.call("技能效果_选取随从","我方")
+		_ = G.call("技能效果_选取英雄","我方")
 		_ = G.call("技能效果_本回合攻击",2)
 		return _
 	end)()
@@ -223,7 +223,7 @@ end
 t =
 {
     'block',
-    {'技能效果_选取英雄','info.Player'},
+    {'技能效果_选取英雄','$我方'},
     {'技能效果_护甲',2},
     {'技能效果_本回合攻击',2}
 },
@@ -232,7 +232,7 @@ lua = function (self, info, card)
 	local t = G.api
 	return (function()
 		local _ = nil
-		_ = G.call("技能效果_选取英雄",info.Player)
+		_ = G.call("技能效果_选取英雄","我方")
 		_ = G.call("技能效果_护甲",2)
 		_ = G.call("技能效果_本回合攻击",2)
 		return _
