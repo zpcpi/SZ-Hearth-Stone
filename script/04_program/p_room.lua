@@ -127,49 +127,70 @@ t['房间_绝对身份获取玩家信息'] = function(estr_absolute_id_type_绝�
     return nil
 end
 
-t['房间_获取绝对身份'] = function(estr_player_相对身份)
+t['房间_获取绝对身份'] = function(estr_player_相对身份, estr_player_对照相对身份)
     local any_当前玩家信息 = G.call('系统_获取当前玩家信息')
-    if estr_player_相对身份 == '我方' then 
-        return any_当前玩家信息.绝对身份 
-    elseif estr_player_相对身份 == '友方1' then 
-        if any_当前玩家信息.绝对身份 == '红1' then 
-            return '红2'
-        elseif any_当前玩家信息.绝对身份 == '红2' then 
-            return '红1'
-        elseif any_当前玩家信息.绝对身份 == '蓝1' then 
-            return '蓝2'
-        elseif any_当前玩家信息.绝对身份 == '蓝2' then 
-            return '蓝1'
-        end
-    elseif estr_player_相对身份 == '敌方1' then 
-        if any_当前玩家信息.绝对身份 == '红1' or any_当前玩家信息.绝对身份 == '红2' then 
-            return '蓝1'
-        elseif any_当前玩家信息.绝对身份 == '蓝1' or any_当前玩家信息.绝对身份 == '蓝2' then 
-            return '红1'
-        end
-    elseif estr_player_相对身份 == '敌方2' then 
-        if any_当前玩家信息.绝对身份 == '红1' or any_当前玩家信息.绝对身份 == '红2' then 
-            return '蓝2'
-        elseif any_当前玩家信息.绝对身份 == '蓝1' or any_当前玩家信息.绝对身份 == '蓝2' then 
-            return '红2'
-        end
+    local estr_absolute_id_type_本地玩家绝对身份 = any_当前玩家信息.绝对身份
+
+    local l2a_mapping
+    local a2l_mapping
+    if G.misc().对决类型 == '1v1' then 
+        l2a_mapping = PLAYER_MAPPING_L2A_1v1
+        a2l_mapping = PLAYER_MAPPING_A2L_1v1
+    elseif G.misc().对决类型 == '2v2' then 
+        l2a_mapping = PLAYER_MAPPING_L2A_2v2
+        a2l_mapping = PLAYER_MAPPING_A2L_2v2
+    else
+        goto next
     end
-    G.call('提示_添加提示', '无法找到绝对身份! ' .. tostring(estr_player_相对身份))
+
+    do
+        local estr_absolute_id_type_对照玩家绝对身份
+        local estr_absolute_id_type_查找玩家绝对身份
+        if estr_player_对照相对身份 then
+            estr_absolute_id_type_对照玩家绝对身份 = (l2a_mapping[estr_absolute_id_type_本地玩家绝对身份] or {})
+                                                                [estr_player_对照相对身份]
+        else
+            estr_absolute_id_type_对照玩家绝对身份 = estr_absolute_id_type_本地玩家绝对身份
+        end
+
+        if estr_absolute_id_type_对照玩家绝对身份 then
+            estr_absolute_id_type_查找玩家绝对身份 = (l2a_mapping[estr_absolute_id_type_对照玩家绝对身份] or {})
+                                                                [estr_player_相对身份]
+        else
+            goto next
+        end
+
+        return estr_absolute_id_type_查找玩家绝对身份
+    end
+
+    ::next::
+    G.call('提示_添加提示', '无法找到绝对身份! ' .. tostring(estr_player_相对身份, estr_player_对照相对身份))
     return ''
 end
 
 t['房间_获取相对身份'] = function(estr_absolute_id_type_绝对身份)
     local any_当前玩家信息 = G.call('系统_获取当前玩家信息')
+    local estr_absolute_id_type_本地玩家绝对身份 = any_当前玩家信息.绝对身份
     
-    if any_当前玩家信息.绝对身份 == estr_absolute_id_type_绝对身份 then 
-        return '我方'
-    elseif string.sub(any_当前玩家信息.绝对身份, 1, -2) == string.sub(estr_absolute_id_type_绝对身份, 1, -2) then 
-        return '友方'
-    elseif string.sub(estr_absolute_id_type_绝对身份, -1, -1) == '1' then 
-        return '敌方1'
-    elseif string.sub(estr_absolute_id_type_绝对身份, -1, -1) == '2' then 
-        return '敌方2'
+    local l2a_mapping
+    local a2l_mapping
+    if G.misc().对决类型 == '1v1' then 
+        a2l_mapping = PLAYER_MAPPING_A2L_1v1
+    elseif G.misc().对决类型 == '2v2' then 
+        a2l_mapping = PLAYER_MAPPING_A2L_2v2
+    else
+        goto next
     end
+
+    do
+        local estr_player_相对身份 = (a2l_mapping[estr_absolute_id_type_本地玩家绝对身份] or {})
+                                                 [estr_absolute_id_type_绝对身份]
+        if estr_player_相对身份 then
+            return estr_player_相对身份
+        end
+    end
+
+    ::next::
     G.call('提示_添加提示', '无法找到相对身份! ' .. tostring(estr_absolute_id_type_绝对身份))
     return ''
 end

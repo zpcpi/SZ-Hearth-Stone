@@ -116,6 +116,15 @@ t['角色_获取随从数量_绝对身份'] = function(estr_absolute_id_type_绝
     return o_misc.随从数量[estr_absolute_id_type_绝对身份] or 0
 end
 
+--hide=true
+t['角色_获取随从列表_绝对身份'] = function(estr_absolute_id_type_绝对身份)
+    local o_misc = G.misc()
+
+    misc_attr_check('随从信息', estr_absolute_id_type_绝对身份)
+
+    return o_misc.随从信息[estr_absolute_id_type_绝对身份]
+end
+
 t['角色_设置水晶数据_绝对身份'] = function(estr_absolute_id_type_绝对身份, estr_mana_type_修改类型, int_value)
     local o_misc = G.misc()
 

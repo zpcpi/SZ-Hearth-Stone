@@ -82,6 +82,64 @@ EVENT_GROUP = {
     system = 'system',
 }
 
+-- 敌方1
+-- 我方
+-- 我方的敌方1，指代我行动回合结束时行动的人
+PLAYER_MAPPING_L2A_1v1 = {
+    ['红1'] = {
+        ['我方'] = '红1',
+        ['敌方1'] = '蓝1',
+    },
+    ['蓝1'] = {
+        ['我方'] = '蓝1',
+        ['敌方1'] = '红1',
+    },
+}
+
+-- 敌方2 敌方1
+-- 友方1 我方
+-- 我方的敌方1，指代我行动回合结束时行动的人
+PLAYER_MAPPING_L2A_2v2 = {
+    ['红1'] = {
+        ['我方'] = '红1',
+        ['友方1'] = '红2',
+        ['敌方1'] = '蓝1',
+        ['敌方2'] = '蓝2',
+    },
+    ['红2'] = {
+        ['我方'] = '红2',
+        ['友方1'] = '红1',
+        ['敌方1'] = '蓝2',
+        ['敌方2'] = '蓝1',
+    },
+    ['蓝1'] = {
+        ['我方'] = '蓝1',
+        ['友方1'] = '蓝2',
+        ['敌方1'] = '红2',
+        ['敌方2'] = '红1',
+    },
+    ['蓝2'] = {
+        ['我方'] = '蓝2',
+        ['友方1'] = '蓝1',
+        ['敌方1'] = '红1',
+        ['敌方2'] = '红2',
+    },
+}
+
+local function A2L_iter(mapping)
+    local t = {}
+    for estr_absolute_id_type_绝对身份,sub_mapping in pairs(mapping) do
+        local sub_t = {}
+        t[estr_absolute_id_type_绝对身份] = sub_t
+        for estr_player_相对身份,estr_absolute_id_type_绝对身份2 in pairs(sub_mapping) do
+            sub_t[estr_absolute_id_type_绝对身份2] = estr_player_相对身份
+        end
+    end
+    return t
+end
+
+PLAYER_MAPPING_A2L_2v2 = A2L_iter(PLAYER_MAPPING_L2A_2v2)
+PLAYER_MAPPING_A2L_1v1 = A2L_iter(PLAYER_MAPPING_L2A_1v1)
 
 function CARD_GET_ATTR(odata, key, ...)
     if key then

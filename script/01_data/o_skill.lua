@@ -121,6 +121,46 @@ end
 		},
 	},
 	{
+		['name']=0x10130007,
+		['showname']='野蛮咆哮-本回合攻击',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能效果_选取随从','info.Player'},
+    {'技能效果_选取英雄','info.Player'},
+    {'技能效果_本回合攻击',2}
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能效果_选取随从",info.Player)
+		_ = G.call("技能效果_选取英雄",info.Player)
+		_ = G.call("技能效果_本回合攻击",2)
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130005,
 		['showname']='野性印记-buff',
 		['逻辑功能']={
@@ -183,7 +223,7 @@ end
 t =
 {
     'block',
-    {'技能效果_选取我方英雄'},
+    {'技能效果_选取英雄','info.Player'},
     {'技能效果_护甲',2},
     {'技能效果_本回合攻击',2}
 },
@@ -192,7 +232,7 @@ lua = function (self, info, card)
 	local t = G.api
 	return (function()
 		local _ = nil
-		_ = G.call("技能效果_选取我方英雄")
+		_ = G.call("技能效果_选取英雄",info.Player)
 		_ = G.call("技能效果_护甲",2)
 		_ = G.call("技能效果_本回合攻击",2)
 		return _

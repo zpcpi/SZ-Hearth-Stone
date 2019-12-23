@@ -793,7 +793,7 @@ end
 -- ============================================
 -- ============================================
 
-t['技能效果_选取我方英雄'] = function ()
+t['技能效果_选取英雄'] = function (estr_player_相对身份)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -801,11 +801,30 @@ t['技能效果_选取我方英雄'] = function ()
     end
 
     local TargetList = o_skill_info_效果信息['Target'] or {}
-    table.insert(TargetList, G.call('角色_战场_获取英雄', '我方'))
+    table.insert(TargetList, G.call('角色_战场_获取英雄', estr_player_相对身份))
     o_skill_info_效果信息['Target'] = TargetList
 end
 
+t['技能效果_选取随从'] = function (estr_player_相对身份, filter)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
 
+    local TargetList = o_skill_info_效果信息['Target'] or {}
+    local FindList = G.call('角色_获取随从列表', estr_player_相对身份)
+
+    if filter then
+        FindList = G.call('array_filter', FindList, filter)
+    end
+
+    for k,v in ipairs(FindList) do
+        table.insert(TargetList, v)
+    end
+
+    o_skill_info_效果信息['Target'] = TargetList
+end
 
 
 -- ============================================

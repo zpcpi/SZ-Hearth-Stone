@@ -128,6 +128,12 @@ t['角色_获取随从数量'] = function(estr_player_相对身份)
     return G.call('角色_获取随从数量_绝对身份', estr_absolute_id_type_绝对身份)
 end
 
+--hide=true
+t['角色_获取随从列表'] = function(estr_player_相对身份)
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
+    return G.call('角色_获取随从列表_绝对身份', estr_absolute_id_type_绝对身份)
+end
+
 t['角色_设置水晶数据'] = function(estr_player_相对身份, estr_mana_type_修改类型, int_value)
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
 
