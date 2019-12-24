@@ -5,6 +5,35 @@ local t = {
 'o_skill',
 {
 	{
+		['name']=0x1013000e,
+		['showname']='奥术射击-伤害',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_法伤伤害',2},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_法伤伤害",2)
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x1013000d,
 		['showname']='变形-护甲、本回合攻击',
 		['postfix']='英雄技能',
@@ -438,7 +467,7 @@ end
 t =
 {
     'block',
-    {'技能效果_生命',2},
+    {'技能效果_生命上限',2},
     {'技能效果_攻击',2},
     {
         '技能效果_特性',
@@ -450,7 +479,7 @@ lua = function (self, info, card)
 	local t = G.api
 	return (function()
 		local _ = nil
-		_ = G.call("技能效果_生命",2)
+		_ = G.call("技能效果_生命上限",2)
 		_ = G.call("技能效果_攻击",2)
 		_ = G.call("技能效果_特性",{"嘲讽"})
 		return _

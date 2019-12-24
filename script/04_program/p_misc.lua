@@ -39,12 +39,8 @@ t['asdasd'] = function ()
     G.show_table(tt)
 end
 
-t['zpc_test'] = function ()
-    G.show_table(PLAYER_MAPPING_L2A)
-    G.show_table(PLAYER_MAPPING_A2L)
-
-
-
+t['zpc_test'] = function (id)
+    G.call('角色_添加手牌', '我方', G.call('卡牌实例化', id), true)
 end
 
 t['zpc_test2'] = function (a)

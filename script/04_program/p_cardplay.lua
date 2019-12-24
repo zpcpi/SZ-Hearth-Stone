@@ -5,6 +5,11 @@ local G = require "gf"
 local L = {}
 local t = G.api
 
+--特殊事件
+-- 逻辑_法术牌打出
+-- 逻辑_英雄技能使用
+
+
 t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
     local get_attr = CARD_GET_ATTR
 
@@ -749,6 +754,10 @@ t['技能效果_护甲'] = function (int_变动值)
         return
     end
 
+    if int_变动值 <= 0 then
+        return
+    end
+
     local init = function ()
         o_skill_info_效果信息['当前护甲变化'] = int_变动值
     end
@@ -765,10 +774,14 @@ t['技能效果_护甲'] = function (int_变动值)
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_当前护甲变化', init, action)
 end
 
-t['技能效果_生命'] = function (int_变动值)
+t['技能效果_生命上限'] = function (int_变动值)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
+        return
+    end
+
+    if int_变动值 <= 0 then
         return
     end
 
@@ -794,6 +807,10 @@ t['技能效果_攻击'] = function (int_变动值)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
+        return
+    end
+
+    if int_变动值 <= 0 then
         return
     end
 
@@ -940,6 +957,35 @@ t['技能效果_创建手牌'] = function (i_card_创建卡牌ID, boolean_是否
         end
         effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_创建手牌', init, action)
     end
+end
+
+t['技能效果_设置生命上限'] = function (int_变动值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    if int_变动值 <= 0 then
+        return
+    end
+
+    local init = function ()
+    end
+    local action = function ()
+        local TargetList = o_skill_info_效果信息['Target'] or {}
+
+        for _, Target in ipairs(TargetList) do
+            G.call('卡牌属性_设置', Target, '生命', '最大值', int_变动值)
+            G.call('卡牌属性_设置', Target, '生命', '当前值', int_变动值)
+        end
+    end
+
+    effect_action_iter(o_skill_info_效果信息, '', init, action)
+end
+
+t['技能效果_设置攻击力'] = function (int_变动值)
+
 end
 
 -- ============================================
