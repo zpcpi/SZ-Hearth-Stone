@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local c_battle_hero = require 'c_battle_hero'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -70,11 +70,10 @@ tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '职业图标2 '
-		tc.left = 14.500
-		tc.right = 105.500
-		tc.bottom = -277.000
-		tc.top = -185.000
-		tc.visible = false
+		tc.left = 12.500
+		tc.right = 103.500
+		tc.bottom = -258.000
+		tc.top = -166.000
 		tc.scaleX = 0.800
 		tc.scaleY = 0.800
 		tc.img = 0x560d0002
@@ -88,7 +87,6 @@ tp = tc
 		tc.right = 45.500
 		tc.bottom = -265.000
 		tc.top = -173.000
-		tc.visible = false
 		tc.img = 0x560d0002
 		tp = tc
 		tp = tp.parent
