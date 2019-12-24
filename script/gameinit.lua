@@ -61,6 +61,7 @@ G.loadFontStyle(fs)
 require 'servershare/gfhs_data'
 require 'servershare/gfhs_net'
 require 'servershare/gfhs_view'
+require 'servershare/gfhs_code'
 require 'servershare/require_o_p'
 require 'require_a_n'
 require 'servershare/const'

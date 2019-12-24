@@ -27,11 +27,12 @@
   - [ ] 选择英雄
   - [ ] 正版炉石卡牌映射
   - [ ] 生成复制代码供正版炉石使用
-    > 复制代码样例
-    > ### 外服传说：鱼人萨
-    > AAECAaoIAvDzAvSZAw7FA9sD/gPjBdAHpwiTCeKJA4yUA7WYA8aZA9SlA6+nA8qrAwA=
-    > 
-    > #此卡组代码来源于炉石盒子，上盒子，上传说！
+    * 复制代码样例
+        ```
+        ### 测试用基本术士卡组
+        AAECAf0GAA8whAGjAb8BhQP+A9AEiAWSB5cHmge2B84H+wfECAA=
+        # 炉石复刻 定义你自己的炉石传说!
+        ```
   - [ ] 卡牌搜索
 - [ ] 指令系统框架
     - [ ] 指令阶段功能补全（10/13）
