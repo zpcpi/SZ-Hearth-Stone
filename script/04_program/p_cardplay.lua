@@ -471,6 +471,7 @@ t['逻辑注册_初始化'] = function ()
     card['动态数据'] = {
         ['当前注册事件'] = {},
         ['浮动属性'] = {},
+        ['光环属性'] = {},
         ['当前属性'] = {},
         ['卡牌位置'] = '牌库',
     }
@@ -654,7 +655,6 @@ t['技能效果_本回合当前水晶'] = function (int_变动值)
 
         effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_当前水晶变化', init(int_变动值), action)
         G.call('tLua_add_listener', 
-                nil,
                 {"对决事件_回合结束"},
                 function ()
                     effect_action_iter(o_skill_info_效果信息, nil, init(-int_变动值), action)
@@ -729,22 +729,36 @@ t['技能效果_本回合攻击'] = function (int_变动值)
         local TargetList = o_skill_info_效果信息['Target'] or {}
 
         for _, Target in ipairs(TargetList) do
-            local cur_value = G.call('卡牌属性_获取', Target, '攻击', '当前值') or 0
-            G.call('卡牌属性_设置', Target, '攻击', '当前值', cur_value + int_变动值)
+            local cur_value = G.call('卡牌属性_获取', Target, '攻击', '浮动值') or 0
+            G.call('卡牌属性_设置', Target, '攻击', '浮动值', cur_value + int_变动值)
+
+            local tar = Target
+            local val = int_变动值
+            G.call('tLua_add_multlisteners', 
+                    {
+                        {
+                            {"对决事件_回合结束"},
+                            function ()
+                                local cur_value = G.call('卡牌属性_获取', tar, '攻击', '浮动值') or 0
+                                G.call('卡牌属性_设置', tar, '攻击', '浮动值', cur_value - val)
+                            end,
+                            nil,
+                            EVENT_PRIOR.last,
+                            nil
+                        },
+                        {
+                            {"逻辑_卡牌属性设置", tar, '攻击'},
+                            function () end,
+                            nil,
+                            EVENT_PRIOR.first,
+                            nil
+                        },
+                    }
+                )
         end
     end
 
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_当前攻击变化', init(int_变动值), action)
-    G.call('tLua_add_listener', 
-            nil,
-            {"对决事件_回合结束"},
-            function ()
-                effect_action_iter(o_skill_info_效果信息, nil, init(-int_变动值), action)
-            end,
-            nil,
-            EVENT_PRIOR.last,
-            nil
-          )
 end
 
 t['技能效果_护甲'] = function (int_变动值)
@@ -793,9 +807,9 @@ t['技能效果_生命上限'] = function (int_变动值)
         local TargetList = o_skill_info_效果信息['Target'] or {}
 
         for _, Target in ipairs(TargetList) do
-            local max_value = G.call('卡牌属性_获取', Target, '生命', '最大值') or 0
+            local buff_value = G.call('卡牌属性_获取', Target, '生命', '浮动值') or 0
             local cur_value = G.call('卡牌属性_获取', Target, '生命', '当前值') or 0
-            G.call('卡牌属性_设置', Target, '生命', '最大值', max_value + int_变动值)
+            G.call('卡牌属性_设置', Target, '生命', '浮动值', buff_value + int_变动值)
             G.call('卡牌属性_设置', Target, '生命', '当前值', cur_value + int_变动值)
         end
     end
@@ -822,8 +836,8 @@ t['技能效果_攻击'] = function (int_变动值)
         local TargetList = o_skill_info_效果信息['Target'] or {}
 
         for _, Target in ipairs(TargetList) do
-            local cur_value = G.call('卡牌属性_获取', Target, '攻击', '当前值') or 0
-            G.call('卡牌属性_设置', Target, '攻击', '当前值', cur_value + int_变动值)
+            local cur_value = G.call('卡牌属性_获取', Target, '攻击', '浮动值') or 0
+            G.call('卡牌属性_设置', Target, '攻击', '浮动值', cur_value + int_变动值)
         end
     end
 
@@ -976,8 +990,11 @@ t['技能效果_设置生命上限'] = function (int_变动值)
         local TargetList = o_skill_info_效果信息['Target'] or {}
 
         for _, Target in ipairs(TargetList) do
-            G.call('卡牌属性_设置', Target, '生命', '最大值', int_变动值)
-            G.call('卡牌属性_设置', Target, '生命', '当前值', int_变动值)
+            local orig_v = G.call('卡牌属性_获取', Target, '生命', '原始值') or 0
+            G.call('卡牌属性_设置', Target, '生命', '浮动值', int_变动值 - orig_v)
+            G.call('卡牌属性_设置', Target, '生命', '当前值', G.call('卡牌属性_获取', Target, '生命', '最大值'))
+        
+            G.trig_event('逻辑_卡牌属性设置', Target, '生命')
         end
     end
 
@@ -985,7 +1002,30 @@ t['技能效果_设置生命上限'] = function (int_变动值)
 end
 
 t['技能效果_设置攻击力'] = function (int_变动值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
 
+    if int_变动值 <= 0 then
+        return
+    end
+
+    local init = function ()
+    end
+    local action = function ()
+        local TargetList = o_skill_info_效果信息['Target'] or {}
+
+        for _, Target in ipairs(TargetList) do
+            local orig_v = G.call('卡牌属性_获取', Target, '攻击', '原始值') or 0
+            G.call('卡牌属性_设置', Target, '攻击', '浮动值', int_变动值 - orig_v)
+        
+            G.trig_event('逻辑_卡牌属性设置', Target, '攻击')
+        end
+    end
+
+    effect_action_iter(o_skill_info_效果信息, '', init, action)
 end
 
 -- ============================================
@@ -1226,13 +1266,25 @@ t['卡牌属性_获取'] = function (o_card_当前卡牌, estr_cardattr_enum_属
         dyn_data = o_card_当前卡牌['动态数据'] or {}
         tattr = dyn_data['当前属性'] or {}
         return value_iter(tattr[estr_cardattr_enum_属性名]) or 
-               G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '最大值') or 
-               G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '原始值')
+               G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '最大值')
     elseif estr_cardattr_type_属性类型 == '最大值' then
+        local buff_v = G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '浮动值')
+        local area_v = G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '光环值')
+        local orig_v = G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '原始值')
+        if buff_v or area_v then
+            return value_iter((buff_v or 0) + (area_v or 0) + (orig_v or 0))
+        else
+            -- 都没有赋值，那就是原始值
+            return orig_v
+        end
+    elseif estr_cardattr_type_属性类型 == '浮动值' then
         dyn_data = o_card_当前卡牌['动态数据'] or {}
         tattr = dyn_data['浮动属性'] or {}
-        return value_iter(tattr[estr_cardattr_enum_属性名]) or 
-               G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '原始值')
+        return value_iter(tattr[estr_cardattr_enum_属性名])
+    elseif estr_cardattr_type_属性类型 == '光环值' then
+        dyn_data = o_card_当前卡牌['动态数据'] or {}
+        tattr = dyn_data['光环属性'] or {}
+        return value_iter(tattr[estr_cardattr_enum_属性名])
     elseif estr_cardattr_type_属性类型 == '原始值' then
         tattr = o_card_当前卡牌['卡牌属性'] or {}
         return value_iter(tattr[estr_cardattr_enum_属性名])
@@ -1261,11 +1313,27 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
         tattr[estr_cardattr_enum_属性名] = cur_value
         
         -- 临时，应该加入动画队列中
-        G.trig_event('UI_卡牌属性更新', o_card_当前卡牌.name, estr_cardattr_enum_属性名, cur_value)
+        G.trig_event('UI_卡牌属性更新', o_card_当前卡牌.name, estr_cardattr_enum_属性名)
     elseif estr_cardattr_type_属性类型 == '最大值' then
+        -- 最大值不能直接设置
+    elseif estr_cardattr_type_属性类型 == '浮动值' then
         dyn_data = o_card_当前卡牌['动态数据']
         tattr = dyn_data['浮动属性']
-        tattr[estr_cardattr_enum_属性名] = value_iter(int_value)
+
+        local cur_value = value_iter(int_value)
+        tattr[estr_cardattr_enum_属性名] = cur_value
+
+        -- 临时，应该加入动画队列中
+        G.trig_event('UI_卡牌属性更新', o_card_当前卡牌.name, estr_cardattr_enum_属性名)
+    elseif estr_cardattr_type_属性类型 == '光环值' then
+        dyn_data = o_card_当前卡牌['动态数据']
+        tattr = dyn_data['光环属性']
+
+        local cur_value = value_iter(int_value)
+        tattr[estr_cardattr_enum_属性名] = cur_value
+
+        -- 临时，应该加入动画队列中
+        G.trig_event('UI_卡牌属性更新', o_card_当前卡牌.name, estr_cardattr_enum_属性名)
     elseif estr_cardattr_type_属性类型 == '原始值' then
         tattr = o_card_当前卡牌['卡牌属性']
         tattr[estr_cardattr_enum_属性名] = value_iter(int_value)

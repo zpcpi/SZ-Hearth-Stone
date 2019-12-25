@@ -142,8 +142,8 @@ t['CardCom_SetData'] = function (com, o_card)
     -- 注册卡牌更新监听
     do
         local update_data = function ()
-            local _, attr, value = G.event_info()
-
+            local _, attr = G.event_info()
+            local value = G.call('卡牌属性_获取', o_card, attr, '当前值')
             if attr == '费用' then
                 attr = 'cost'
             elseif attr == '攻击' then

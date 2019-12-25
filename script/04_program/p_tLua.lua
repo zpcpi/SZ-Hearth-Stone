@@ -199,7 +199,7 @@ local create_listener_name = function (event)
     return '|#tLua_listener#|#' .. event .. '#|' .. count
 end
 
-t['tLua_add_listener'] = function (o_order_info_当前指令信息, earg_注册事件, func_执行函数, cond, prior, group)
+t['tLua_add_listener'] = function (earg_注册事件, func_执行函数, cond, prior, group)
     if earg_注册事件 and type(earg_注册事件[1]) == 'string' then
         local event_name = earg_注册事件[1]
         local key = create_listener_name(event_name)
@@ -209,7 +209,39 @@ t['tLua_add_listener'] = function (o_order_info_当前指令信息, earg_注册�
             return func_执行函数()
         end
         G.addListener(key, earg_注册事件, cond, prior, group)
-        return key
+        return key, event_name
+    end
+end
+
+t['tLua_add_multlisteners'] = function (_listener_info)
+    local api_info = {}
+
+    local del_iter = function ()
+        for _, info in ipairs(api_info) do
+            local key = info[1]
+            local event_name = info[2]
+            G.removeListener(key, event_name)
+            t[key] = nil
+        end
+    end
+
+    for _,info in ipairs(_listener_info or {}) do
+        local earg_注册事件 = info[1]
+        local func_执行函数 = info[2]
+        local func_条件函数 = info[3]
+        local int_prior = info[4]
+        local string_group = info[5]
+
+        if earg_注册事件 and type(earg_注册事件[1]) == 'string' then
+            local event_name = earg_注册事件[1]
+            local key = create_listener_name(event_name)
+            t[key] = function ()
+                del_iter()
+                return func_执行函数()
+            end
+            G.addListener(key, earg_注册事件, func_条件函数, int_prior, string_group)
+            table.insert(api_info, {key, event_name})
+        end
     end
 end
 
@@ -767,7 +799,7 @@ code_iter = function (ast)
         elseif ast.tag == 'function' then
             localfunction_iter(nil, ast)
         elseif ast.tag == 'listener' then
-            tl('t["tLua_add_listener"](nil,{"' .. ast['earg']['event'] .. '"') 
+            tl('t["tLua_add_listener"]({"' .. ast['earg']['event'] .. '"') 
             for k,v in ipairs(ast['earg'] or {}) do
                 tl(',') value_iter(v)
             end

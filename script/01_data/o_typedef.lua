@@ -568,10 +568,14 @@ local t = {
 				['type']='o_card_attr',
 			},
 			[3]={
-				['name']='当前属性',
+				['name']='光环属性',
 				['type']='o_card_attr',
 			},
 			[4]={
+				['name']='当前属性',
+				['type']='o_card_attr',
+			},
+			[5]={
 				['name']='卡牌位置',
 				['type']='estr_cardpos_type',
 			},

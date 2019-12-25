@@ -276,6 +276,20 @@ local t = {
 		},
 	},
 	{
+		['name']='逻辑_卡牌属性设置',
+		['postfix']='临时属性将不再删除',
+		['arg']={
+			[1]={
+				['id']='Target',
+				['type']='o_card',
+			},
+			[2]={
+				['id']='属性',
+				['type']='estr_cardattr_enum',
+			},
+		},
+	},
+	{
 		['name']='逻辑_卡牌使用_消耗法力',
 		['arg']={
 			[1]={
@@ -571,10 +585,6 @@ local t = {
 			[2]={
 				['id']='Attr',
 				['type']='estr_cardattr_enum',
-			},
-			[3]={
-				['id']='Value',
-				['type']='int',
 			},
 		},
 	},
