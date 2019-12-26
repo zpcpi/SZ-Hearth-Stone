@@ -1333,6 +1333,39 @@ t['卡牌条件_卡牌特性判断'] = function (o_card_当前卡牌, _string_�
     return true
 end
 
+t['卡牌条件_卡牌类型判断'] = function (o_card_当前卡牌, _i_cardtype_卡牌类型)
+    local i_cardtype_当前卡牌类型 = (o_card_当前卡牌['逻辑数据'] or {})['类型']
+    return G.call('array_get_element_index', _i_cardtype_卡牌类型, i_cardtype_当前卡牌类型) ~= nil
+end
+
+t['卡牌条件_卡牌所处位置判断'] = function (o_card_当前卡牌, _estr_cardpos_type_所处位置)
+    local estr_cardpos_type_当前卡牌所处位置 = (o_card_当前卡牌['动态数据'] or {})['卡牌位置']
+    return G.call('array_get_element_index', _estr_cardpos_type_所处位置, estr_cardpos_type_当前卡牌所处位置) ~= nil
+end
+
+t['卡牌条件_卡牌种族判断'] = function (o_card_当前卡牌, _i_race_种族)
+    local i_race_当前卡牌种族 = (o_card_当前卡牌['逻辑数据'] or {})['种族']
+    return G.call('array_get_element_index', _i_race_种族, i_race_当前卡牌种族) ~= nil
+end
+
+--ret=boolean
+t['卡牌条件_光环通用过滤器'] = function(o_card_当前卡牌, _i_cardtype_卡牌类型,_estr_cardpos_type_所处位置, _i_race_种族, _string_满足特性, _string_排除特性, boolean_排除自身)
+    local result = true
+    if result and _i_cardtype_卡牌类型 then
+        result = G.call('卡牌条件_卡牌类型判断', o_card_当前卡牌, _i_cardtype_卡牌类型)
+    end
+    if result and _estr_cardpos_type_所处位置 then
+        result = G.call('卡牌条件_卡牌所处位置判断', o_card_当前卡牌, _estr_cardpos_type_所处位置)
+    end
+    if result and _i_race_种族 then
+        result = G.call('卡牌条件_卡牌种族判断', o_card_当前卡牌, _i_race_种族)
+    end
+    if result and (_string_满足特性 or _string_排除特性) then
+        result = G.call('卡牌条件_卡牌特性判断', o_card_当前卡牌, _string_满足特性, _string_排除特性)
+    end
+    return result
+end
+
 -- ============================================
 -- ============================================
 -- ============================================

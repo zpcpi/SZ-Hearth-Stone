@@ -955,8 +955,8 @@ local t = {
 				['type']='string',
 			},
 			[2]={
-				['name']='目标筛选',
-				['type']='_fargo_target_filter',
+				['name']='光环筛选',
+				['type']='fargboolean',
 			},
 			[3]={
 				['name']='逻辑功能',
@@ -995,11 +995,6 @@ local t = {
 				['name']='分组',
 				['type']='string',
 			},
-		},
-	},
-	{
-		['name']='o_target_filter',
-		['define']={
 		},
 	},
 	{
