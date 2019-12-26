@@ -1,0 +1,4 @@
+{
+    "CardExcelPath" : "../../excel/新卡片表.xlsx",
+    "HSDataJsonPath" : "./cards.json"
+}
