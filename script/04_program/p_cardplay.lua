@@ -374,7 +374,7 @@ end
 
 t['技能效果_效果树_执行子效果'] = function (skill_info, action)
     -- 效果挂钩，入栈
-    local effect_stack = G.misc().当前效果堆栈
+    local effect_stack = skill_info['Stack']
     local o_skill_info_效果信息 = effect_stack.top()
     effect_stack.push(skill_info)
     skill_info['Parent'] = o_skill_info_效果信息
@@ -1026,6 +1026,97 @@ t['技能效果_设置攻击力'] = function (int_变动值)
     end
 
     effect_action_iter(o_skill_info_效果信息, '', init, action)
+end
+
+t['技能效果_创建光环'] = function (o_skill, func_add, func_del, _earg_光环添加事件, _earg_光环删除事件)
+    local effect_stack = G.misc().当前效果堆栈 
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local 过滤数据 = o_skill['目标筛选']
+    local all_cards = {}
+    local TargetList = G.call('array_filter', all_cards, function (v) end)
+    G.call('技能效果_效果树_执行子效果',
+            {
+                ['Player'] = o_skill_info_效果信息['Player'],
+                ['Caster'] = o_skill_info_效果信息['Caster'],
+                ['Target'] = TargetList,
+                ['Stack'] = effect_stack,
+            }, 
+            func_add
+        )
+
+    local infolist = {}
+    local add_buff_iter = function ()
+        local Target = G.event_info()
+        if G.call('array_get_element_index', TargetList, Target) then
+        elseif true then
+            table.insert(TargetList, Target)
+            G.call('技能效果_效果树_执行子效果',
+                    {
+                        ['Player'] = o_skill_info_效果信息['Player'],
+                        ['Caster'] = o_skill_info_效果信息['Caster'],
+                        ['Target'] = {Target},
+                        ['Stack'] = effect_stack,
+                    }, 
+                    func_add
+                )
+        end
+        G.call('tLua_add_multlisteners', infolist)
+    end
+    local del_buff_iter = function ()
+        local Target = G.event_info()
+        local index = G.call('array_get_element_index', TargetList, Target)
+        if index then
+            table.remove(TargetList, index)
+            G.call('技能效果_效果树_执行子效果',
+                    {
+                        ['Player'] = o_skill_info_效果信息['Player'],
+                        ['Caster'] = o_skill_info_效果信息['Caster'],
+                        ['Target'] = {Target},
+                        ['Stack'] = effect_stack,
+                    }, 
+                    func_del
+                )
+        end
+        G.call('tLua_add_multlisteners', infolist)
+    end
+
+    for _,earg in ipairs(_earg_光环添加事件) do
+        local info = {
+            [1] = earg,
+            [2] = add_buff_iter,
+        }
+        table.insert(infolist, info)
+    end
+    for _,earg in ipairs(_earg_光环删除事件) do
+        local info = {
+            [1] = earg,
+            [2] = del_buff_iter,
+        }
+        table.insert(infolist, info)
+    end
+    table.insert(infolist,
+                {
+                    [1] = {'逻辑_卡牌死亡', o_skill_info_效果信息['Caster']}
+                },
+                function ()
+                    G.call('技能效果_效果树_执行子效果',
+                            {
+                                ['Player'] = o_skill_info_效果信息['Player'],
+                                ['Caster'] = o_skill_info_效果信息['Caster'],
+                                ['Target'] = TargetList,
+                                ['Stack'] = effect_stack,
+                            }, 
+                            func_del
+                        )
+                end
+            )
+
+    G.call('tLua_add_multlisteners', infolist)
 end
 
 -- ============================================
