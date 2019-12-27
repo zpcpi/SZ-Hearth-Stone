@@ -470,7 +470,7 @@ local t = {
 		['arg']={
 			[1]={
 				['id']='卡牌id',
-				['type']='i_card_卡牌',
+				['type']='o_card_卡牌',
 			},
 		},
 	},

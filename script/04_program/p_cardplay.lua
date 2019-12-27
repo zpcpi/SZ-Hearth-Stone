@@ -9,7 +9,6 @@ local t = G.api
 -- 逻辑_法术牌打出
 -- 逻辑_英雄技能使用
 
-
 t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
     local get_attr = CARD_GET_ATTR
 
@@ -394,7 +393,7 @@ local aura_add_buff = function (func_filer, func_add, func_del, _earg_光环添�
         return
     end
 
-    local all_cards = {}
+    local all_cards = G.misc()['实例化卡牌列表']
     local TargetList = G.call('array_filter', all_cards, func_filer)
     G.call('技能效果_效果树_执行子效果',
             {
@@ -632,8 +631,22 @@ t['逻辑注册_初始化'] = function ()
         ['光环属性'] = {},
         ['当前属性'] = {},
         ['卡牌位置'] = '牌库',
+        ['所有者'] = G.call('系统_获取当前玩家信息').绝对身份
     }
+
+    table.insert(G.misc()['实例化卡牌列表'], card)
     trigger_iter('初始', card)
+end
+
+t['逻辑注册_别人初始化'] = function ()
+    local card = G.event_info()
+
+    local misc = G.misc()
+    if misc['别人实例化卡牌反查表'][card.name] then
+    elseif card['动态数据'] then
+        table.insert(misc['实例化卡牌列表'], card)
+        misc['别人实例化卡牌反查表'][card.name] = true
+    end
 end
 
 t['逻辑注册_上场'] = function ()
@@ -683,6 +696,7 @@ t['通用逻辑_默认流程注册'] = function ()
     
     -- trigger注册
     G.addListener('逻辑注册_初始化', {'逻辑_卡牌初始化'}, cond, EVENT_PRIOR.first, group_system)
+    G.addListener('逻辑注册_别人初始化', {'卡牌实例_信息更新'}, cond, EVENT_PRIOR.first, group_system)
     G.addListener('逻辑注册_上场', {'逻辑_卡牌上场前'}, cond, prior_base, group_system)
     G.addListener('逻辑注册_上手', {'逻辑_卡牌上手前'}, cond, prior_base, group_system)
     G.addListener('逻辑注册_生效', {'逻辑_卡牌生效'}, cond, prior_base, group_system)
@@ -1040,7 +1054,7 @@ t['技能效果_特性'] = function (_string_添加特性, _string_移除特性)
                 }
             end
             -- todo，临时处理，后续由动画控制
-            G.trig_event('卡牌实例_信息更新', Target.name)
+            G.trig_event('卡牌实例_信息更新', Target)
         end
     end
 
@@ -1185,12 +1199,18 @@ t['技能效果_战场光环'] = function (o_skill, func_add, func_del)
     local Caster = o_skill_info_效果信息['Caster']
     local func_filer
     if farg_光环过滤器[1] == '卡牌条件_光环通用过滤器' then
-        local boolean_排除自身 = farg_光环过滤器[8]
+        local boolean_排除自身 = farg_光环过滤器[9]
         func_filer = function (tar)
-            if tar == Caster then
+            if boolean_排除自身 and (tar == Caster) then
                 return false
             end
-            return G.call('卡牌条件_光环通用过滤器', tar, farg_光环过滤器[3], farg_光环过滤器[4], farg_光环过滤器[5], farg_光环过滤器[6], farg_光环过滤器[7])
+            if farg_光环过滤器[3] then
+                if G.call('卡牌条件_卡牌阵营判断', Caster, tar, farg_光环过滤器[3]) then
+                else
+                    return false
+                end
+            end
+            return G.call('卡牌条件_光环通用过滤器', tar, nil, farg_光环过滤器[4], farg_光环过滤器[5], farg_光环过滤器[6], farg_光环过滤器[7], farg_光环过滤器[8])
         end
     end
 
@@ -1202,7 +1222,7 @@ t['技能效果_战场光环'] = function (o_skill, func_add, func_del)
 
                     },
                     { -- 光环移除事件
-
+                        
                     },
                     { -- 自定义事件
 
@@ -1295,6 +1315,8 @@ t['卡牌实例表_初始化'] = function ()
     G.newinst_cache['o_card_blueplayer1'] = {}
     G.newinst_cache['o_card_blueplayer2'] = {}
 
+    local misc = G.misc()
+
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', '我方')
     local dbname
     if estr_absolute_id_type_绝对身份 == '红1' then
@@ -1307,10 +1329,12 @@ t['卡牌实例表_初始化'] = function ()
         dbname = 'o_card_blueplayer2'
     end
     if dbname then
-        G.misc().卡牌实例表 = dbname
+        misc['卡牌实例表'] = dbname
     end
     
     -- 机制启用
+    misc['实例化卡牌列表'] = {}
+    misc['别人实例化卡牌反查表'] = {}
     G.call('通用逻辑_默认流程注册')
 end
 
@@ -1362,7 +1386,7 @@ t['卡牌实例化_信息更新'] = function (i_card_卡牌, _string_attr, _valu
         end
     end
 
-    G.trig_event('卡牌实例_信息更新', i_card_卡牌)
+    G.trig_event('卡牌实例_信息更新', o_card_卡牌)
 end
 
 t['卡牌实例化_信息更新_预处理'] = function (o_card_卡牌, _string_attr)
@@ -1408,6 +1432,28 @@ local cardflag_iter = function (data, flag)
     return false
 end
 
+t['卡牌条件_卡牌阵营判断'] = function (o_card_比对卡牌, o_card_当前卡牌, estr_side_阵营)
+    local p1 = (o_card_比对卡牌['动态数据'] or {})['所有者']
+    local p2 = (o_card_当前卡牌['动态数据'] or {})['所有者']
+
+    return G.call('房间_身份阵营关系', p1, p2) == estr_side_阵营
+end
+
+t['卡牌条件_卡牌类型判断'] = function (o_card_当前卡牌, _i_cardtype_卡牌类型)
+    local i_cardtype_当前卡牌类型 = (o_card_当前卡牌['逻辑数据'] or {})['类型']
+    return G.call('array_get_element_index', _i_cardtype_卡牌类型, i_cardtype_当前卡牌类型) ~= nil
+end
+
+t['卡牌条件_卡牌所处位置判断'] = function (o_card_当前卡牌, _estr_cardpos_type_所处位置)
+    local estr_cardpos_type_当前卡牌所处位置 = (o_card_当前卡牌['动态数据'] or {})['卡牌位置']
+    return G.call('array_get_element_index', _estr_cardpos_type_所处位置, estr_cardpos_type_当前卡牌所处位置) ~= nil
+end
+
+t['卡牌条件_卡牌种族判断'] = function (o_card_当前卡牌, _i_race_种族)
+    local i_race_当前卡牌种族 = (o_card_当前卡牌['逻辑数据'] or {})['种族']
+    return G.call('array_get_element_index', _i_race_种族, i_race_当前卡牌种族) ~= nil
+end
+
 t['卡牌条件_卡牌特性判断'] = function (o_card_当前卡牌, _string_满足特性, _string_排除特性)
     local data = (o_card_当前卡牌['逻辑数据'] or {})['卡牌特性'] or {}
 
@@ -1427,23 +1473,8 @@ t['卡牌条件_卡牌特性判断'] = function (o_card_当前卡牌, _string_�
     return true
 end
 
-t['卡牌条件_卡牌类型判断'] = function (o_card_当前卡牌, _i_cardtype_卡牌类型)
-    local i_cardtype_当前卡牌类型 = (o_card_当前卡牌['逻辑数据'] or {})['类型']
-    return G.call('array_get_element_index', _i_cardtype_卡牌类型, i_cardtype_当前卡牌类型) ~= nil
-end
-
-t['卡牌条件_卡牌所处位置判断'] = function (o_card_当前卡牌, _estr_cardpos_type_所处位置)
-    local estr_cardpos_type_当前卡牌所处位置 = (o_card_当前卡牌['动态数据'] or {})['卡牌位置']
-    return G.call('array_get_element_index', _estr_cardpos_type_所处位置, estr_cardpos_type_当前卡牌所处位置) ~= nil
-end
-
-t['卡牌条件_卡牌种族判断'] = function (o_card_当前卡牌, _i_race_种族)
-    local i_race_当前卡牌种族 = (o_card_当前卡牌['逻辑数据'] or {})['种族']
-    return G.call('array_get_element_index', _i_race_种族, i_race_当前卡牌种族) ~= nil
-end
-
 --ret=boolean
-t['卡牌条件_光环通用过滤器'] = function(o_card_当前卡牌, _i_cardtype_卡牌类型,_estr_cardpos_type_所处位置, _i_race_种族, _string_满足特性, _string_排除特性, boolean_排除自身)
+t['卡牌条件_光环通用过滤器'] = function(o_card_当前卡牌, estr_side_阵营, _i_cardtype_卡牌类型, _estr_cardpos_type_所处位置, _i_race_种族, _string_满足特性, _string_排除特性, boolean_排除自身)
     local result = true
     if result and _i_cardtype_卡牌类型 then
         result = G.call('卡牌条件_卡牌类型判断', o_card_当前卡牌, _i_cardtype_卡牌类型)
