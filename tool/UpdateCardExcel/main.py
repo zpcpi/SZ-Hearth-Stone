@@ -1,5 +1,3 @@
-import openpyxl
-import xml.dom.minidom
 from ConfigManager import ConfigManager
 from CardDataManager import CardDataManager
 
