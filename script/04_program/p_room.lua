@@ -195,6 +195,26 @@ t['房间_获取相对身份'] = function(estr_absolute_id_type_绝对身份)
     return ''
 end
 
+t['房间_身份阵营关系'] = function(estr_absolute_id_type_绝对身份1, estr_absolute_id_type_绝对身份2)
+    local l2a_mapping
+    if G.misc().对决类型 == '1v1' then 
+        l2a_mapping = PLAYER_MAPPING_L2A_1v1
+    elseif G.misc().对决类型 == '2v2' then 
+        l2a_mapping = PLAYER_MAPPING_L2A_2v2
+    else
+        goto next
+    end
+
+    if (l2a_mapping[estr_absolute_id_type_绝对身份1]['我方'] == estr_absolute_id_type_绝对身份2) or
+       (l2a_mapping[estr_absolute_id_type_绝对身份1]['友方1'] == estr_absolute_id_type_绝对身份2) then
+        return '我方'
+    else
+        return '敌方'
+    end
+
+    ::next::
+end
+
 t['房间_是否同一阵营_绝对身份'] = function(estr_absolute_id_type_绝对身份1, estr_absolute_id_type_绝对身份2)
     if estr_absolute_id_type_绝对身份1 == estr_absolute_id_type_绝对身份2 then 
         return true

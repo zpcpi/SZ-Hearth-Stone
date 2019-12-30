@@ -208,7 +208,7 @@ t['tLua_add_listener'] = function (earg_注册事件, func_执行函数, cond, p
             t[key] = nil
             return func_执行函数()
         end
-        G.addListener(key, earg_注册事件, cond, prior, group)
+        G.addListener(key, earg_注册事件, cond, prior or EVENT_PRIOR.base, group)
         return key, event_name
     end
 end
@@ -225,11 +225,13 @@ t['tLua_add_multlisteners'] = function (_listener_info)
         end
     end
 
+    local prior_base = EVENT_PRIOR.base
+
     for _,info in ipairs(_listener_info or {}) do
         local earg_注册事件 = info[1]
         local func_执行函数 = info[2]
         local func_条件函数 = info[3]
-        local int_prior = info[4]
+        local int_prior = info[4] or prior_base
         local string_group = info[5]
 
         if earg_注册事件 and type(earg_注册事件[1]) == 'string' then

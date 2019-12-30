@@ -198,6 +198,14 @@ local t = {
 				['name']='我方牌库',
 				['type']='_o_randomlib',
 			},
+			[21]={
+				['name']='实例化卡牌列表',
+				['type']='_o_card',
+			},
+			[22]={
+				['name']='别人实例化卡牌反查表',
+				['type']='_boolean',
+			},
 		},
 	},
 	{
@@ -579,6 +587,10 @@ local t = {
 				['name']='卡牌位置',
 				['type']='estr_cardpos_type',
 			},
+			[6]={
+				['name']='所有者',
+				['type']='estr_absolute_id_type',
+			},
 		},
 	},
 	{
@@ -955,8 +967,8 @@ local t = {
 				['type']='string',
 			},
 			[2]={
-				['name']='目标筛选',
-				['type']='_fargo_target_filter',
+				['name']='光环筛选',
+				['type']='fargboolean',
 			},
 			[3]={
 				['name']='逻辑功能',
@@ -995,11 +1007,6 @@ local t = {
 				['name']='分组',
 				['type']='string',
 			},
-		},
-	},
-	{
-		['name']='o_target_filter',
-		['define']={
 		},
 	},
 	{

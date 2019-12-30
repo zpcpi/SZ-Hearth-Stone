@@ -30,7 +30,7 @@ function t:setData(o_card_卡片数据, boolean_isbattle)
         local key = 'c_card_manager|' .. tostring(self)
         G.removeListener(key, '卡牌实例_信息更新')
         G.api[key] = update_data
-        G.addListener(key, {'卡牌实例_信息更新', o_card_卡片数据.name})
+        G.addListener(key, {'卡牌实例_信息更新', o_card_卡片数据})
     end
 
     local i_cardtype_卡片类型 = CARD_GET_ATTR(o_card_卡片数据, '逻辑数据', '类型')
