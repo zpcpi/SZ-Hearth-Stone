@@ -63,6 +63,35 @@ end
 		},
 	},
 	{
+		['name']=0x10130011,
+		['showname']='猎人印记-生命上限变1',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_设置生命上限',1},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_设置生命上限",1)
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x1013000f,
 		['showname']='森林狼-光环',
 		['光环筛选']={n=8,[1] = '卡牌条件_光环通用过滤器',

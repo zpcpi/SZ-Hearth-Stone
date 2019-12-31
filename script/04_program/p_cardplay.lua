@@ -1167,7 +1167,7 @@ t['技能效果_设置生命上限'] = function (int_变动值)
         end
     end
 
-    effect_action_iter(o_skill_info_效果信息, '', init, action)
+    effect_action_iter(o_skill_info_效果信息, nil, init, action)
 end
 
 t['技能效果_设置攻击力'] = function (int_变动值)
