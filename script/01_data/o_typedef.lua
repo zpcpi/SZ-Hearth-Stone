@@ -558,7 +558,7 @@ local t = {
 				['type']='boolean',
 			},
 			[4]={
-				['name']='延伸卡',
+				['name']='衍生卡',
 				['type']='_i_card',
 			},
 		},
