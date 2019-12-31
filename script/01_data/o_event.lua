@@ -370,6 +370,19 @@ local t = {
 		},
 	},
 	{
+		['name']='UI_抓取卡牌_选择界面',
+		['arg']={
+			[1]={
+				['id']='Caster',
+				['type']='o_card',
+			},
+			[2]={
+				['id']='CasterObj',
+				['type']='any',
+			},
+		},
+	},
+	{
 		['name']='UI_抓取卡牌_英雄技能',
 		['arg']={
 			[1]={
@@ -401,6 +414,15 @@ local t = {
 			[1]={
 				['id']='Select',
 				['type']='o_card',
+			},
+		},
+	},
+	{
+		['name']='UI_发现选择完毕',
+		['arg']={
+			[1]={
+				['id']='Order',
+				['type']='o_order_info',
 			},
 		},
 	},

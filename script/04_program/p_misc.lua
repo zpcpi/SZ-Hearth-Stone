@@ -39,8 +39,15 @@ t['asdasd'] = function ()
     G.show_table(tt)
 end
 
-t['zpc_test'] = function (id)
-    G.call('角色_添加手牌', '我方', G.call('卡牌实例化', id), true)
+t['zpc_test'] = function (count)
+    local o_card_硬币 = G.call('卡牌实例化', G.QueryName(0x1006000e))
+    local _o_card_卡牌list = {}
+
+    for i = 1, count, 1 do
+        _o_card_卡牌list[i] = o_card_硬币
+    end
+
+    G.call('卡牌注册指令_发现', _o_card_卡牌list)
 end
 
 t['zpc_test2'] = function (a)

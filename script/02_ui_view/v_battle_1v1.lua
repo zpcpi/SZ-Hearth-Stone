@@ -2,23 +2,24 @@
 
 ]]
 local G = require 'gf'
-local c_handcards_enemy = require 'c_handcards_enemy'
-local c_battlehero_enemy = require 'c_battlehero_enemy'
-local c_battleminion_self = require 'c_battleminion_self'
-local c_card_manager = require 'c_card_manager'
-local c_battlemana_enemy = require 'c_battlemana_enemy'
-local c_battlemana_self = require 'c_battlemana_self'
-local c_button = require 'c_button'
-local c_animactor = require 'c_animactor'
-local c_battle_hero = require 'c_battle_hero'
-local c_give_up_button = require 'c_give_up_button'
-local c_battlehero_self = require 'c_battlehero_self'
-local c_battle_1v1 = require 'c_battle_1v1'
-local c_battleminion_enemy = require 'c_battleminion_enemy'
-local c_battle_herospell = require 'c_battle_herospell'
 local c_handcards_self = require 'c_handcards_self'
+local c_perfectsize = require 'c_perfectsize'
+local c_card_manager = require 'c_card_manager'
+local c_animactor = require 'c_animactor'
+local c_battlehero_enemy = require 'c_battlehero_enemy'
 local c_mintextquadsize = require 'c_mintextquadsize'
-local c_battle_weapon = require 'c_battle_weapon'
+local c_button = require 'c_button'
+local c_battleminion_enemy = require 'c_battleminion_enemy'
+local c_layout_v = require 'c_layout_v'
+local c_give_up_button = require 'c_give_up_button'
+local c_battlemana_enemy = require 'c_battlemana_enemy'
+local c_battle_1v1 = require 'c_battle_1v1'
+local c_battlemana_self = require 'c_battlemana_self'
+local c_handcards_enemy = require 'c_handcards_enemy'
+local c_carddeck = require 'c_carddeck'
+local c_battleminion_self = require 'c_battleminion_self'
+local c_battlehero_self = require 'c_battlehero_self'
+local c_choose = require 'c_choose'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -40,6 +41,68 @@ tp = tc
 	tc.alpha = 150
 	tc.img = 0x56000001
 	tp = tc
+	tp = tp.parent
+	--end
+	tc = G.Entity()
+	tp.addChild(tc)
+	tc.name = 'EndTurnButton'
+	tc.left = 241.000
+	tc.right = 353.000
+	tc.bottom = -20.000
+	tc.top = 20.000
+	tc.mouseEnabled = true
+	tp = tc
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = 'img_ex'
+		tc.right = 0.000
+		tc.top = 0.000
+		tc.anchor = 0x64006400
+		tc.visible = false
+		tp = tc
+		tp = tp.parent
+		--end
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = 'img'
+		tc.right = 0.000
+		tc.top = 0.000
+		tc.anchor = 0x64006400
+		tc.img = 0x56000001
+		tp = tc
+		tp = tp.parent
+		--end
+		tc = G.TextQuad()
+		tp.addChild(tc)
+		tc.name = 'text'
+		tc.right = 0.000
+		tc.top = 0.000
+		tc.anchor = 0x64006400
+		tc.color = 0x0
+		tc.text = '对方回合'
+		tc.font = 0x60100000
+		tp = tc
+		tp = tp.parent
+		--end
+	tp.c_button = setmetatable({}, c_button)
+	com = tp.c_button
+	com['text'] ='对方回合'
+	com['btn_class'] =nil
+	com['customsize'] =true
+	com['img_normal'] =1442840577.000
+	com['color_normal'] =nil
+	com['img_hover'] =nil
+	com['color_hover'] =nil
+	com['audio_hover'] =nil
+	com['img_press'] =nil
+	com['frameList_press'] =nil
+	com['color_press'] =nil
+	com['audio_press'] =nil
+	com['img_disable'] =nil
+	com['color_disable'] =nil
+	com['img_toggle'] =nil
+	com['color_toggle'] =nil
+	com['img_togEx'] =nil
 	tp = tp.parent
 	--end
 	tc = G.loadUI('v_battlemana_enemy')
@@ -128,6 +191,19 @@ tp = tc
 	tp.c_battlehero_self = setmetatable({}, c_battlehero_self)
 	tp = tp.parent
 	--end
+	tc = G.loadUI('v_choose')
+	tc.prefab = true
+	tp.addChild(tc)
+	tc.name = 'Choose'
+	tc.left = -640.000
+	tc.right = 640.000
+	tc.bottom = -360.000
+	tc.top = 360.000
+	tc.visible = false
+	tp = tc
+	tp.c_choose = setmetatable({}, c_choose)
+	tp = tp.parent
+	--end
 	tc = G.loadUI('v_handcards_enemy')
 	tc.prefab = true
 	tp.addChild(tc)
@@ -200,68 +276,6 @@ tp = tc
 	--end
 	tc = G.Entity()
 	tp.addChild(tc)
-	tc.name = 'EndTurnButton'
-	tc.left = 241.000
-	tc.right = 353.000
-	tc.bottom = -20.000
-	tc.top = 20.000
-	tc.mouseEnabled = true
-	tp = tc
-		tc = G.Quad()
-		tp.addChild(tc)
-		tc.name = 'img_ex'
-		tc.right = 0.000
-		tc.top = 0.000
-		tc.anchor = 0x64006400
-		tc.visible = false
-		tp = tc
-		tp = tp.parent
-		--end
-		tc = G.Quad()
-		tp.addChild(tc)
-		tc.name = 'img'
-		tc.right = 0.000
-		tc.top = 0.000
-		tc.anchor = 0x64006400
-		tc.img = 0x56000001
-		tp = tc
-		tp = tp.parent
-		--end
-		tc = G.TextQuad()
-		tp.addChild(tc)
-		tc.name = 'text'
-		tc.right = 0.000
-		tc.top = 0.000
-		tc.anchor = 0x64006400
-		tc.color = 0x0
-		tc.text = '结束回合(黄)'
-		tc.font = 0x60100000
-		tp = tc
-		tp = tp.parent
-		--end
-	tp.c_button = setmetatable({}, c_button)
-	com = tp.c_button
-	com['text'] ='结束回合(黄)'
-	com['btn_class'] =nil
-	com['customsize'] =true
-	com['img_normal'] =1442840577.000
-	com['color_normal'] =nil
-	com['img_hover'] =nil
-	com['color_hover'] =nil
-	com['audio_hover'] =nil
-	com['img_press'] =nil
-	com['frameList_press'] =nil
-	com['color_press'] =nil
-	com['audio_press'] =nil
-	com['img_disable'] =nil
-	com['color_disable'] =nil
-	com['img_toggle'] =nil
-	com['color_toggle'] =nil
-	com['img_togEx'] =nil
-	tp = tp.parent
-	--end
-	tc = G.Entity()
-	tp.addChild(tc)
 	tc.name = '全局Tips版'
 	tc.right = 0.000
 	tc.top = 0.000
@@ -291,6 +305,141 @@ tp = tc
 				tc.right = 163.500
 				tc.bottom = -236.000
 				tc.top = 236.000
+				tc.img = 0x5601000a
+				tp = tc
+				tp = tp.parent
+				--end
+			tp = tp.parent
+			--end
+			tc = G.Entity()
+			tp.addChild(tc)
+			tc.name = '卡片实例'
+			tc.left = -50.000
+			tc.right = 50.000
+			tc.bottom = -50.000
+			tc.top = 50.000
+			tp = tc
+			tp = tp.parent
+			--end
+		tp.c_card_manager = setmetatable({}, c_card_manager)
+		tp = tp.parent
+		--end
+		tc = G.Entity()
+		tp.addChild(tc)
+		tc.name = 'v_card_manager'
+		tc.left = -640.000
+		tc.right = 640.000
+		tc.bottom = -360.000
+		tc.top = 360.000
+		tc.visible = false
+		tc.scaleX = 0.700
+		tc.scaleY = 0.700
+		tp = tc
+			tc = G.Entity()
+			tp.addChild(tc)
+			tc.name = '卡背框'
+			tc.right = 0.000
+			tc.top = 0.000
+			tp = tc
+				tc = G.Quad()
+				tp.addChild(tc)
+				tc.name = '卡背'
+				tc.left = -163.500
+				tc.right = 163.500
+				tc.bottom = -236.000
+				tc.top = 236.000
+				tc.scaleX = 0.900
+				tc.scaleY = 0.900
+				tc.img = 0x5601000a
+				tp = tc
+				tp = tp.parent
+				--end
+			tp = tp.parent
+			--end
+			tc = G.Entity()
+			tp.addChild(tc)
+			tc.name = '卡片实例'
+			tc.left = -50.000
+			tc.right = 50.000
+			tc.bottom = -50.000
+			tc.top = 50.000
+			tp = tc
+			tp = tp.parent
+			--end
+		tp.c_card_manager = setmetatable({}, c_card_manager)
+		tp = tp.parent
+		--end
+		tc = G.Entity()
+		tp.addChild(tc)
+		tc.name = 'v_card_manager'
+		tc.left = -640.000
+		tc.right = 640.000
+		tc.bottom = -360.000
+		tc.top = 360.000
+		tc.visible = false
+		tc.scaleX = 0.700
+		tc.scaleY = 0.700
+		tp = tc
+			tc = G.Entity()
+			tp.addChild(tc)
+			tc.name = '卡背框'
+			tc.right = 0.000
+			tc.top = 0.000
+			tp = tc
+				tc = G.Quad()
+				tp.addChild(tc)
+				tc.name = '卡背'
+				tc.left = -163.500
+				tc.right = 163.500
+				tc.bottom = -236.000
+				tc.top = 236.000
+				tc.scaleX = 0.900
+				tc.scaleY = 0.900
+				tc.img = 0x5601000a
+				tp = tc
+				tp = tp.parent
+				--end
+			tp = tp.parent
+			--end
+			tc = G.Entity()
+			tp.addChild(tc)
+			tc.name = '卡片实例'
+			tc.left = -50.000
+			tc.right = 50.000
+			tc.bottom = -50.000
+			tc.top = 50.000
+			tp = tc
+			tp = tp.parent
+			--end
+		tp.c_card_manager = setmetatable({}, c_card_manager)
+		tp = tp.parent
+		--end
+		tc = G.Entity()
+		tp.addChild(tc)
+		tc.name = 'v_card_manager'
+		tc.left = -640.000
+		tc.right = 640.000
+		tc.bottom = -360.000
+		tc.top = 360.000
+		tc.visible = false
+		tc.scaleX = 0.700
+		tc.scaleY = 0.700
+		tp = tc
+			tc = G.Entity()
+			tp.addChild(tc)
+			tc.name = '卡背框'
+			tc.right = 0.000
+			tc.top = 0.000
+			tp = tc
+				tc = G.Quad()
+				tp.addChild(tc)
+				tc.name = '卡背'
+				tc.left = -163.500
+				tc.right = 163.500
+				tc.bottom = -236.000
+				tc.top = 236.000
+				tc.scaleX = 0.900
+				tc.scaleY = 0.900
 				tc.img = 0x5601000a
 				tp = tc
 				tp = tp.parent

@@ -621,6 +621,10 @@ local t = {
 				['name']='MinionPos',
 				['type']='int',
 			},
+			[7]={
+				['name']='Player',
+				['type']='estr_player',
+			},
 		},
 	},
 	{

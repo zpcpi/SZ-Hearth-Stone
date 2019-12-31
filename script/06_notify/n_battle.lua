@@ -4,6 +4,7 @@ local noti = G.notify
 function noti.对决_初始化战场(estr_battle_type_对决类型)
     if estr_battle_type_对决类型 == '1v1' then 
         G.addUI('v_battle_1v1')
+        noti.作弊系统_初始化作弊系统ui()
     elseif estr_battle_type_对决类型 == '2v2' then 
     end
     G.removeUI('v_room')

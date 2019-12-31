@@ -65,5 +65,6 @@ t[0x0]="n_battle"
 t[0x0]="n_card_system"
 t[0x0]="n_cheat_system"
 t[0x0]="n_common"
+t[0x0]="n_order"
 t[0x0]="n_player"
 return t

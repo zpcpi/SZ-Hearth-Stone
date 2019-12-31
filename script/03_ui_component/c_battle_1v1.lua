@@ -54,6 +54,8 @@ function t:init()
     self.tips版 = self.obj.getChildByName('全局Tips版')
     self:initTipsCard()
 
+    self.choose = self.obj.getChildByName('Choose').c_choose
+
     -- 连线管理
     self.popline_list = {}
 

@@ -532,9 +532,13 @@ end
 t['技能效果_效果树_执行子效果'] = function (skill_info, action)
     -- 效果挂钩，入栈
     local effect_stack = skill_info['Stack']
-    local o_skill_info_效果信息 = effect_stack.top()
+
+    if skill_info['Parent'] then
+    else
+        local o_skill_info_效果信息 = effect_stack.top()
+        skill_info['Parent'] = o_skill_info_效果信息
+    end
     effect_stack.push(skill_info)
-    skill_info['Parent'] = o_skill_info_效果信息
 
     -- 执行效果
     action()
@@ -1105,13 +1109,13 @@ t['技能效果_抽牌'] = function ()
             estr_player_相对身份 = o_skill_info_效果信息['Player']
 
             -- TODO，缺少处理，默认自己抽自己
-            G.call('角色_抽取随机卡牌', estr_player_相对身份, estr_player_相对身份)
+            G.call('角色_牌库抽取卡牌', estr_player_相对身份, estr_player_相对身份)
         end
         effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_牌库抽牌', init, action)
     end
 end
 
-t['技能效果_创建手牌'] = function (i_card_创建卡牌ID, boolean_是否明牌)
+t['技能效果_创建手牌'] = function (i_card_创建卡牌ID, boolean_是否明牌, boolean_是否是实例)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -1119,7 +1123,6 @@ t['技能效果_创建手牌'] = function (i_card_创建卡牌ID, boolean_是否
     end
 
     local estr_player_相对身份 = o_skill_info_效果信息['Player']
-
     if estr_player_相对身份 then
         local init = function ()
         end
@@ -1127,7 +1130,13 @@ t['技能效果_创建手牌'] = function (i_card_创建卡牌ID, boolean_是否
             estr_player_相对身份 = o_skill_info_效果信息['Player']
 
             -- TODO，缺少处理
-            G.call('角色_添加手牌', estr_player_相对身份, G.call('卡牌实例化', G.QueryName(i_card_创建卡牌ID)), boolean_是否明牌)
+            local o_card_添加卡牌实例
+            if boolean_是否是实例 then
+                o_card_添加卡牌实例 = G.QueryName(i_card_创建卡牌ID)
+            else
+                o_card_添加卡牌实例 = G.call('卡牌实例化', G.QueryName(i_card_创建卡牌ID))
+            end
+            G.call('角色_添加手牌', estr_player_相对身份, o_card_添加卡牌实例, boolean_是否明牌)
         end
         effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_创建手牌', init, action)
     end
@@ -1230,7 +1239,64 @@ t['技能效果_战场光环'] = function (o_skill, func_add, func_del)
                 )
 end
 
+t['技能效果_追踪术'] = function (int_追踪数量)
+    local effect_stack = G.misc().当前效果堆栈 
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
 
+    local estr_player_相对身份 = o_skill_info_效果信息['Player']
+    local Caster = o_skill_info_效果信息['Caster']
+    local _o_randomlib_抽牌牌库 = G.call('角色_获取牌库', estr_player_相对身份)
+
+    if _o_randomlib_抽牌牌库 then
+    else
+        return
+    end
+
+    local random_iter = function ()
+        return _o_randomlib_抽牌牌库[1](1)[1] or -- 为空，说明牌库顶里面没有卡牌
+               _o_randomlib_抽牌牌库[2](1)[1] or -- 为空，说明随机牌库里面没有卡牌
+               _o_randomlib_抽牌牌库[3](1)[1] -- 为空，说明牌库底里面没有卡牌
+    end
+    local _o_card_选择列表 = {}
+    for i = 1, int_追踪数量, 1 do
+        _o_card_选择列表[i] = random_iter()
+    end
+    G.trig_event('UI_牌库更新')
+
+    if #_o_card_选择列表 > 0 then
+        G.call('卡牌注册指令_发现', _o_card_选择列表, 0x10040005)
+
+        G.call('tLua_add_listener', 
+                {"UI_发现选择完毕"},
+                function ()
+                    local o_order_info_当前指令信息 = G.event_info()
+                    local o_card_select = o_order_info_当前指令信息['Caster']
+
+                    G.call('技能效果_效果树_执行子效果', 
+                                {
+                                    ['Player'] = o_order_info_当前指令信息['Player'],
+                                    ['Caster'] = Caster,
+                                    ['Target'] = o_card_select,
+                                    ['Parent'] = o_skill_info_效果信息,
+                                    ['Stack'] = effect_stack,
+                                }, 
+                                function ()
+                                    G.call('技能效果_创建手牌', o_card_select.name, false, true)
+                                end
+                            )
+                end,
+                nil,
+                EVENT_PRIOR.last,
+                nil
+            )
+    else
+        -- 没有卡牌，效果结束
+    end
+end
 
 
 -- ============================================
