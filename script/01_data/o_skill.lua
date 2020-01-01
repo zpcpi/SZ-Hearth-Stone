@@ -64,7 +64,7 @@ end
 	},
 	{
 		['name']=0x10130011,
-		['showname']='猎人印记-生命上限变1',
+		['showname']='猎人印记-添加buff',
 		['逻辑功能']={
 			[1]={
 				['注册时机']='生效',
@@ -80,11 +80,40 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_设置生命上限',1},
+{'技能效果_添加BUFF',0x10130016},
 lua = function (self, info, card)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_设置生命上限",1)
+	return G.call("技能效果_添加BUFF",269680662)
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130017,
+		['showname']='驯兽师-战吼添加buff',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='战吼',
+				['触发时机']={
+t =
+{'$逻辑_随从战吼','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_随从战吼",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_添加BUFF',0x10130018},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_添加BUFF",269680664)
 end
 ,
 },
@@ -178,6 +207,46 @@ lua = function (self, info, card)
 		else
 			return G.call("技能效果_法伤伤害",3)
 		end
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130015,
+		['showname']='多重射击-俩目标伤害',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能目标_选取随从','$敌方1'},
+    {'技能目标_随机选择',2,0x100c0002},
+    {'技能效果_法伤伤害',3}
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能目标_选取随从","敌方1")
+		_ = G.call("技能目标_随机选择",2,269221890)
+		_ = G.call("技能效果_法伤伤害",3)
+		return _
 	end)()
 end
 ,
@@ -721,6 +790,81 @@ end
 	{
 		['name']=0x10130005,
 		['showname']='野性印记-buff',
+		['postfix']='+2/+2，嘲讽',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='添加',
+				['触发时机']={
+t =
+{'$逻辑_技能添加','nil','self'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_技能添加",nil,self}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能效果_生命上限',2},
+    {'技能效果_攻击',2},
+    {
+        '技能效果_特性',
+        {'$嘲讽'}
+    }
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能效果_生命上限",2)
+		_ = G.call("技能效果_攻击",2)
+		_ = G.call("技能效果_特性",{"嘲讽"})
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130016,
+		['showname']='猎人印记-buff',
+		['postfix']='生命上限变1',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='添加',
+				['触发时机']={
+t =
+{'$逻辑_技能添加','nil','self'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_技能添加",nil,self}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_设置生命上限',1},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_设置生命上限",1)
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130018,
+		['showname']='驯兽师-buff',
+		['postfix']='+2/+2，嘲讽',
 		['逻辑功能']={
 			[1]={
 				['注册时机']='添加',

@@ -284,6 +284,9 @@ t['卡牌关键词_战吼'] = function ()
     end
     local action = function ()
         -- 如果没有目标，那么根据指令id随机选一个目标
+        local Caster = o_skill_info_效果信息['Caster']
+
+        G.trig_event('逻辑_随从战吼', Caster)
     end
     effect_action_iter(o_skill_info_效果信息, '逻辑关键词_战吼', init, action)
 end
@@ -680,6 +683,13 @@ t['逻辑注册_添加'] = function ()
     trigger_iter('添加', card, skill.name)
 end
 
+t['逻辑注册_战吼'] = function ()
+    local info = G.event_info()
+    local card = info['Caster']
+
+    trigger_iter('战吼', card)
+end
+
 t['逻辑反注册_沉默'] = function ()
     -- 沉默或者移除时传card
     local card = G.event_info()
@@ -703,10 +713,13 @@ t['通用逻辑_默认流程注册'] = function ()
     -- trigger注册
     G.addListener('逻辑注册_初始化', {'逻辑_卡牌初始化'}, cond, EVENT_PRIOR.first, group_system)
     G.addListener('逻辑注册_别人初始化', {'卡牌实例_信息更新'}, cond, EVENT_PRIOR.first, group_system)
-    G.addListener('逻辑注册_上场', {'逻辑_随从上场前'}, cond, EVENT_PRIOR.first, group_system)
+    G.addListener('逻辑注册_上场', {'逻辑_随从上场前'}, cond, prior_base, group_system)
     G.addListener('逻辑注册_上手', {'逻辑_卡牌上手前'}, cond, prior_base, group_system)
     G.addListener('逻辑注册_生效', {'逻辑_卡牌生效'}, cond, prior_base, group_system)
-    G.addListener('逻辑注册_添加', {'逻辑_技能添加前'}, cond, EVENT_PRIOR.first, group_system)
+    G.addListener('逻辑注册_添加', {'逻辑_技能添加前'}, cond, prior_base, group_system)
+
+    G.addListener('逻辑注册_战吼', {'逻辑关键词_战吼前'}, cond, prior_base, group_system)
+
 
     -- 沉默
     G.addListener('逻辑反注册_沉默', {''}, cond, prior_base, group_system)
@@ -1415,6 +1428,23 @@ t['技能目标_剔除目标'] = function (o_card_delTargetList)
     o_skill_info_效果信息['Target'] = TargetList
 end
 
+t['技能目标_随机选择'] = function (int_选择数量, i_randomlib_type_选择类型)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local TargetList = o_skill_info_效果信息['Target'] or {}
+    local rlib = G.call('Create_Randomlib', G.QueryName(i_randomlib_type_选择类型 or 0x100c0001))
+    for _,tar in ipairs(TargetList) do
+        rlib:添加数据({tar, 1})
+    end
+    rlib:初始化(true, true)
+
+    o_skill_info_效果信息['Target'] = rlib(int_选择数量)
+end
+
 -- ============================================
 -- ============================================
 -- ============================================
@@ -1586,6 +1616,24 @@ t['卡牌条件_卡牌特性判断'] = function (o_card_当前卡牌, _string_�
     return true
 end
 
+--ret=boolean
+t['卡牌条件_目标通用过滤器'] = function(o_card_当前卡牌, estr_side_阵营, _i_cardtype_卡牌类型, _estr_cardpos_type_所处位置, _i_race_种族, _string_满足特性, _string_排除特性, boolean_排除自身)
+    local result = true
+    if result and _i_cardtype_卡牌类型 then
+        result = G.call('卡牌条件_卡牌类型判断', o_card_当前卡牌, _i_cardtype_卡牌类型)
+    end
+    if result and _estr_cardpos_type_所处位置 then
+        result = G.call('卡牌条件_卡牌所处位置判断', o_card_当前卡牌, _estr_cardpos_type_所处位置)
+    end
+    if result and _i_race_种族 then
+        result = G.call('卡牌条件_卡牌种族判断', o_card_当前卡牌, _i_race_种族)
+    end
+    if result and (_string_满足特性 or _string_排除特性) then
+        result = G.call('卡牌条件_卡牌特性判断', o_card_当前卡牌, _string_满足特性, _string_排除特性)
+    end
+    return result
+end
+
 t['卡牌条件_制作过滤器'] = function (o_skill, Caster)
     local farg_光环过滤器 = o_skill['目标筛选']
     local func_filer
@@ -1614,25 +1662,6 @@ t['卡牌条件_获取过滤后数量'] = function (o_skill, Caster)
 
     return #G.call('array_filter', all_cards, func_filer)
 end
-
---ret=boolean
-t['卡牌条件_目标通用过滤器'] = function(o_card_当前卡牌, estr_side_阵营, _i_cardtype_卡牌类型, _estr_cardpos_type_所处位置, _i_race_种族, _string_满足特性, _string_排除特性, boolean_排除自身)
-    local result = true
-    if result and _i_cardtype_卡牌类型 then
-        result = G.call('卡牌条件_卡牌类型判断', o_card_当前卡牌, _i_cardtype_卡牌类型)
-    end
-    if result and _estr_cardpos_type_所处位置 then
-        result = G.call('卡牌条件_卡牌所处位置判断', o_card_当前卡牌, _estr_cardpos_type_所处位置)
-    end
-    if result and _i_race_种族 then
-        result = G.call('卡牌条件_卡牌种族判断', o_card_当前卡牌, _i_race_种族)
-    end
-    if result and (_string_满足特性 or _string_排除特性) then
-        result = G.call('卡牌条件_卡牌特性判断', o_card_当前卡牌, _string_满足特性, _string_排除特性)
-    end
-    return result
-end
-
 -- ============================================
 -- ============================================
 -- ============================================
