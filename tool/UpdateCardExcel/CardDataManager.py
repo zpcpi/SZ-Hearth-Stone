@@ -64,7 +64,7 @@ class CardDataManager():
                     if zhCnNode != None:
                         attrValue = zhCnNode.text
             elif 'TextTagName' in parseInfo:
-                tagName = parseInfo['LanguageTagName']
+                tagName = parseInfo['TextTagName']
                 tagNode = self.GetEntityNodeTagNode(entityNode, tagName)
                 if tagNode != None:
                     attrValue = tagNode.text
@@ -126,6 +126,9 @@ class CardDataManager():
             if cardData != None:
                 if cardDbfID == None or str(cardData['DbfID']) != str(cardDbfID):
                     cardSheet['D' + str(row)].value = cardData['DbfID']
+        if True:
+            excelData.save(excelPath)
+            return
         for cardUID in cardDataUIdDict:
             cardData = cardDataUIdDict[cardUID]
             cardSheet['A' + str(lastRow)].value = cardData['EditorID']
