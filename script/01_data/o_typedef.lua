@@ -1019,7 +1019,7 @@ local t = {
 				['type']='string',
 			},
 			[2]={
-				['name']='光环筛选',
+				['name']='目标筛选',
 				['type']='fargboolean',
 			},
 			[3]={

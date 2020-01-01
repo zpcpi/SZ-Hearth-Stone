@@ -1206,24 +1206,8 @@ t['技能效果_战场光环'] = function (o_skill, func_add, func_del)
         return
     end
 
-    local farg_光环过滤器 = o_skill['光环筛选']
     local Caster = o_skill_info_效果信息['Caster']
-    local func_filer
-    if farg_光环过滤器[1] == '卡牌条件_光环通用过滤器' then
-        local boolean_排除自身 = farg_光环过滤器[9]
-        func_filer = function (tar)
-            if boolean_排除自身 and (tar == Caster) then
-                return false
-            end
-            if farg_光环过滤器[3] then
-                if G.call('卡牌条件_卡牌阵营判断', Caster, tar, farg_光环过滤器[3]) then
-                else
-                    return false
-                end
-            end
-            return G.call('卡牌条件_光环通用过滤器', tar, nil, farg_光环过滤器[4], farg_光环过滤器[5], farg_光环过滤器[6], farg_光环过滤器[7], farg_光环过滤器[8])
-        end
-    end
+    local func_filer = G.call('卡牌条件_制作过滤器', o_skill, Caster)
 
     aura_add_buff(func_filer, func_add, func_del, 
                     { -- 光环添加事件
@@ -1602,8 +1586,37 @@ t['卡牌条件_卡牌特性判断'] = function (o_card_当前卡牌, _string_�
     return true
 end
 
+t['卡牌条件_制作过滤器'] = function (o_skill, Caster)
+    local farg_光环过滤器 = o_skill['目标筛选']
+    local func_filer
+    if farg_光环过滤器[1] == '卡牌条件_目标通用过滤器' then
+        local boolean_排除自身 = farg_光环过滤器[9]
+        func_filer = function (tar)
+            if boolean_排除自身 and (tar == Caster) then
+                return false
+            end
+            if farg_光环过滤器[3] then
+                if G.call('卡牌条件_卡牌阵营判断', Caster, tar, farg_光环过滤器[3]) then
+                else
+                    return false
+                end
+            end
+            return G.call('卡牌条件_目标通用过滤器', tar, nil, farg_光环过滤器[4], farg_光环过滤器[5], farg_光环过滤器[6], farg_光环过滤器[7], farg_光环过滤器[8])
+        end
+    end
+
+    return func_filer
+end
+
+t['卡牌条件_获取过滤后数量'] = function (o_skill, Caster)
+    local func_filer = G.call('卡牌条件_制作过滤器', o_skill, Caster)
+    local all_cards = G.misc()['实例化卡牌列表']
+
+    return #G.call('array_filter', all_cards, func_filer)
+end
+
 --ret=boolean
-t['卡牌条件_光环通用过滤器'] = function(o_card_当前卡牌, estr_side_阵营, _i_cardtype_卡牌类型, _estr_cardpos_type_所处位置, _i_race_种族, _string_满足特性, _string_排除特性, boolean_排除自身)
+t['卡牌条件_目标通用过滤器'] = function(o_card_当前卡牌, estr_side_阵营, _i_cardtype_卡牌类型, _estr_cardpos_type_所处位置, _i_race_种族, _string_满足特性, _string_排除特性, boolean_排除自身)
     local result = true
     if result and _i_cardtype_卡牌类型 then
         result = G.call('卡牌条件_卡牌类型判断', o_card_当前卡牌, _i_cardtype_卡牌类型)
