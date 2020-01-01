@@ -170,7 +170,9 @@ class CardDataManager():
             cardSheet['Q' + str(lastRow)].value = cardData['TargetingArrowText']
             cardSheet['R' + str(lastRow)].value = cardData['Artist']
             cardSheet['S' + str(lastRow)].value = cardData['FlavorText']
-            cardSheet['T' + str(lastRow)].value = cardData['Collectible'] == '1'
+            cardSheet['T' + str(lastRow)].value = HearthStoneEnums.CardSetZhCN[cardData['CardSet']]
+            cardSheet['U' + str(lastRow)].value = cardData['Collectible'] == '1'
+            lastRow = lastRow + 1
         excelData.save(excelPath)
 
     def GenerateDictByKey(self, dataList, keyName):
