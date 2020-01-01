@@ -819,6 +819,50 @@ local t = {
 		},
 	},
 	{
+		['name']='o_randomiter',
+		['showname']='随机库索引',
+		['define']={
+			[1]={
+				['name']='生成函数',
+				['type']='farg_o_random_carddata',
+			},
+			[2]={
+				['name']='默认数据',
+				['type']='_o_random_carddata',
+			},
+			[3]={
+				['name']='随机库类型',
+				['type']='i_randomlib_type',
+			},
+			[4]={
+				['name']='是否初始化',
+				['type']='boolean',
+			},
+			[5]={
+				['name']='随机库',
+				['type']='o_randomlib',
+			},
+		},
+	},
+	{
+		['name']='o_random_carddata',
+		['showname']='随机库索引',
+		['define']={
+			[1]={
+				['name']='卡牌',
+				['type']='i_card',
+			},
+			[2]={
+				['name']='权重',
+				['type']='int',
+			},
+			[3]={
+				['name']='条件',
+				['type']='fargboolean',
+			},
+		},
+	},
+	{
 		['name']='o_ui_topmost',
 		['define']={
 			[1]={
@@ -1128,7 +1172,7 @@ local t = {
 			[22]={
 				['name']='当前移除特性',
 				['type']='_string',
-			},			
+			},
 			[23]={
 				['name']='原始治疗数值',
 				['type']='int',
