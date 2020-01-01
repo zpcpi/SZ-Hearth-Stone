@@ -8,6 +8,7 @@ local t = G.api
 t['收藏_初始化收藏'] = function()
     G.call('收藏_初始化卡片收藏')
     G.call('系统_读取卡组列表')
+    G.call('收藏_生成卡片DbfID映射表')
 end
 
 t['收藏_进入收藏界面'] = function()
