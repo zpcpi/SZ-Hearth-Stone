@@ -122,7 +122,7 @@ t['角色_战场_添加随从'] = function(estr_player_相对身份, o_card_卡�
 
     int_随从编号 = int_随从编号 or (int_当前随从数量 + 1)
 
-    if (o_card_卡牌 ~= nil) and (int_当前随从数量 < BATTLEMINIONS_MAX_COUNT) and (int_随从编号 > 0) and (int_随从编号 <= BATTLEMINIONS_MAX_COUNT) then
+    if (o_card_卡牌 ~= nil) and (int_当前随从数量 < BATTLEMINIONS_MAX_COUNT) then
         local i_card_卡牌 = o_card_卡牌.name
         o_card_卡牌['动态数据']['卡牌位置'] = '战场'
         G.call('角色_战场_添加随从_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌, int_随从编号)

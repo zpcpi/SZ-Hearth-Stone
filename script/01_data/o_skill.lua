@@ -35,7 +35,7 @@ end
 	},
 	{
 		['name']=0x10130010,
-		['showname']='追踪术-牌库三选一',
+		['showname']='追踪术-牌库3选1',
 		['逻辑功能']={
 			[1]={
 				['注册时机']='生效',
@@ -92,6 +92,44 @@ end
 		},
 	},
 	{
+		['name']=0x10130012,
+		['showname']='动物伙伴-招1',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    '技能效果_召唤',
+    {
+        {
+            '$我方',
+            '$末尾',
+            {'卡牌随机库_获取ID',0x10140001,true}
+        }
+    }
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_召唤",{{"我方","末尾",G.call("卡牌随机库_获取ID",269746177,true)}})
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x1013000f,
 		['showname']='森林狼-光环',
 		['光环筛选']={n=8,[1] = '卡牌条件_光环通用过滤器',
@@ -109,7 +147,65 @@ end
 		},
 		['逻辑功能']={
 			[1]={
-				['注册时机']='生效',
+				['注册时机']='上场',
+				['触发时机']={
+t =
+{'$逻辑_随从上场','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_随从上场",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    '技能效果_战场光环',
+    'self',
+    {
+        'function',
+        {},
+        {},
+        {'技能效果_攻击',1}
+    },
+    {
+        'function',
+        {},
+        {},
+        {'技能效果_攻击',-1}
+    }
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_战场光环",self,(function()
+		return G.call("技能效果_攻击",1)
+	end),(function()
+		return G.call("技能效果_攻击",-1)
+	end))
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130013,
+		['showname']='雷欧克-光环',
+		['光环筛选']={n=8,[1] = '卡牌条件_光环通用过滤器',
+			[3]='我方',
+			[4]={
+				[1]=0x10090004,
+			},
+			[5]={
+				[1]='战场',
+			},
+			[9]=true,
+		},
+		['逻辑功能']={
+			[1]={
+				['注册时机']='上场',
 				['触发时机']={
 t =
 {'$逻辑_随从上场','card'},

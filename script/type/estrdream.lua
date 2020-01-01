@@ -12,6 +12,7 @@ t.estr_cardattr_type = {'当前值', '最大值', '浮动值', '光环值', '原
 t.estr_cardevent_inittype = {'初始', '上场', '上手', '生效', '添加'}
 t.estr_cardattr_enum = {'费用', '过载费用', '攻击', '生命', '护甲', '法术伤害', '英雄技能伤害'}
 t.estr_cardpos_type = {'牌库', '手牌', '战场', '坟场', '丢弃'}
+t.estr_minionpos_type = {'左邻', '右邻', '末尾'}
 
 t.estr_damage_type = {'法术', '英雄技能', '攻击', '疲劳', '直接'}
 t.estr_heal_type = {'法术', '英雄技能'}

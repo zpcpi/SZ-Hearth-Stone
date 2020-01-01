@@ -104,6 +104,8 @@ t['角色_战场_添加随从_绝对身份'] = function(estr_absolute_id_type_�
     local 随从信息 = o_misc.随从信息[estr_absolute_id_type_绝对身份]
     if int_随从编号 > #随从信息 then
         int_随从编号 = #随从信息 + 1
+    elseif int_随从编号 <= 0 then
+        int_随从编号 = 1
     end
     table.insert(随从信息, int_随从编号, o_card_卡牌)
 end

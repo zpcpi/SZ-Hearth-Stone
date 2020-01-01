@@ -20,6 +20,7 @@ t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_�
         ['Caster'] = o_order_info_当前指令信息['Caster'],
         ['Target'] = o_order_info_当前指令信息['Target'],
         ['Parent'] = nil,
+        ['MinionPos'] = o_order_info_当前指令信息['MinionPos'],
         ['Stack'] = effect_stack,
     }
     effect_stack.push(root_info)
@@ -58,7 +59,7 @@ t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_�
         -- 随从卡，召唤随从
         -- 可能不对，需要判断下
         local index = o_order_info_当前指令信息['MinionPos']
-        o_order_info_当前指令信息[''] = Caster
+        --o_order_info_当前指令信息[''] = Caster
         G.call('角色_战场_添加随从', estr_player_相对身份, Caster, index)
 
         G.call('卡牌使用_使用')
@@ -238,6 +239,7 @@ t['卡牌使用_上场'] = function ()
 
         if cardtype == 0x10090004 then
             -- 随从
+            G.trig_event('逻辑_随从上场前', Caster)
             G.trig_event('逻辑_随从上场', Caster)
         end
 
@@ -701,7 +703,7 @@ t['通用逻辑_默认流程注册'] = function ()
     -- trigger注册
     G.addListener('逻辑注册_初始化', {'逻辑_卡牌初始化'}, cond, EVENT_PRIOR.first, group_system)
     G.addListener('逻辑注册_别人初始化', {'卡牌实例_信息更新'}, cond, EVENT_PRIOR.first, group_system)
-    G.addListener('逻辑注册_上场', {'逻辑_卡牌上场前'}, cond, prior_base, group_system)
+    G.addListener('逻辑注册_上场', {'逻辑_随从上场前'}, cond, EVENT_PRIOR.first, group_system)
     G.addListener('逻辑注册_上手', {'逻辑_卡牌上手前'}, cond, prior_base, group_system)
     G.addListener('逻辑注册_生效', {'逻辑_卡牌生效'}, cond, prior_base, group_system)
     G.addListener('逻辑注册_添加', {'逻辑_技能添加前'}, cond, EVENT_PRIOR.first, group_system)
@@ -1194,7 +1196,7 @@ t['技能效果_设置攻击力'] = function (int_变动值)
         end
     end
 
-    effect_action_iter(o_skill_info_效果信息, '', init, action)
+    effect_action_iter(o_skill_info_效果信息, nil, init, action)
 end
 
 t['技能效果_战场光环'] = function (o_skill, func_add, func_del)
@@ -1298,6 +1300,67 @@ t['技能效果_追踪术'] = function (int_追踪数量)
     end
 end
 
+t['技能效果_召唤'] = function (datas)
+    local effect_stack = G.misc().当前效果堆栈 
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local estr_player_相对身份 = o_skill_info_效果信息['Player']
+    local TargetList = {}
+
+    local init = function ()
+    end
+    local action = function ()
+        for _,info in ipairs(datas) do
+            local side = info[1]
+            local pos = info[2]
+            local cardid = info[3]
+
+            local player
+            if side == '我方' then
+                player = G.call('房间_获取相对身份', G.call('房间_获取绝对身份', '我方', estr_player_相对身份))
+            elseif side == '敌方' then
+                player = G.call('房间_获取相对身份', G.call('房间_获取绝对身份', '敌方1', estr_player_相对身份))
+            end
+
+            local o_card_召唤单位
+            if type(cardid) == 'number' then
+                o_card_召唤单位 = G.call('卡牌实例化', G.QueryName(cardid))
+            elseif type(cardid) == 'table' then
+
+            end
+
+            local index
+            if pos ~= '末尾' then
+                index = o_skill_info_效果信息['MinionPos']
+                if index then
+                    if pos == '右邻' then
+                        index = index + 1
+                    end
+                end
+            end
+
+            G.call('技能效果_效果树_执行子效果', 
+                        {
+                            ['Player'] = player,
+                            ['Caster'] = o_card_召唤单位,
+                            ['MinionPos'] = index,
+                            ['Stack'] = effect_stack,
+                        }, 
+                        function ()
+                            G.call('角色_战场_添加随从', player, o_card_召唤单位, index)
+                            G.call('卡牌使用_上场')
+                            G.call('卡牌使用_随从召唤')
+                        end
+                    )
+        end
+    end
+
+    effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_召唤单位', init, action)
+end
 
 -- ============================================
 -- ============================================

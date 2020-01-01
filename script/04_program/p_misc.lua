@@ -40,14 +40,8 @@ t['asdasd'] = function ()
 end
 
 t['zpc_test'] = function (count)
-    local o_card_硬币 = G.call('卡牌实例化', G.QueryName(0x1006000e))
-    local _o_card_卡牌list = {}
-
-    for i = 1, count, 1 do
-        _o_card_卡牌list[i] = o_card_硬币
-    end
-
-    G.call('卡牌注册指令_发现', _o_card_卡牌list)
+    local rlib = G.call('卡牌随机库_获取', 0x10140001)
+    G.show_table(rlib)
 end
 
 t['zpc_test2'] = function (a)
