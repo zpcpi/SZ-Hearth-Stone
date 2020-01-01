@@ -1,10 +1,15 @@
 import sys
 import json
+import openpyxl
+import xml.etree.ElementTree as ET
+from ConfigManager import ConfigManager
+
+ExcelMaxRow = 100000
 
 class CardDataManager():
-    cardDataList = []
-    cardNameDataDict = {}
-    cardUIdDataDict = {}
+    xmlCardDataList = []
+    jsonCardDataList = []
+    maxCardEditorID = 0
 
     @classmethod
     def GetInstance(cls, *args, **kwargs):
@@ -14,21 +19,139 @@ class CardDataManager():
 
     def __init__(self):
         pass
+    
+    def GetCardXmlParseDefine(self):
+        cardXmlParseDefine = {}
+        xmlPath = ConfigManager.GetInstance().GetConfig('CardXmlParseDefinePath')
+        xmlTree = ET.parse(xmlPath)
+        root = xmlTree.getroot()
+        entitys = root.findall('attr')
+        for entity in entitys:
+            attrName = entity.get('Name')
+            cardXmlParseDefine[attrName] = {}
+            for key in entity.keys():
+                cardXmlParseDefine[attrName][key] = entity.get(key)
+        return cardXmlParseDefine
+
+    def GenerateNewCardEditorID(self, entityNode):
+        newID = self.maxCardEditorID + 1
+        self.maxCardEditorID = newID
+        return newID
+
+    def GetEntityNodeTagNode(self, entityNode, tagName):
+        for tagNode in entityNode.findall('Tag'):
+            if tagNode.get('name', None) == tagName:
+                return tagNode
+        return None
+
+    def ParseCardXml(self, cardXmlParseDefineInfo, entityNode):
+        cardData = {}
+        for attrName in cardXmlParseDefineInfo:
+            parseInfo = cardXmlParseDefineInfo[attrName]
+            attrValue = None
+            if 'XmlName' in parseInfo:
+                attrValue = entityNode.get(parseInfo['XmlName'], None)
+            elif 'TagName' in parseInfo:
+                tagName = parseInfo['TagName']
+                tagNode = self.GetEntityNodeTagNode(entityNode, tagName)
+                if tagNode != None:
+                    attrValue = tagNode.get('value', None)
+            elif 'LanguageTagName' in parseInfo:
+                tagName = parseInfo['LanguageTagName']
+                tagNode = self.GetEntityNodeTagNode(entityNode, tagName)
+                if tagNode != None:
+                    zhCnNode = tagNode.find('zhCN')
+                    if zhCnNode != None:
+                        attrValue = zhCnNode.text
+            elif 'TextTagName' in parseInfo:
+                tagName = parseInfo['LanguageTagName']
+                tagNode = self.GetEntityNodeTagNode(entityNode, tagName)
+                if tagNode != None:
+                    attrValue = tagNode.text
+            elif 'ParseFunc' in parseInfo:
+                funcName = parseInfo['ParseFunc']
+                func = getattr(self, funcName)
+                attrValue = func(entityNode)
+            if attrValue != None:
+                cardData[attrName] = attrValue
+        return cardData
+
+    def ReloadCardDataFromXml(self, xmlPath):
+        cardXmlParseDefine = self.GetCardXmlParseDefine()
+        self.xmlCardDataList = []
+        xmlTree = ET.parse(xmlPath)
+        root = xmlTree.getroot()
+        entityNodes = root.findall('Entity')
+        for entityNode in entityNodes:
+            cardData = self.ParseCardXml(cardXmlParseDefine, entityNode)
+            self.xmlCardDataList.append(cardData)
 
     def ReloadCardDataFromJson(self, jsonPath):
         ifs = open(jsonPath, 'r', encoding='utf-8')
-        self.cardDataList = json.load(ifs, strict = False)
+        self.jsonCardDataList = json.load(ifs, strict = False)
         ifs.close()
-        self.cardNameDataDict = self.GenerateDictByKey('name')
-        self.cardUIdDataDict = self.GenerateDictByKey('id')
+        self.cardNameDataDict = self.GenerateDictByKey(self.jsonCardDataList, 'name')
+        self.cardUIdDataDict = self.GenerateDictByKey(self.jsonCardDataList, 'id')
     
-    # 编号 名称 后缀 dbfid uid 类型 费用 攻击 生命 职业 品质 种族 是精英 描述 目标指向文本 画家 flavor 归类 可收集 收藏描述 提示标签 标旗 阵营 hideStats
-    def UpdateExcel(self, excelPath):
-        pass
+    def ReloadCardIdInfoFromExcel(self, excelPath):
+        excelData = openpyxl.load_workbook(excelPath)
+        cardSheet = excelData['卡牌表']
+        for row in range(4, ExcelMaxRow):
+            cardEditorID = cardSheet['A' + str(row)].value
+            if cardEditorID == None:
+                break
+            cardEditorID = int(cardEditorID)
+            if self.maxCardEditorID < cardEditorID:
+                self.maxCardEditorID = cardEditorID
 
-    def GenerateDictByKey(self, keyName):
+    def UpdateCardExcel(self, excelPath):
+        excelData = openpyxl.load_workbook(excelPath)
+        cardSheet = excelData['卡牌表']
+        cardDataUIdDict = self.GenerateDictByKey(self.xmlCardDataList, 'UID')
+        lastRow = 4
+        for row in range(4, ExcelMaxRow):
+            cardEditorID = cardSheet['A' + str(row)].value
+            if cardEditorID == None:
+                lastRow = row
+                break
+            cardDbfID = cardSheet['D' + str(row)].value
+            cardUID = cardSheet['E' + str(row)].value
+            cardData = None
+            if cardUID in cardDataUIdDict:
+                cardData = cardDataUIdDict[cardUID]
+                del(cardDataUIdDict[cardUID])
+            if str(cardUID) in cardDataUIdDict:
+                cardData = cardDataUIdDict[str(cardUID)]
+                del(cardDataUIdDict[str(cardUID)])
+            if cardData != None:
+                if cardDbfID == None or str(cardData['DbfID']) != str(cardDbfID):
+                    cardSheet['D' + str(row)].value = cardData['DbfID']
+        for cardUID in cardDataUIdDict:
+            cardData = cardDataUIdDict[cardUID]
+            cardSheet['A' + str(lastRow)].value = cardData['EditorID']
+            cardSheet['B' + str(lastRow)].value = cardData['Showname']
+            cardSheet['D' + str(lastRow)].value = cardData['DbfID']
+            cardSheet['E' + str(lastRow)].value = cardData['UID']
+            cardSheet['F' + str(lastRow)].value = cardData['Type']
+            cardSheet['G' + str(lastRow)].value = cardData['Cost']
+            cardSheet['H' + str(lastRow)].value = cardData['Atk']
+            cardSheet['I' + str(lastRow)].value = cardData['Hp']
+            cardSheet['J' + str(lastRow)].value = cardData['Armor']
+            cardSheet['K' + str(lastRow)].value = cardData['SpellPower']
+            cardSheet['L' + str(lastRow)].value = cardData['CardClass']
+            cardSheet['M' + str(lastRow)].value = cardData['Rarity']
+            cardSheet['N' + str(lastRow)].value = cardData['Race']
+            cardSheet['O' + str(lastRow)].value = cardData['IsElite']
+            cardSheet['P' + str(lastRow)].value = cardData['CardText']
+            cardSheet['Q' + str(lastRow)].value = cardData['TargetingArrowText']
+            cardSheet['R' + str(lastRow)].value = cardData['Artist']
+            cardSheet['S' + str(lastRow)].value = cardData['FlavorText']
+            cardSheet['T' + str(lastRow)].value = cardData['Collectible']
+        excelData.save(excelPath)
+
+    def GenerateDictByKey(self, dataList, keyName):
         newDataDict = {}
-        for cardData in self.cardDataList:
+        for cardData in dataList:
             if not keyName in cardData:
                 print('Warning! Rebuild dict warning! No attr (%s) in data.\n%s' % (keyName, cardData))
                 continue

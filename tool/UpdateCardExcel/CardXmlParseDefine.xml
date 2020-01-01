@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<root>
+    <attr Name="EditorID" ParseFunc="GenerateNewCardEditorID" comment="编号"/>
+    <attr Name="Showname" LanguageTagName="CARDNAME" comment="名称"/>
+    <attr Name="DbfID" XmlName="ID" comment="dbfid"/>
+	<attr Name="UID" XmlName="CardID" comment="uid"/>
+    <attr Name="Type" TagName="CARDTYPE" comment="类型"/>
+    <attr Name="Cost" TagName="COST" comment="费用"/>
+    <attr Name="Atk" TagName="ATK" comment="攻击"/>
+    <attr Name="Hp" TagName="HEALTH" comment="生命"/>
+    <attr Name="Armor" TagName="ARMOR" comment="护甲"/>
+    <attr Name="SpellPower" TagName="SPELLPOWER" comment="法术伤害"/>
+    <attr Name="CardClass" TagName="CLASS" comment="职业"/>
+    <attr Name="Rarity" TagName="RARITY" comment="品质"/>
+    <attr Name="Race" TagName="CARDRACE" comment="种族"/>
+    <attr Name="IsElite" TagName="ELITE" comment="是精英"/>
+    <attr Name="CardText" LanguageTagName="CARDTEXT" comment="描述"/>
+    <attr Name="TargetingArrowText" LanguageTagName="TARGETING_ARROW_TEXT" comment="目标指向文本"/>
+    <attr Name="Artist" TextTagName="ARTISTNAME" comment="画家"/>
+    <attr Name="FlavorText" LanguageTagName="FLAVORTEXT" comment="趣味描述"/>
+    <attr Name="CardSet" TagName="CARD_SET" comment="扩展包"/>
+    <attr Name="Collectible" TagName="COLLECTIBLE" comment="可收集"/>
+</root>
