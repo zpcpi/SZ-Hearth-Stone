@@ -3,6 +3,7 @@ import json
 import openpyxl
 import xml.etree.ElementTree as ET
 from ConfigManager import ConfigManager
+import HearthStoneEnums
 
 ExcelMaxRow = 100000
 
@@ -44,8 +45,31 @@ class CardDataManager():
                 return tagNode
         return None
 
-    def ParseCardXml(self, cardXmlParseDefineInfo, entityNode):
+    def CreateEmptyCardData(self):
         cardData = {}
+        cardData['EditorID'] = 0
+        cardData['Showname'] = ''
+        cardData['DbfID'] = 0
+        cardData['UID'] = ''
+        cardData['Type'] = 0
+        cardData['Cost'] = 0
+        cardData['Atk'] = 0
+        cardData['Hp'] = 0
+        cardData['Armor'] = 0
+        cardData['SpellPower'] = 0
+        cardData['CardClass'] = 0
+        cardData['Rarity'] = 0
+        cardData['Race'] = 0
+        cardData['IsElite'] = False
+        cardData['CardText'] = ''
+        cardData['TargetingArrowText'] = ''
+        cardData['Artist'] = ''
+        cardData['FlavorText'] = ''
+        cardData['Collectible'] = False
+        return cardData
+
+    def ParseCardXml(self, cardXmlParseDefineInfo, entityNode):
+        cardData = self.CreateEmptyCardData()
         for attrName in cardXmlParseDefineInfo:
             parseInfo = cardXmlParseDefineInfo[attrName]
             attrValue = None
@@ -126,30 +150,27 @@ class CardDataManager():
             if cardData != None:
                 if cardDbfID == None or str(cardData['DbfID']) != str(cardDbfID):
                     cardSheet['D' + str(row)].value = cardData['DbfID']
-        if True:
-            excelData.save(excelPath)
-            return
         for cardUID in cardDataUIdDict:
             cardData = cardDataUIdDict[cardUID]
             cardSheet['A' + str(lastRow)].value = cardData['EditorID']
             cardSheet['B' + str(lastRow)].value = cardData['Showname']
             cardSheet['D' + str(lastRow)].value = cardData['DbfID']
             cardSheet['E' + str(lastRow)].value = cardData['UID']
-            cardSheet['F' + str(lastRow)].value = cardData['Type']
+            cardSheet['F' + str(lastRow)].value = HearthStoneEnums.CardTypeZhCN[cardData['Type']]
             cardSheet['G' + str(lastRow)].value = cardData['Cost']
             cardSheet['H' + str(lastRow)].value = cardData['Atk']
             cardSheet['I' + str(lastRow)].value = cardData['Hp']
             cardSheet['J' + str(lastRow)].value = cardData['Armor']
             cardSheet['K' + str(lastRow)].value = cardData['SpellPower']
-            cardSheet['L' + str(lastRow)].value = cardData['CardClass']
-            cardSheet['M' + str(lastRow)].value = cardData['Rarity']
-            cardSheet['N' + str(lastRow)].value = cardData['Race']
-            cardSheet['O' + str(lastRow)].value = cardData['IsElite']
+            cardSheet['L' + str(lastRow)].value = HearthStoneEnums.CardClassZhCN[cardData['CardClass']]
+            cardSheet['M' + str(lastRow)].value = HearthStoneEnums.RarityZhCN[cardData['Rarity']]
+            cardSheet['N' + str(lastRow)].value = HearthStoneEnums.RaceZhCN[cardData['Race']]
+            cardSheet['O' + str(lastRow)].value = cardData['IsElite'] == '1'
             cardSheet['P' + str(lastRow)].value = cardData['CardText']
             cardSheet['Q' + str(lastRow)].value = cardData['TargetingArrowText']
             cardSheet['R' + str(lastRow)].value = cardData['Artist']
             cardSheet['S' + str(lastRow)].value = cardData['FlavorText']
-            cardSheet['T' + str(lastRow)].value = cardData['Collectible']
+            cardSheet['T' + str(lastRow)].value = cardData['Collectible'] == '1'
         excelData.save(excelPath)
 
     def GenerateDictByKey(self, dataList, keyName):

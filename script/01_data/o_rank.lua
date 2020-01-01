@@ -39,5 +39,13 @@ local t = {
 		['宝石图片']=0x560b000b,
 		['品质颜色']=0xb7b7b7,
 	},
+	{
+		['name']=0x10070007,
+		['showname']='FREE',
+	},
+	{
+		['name']=0x10070008,
+		['showname']='UNKNOWN_6',
+	},
 }}
 return t

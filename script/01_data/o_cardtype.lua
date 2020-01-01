@@ -50,5 +50,37 @@ local t = {
 		['职业边框']='武器卡边框',
 		['默认原画配置']=0x10060076,
 	},
+	{
+		['name']=0x10090008,
+		['showname']='GAME',
+	},
+	{
+		['name']=0x10090009,
+		['showname']='PLAYER',
+	},
+	{
+		['name']=0x10090010,
+		['showname']='ENCHANTMENT',
+	},
+	{
+		['name']=0x10090011,
+		['showname']='ITEM',
+	},
+	{
+		['name']=0x10090012,
+		['showname']='TOKEN',
+	},
+	{
+		['name']=0x10090013,
+		['showname']='BLANK',
+	},
+	{
+		['name']=0x10090014,
+		['showname']='GAME_MODE_BUTTON',
+	},
+	{
+		['name']=0x10090015,
+		['showname']='MOVE_MINION_HOVER_TARGET',
+	},
 }}
 return t
