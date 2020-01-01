@@ -400,6 +400,7 @@ local aura_add_buff = function (func_filer, func_add, func_del, _earg_光环添�
 
     local all_cards = G.misc()['实例化卡牌列表']
     local TargetList = G.call('array_filter', all_cards, func_filer)
+
     G.call('技能效果_效果树_执行子效果',
             {
                 ['Player'] = o_skill_info_效果信息['Player'],
@@ -471,7 +472,7 @@ local aura_add_buff = function (func_filer, func_add, func_del, _earg_光环添�
         }
         table.insert(infolist, info)
     end
-    for _,earg in ipairs(_earg_光环删除事件) do
+    for _,earg in ipairs(_earg_光环移除事件) do
         local info = {
             [1] = earg,
             [2] = del_aure_iter,
@@ -640,7 +641,8 @@ t['逻辑注册_初始化'] = function ()
         ['光环属性'] = {},
         ['当前属性'] = {},
         ['卡牌位置'] = '牌库',
-        ['所有者'] = G.call('系统_获取当前玩家信息').绝对身份
+        ['所有者'] = G.call('系统_获取当前玩家信息').绝对身份,
+        ['特性层数'] = {},
     }
 
     table.insert(G.misc()['实例化卡牌列表'], card)
@@ -1023,7 +1025,7 @@ t['技能效果_攻击'] = function (int_变动值)
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_当前攻击变化', init, action)
 end
 
-t['技能效果_特性'] = function (_string_添加特性, _string_移除特性)
+t['技能效果_特性'] = function (_string_添加特性, _string_移除特性, _string_还原特性)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -1032,37 +1034,69 @@ t['技能效果_特性'] = function (_string_添加特性, _string_移除特性)
 
     local get_attr = CARD_GET_ATTR
     local flags_data = CARD_FLAGS
-    local cardflag_set = function (data, flag)
+    local cardflag_set = function (Target, data, flag)
         for index, t in ipairs(flags_data) do
             if t[flag] then
                 data[index] = (data[index] or 0) | (1 << t[flag])
             end
         end
+
+        local countmap = (Target['动态数据'] or {})['特性层数'] or {}
+        countmap[flag] = (countmap[flag] or 0) + 1
+        print(countmap[flag], Target.showname, Target.name, o_skill_info_效果信息['Caster'].name, o_skill_info_效果信息)
     end
-    local cardflag_del = function (data, flag)
+    local cardflag_del = function (Target, data, flag)
         for index, t in ipairs(flags_data) do
             if t[flag] then
                 data[index] = (data[index] or 0) & (~(1 << t[flag]))
             end
+        end
+
+        local countmap = (Target['动态数据'] or {})['特性层数'] or {}
+        countmap[flag] = nil
+    end
+    local cardflag_reset = function (Target, root_data, data, flag)
+        local countmap = (Target['动态数据'] or {})['特性层数'] or {}
+        local count = countmap[flag] or 0
+        if count > 1 then
+            -- 特性被叠加过多次
+            countmap[flag] = count - 1
+        else
+            for index, t in ipairs(flags_data) do
+                if t[flag] then
+                    -- 先删除，再叠加
+                    data[index] = ((data[index] or 0) & (~(1 << t[flag]))) | 
+                                  ((root_data[index] or 0) & (1 << t[flag]))
+                end
+            end
+            countmap[flag] = nil
         end
     end
 
     local init = function ()
         o_skill_info_效果信息['当前添加特性'] = _string_添加特性
         o_skill_info_效果信息['当前移除特性'] = _string_移除特性
+        o_skill_info_效果信息['当前还原特性'] = _string_还原特性
     end
     local action = function ()
         _string_添加特性 = o_skill_info_效果信息['当前添加特性']
         _string_移除特性 = o_skill_info_效果信息['当前移除特性']
+        _string_还原特性 = o_skill_info_效果信息['当前还原特性']
         local TargetList = o_skill_info_效果信息['Target'] or {}
 
         for _, Target in ipairs(TargetList) do
             local flags = get_attr(Target, '逻辑数据', '卡牌特性') or {}
             for k,v in ipairs(_string_添加特性 or {}) do
-                cardflag_set(flags, v)
+                cardflag_set(Target, flags, v)
             end
             for k,v in ipairs(_string_移除特性 or {}) do
-                cardflag_del(flags, v)
+                cardflag_del(Target, flags, v)
+            end
+
+            -- 还原特性，读取root的值
+            local root_flags = get_attr(G.QueryName(Target.root), '逻辑数据', '卡牌特性') or {}
+            for k,v in ipairs(_string_还原特性 or {}) do
+                cardflag_reset(Target, root_flags, flags, v)
             end
 
             if Target['逻辑数据'] then
@@ -1072,8 +1106,6 @@ t['技能效果_特性'] = function (_string_添加特性, _string_移除特性)
                     ['卡牌特性'] = flags
                 }
             end
-            -- todo，临时处理，后续由动画控制
-            G.trig_event('卡牌实例_信息更新', Target)
         end
     end
 
