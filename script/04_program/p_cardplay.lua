@@ -645,7 +645,13 @@ t['逻辑注册_初始化'] = function ()
         ['特性层数'] = {},
     }
 
-    table.insert(G.misc()['实例化卡牌列表'], card)
+    local misc = G.misc()
+    if misc['别人实例化卡牌反查表'][card.name] then
+    else
+        table.insert(misc['实例化卡牌列表'], card)
+        misc['别人实例化卡牌反查表'][card.name] = true
+    end
+    
     trigger_iter('初始', card)
 end
 
@@ -1043,7 +1049,6 @@ t['技能效果_特性'] = function (_string_添加特性, _string_移除特性,
 
         local countmap = (Target['动态数据'] or {})['特性层数'] or {}
         countmap[flag] = (countmap[flag] or 0) + 1
-        print(countmap[flag], Target.showname, Target.name, o_skill_info_效果信息['Caster'].name, o_skill_info_效果信息)
     end
     local cardflag_del = function (Target, data, flag)
         for index, t in ipairs(flags_data) do
@@ -1106,6 +1111,9 @@ t['技能效果_特性'] = function (_string_添加特性, _string_移除特性,
                     ['卡牌特性'] = flags
                 }
             end
+
+            -- TODO，临时处理，后面需要动画来管理
+            G.trig_event('卡牌实例_信息更新', Target)
         end
     end
 

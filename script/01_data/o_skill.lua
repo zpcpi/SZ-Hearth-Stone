@@ -974,6 +974,61 @@ end
 		},
 	},
 	{
+		['name']=0x1013001a,
+		['showname']='饥饿的秃鹫-招野兽抽牌',
+		['目标筛选']={n=8,[1] = '卡牌条件_目标通用过滤器',
+			[3]='我方',
+			[4]={
+				[1]=0x10090004,
+			},
+			[5]={
+				[1]='战场',
+			},
+			[6]={
+				[1]=0x100a0006,
+			},
+			[9]=true,
+		},
+		['逻辑功能']={
+			[1]={
+				['注册时机']='上场',
+				['是否重复触发']=true,
+				['触发时机']={
+t =
+{'$逻辑_随从召唤'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_随从召唤"}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'if',
+    {
+        'apply',
+        {'卡牌条件_制作过滤器','self','card'},
+        'info.Caster'
+    },
+    {'技能效果_抽牌'}
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return (function ()
+		if(G.call(G.call("卡牌条件_制作过滤器",self,card),info.Caster))then
+			return G.call("技能效果_抽牌")
+		end
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130003,
 		['showname']='爪击-护甲、本回合攻击',
 		['逻辑功能']={
