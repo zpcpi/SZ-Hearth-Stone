@@ -546,18 +546,22 @@ local t = {
 		['showname']='卡牌局外数据',
 		['define']={
 			[1]={
+				['name']='dbfid',
+				['type']='int',
+			},
+			[2]={
 				['name']='uid',
 				['type']='string',
 			},
-			[2]={
+			[3]={
 				['name']='扩展包',
 				['type']='i_category',
 			},
-			[3]={
+			[4]={
 				['name']='可收集',
 				['type']='boolean',
 			},
-			[4]={
+			[5]={
 				['name']='衍生卡',
 				['type']='_i_card',
 			},
