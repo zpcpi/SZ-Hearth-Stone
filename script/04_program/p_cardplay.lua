@@ -651,7 +651,7 @@ t['逻辑注册_初始化'] = function ()
         table.insert(misc['实例化卡牌列表'], card)
         misc['别人实例化卡牌反查表'][card.name] = true
     end
-    
+
     trigger_iter('初始', card)
 end
 
@@ -800,6 +800,34 @@ t['技能效果_法伤伤害'] = function (int_伤害值)
         end
     end
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_法伤伤害', init, action)
+end
+
+t['技能效果_英雄技能伤害'] = function (int_伤害值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+        o_skill_info_效果信息['原始伤害数值'] = int_伤害值
+        o_skill_info_效果信息['伤害类型'] = '英雄技能'
+    end
+    local action = function ()
+        local int_中间伤害值 = o_skill_info_效果信息['中间伤害数值'] or o_skill_info_效果信息['原始伤害数值']
+        local TargetList = o_skill_info_效果信息['Target'] or {}
+        local _int_伤害数值 = {}
+
+        o_skill_info_效果信息['最终伤害目标'] = {}
+        o_skill_info_效果信息['伤害数值'] = _int_伤害数值
+
+        for k,Target in ipairs(TargetList) do
+            o_skill_info_效果信息['逐个伤害数值'] = int_中间伤害值
+            o_skill_info_效果信息['逐个伤害目标'] = Target
+            single_damage()
+        end
+    end
+    effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_英雄技能伤害', init, action)
 end
 
 t['技能效果_法术治疗'] = function (int_治疗值)
@@ -1701,6 +1729,16 @@ t['卡牌条件_获取过滤后数量'] = function (o_skill, Caster)
     local all_cards = G.misc()['实例化卡牌列表']
 
     return #G.call('array_filter', all_cards, func_filer)
+end
+
+t['卡牌条件_获取目标数量'] = function ()
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return 0
+    end
+
+    return #(o_skill_info_效果信息['Target'] or {})
 end
 -- ============================================
 -- ============================================

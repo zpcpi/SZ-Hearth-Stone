@@ -34,6 +34,57 @@ end
 		},
 	},
 	{
+		['name']=0x1013001b,
+		['showname']='稳固射击-伤害',
+		['postfix']='英雄技能',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_英雄技能使用','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_英雄技能使用",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {
+        'if',
+        {
+            '==',
+            {'卡牌条件_获取目标数量'},
+            0
+        },
+        {'技能目标_选取英雄','$敌方1'}
+    },
+    {'技能效果_英雄技能伤害',2}
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = (function ()
+			if(t["tLua_EQUAL"](G.call("卡牌条件_获取目标数量"),0))then
+				return G.call("技能目标_选取英雄","敌方1")
+			end
+		end)()
+		_ = G.call("技能效果_英雄技能伤害",2)
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130010,
 		['showname']='追踪术-牌库3选1',
 		['逻辑功能']={
