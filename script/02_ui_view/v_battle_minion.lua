@@ -3,6 +3,7 @@
 ]]
 local G = require 'gf'
 local c_battle_minion = require 'c_battle_minion'
+local c_button = require 'c_button'
 local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
@@ -100,6 +101,112 @@ tp = tc
 		--end
 		tc = G.Entity()
 		tp.addChild(tc)
+		tc.name = '状态栏'
+		tc.left = -50.000
+		tc.right = 50.000
+		tc.bottom = -50.000
+		tc.top = 50.000
+		tp = tc
+			tc = G.loadUI('v_button')
+			tc.prefab = true
+			tp.addChild(tc)
+			tc.name = '复生'
+			tc.left = 104.000
+			tc.right = 154.000
+			tc.bottom = -6.000
+			tc.top = 34.000
+			tc.mouseEnabled = true
+			tc.color = 0xdbff00
+			tp = tc
+			tp.c_button = setmetatable({}, c_button)
+			com = tp.c_button
+			com['text'] ='复生'
+			com['btn_class'] =nil
+			com['customsize'] =true
+			com['img_normal'] =1442840577.000
+			com['color_normal'] =0.000
+			com['img_hover'] =nil
+			com['color_hover'] =nil
+			com['audio_hover'] =nil
+			com['img_press'] =nil
+			com['frameList_press'] =nil
+			com['color_press'] =nil
+			com['audio_press'] =nil
+			com['img_disable'] =nil
+			com['color_disable'] =nil
+			com['img_toggle'] =nil
+			com['color_toggle'] =nil
+			com['img_togEx'] =nil
+			tp = tp.parent
+			--end
+			tc = G.loadUI('v_button')
+			tc.prefab = true
+			tp.addChild(tc)
+			tc.name = '圣盾'
+			tc.left = 100.000
+			tc.right = 150.000
+			tc.bottom = -38.000
+			tc.top = 2.000
+			tc.mouseEnabled = true
+			tc.color = 0x2cf2ee
+			tp = tc
+			tp.c_button = setmetatable({}, c_button)
+			com = tp.c_button
+			com['text'] ='圣盾'
+			com['btn_class'] =nil
+			com['customsize'] =true
+			com['img_normal'] =1442840577.000
+			com['color_normal'] =0.000
+			com['img_hover'] =nil
+			com['color_hover'] =nil
+			com['audio_hover'] =nil
+			com['img_press'] =nil
+			com['frameList_press'] =nil
+			com['color_press'] =nil
+			com['audio_press'] =nil
+			com['img_disable'] =nil
+			com['color_disable'] =nil
+			com['img_toggle'] =nil
+			com['color_toggle'] =nil
+			com['img_togEx'] =nil
+			tp = tp.parent
+			--end
+			tc = G.loadUI('v_button')
+			tc.prefab = true
+			tp.addChild(tc)
+			tc.name = '冻结'
+			tc.left = 94.000
+			tc.right = 144.000
+			tc.bottom = -70.000
+			tc.top = -30.000
+			tc.mouseEnabled = true
+			tc.color = 0xdb6656
+			tp = tc
+			tp.c_button = setmetatable({}, c_button)
+			com = tp.c_button
+			com['text'] ='冻结'
+			com['btn_class'] =nil
+			com['customsize'] =true
+			com['img_normal'] =1442840577.000
+			com['color_normal'] =0.000
+			com['img_hover'] =nil
+			com['color_hover'] =nil
+			com['audio_hover'] =nil
+			com['img_press'] =nil
+			com['frameList_press'] =nil
+			com['color_press'] =nil
+			com['audio_press'] =nil
+			com['img_disable'] =nil
+			com['color_disable'] =nil
+			com['img_toggle'] =nil
+			com['color_toggle'] =nil
+			com['img_togEx'] =nil
+			tp = tp.parent
+			--end
+		tp = tp.parent
+		--end
+		tc = G.Entity()
+		tp.addChild(tc)
 		tc.name = '属性值组合'
 		tc.right = 40.667
 		tc.top = 46.000
@@ -171,8 +278,44 @@ tp = tc
 				--end
 			tp = tp.parent
 			--end
+			tc = G.Quad()
+			tp.addChild(tc)
+			tc.name = '护甲值'
+			tc.left = 32.316
+			tc.right = 129.316
+			tc.bottom = -124.369
+			tc.top = -14.369
+			tc.visible = false
+			tc.scaleX = 0.800
+			tc.scaleY = 0.800
+			tc.img = 0x560b0004
+			tp = tc
+				tc = G.TextQuad()
+				tp.addChild(tc)
+				tc.name = '护甲值数值'
+				tc.left = -14.342
+				tc.right = 14.658
+				tc.bottom = 0.342
+				tc.top = 35.342
+				tc.scaleX = 1.600
+				tc.scaleY = 1.600
+				tc.font = 0x63410000
+				tc.style = 14
+				tp = tc
+				tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
+				com = tp.c_mintextquadsize
+				com['minWidth'] =0.000
+				com['autowidth'] =true
+				tp = tp.parent
+				--end
+			tp = tp.parent
+			--end
 		tp = tp.parent
 		--end
 	tp.c_battle_minion = setmetatable({}, c_battle_minion)
+	com = tp.c_battle_minion
+	com['cost'] =nil
+	com['atk'] =nil
+	com['hp'] =nil
 	tp = tp.parent
 	--end
