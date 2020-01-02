@@ -633,6 +633,7 @@ local trigger_iter = function (estr_cardevent_inittype_类型, card, skill)
     end
 end
 
+-- trigger注册
 t['逻辑注册_初始化'] = function ()
     local card = G.event_info()
     card['动态数据'] = {
@@ -643,6 +644,8 @@ t['逻辑注册_初始化'] = function ()
         ['卡牌位置'] = '牌库',
         ['所有者'] = G.call('系统_获取当前玩家信息').绝对身份,
         ['特性层数'] = {},
+        ['攻击次数上限'] = 0,
+        ['已攻击次数'] = 0,
     }
 
     local misc = G.misc()
@@ -691,6 +694,32 @@ t['逻辑注册_添加'] = function ()
     trigger_iter('添加', card, skill.name)
 end
 
+-- 特定流程
+t['逻辑注册_水晶设置'] = function ()
+    G.call('角色_设置水晶数据_回合开始', '我方')
+end
+
+t['逻辑注册_抽牌'] = function ()
+    G.call('角色_牌库抽取卡牌', '我方', '我方')
+end
+
+t['逻辑注册_攻击次数设置'] = function ()
+    local MinionList = G.call('角色_获取随从列表', '我方') or {}
+    table.insert(MinionList, G.call('角色_战场_获取英雄', '我方'))
+
+    for _,minion in ipairs(MinionList) do
+        if G.call('卡牌条件_卡牌特性判断', minion, '风怒') then
+            minion['动态数据']['攻击次数上限'] = 2
+        elseif G.call('卡牌条件_卡牌特性判断', minion, '超级风怒') then
+            minion['动态数据']['攻击次数上限'] = 4
+        else
+            minion['动态数据']['攻击次数上限'] = 1
+        end
+        minion['动态数据']['已攻击次数'] = 0
+    end
+end
+
+-- 特定逻辑
 t['逻辑注册_战吼'] = function ()
     local info = G.event_info()
     local card = info['Caster']
@@ -717,6 +746,7 @@ t['通用逻辑_默认流程注册'] = function ()
     local cond = nil
     local prior_base = EVENT_PRIOR.base
     local group_system = EVENT_GROUP.system
+    local player = G.call('房间_获取绝对身份', '我方')
     
     -- trigger注册
     G.addListener('逻辑注册_初始化', {'逻辑_卡牌初始化'}, cond, EVENT_PRIOR.first, group_system)
@@ -726,11 +756,17 @@ t['通用逻辑_默认流程注册'] = function ()
     G.addListener('逻辑注册_生效', {'逻辑_卡牌生效'}, cond, prior_base, group_system)
     G.addListener('逻辑注册_添加', {'逻辑_技能添加前'}, cond, prior_base, group_system)
 
+    -- 特定流程
+    G.addListener('逻辑注册_水晶设置', {'流程_回合开始', player}, cond, EVENT_PRIOR.设置水晶数, EVENT_GROUP.设置水晶数)
+    G.addListener('逻辑注册_抽牌', {'流程_回合开始', player}, cond, EVENT_PRIOR.抽牌, EVENT_GROUP.抽牌)
+    G.addListener('逻辑注册_攻击次数设置', {'流程_回合开始', player}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
+
+    -- 特定逻辑
     G.addListener('逻辑注册_战吼', {'逻辑关键词_战吼前'}, cond, prior_base, group_system)
 
 
     -- 沉默
-    G.addListener('逻辑反注册_沉默', {''}, cond, prior_base, group_system)
+    -- G.addListener('逻辑反注册_沉默', {''}, cond, prior_base, group_system)
 
 end
 
@@ -882,7 +918,7 @@ t['技能效果_本回合当前水晶'] = function (int_变动值)
 
         effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_当前水晶变化', init(int_变动值), action)
         G.call('tLua_add_listener', 
-                {"对决事件_回合结束"},
+                {"流程_回合结束"},
                 function ()
                     effect_action_iter(o_skill_info_效果信息, nil, init(-int_变动值), action)
                 end,
@@ -964,7 +1000,7 @@ t['技能效果_本回合攻击'] = function (int_变动值)
             G.call('tLua_add_multlisteners', 
                     {
                         {
-                            {"对决事件_回合结束"},
+                            {"流程_回合结束"},
                             function ()
                                 local cur_value = G.call('卡牌属性_获取', tar, '攻击', '浮动值') or 0
                                 G.call('卡牌属性_设置', tar, '攻击', '浮动值', cur_value - val)
@@ -1740,6 +1776,7 @@ t['卡牌条件_获取目标数量'] = function ()
 
     return #(o_skill_info_效果信息['Target'] or {})
 end
+
 -- ============================================
 -- ============================================
 -- ============================================

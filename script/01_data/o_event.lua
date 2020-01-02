@@ -384,6 +384,24 @@ local t = {
 		},
 	},
 	{
+		['name']='流程_回合结束',
+		['arg']={
+			[1]={
+				['id']='Player',
+				['type']='estr_absolute_id_type',
+			},
+		},
+	},
+	{
+		['name']='流程_回合开始',
+		['arg']={
+			[1]={
+				['id']='Player',
+				['type']='estr_absolute_id_type',
+			},
+		},
+	},
+	{
 		['name']='UI_抓取卡牌_战场',
 		['arg']={
 			[1]={

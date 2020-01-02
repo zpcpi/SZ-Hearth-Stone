@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local c_battlemana_self = require 'c_battlemana_self'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)

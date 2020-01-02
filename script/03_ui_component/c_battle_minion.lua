@@ -29,9 +29,20 @@ function t:init()
     self.护甲值数值 = self.护甲值.getChildByName('护甲值数值')
 
     self.状态栏 = self.obj.getChildByName('状态栏')
-    self.冻结 = self.状态栏.getChildByName('冻结')
-    self.圣盾 = self.状态栏.getChildByName('圣盾')
-    self.复生 = self.状态栏.getChildByName('复生')
+    self.剧毒框 = self.状态栏.getChildByName('剧毒')
+    self.吸血框 = self.状态栏.getChildByName('吸血')
+    self.超杀框 = self.状态栏.getChildByName('超杀')
+
+    self.被动框 = self.状态栏.getChildByName('被动')
+    self.亡语框 = self.状态栏.getChildByName('亡语')
+    self.光环框 = self.状态栏.getChildByName('光环')
+
+    self.圣盾框 = self.状态栏.getChildByName('圣盾')
+    self.复生框 = self.状态栏.getChildByName('复生')
+    self.免疫框 = self.状态栏.getChildByName('免疫')
+
+    self.冻结框 = self.状态栏.getChildByName('冻结')
+    self.攻击框 = self.状态栏.getChildByName('攻击')
 
     self.setData = function (self, o_card)
         self.cur_card = o_card

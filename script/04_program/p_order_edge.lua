@@ -421,8 +421,24 @@ end
 
 t['抓取卡牌_随从_条件'] = function (o_order_info_当前指令信息)
     local Caster = o_order_info_当前指令信息['Caster']
+
     if Caster['动态数据'] and (Caster['动态数据']['卡牌位置'] == '战场') then
-        return true
+        -- 判断冻结状态
+        if G.call('卡牌条件_卡牌特性判断', Caster, {'冻结'}) then
+            G.call('提示_添加提示', '被[03]冻结[ff]的角色无法攻击')
+        else
+            -- 判断攻击次数
+            if G.call('角色攻击指令判断', o_order_info_当前指令信息) then
+                return true
+            else
+                if G.call('卡牌条件_卡牌特性判断', Caster, {'首回合召唤'}) then
+                    -- 第一回合召唤
+                    G.call('提示_添加提示', '该角色需要等待一回合才能攻击')
+                else
+                    G.call('提示_添加提示', '该角色已经攻击过了')
+                end
+            end
+        end
     end
     return false
 end
@@ -724,4 +740,15 @@ end
 --ret=boolean
 t['随从召唤条件判断'] = function(o_order_info_当前指令信息)
     return true
+end
+
+--ret=boolean
+t['角色攻击指令判断'] = function(o_order_info_当前指令信息)
+    local Caster = o_order_info_当前指令信息['Caster']
+    local get_attr = CARD_GET_ATTR
+
+    local 已攻击次数 = get_attr(Caster, '动态数据', '已攻击次数')
+    local 可攻击次数 = get_attr(Caster, '动态数据', '攻击次数上限')
+
+    return 已攻击次数 < 可攻击次数
 end

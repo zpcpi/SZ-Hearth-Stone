@@ -128,13 +128,31 @@ t['CardCom_SetData'] = function (com, o_card)
     end
 
     -- 战场随从数据
-    if com.嘲讽框 then
-        if G.call('卡牌条件_卡牌特性判断', o_card, {'嘲讽'}) then
-            com.嘲讽框.visible = true
-        else
-            com.嘲讽框.visible = false
+    local obj_show_iter = function (objname, flag)
+        if com[objname] then
+            if G.call('卡牌条件_卡牌特性判断', o_card, {flag}) then
+                com[objname].visible = true
+            else
+                com[objname].visible = false
+            end
         end
     end
+    obj_show_iter('剧毒框', '剧毒')
+    obj_show_iter('吸血框', '吸血')
+    obj_show_iter('超杀框', '超杀')
+
+    obj_show_iter('被动框', '被动')
+    obj_show_iter('亡语框', '亡语')
+    obj_show_iter('光环框', '光环')
+
+    obj_show_iter('嘲讽框', '嘲讽')
+
+    obj_show_iter('圣盾框', '圣盾')
+    obj_show_iter('复生框', '复生')
+    obj_show_iter('免疫框', '免疫')
+
+    obj_show_iter('冻结框', '冻结')
+    obj_show_iter('攻击框', '攻击')
 
     -- 临时，追加属性改变监听
     -- 应该做成动画
