@@ -12,8 +12,7 @@ local t = G.api
 t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
     local get_attr = CARD_GET_ATTR
 
-    local effect_stack = G.misc().当前效果堆栈 or G.call('create_stack')
-    G.misc().当前效果堆栈 = effect_stack
+    local effect_stack = G.misc().当前效果堆栈
 
     local root_info = {
         ['Player'] = estr_player_相对身份,
@@ -21,7 +20,6 @@ t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_�
         ['Target'] = o_order_info_当前指令信息['Target'],
         ['Parent'] = nil,
         ['MinionPos'] = o_order_info_当前指令信息['MinionPos'],
-        ['Stack'] = effect_stack,
     }
     effect_stack.push(root_info)
 
@@ -63,12 +61,6 @@ t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_�
         G.call('角色_战场_添加随从', estr_player_相对身份, Caster, index)
 
         G.call('卡牌使用_使用')
-        G.call('卡牌使用_上场')
-        G.call('卡牌关键词_战吼')
-        G.call('卡牌使用_随从召唤')
-
-        --上场，战吼，召唤自身
-
     elseif cardtype == 0x10090005 then
         -- 法术卡，执行使用逻辑
         G.call('卡牌使用_使用')
@@ -87,15 +79,13 @@ end
 t['卡牌攻击_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
     local get_attr = CARD_GET_ATTR
 
-    local effect_stack = G.misc().当前效果堆栈 or G.call('create_stack')
-    G.misc().当前效果堆栈 = effect_stack
+    local effect_stack = G.misc().当前效果堆栈
 
     local root_info = {
         ['Player'] = estr_player_相对身份,
         ['Caster'] = o_order_info_当前指令信息['Caster'],
         ['Target'] = o_order_info_当前指令信息['Target'],
         ['Parent'] = nil,
-        ['Stack'] = effect_stack,
     }
     effect_stack.push(root_info)
 
@@ -212,6 +202,11 @@ t['卡牌使用_使用'] = function ()
         elseif cardtype == 0x10090004 then
             -- 随从
             G.trig_event('逻辑_随从牌打出', Caster)
+
+            --上场，战吼，召唤自身
+            G.call('卡牌使用_上场')
+            G.call('卡牌关键词_战吼')
+            G.call('卡牌使用_随从召唤')
         elseif cardtype == 0x10090005 then
             -- 法术
             G.trig_event('逻辑_法术牌打出', Caster)
@@ -361,7 +356,6 @@ local single_heal = function ()
 end
 
 local single_add_buff = function ()
-    local effect_stack = G.misc().当前效果堆栈 
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -381,7 +375,6 @@ local single_add_buff = function ()
         ['Player'] = o_skill_info_效果信息['Player'],
         ['Caster'] = o_skill_info_效果信息['Caster'],
         ['Target'] = {o_skill_info_效果信息['逐个伤害目标']},
-        ['Stack'] = effect_stack,
     }
     G.call('技能效果_效果树_执行子效果', buff_info,
             function ()
@@ -391,7 +384,6 @@ local single_add_buff = function ()
 end
 
 local aura_add_buff = function (func_filer, func_add, func_del, _earg_光环添加事件, _earg_光环删除事件, _earg_光环移除事件, _info_自定义事件)
-    local effect_stack = G.misc().当前效果堆栈 
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -406,7 +398,6 @@ local aura_add_buff = function (func_filer, func_add, func_del, _earg_光环添�
                 ['Player'] = o_skill_info_效果信息['Player'],
                 ['Caster'] = o_skill_info_效果信息['Caster'],
                 ['Target'] = TargetList,
-                ['Stack'] = effect_stack,
             }, 
             func_add
         )
@@ -422,7 +413,6 @@ local aura_add_buff = function (func_filer, func_add, func_del, _earg_光环添�
                         ['Player'] = o_skill_info_效果信息['Player'],
                         ['Caster'] = o_skill_info_效果信息['Caster'],
                         ['Target'] = {Target},
-                        ['Stack'] = effect_stack,
                     }, 
                     func_add
                 )
@@ -439,7 +429,6 @@ local aura_add_buff = function (func_filer, func_add, func_del, _earg_光环添�
                         ['Player'] = o_skill_info_效果信息['Player'],
                         ['Caster'] = o_skill_info_效果信息['Caster'],
                         ['Target'] = {Target},
-                        ['Stack'] = effect_stack,
                     }, 
                     func_del
                 )
@@ -452,7 +441,6 @@ local aura_add_buff = function (func_filer, func_add, func_del, _earg_光环添�
                     ['Player'] = o_skill_info_效果信息['Player'],
                     ['Caster'] = o_skill_info_效果信息['Caster'],
                     ['Target'] = TargetList,
-                    ['Stack'] = effect_stack,
                 }, 
                 func_del
             )
@@ -484,7 +472,6 @@ local aura_add_buff = function (func_filer, func_add, func_del, _earg_光环添�
 end
 
 local normal_attck = function ()
-    local effect_stack = G.misc().当前效果堆栈 
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -520,7 +507,6 @@ local normal_attck = function ()
         ['Player'] = o_skill_info_效果信息['Player'],
         ['Caster'] = o_skill_info_效果信息['Target'][1],
         ['Target'] = {o_skill_info_效果信息['Caster']},
-        ['Stack'] = effect_stack, 
     }
     G.call('技能效果_效果树_执行子效果', 
             beatback_info, 
@@ -537,7 +523,7 @@ end
 
 t['技能效果_效果树_执行子效果'] = function (skill_info, action)
     -- 效果挂钩，入栈
-    local effect_stack = skill_info['Stack']
+    local effect_stack = skill_info['Stack'] or G.misc().当前效果堆栈
 
     if skill_info['Parent'] then
     else
@@ -644,10 +630,33 @@ t['逻辑注册_初始化'] = function ()
         ['卡牌位置'] = '牌库',
         ['所有者'] = G.call('系统_获取当前玩家信息').绝对身份,
         ['特性层数'] = {},
-        ['攻击次数上限'] = 0,
-        ['已攻击次数'] = 0,
     }
+    if card['逻辑数据'] then
+        if card['逻辑数据']['卡牌特性'] then
+        else
+            card['逻辑数据']['卡牌特性'] = {0,0,0,0}
+        end
+    else
+        card['逻辑数据'] = {
+            ['卡牌特性'] = {0,0,0,0}
+        }
+    end
 
+    -- 属性初始化
+    local flags_data = CARD_FLAGS
+    for _,skill_id in ipairs(card['逻辑数据']['卡牌效果'] or {}) do
+        local skill = G.QueryName(skill_id)
+        local flags = skill['技能类型']
+        for _,flag in ipairs(flags or {}) do
+            local data = card['逻辑数据']['卡牌特性']
+            data[2] = (data[2] or 0) | (1 << flags_data[2][flag])
+
+            local countmap = card['动态数据']['特性层数']
+            countmap[flag] = (countmap[flag] or 0) + 1
+        end
+    end
+
+    -- 防重复记录
     local misc = G.misc()
     if misc['别人实例化卡牌反查表'][card.name] then
     else
@@ -671,6 +680,7 @@ end
 
 t['逻辑注册_上场'] = function ()
     local card = G.event_info()
+
     trigger_iter('上场', card)
 end
 
@@ -703,19 +713,80 @@ t['逻辑注册_抽牌'] = function ()
     G.call('角色_牌库抽取卡牌', '我方', '我方')
 end
 
-t['逻辑注册_攻击次数设置'] = function ()
+local card_init_accack_count = function (Target, int_已攻击次数)
+    G.call('卡牌属性_设置', Target, '攻击次数', '当前值', int_已攻击次数 or 0)
+    if G.call('卡牌条件_卡牌特性判断', Target, {'超级风怒'}) then
+        G.call('卡牌属性_设置', Target, '攻击次数', '浮动值', 4)
+    elseif G.call('卡牌条件_卡牌特性判断', Target, {'风怒'}) then
+        G.call('卡牌属性_设置', Target, '攻击次数', '浮动值', 2)
+    else
+        G.call('卡牌属性_设置', Target, '攻击次数', '浮动值', 1)
+    end
+end
+
+t['逻辑注册_攻击次数重置_回合开始'] = function ()
     local MinionList = G.call('角色_获取随从列表', '我方') or {}
     table.insert(MinionList, G.call('角色_战场_获取英雄', '我方'))
 
-    for _,minion in ipairs(MinionList) do
-        if G.call('卡牌条件_卡牌特性判断', minion, '风怒') then
-            minion['动态数据']['攻击次数上限'] = 2
-        elseif G.call('卡牌条件_卡牌特性判断', minion, '超级风怒') then
-            minion['动态数据']['攻击次数上限'] = 4
-        else
-            minion['动态数据']['攻击次数上限'] = 1
+    for _,Target in ipairs(MinionList) do
+        card_init_accack_count(Target)
+    end
+end
+
+t['逻辑注册_攻击次数设置_单个召唤'] = function ()
+    local Target = G.event_info()
+
+    if true then
+        -- TODO，判断下随从的阵营
+    end
+    
+    if G.call('卡牌条件_卡牌特性判断', Target, {'冲锋'}) or G.call('卡牌条件_卡牌特性判断', Target, {'突袭'}) then
+        card_init_accack_count(Target)
+    end
+
+    -- 上场时属性设置
+    G.call('技能效果_效果树_执行子效果',
+            {
+                ['Player'] = '我方',
+                ['Caster'] = Target,
+                ['Target'] = {Target},
+            },
+            function ()
+                local add_flag = {}
+                table.insert(add_flag, '首回合召唤')
+                if G.call('卡牌条件_卡牌特性判断', Target, {'突袭'}) then
+                    table.insert(add_flag, '不能攻击英雄')
+                end
+
+                G.call('技能效果_特性', add_flag)
+            end
+        )
+end
+
+t['逻辑注册_攻击状态设置_回合结束'] = function ()
+    local MinionList = G.call('角色_获取随从列表', '我方') or {}
+    table.insert(MinionList, G.call('角色_战场_获取英雄', '我方'))
+
+    for _,Target in ipairs(MinionList) do
+        local del_flag = {}
+        local reset_farg = {}
+        if G.call('卡牌条件_卡牌特性判断', Target, {'首回合召唤'}) then
+            table.insert(del_flag, '首回合召唤')
+            if G.call('卡牌条件_卡牌特性判断', Target, {'突袭'}) then
+                table.insert(reset_farg, '不能攻击英雄')
+            end
+
+            G.call('技能效果_效果树_执行子效果',
+                    {
+                        ['Player'] = '我方',
+                        ['Caster'] = Target,
+                        ['Target'] = {Target},
+                    },
+                    function ()
+                        G.call('技能效果_特性', nil, del_flag, reset_farg)
+                    end
+                )
         end
-        minion['动态数据']['已攻击次数'] = 0
     end
 end
 
@@ -725,6 +796,44 @@ t['逻辑注册_战吼'] = function ()
     local card = info['Caster']
 
     trigger_iter('战吼', card)
+end
+
+t['逻辑注册_冲锋添加'] = function ()
+    local Target = G.event_info()
+
+    if G.call('卡牌条件_卡牌特性判断', Target, {'首回合召唤'}) then
+        card_init_accack_count(Target, G.call('卡牌属性_获取', Target, '攻击次数', '当前值'))
+    end
+end
+
+t['逻辑注册_冲锋删除'] = function ()
+    local Target = G.event_info()
+
+    if G.call('卡牌条件_卡牌特性判断', Target, {'首回合召唤'}) then
+        G.call('卡牌属性_设置', Target, '攻击次数', '浮动值', 0)
+    end
+end
+
+t['逻辑注册_回合结束_冻结删除判断'] = function ()
+    local MinionList = G.call('角色_获取随从列表', '我方') or {}
+    table.insert(MinionList, G.call('角色_战场_获取英雄', '我方'))
+    
+    for _,Target in ipairs(MinionList) do
+        if G.call('卡牌条件_卡牌特性判断', Target, {'冻结'}) then
+            if G.call('角色攻击次数判断', {['Caster']=Target}) then
+                G.call('技能效果_效果树_执行子效果',
+                        {
+                            ['Player'] = '我方',
+                            ['Caster'] = Target,
+                            ['Target'] = {Target},
+                        },
+                        function ()
+                            G.call('技能效果_特性', nil, {'冻结'})
+                        end
+                    )
+            end
+        end
+    end
 end
 
 t['逻辑反注册_沉默'] = function ()
@@ -759,10 +868,21 @@ t['通用逻辑_默认流程注册'] = function ()
     -- 特定流程
     G.addListener('逻辑注册_水晶设置', {'流程_回合开始', player}, cond, EVENT_PRIOR.设置水晶数, EVENT_GROUP.设置水晶数)
     G.addListener('逻辑注册_抽牌', {'流程_回合开始', player}, cond, EVENT_PRIOR.抽牌, EVENT_GROUP.抽牌)
-    G.addListener('逻辑注册_攻击次数设置', {'流程_回合开始', player}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
+    G.addListener('逻辑注册_攻击次数重置_回合开始', {'流程_回合开始', player}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
+    G.addListener('逻辑注册_攻击次数设置_单个召唤', {'逻辑_随从召唤'}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
+    G.addListener('逻辑注册_攻击状态设置_回合结束', {'流程_回合结束', player}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
 
     -- 特定逻辑
     G.addListener('逻辑注册_战吼', {'逻辑关键词_战吼前'}, cond, prior_base, group_system)
+
+
+    -- 冲锋
+    G.addListener('逻辑注册_冲锋添加', {'逻辑_卡牌特性设置', nil, '冲锋'}, cond, prior_base, EVENT_GROUP.冲锋)
+    G.addListener('逻辑注册_冲锋删除', {'逻辑_卡牌特性删除', nil, '冲锋'}, cond, prior_base, EVENT_GROUP.冲锋)
+
+    -- 冻结解除
+    G.addListener('逻辑注册_回合结束_冻结删除判断', {'流程_回合结束', player}, cond, EVENT_PRIOR.冻结解除, EVENT_GROUP.冻结解除)
+
 
 
     -- 沉默
@@ -780,7 +900,6 @@ end
 -- ============================================
 
 t['卡牌使用_攻击'] = function ()
-    local effect_stack = G.misc().当前效果堆栈 
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -799,10 +918,13 @@ t['卡牌使用_攻击'] = function ()
                         ['Player'] = o_skill_info_效果信息['Player'],
                         ['Caster'] = o_skill_info_效果信息['Caster'],
                         ['Target'] = {Target},
-                        ['Stack'] = effect_stack,
                     }, 
                     function ()
                         normal_attck()
+
+                        -- 攻击次数累加
+                        local cur = G.call('卡牌属性_获取', Caster, '攻击次数', '当前值') or 0
+                        G.call('卡牌属性_设置', Caster, '攻击次数', '当前值', cur + 1)
                     end
                   )
         end
@@ -1097,6 +1219,7 @@ end
 
 t['技能效果_特性'] = function (_string_添加特性, _string_移除特性, _string_还原特性)
     local o_skill_info_效果信息 = get_cur_effect_info()
+
     if o_skill_info_效果信息 then
     else
         return
@@ -1113,6 +1236,8 @@ t['技能效果_特性'] = function (_string_添加特性, _string_移除特性,
 
         local countmap = (Target['动态数据'] or {})['特性层数'] or {}
         countmap[flag] = (countmap[flag] or 0) + 1
+
+        G.trig_event('逻辑_卡牌特性设置', Target, flag)
     end
     local cardflag_del = function (Target, data, flag)
         for index, t in ipairs(flags_data) do
@@ -1123,6 +1248,8 @@ t['技能效果_特性'] = function (_string_添加特性, _string_移除特性,
 
         local countmap = (Target['动态数据'] or {})['特性层数'] or {}
         countmap[flag] = nil
+
+        G.trig_event('逻辑_卡牌特性删除', Target, flag)
     end
     local cardflag_reset = function (Target, root_data, data, flag)
         local countmap = (Target['动态数据'] or {})['特性层数'] or {}
@@ -1138,6 +1265,8 @@ t['技能效果_特性'] = function (_string_添加特性, _string_移除特性,
                                   ((root_data[index] or 0) & (1 << t[flag]))
                 end
             end
+
+            -- TODO，判断是否需要抛出事件
             countmap[flag] = nil
         end
     end
@@ -1324,7 +1453,7 @@ t['技能效果_战场光环'] = function (o_skill, func_add, func_del)
     end
 
     local Caster = o_skill_info_效果信息['Caster']
-    local func_filer = G.call('卡牌条件_制作过滤器', o_skill, Caster)
+    local func_filer = G.call('卡牌数据_制作过滤器', o_skill, Caster)
 
     aura_add_buff(func_filer, func_add, func_del, 
                     { -- 光环添加事件
@@ -1343,7 +1472,6 @@ t['技能效果_战场光环'] = function (o_skill, func_add, func_del)
 end
 
 t['技能效果_追踪术'] = function (int_追踪数量)
-    local effect_stack = G.misc().当前效果堆栈 
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -1385,7 +1513,6 @@ t['技能效果_追踪术'] = function (int_追踪数量)
                                     ['Caster'] = Caster,
                                     ['Target'] = o_card_select,
                                     ['Parent'] = o_skill_info_效果信息,
-                                    ['Stack'] = effect_stack,
                                 }, 
                                 function ()
                                     G.call('技能效果_创建手牌', o_card_select.name, false, true)
@@ -1402,7 +1529,6 @@ t['技能效果_追踪术'] = function (int_追踪数量)
 end
 
 t['技能效果_召唤'] = function (datas)
-    local effect_stack = G.misc().当前效果堆栈 
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -1449,7 +1575,6 @@ t['技能效果_召唤'] = function (datas)
                             ['Player'] = player,
                             ['Caster'] = o_card_召唤单位,
                             ['MinionPos'] = index,
-                            ['Stack'] = effect_stack,
                         }, 
                         function ()
                             G.call('角色_战场_添加随从', player, o_card_召唤单位, index)
@@ -1461,6 +1586,62 @@ t['技能效果_召唤'] = function (datas)
     end
 
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_召唤单位', init, action)
+end
+
+t['技能效果_奥数飞弹'] = function (int_随机次数, int_单个伤害, filter)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+        o_skill_info_效果信息['原始伤害数值'] = int_伤害值
+        o_skill_info_效果信息['伤害类型'] = '法术'
+    end
+    local action = function ()
+        local int_中间伤害值 = o_skill_info_效果信息['中间伤害数值'] or o_skill_info_效果信息['原始伤害数值']
+        local TargetList = o_skill_info_效果信息['Target'] or {}
+        local _int_伤害数值 = {}
+
+        o_skill_info_效果信息['最终伤害目标'] = {}
+        o_skill_info_效果信息['伤害数值'] = _int_伤害数值
+
+        for k,Target in ipairs(TargetList) do
+            o_skill_info_效果信息['逐个伤害数值'] = int_中间伤害值
+            o_skill_info_效果信息['逐个伤害目标'] = Target
+            single_damage()
+        end
+    end
+
+    local init = function ()
+        o_skill_info_效果信息['原始伤害数值'] = int_随机次数
+        o_skill_info_效果信息['伤害类型'] = '法术'
+    end
+    -- 通过这一步来收到法伤加成
+    init()
+    G.trig_event('逻辑_技能效果_法伤伤害前', o_skill_info_效果信息)
+
+    local action = function ()
+        local int_伤害目标数量 = o_skill_info_效果信息['中间伤害数值'] or o_skill_info_效果信息['原始伤害数值']
+        local _int_伤害数值 = {}
+
+        o_skill_info_效果信息['最终伤害目标'] = {}
+        o_skill_info_效果信息['伤害数值'] = _int_伤害数值
+
+        for i = 1, int_伤害目标数量, 1 do
+            o_skill_info_效果信息['逐个伤害数值'] = int_单个伤害
+
+            filter()
+            for _,Target in ipairs(o_skill_info_效果信息['Target']) do
+                o_skill_info_效果信息['逐个伤害目标'] = Target
+            end
+            single_damage()
+        end
+    end
+    -- 通过这一步造成伤害
+    action()
+    G.trig_event('逻辑_技能效果_法伤伤害', o_skill_info_效果信息)
 end
 
 -- ============================================
@@ -1583,6 +1764,9 @@ t['卡牌实例表_初始化'] = function ()
     misc['实例化卡牌列表'] = {}
     misc['别人实例化卡牌反查表'] = {}
     G.call('通用逻辑_默认流程注册')
+
+    -- 效果信息堆栈建立
+    misc.当前效果堆栈 = G.call('create_stack')
 end
 
 t['卡牌实例化'] = function (o_card_卡片模板)
@@ -1738,7 +1922,15 @@ t['卡牌条件_目标通用过滤器'] = function(o_card_当前卡牌, estr_sid
     return result
 end
 
-t['卡牌条件_制作过滤器'] = function (o_skill, Caster)
+-- ============================================
+-- ============================================
+-- ============================================
+-- 卡牌数据相关接口
+-- ============================================
+-- ============================================
+-- ============================================
+
+t['卡牌数据_制作过滤器'] = function (o_skill, Caster)
     local farg_光环过滤器 = o_skill['目标筛选']
     local func_filer
     if farg_光环过滤器[1] == '卡牌条件_目标通用过滤器' then
@@ -1760,14 +1952,14 @@ t['卡牌条件_制作过滤器'] = function (o_skill, Caster)
     return func_filer
 end
 
-t['卡牌条件_获取过滤后数量'] = function (o_skill, Caster)
-    local func_filer = G.call('卡牌条件_制作过滤器', o_skill, Caster)
+t['卡牌数据_获取过滤后数量'] = function (o_skill, Caster)
+    local func_filer = G.call('卡牌数据_制作过滤器', o_skill, Caster)
     local all_cards = G.misc()['实例化卡牌列表']
 
     return #G.call('array_filter', all_cards, func_filer)
 end
 
-t['卡牌条件_获取目标数量'] = function ()
+t['卡牌数据_获取目标数量'] = function ()
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else

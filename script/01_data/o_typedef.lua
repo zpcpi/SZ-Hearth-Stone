@@ -599,14 +599,6 @@ local t = {
 				['name']='特性层数',
 				['type']='any',
 			},
-			[8]={
-				['name']='攻击次数上限',
-				['type']='int',
-			},
-			[9]={
-				['name']='已攻击次数',
-				['type']='int',
-			},
 		},
 	},
 	{
@@ -1031,10 +1023,14 @@ local t = {
 				['type']='string',
 			},
 			[2]={
+				['name']='技能类型',
+				['type']='_estr_skill_type',
+			},
+			[3]={
 				['name']='目标筛选',
 				['type']='fargboolean',
 			},
-			[3]={
+			[4]={
 				['name']='逻辑功能',
 				['type']='_o_skill_trigger',
 			},

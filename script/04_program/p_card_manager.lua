@@ -152,7 +152,14 @@ t['CardCom_SetData'] = function (com, o_card)
     obj_show_iter('免疫框', '免疫')
 
     obj_show_iter('冻结框', '冻结')
-    obj_show_iter('攻击框', '攻击')
+
+    if com['攻击框'] then
+        if G.call('角色攻击次数判断', {['Caster']=o_card}) then
+            com['攻击框'].visible = true
+        else
+            com['攻击框'].visible = false
+        end
+    end
 
     -- 临时，追加属性改变监听
     -- 应该做成动画
@@ -170,6 +177,14 @@ t['CardCom_SetData'] = function (com, o_card)
                 attr = 'hp'
             elseif attr == '护甲' then
                 attr = 'ap'
+            elseif attr == '攻击次数' then
+                if com['攻击框'] then
+                    if G.call('角色攻击次数判断', {['Caster']=o_card}) then
+                        com['攻击框'].visible = true
+                    else
+                        com['攻击框'].visible = false
+                    end
+                end
             end
             com[attr] = value
         end

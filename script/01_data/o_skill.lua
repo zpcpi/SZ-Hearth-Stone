@@ -34,6 +34,134 @@ end
 		},
 	},
 	{
+		['name']=0x1013001e,
+		['showname']='寒冰箭-伤害,冻结',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能效果_法伤伤害',3},
+    {
+        '技能效果_特性',
+        {'$冻结'}
+    }
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能效果_法伤伤害",3)
+		_ = G.call("技能效果_特性",{"冻结"})
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x1013001c,
+		['showname']='奥术飞弹-随机打三个',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    '技能效果_奥数飞弹',
+    3,
+    1,
+    {
+        'function',
+        {},
+        {},
+        {
+            'block',
+            {'技能目标_选取英雄','$敌方1'},
+            {'技能目标_选取随从','$敌方1'},
+            {'技能目标_随机选择',1}
+        }
+    }
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_奥数飞弹",3,1,(function()
+		return (function()
+			local _ = nil
+			_ = G.call("技能目标_选取英雄","敌方1")
+			_ = G.call("技能目标_选取随从","敌方1")
+			_ = G.call("技能目标_随机选择",1)
+			return _
+		end)()
+	end))
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x1013001d,
+		['showname']='镜像-召唤',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    '技能效果_召唤',
+    {
+        {'$我方','$末尾',0x10060029},
+        {'$我方','$末尾',0x10060029}
+    }
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_召唤",{{"我方","末尾",268828713},{"我方","末尾",268828713}})
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x1013001b,
 		['showname']='稳固射击-伤害',
 		['postfix']='英雄技能',
@@ -58,7 +186,7 @@ t =
         'if',
         {
             '==',
-            {'卡牌条件_获取目标数量'},
+            {'卡牌数据_获取目标数量'},
             0
         },
         {'技能目标_选取英雄','$敌方1'}
@@ -71,7 +199,7 @@ lua = function (self, info, card)
 	return (function()
 		local _ = nil
 		_ = (function ()
-			if(t["tLua_EQUAL"](G.call("卡牌条件_获取目标数量"),0))then
+			if(t["tLua_EQUAL"](G.call("卡牌数据_获取目标数量"),0))then
 				return G.call("技能目标_选取英雄","敌方1")
 			end
 		end)()
@@ -243,7 +371,7 @@ t =
     'if',
     {
         '>',
-        {'卡牌条件_获取过滤后数量','self','card'},
+        {'卡牌数据_获取过滤后数量','self','card'},
         0
     },
     {'技能效果_法伤伤害',5},
@@ -253,7 +381,7 @@ lua = function (self, info, card)
 	local G = require "gf"
 	local t = G.api
 	return (function ()
-		if(t["tLua_GT"](G.call("卡牌条件_获取过滤后数量",self,card),0))then
+		if(t["tLua_GT"](G.call("卡牌数据_获取过滤后数量",self,card),0))then
 			return G.call("技能效果_法伤伤害",5)
 		else
 			return G.call("技能效果_法伤伤害",3)
@@ -308,6 +436,9 @@ end
 	{
 		['name']=0x1013000f,
 		['showname']='森林狼-光环',
+		['技能类型']={
+			[1]='光环',
+		},
 		['目标筛选']={n=8,[1] = '卡牌条件_目标通用过滤器',
 			[3]='我方',
 			[4]={
@@ -369,6 +500,9 @@ end
 	{
 		['name']=0x10130013,
 		['showname']='雷欧克-光环',
+		['技能类型']={
+			[1]='光环',
+		},
 		['目标筛选']={n=8,[1] = '卡牌条件_目标通用过滤器',
 			[3]='我方',
 			[4]={
@@ -488,6 +622,44 @@ lua = function (self, info, card)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_抽牌")
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130021,
+		['showname']='奥术智慧-抽2牌',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能效果_抽牌'},
+    {'技能效果_抽牌'}
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能效果_抽牌")
+		_ = G.call("技能效果_抽牌")
+		return _
+	end)()
 end
 ,
 },
@@ -801,6 +973,85 @@ end
 		},
 	},
 	{
+		['name']=0x1013001f,
+		['showname']='魔爆术-群体伤害',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能目标_选取随从','$敌方1'},
+    {'技能效果_法伤伤害',1}
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能目标_选取随从","敌方1")
+		_ = G.call("技能效果_法伤伤害",1)
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130020,
+		['showname']='冰霜新星-群体冻结',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能目标_选取随从','$敌方1'},
+    {
+        '技能效果_特性',
+        {'$冻结'}
+    }
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能目标_选取随从","敌方1")
+		_ = G.call("技能效果_特性",{"冻结"})
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x1013000a,
 		['showname']='星火术-伤害、抽牌',
 		['逻辑功能']={
@@ -959,6 +1210,9 @@ end
 	{
 		['name']=0x10130019,
 		['showname']='苔原犀牛-冲锋光环',
+		['技能类型']={
+			[1]='光环',
+		},
 		['目标筛选']={n=8,[1] = '卡牌条件_目标通用过滤器',
 			[3]='我方',
 			[4]={
@@ -1027,6 +1281,9 @@ end
 	{
 		['name']=0x1013001a,
 		['showname']='饥饿的秃鹫-招野兽抽牌',
+		['技能类型']={
+			[1]='被动',
+		},
 		['目标筛选']={n=8,[1] = '卡牌条件_目标通用过滤器',
 			[3]='我方',
 			[4]={
@@ -1060,7 +1317,7 @@ t =
     'if',
     {
         'apply',
-        {'卡牌条件_制作过滤器','self','card'},
+        {'卡牌数据_制作过滤器','self','card'},
         'info.Caster'
     },
     {'技能效果_抽牌'}
@@ -1069,7 +1326,7 @@ lua = function (self, info, card)
 	local G = require "gf"
 	local t = G.api
 	return (function ()
-		if(G.call(G.call("卡牌条件_制作过滤器",self,card),info.Caster))then
+		if(G.call(G.call("卡牌数据_制作过滤器",self,card),info.Caster))then
 			return G.call("技能效果_抽牌")
 		end
 	end)()
