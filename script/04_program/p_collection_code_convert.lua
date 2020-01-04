@@ -124,7 +124,7 @@ t['收藏_解析卡组代码'] = function (string_cardcode, boolean_need_create_
             local i_card_英雄 = cardDbfIdDataDict[heroDbfID].name
             table.insert(o_deck['英雄'], i_card_英雄)
         else
-            print('Cannot find hero by dbfid', heroDbfID)
+            G.call('提示_添加提示', '找不到英雄, ID:' .. tostring(heroDbfID))
         end
     end
     o_deck['卡牌列表'] = {}
@@ -133,7 +133,7 @@ t['收藏_解析卡组代码'] = function (string_cardcode, boolean_need_create_
             local o_card_卡片 = cardDbfIdDataDict[cardDbfID]
             table.insert(o_deck['卡牌列表'], o_card_卡片)
         else
-            print('Cannot find card by dbfid', cardDbfID)
+            G.call('提示_添加提示', '找不到卡片, ID:' .. tostring(cardDbfID))
         end
     end
 
