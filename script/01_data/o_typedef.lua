@@ -1002,16 +1002,16 @@ local t = {
 				['type']='_o_card',
 			},
 			[3]={
-				['name']='职业',
-				['type']='_i_profession',
+				['name']='英雄',
+				['type']='_i_card',
 			},
 			[4]={
-				['name']='英雄',
-				['type']='i_card',
+				['name']='英雄技能',
+				['type']='_i_card',
 			},
 			[5]={
-				['name']='英雄技能',
-				['type']='i_card',
+				['name']='模式',
+				['type']='estr_game_mode',
 			},
 		},
 	},

@@ -33,12 +33,12 @@ function t:init()
     self.newDeckButton = self.deckInfoParent.getChildByName('DeckInfo')
     self.endDeckEditButton = self.newDeckButton
     
-    self.profScrollView = self.obj.getChildByName('ProfessionScrollView')
-    self.newDeckNameNode = self.profScrollView.getChildByName('DeckName').getChildByName('Text')
-    self.profChoiceButtonParent = self.profScrollView.getChildByName('content')
-    self.profChoiceButtonTemplate = self.profChoiceButtonParent.getChildByName('ProfessionInfo')
-    self.profChoiceButtonTemplate.visible = false
-    self.profScrollView.visible = false
+    self.heroScrollView = self.obj.getChildByName('HeroScrollView')
+    self.newDeckNameNode = self.heroScrollView.getChildByName('DeckName').getChildByName('Text')
+    self.heroChoiceButtonParent = self.heroScrollView.getChildByName('content')
+    self.heroChoiceButtonTemplate = self.heroChoiceButtonParent.getChildByName('HeroInfo')
+    self.heroChoiceButtonTemplate.visible = false
+    self.heroScrollView.visible = false
 
     self.currentEditDeck = nil
     self.startCardIndex = 1
@@ -66,10 +66,10 @@ function t:click(tar)
         if o_card_卡片 ~= nil then 
             G.call('收藏_添加卡组卡片', self.currentEditDeck, o_card_卡片)
         end
-    elseif tar.parent == self.profChoiceButtonParent then
+    elseif tar.parent == self.heroChoiceButtonParent then
         if tar.data ~= nil and tar.data ~= 0 then 
-            local professID = math.floor(tar.data)
-            G.call('收藏_新建卡组', {professID}, self.newDeckNameNode.text or '新卡组')
+            local heroID = math.floor(tar.data)
+            G.call('收藏_新建卡组', {heroID}, self.newDeckNameNode.text or '新卡组')
             self:HideProfessionList()
         end
     elseif self.currentEditDeck == nil and tar == self.newDeckButton then 
@@ -157,6 +157,7 @@ function t:UpdateCardCollection()
 end
 
 function t:UpdateDeckInfo()
+    print('self.currentEditDeck', self.currentEditDeck)
     if self.currentEditDeck == nil then 
         self:ShowAllDeck()
     else
@@ -166,6 +167,7 @@ end
 
 function t:ShowAllDeck()
     local _o_deck_卡组列表 = G.call('收藏_获取所有卡组')
+    print('#_o_deck_卡组列表', #_o_deck_卡组列表)
     self.deckInfoParent.removeAllChildren()
     for _, o_deck_卡组 in ipairs(_o_deck_卡组列表) do
         self:AddDeckInfoButton(o_deck_卡组)
@@ -269,40 +271,43 @@ function t:EndDeckEdit()
     textNode.text = '新建卡组'
     self:UpdateDeckInfo()
     self:UpdateProfessionMark()
+
+    -- FIXME: 结束编辑后卡组列表突然不显示了, 临时使用重启界面这个方法解决一下问题
+    G.call('收藏_退出收藏界面')
+    G.call('收藏_进入收藏界面')
 end
 
 function t:ShowProfessionList()
-    self.profScrollView.visible = true
-    self.profChoiceButtonParent.removeAllChildren()
+    self.heroScrollView.visible = true
+    self.heroChoiceButtonParent.removeAllChildren()
     
-    local _o_profession_职业表 = G.DBTable('o_profession') or {}
-    for _, o_profession_职业 in ipairs(_o_profession_职业表) do 
-        if o_profession_职业.是否可选 ~= false then 
-            local o_node_职业 = G.Clone(self.profChoiceButtonTemplate)
-            o_node_职业.visible = true
-            self.profChoiceButtonParent.addChild(o_node_职业)
-            local textNode = o_node_职业.getChildByName('Name')
-            textNode.text = o_profession_职业.showname
-            o_node_职业.data = o_profession_职业.name
+    local _o_card_英雄卡ID列表 = G.call('收藏_获取所有英雄卡')
+    for _, o_card_英雄 in ipairs(_o_card_英雄卡ID列表) do 
+        if o_card_英雄.局外数据 ~= nil and o_card_英雄.局外数据.可收集 then 
+            local o_node_英雄 = G.Clone(self.heroChoiceButtonTemplate)
+            o_node_英雄.visible = true
+            self.heroChoiceButtonParent.addChild(o_node_英雄)
+            local textNode = o_node_英雄.getChildByName('Name')
+            textNode.text = o_card_英雄.showname
+            o_node_英雄.data = o_card_英雄.name
         end
     end
 end
 
 function t:HideProfessionList()
-    self.profScrollView.visible = false
+    self.heroScrollView.visible = false
 end
 
 function t:GetProfessionList()
     if self.currentEditDeck == nil then 
         return G.DBTable('o_profession') or {}
     end
-    local _o_profession_职业列表 = {}
-    local o_profession_中立 = G.QueryName(0x10080001)
-    for _, i_profession in ipairs(self.currentEditDeck.职业) do 
-        table.insert(_o_profession_职业列表, G.QueryName(i_profession))
+    local _i_profession_卡组职业 = G.call('收藏_获取卡组职业', self.currentEditDeck, true)
+    local _o_profession_卡组职业 = {}
+    for _, i_profession_职业 in ipairs(_i_profession_卡组职业) do 
+        table.insert(_o_profession_卡组职业, G.QueryName(i_profession_职业))
     end
-    table.insert(_o_profession_职业列表, o_profession_中立)
-    return _o_profession_职业列表
+    return _o_profession_卡组职业
 end
 
 return t

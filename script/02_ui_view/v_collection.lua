@@ -3,12 +3,12 @@
 ]]
 local G = require 'gf'
 local c_card_manager = require 'c_card_manager'
-local c_collection = require 'c_collection'
-local c_layout_h = require 'c_layout_h'
-local c_layout_v = require 'c_layout_v'
 local c_button = require 'c_button'
-local c_perfectsize = require 'c_perfectsize'
+local c_collection = require 'c_collection'
 local c_scrollview = require 'c_scrollview'
+local c_perfectsize = require 'c_perfectsize'
+local c_layout_v = require 'c_layout_v'
+local c_layout_h = require 'c_layout_h'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -1051,20 +1051,20 @@ tp = tc
 	--end
 	tc = G.Quad()
 	tp.addChild(tc)
-	tc.name = 'ProfessionScrollView'
-	tc.left = -125.000
-	tc.right = 125.000
-	tc.bottom = -275.000
-	tc.top = 275.000
+	tc.name = 'HeroScrollView'
+	tc.left = -124.000
+	tc.right = 126.000
+	tc.bottom = -315.000
+	tc.top = 235.000
 	tc.mouseEnabled = true
-	tc.visible = false
 	tp = tc
 		tc = G.Entity()
 		tp.addChild(tc)
 		tc.name = 'DeckName'
 		tc.pivotY = 0.000
 		tc.right = 0.000
-		tc.top = 60.000
+		tc.bottom = 16.000
+		tc.top = 76.000
 		tc.anchor = 0x64646400
 		tp = tc
 			tc = G.Quad()
@@ -1128,7 +1128,7 @@ tp = tc
 		tp = tc
 			tc = G.Entity()
 			tp.addChild(tc)
-			tc.name = 'ProfessionInfo'
+			tc.name = 'HeroInfo'
 			tc.pivotX = 0.000
 			tc.pivotY = 1.000
 			tc.left = 2.500

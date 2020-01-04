@@ -21,10 +21,12 @@ t['收藏_初始化卡片收藏'] = function()
     G['收藏卡片列表'] = {}
     local _o_card_卡片列表 = G.DBTable('o_card') or {}
     for _, o_card_卡片 in ipairs(_o_card_卡片列表) do 
-        if o_card_卡片.可收集 then 
+        if o_card_卡片.局外数据 and o_card_卡片.局外数据.可收集 then 
             table.insert(G['收藏卡片列表'], o_card_卡片)
-            if o_card_卡片.职业 ~= nil then 
-                G.call('收藏_记录职业卡片', o_card_卡片, o_card_卡片.职业)
+            if o_card_卡片.逻辑数据 ~= nil and o_card_卡片.逻辑数据.职业 then
+                for _, i_profession_职业 in ipairs(o_card_卡片.逻辑数据.职业) do 
+                    G.call('收藏_记录职业卡片', o_card_卡片, i_profession_职业)
+                end
             end
         end
     end
@@ -78,14 +80,14 @@ t['收藏_获取卡组列表'] = function()
     -- TODO: 获取卡组列表
 end
 
-t['收藏_新建卡组'] = function(_i_profession_职业, string_卡组名称)
+t['收藏_新建卡组'] = function(_i_card_英雄列表, string_卡组名称)
     string_卡组名称 = string_卡组名称 or '新卡组'
     local o_deck_新卡组 = G.NewInst('o_deck')
     o_deck_新卡组.卡牌列表 = {}
     o_deck_新卡组.卡组名称 = string_卡组名称
-    o_deck_新卡组.职业 = {}
-    for _, i_profession_职业 in ipairs(_i_profession_职业) do 
-        table.insert(o_deck_新卡组.职业, i_profession_职业)
+    o_deck_新卡组.英雄 = {}
+    for _, i_card_英雄 in ipairs(_i_card_英雄列表) do 
+        table.insert(o_deck_新卡组.英雄, i_card_英雄)
     end
     return o_deck_新卡组
 end
@@ -144,12 +146,12 @@ end
 
 t['收藏_获取卡片总数量上限'] = function()
     -- TODO: 通过配置读取
-    return 10
+    return 30
 end
 
 t['收藏_获取卡片总数量下限'] = function()
     -- TODO: 通过配置读取
-    return 10
+    return 30
 end
 
 t['收藏_获取卡片总数量'] = function(o_deck_卡组)
@@ -188,7 +190,8 @@ end
 t['收藏_获取卡组全称'] = function(o_deck_卡组)
     local string_卡组名称 = o_deck_卡组.卡组名称
     local string_职业名称 = ''
-    for _, i_profession_职业ID in ipairs(o_deck_卡组.职业) do 
+    local _i_profession_卡组职业 = G.call('收藏_获取卡组职业', o_deck_卡组, false)
+    for _, i_profession_职业ID in ipairs(_i_profession_卡组职业) do 
         local o_profession_职业 = G.QueryName(i_profession_职业ID)
         if o_profession_职业 ~= nil then 
             if string_职业名称 ~= '' then 
@@ -199,4 +202,39 @@ t['收藏_获取卡组全称'] = function(o_deck_卡组)
     end
     
     return string_卡组名称 .. '(' .. string_职业名称 .. ')'
+end
+
+--ret=_i_profession
+t['收藏_获取卡组职业'] = function(o_deck_卡组, boolean_包含中立)
+    local any_profession_职业字典 = {}
+    for _, i_card_英雄 in ipairs(o_deck_卡组.英雄) do 
+        local o_card_英雄 = G.QueryName(i_card_英雄)
+        if o_card_英雄 and o_card_英雄.逻辑数据 and o_card_英雄.逻辑数据.职业 then 
+            for _, i_profession_职业 in ipairs(o_card_英雄.逻辑数据.职业) do 
+                any_profession_职业字典[i_profession_职业] = true
+            end
+        end
+    end
+    local _i_profession_职业列表 = {}
+    for i_profession_职业, _ in pairs(any_profession_职业字典) do 
+        table.insert(_i_profession_职业列表, i_profession_职业)
+    end
+    if boolean_包含中立 then 
+        local i_profession_中立 = 0x10080001
+        table.insert(_i_profession_职业列表, i_profession_中立)
+    end
+    return _i_profession_职业列表
+end
+
+--ret=_o_card
+t['收藏_获取所有英雄卡'] = function()
+    local i_cardtype_英雄卡类型 = 0x10090001
+    local _o_card_英雄卡列表 = {}
+    local _o_card_卡片列表 = G.DBTable('o_card') or {}
+    for _, o_card_卡片 in ipairs(_o_card_卡片列表) do
+        if o_card_卡片.逻辑数据 ~= nil and o_card_卡片.逻辑数据.类型 == i_cardtype_英雄卡类型 then 
+            table.insert(_o_card_英雄卡列表, o_card_卡片)
+        end
+    end
+    return _o_card_英雄卡列表
 end

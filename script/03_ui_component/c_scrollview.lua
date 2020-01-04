@@ -126,7 +126,6 @@ function t:initUI()
 	self:updateSlider()
 end 
 function t:updateUI()
-	
 	for index=1,#self.allChild do 
 		
 		if self.allChild[index]._index <= self._dataNum then 
@@ -368,8 +367,6 @@ function t:boundUpdated()
 	if self.type ~= 1 then 
 		self:getAllChildren()
 	end 
-	
-	
 	self:updateSlider()
 	
 	if self.autoMove == true and self.needAutoMove then 
@@ -380,7 +377,6 @@ function t:boundUpdated()
 			end 
 		end 
 	end 
-	
 end 
 function t:update()
 	if G.MouseState() == 0 then 
@@ -390,7 +386,6 @@ function t:update()
 		self.slider_y = nil
 	end 
 	--self:updateSelf()	
-	
 end 
 function t:mouseDown(tar)
 	if self.ignore then return end

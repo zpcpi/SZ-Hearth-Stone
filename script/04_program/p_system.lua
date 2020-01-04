@@ -65,7 +65,7 @@ t['系统_保存卡组数据'] = function()
         for _, o_card_卡片 in ipairs(_o_deck_卡组列表[i].卡牌列表) do 
             table.insert(o_deck_卡组.卡牌列表, o_card_卡片.name)
         end
-        o_deck_卡组.职业 = _o_deck_卡组列表[i].职业
+        o_deck_卡组.英雄 = _o_deck_卡组列表[i].英雄
         _o_deck_卡组列表[i] = o_deck_卡组
     end
     local buf = js.encode(_o_deck_卡组列表)
@@ -91,7 +91,7 @@ t['系统_读取卡组列表'] = function()
     for _, o_deck_档案卡组 in ipairs(_o_deck_卡组列表) do 
         local o_deck_卡组 = G.NewInst('o_deck')
         o_deck_卡组.卡组名称 = o_deck_档案卡组.卡组名称
-        o_deck_卡组.职业 = o_deck_档案卡组.职业
+        o_deck_卡组.英雄 = o_deck_档案卡组.英雄
         o_deck_卡组.卡牌列表 = {}
         for _, i_card_卡片ID in ipairs(o_deck_档案卡组.卡牌列表) do 
             table.insert(o_deck_卡组.卡牌列表, G.QueryName(i_card_卡片ID))

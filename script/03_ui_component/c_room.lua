@@ -6,6 +6,9 @@ local G = require "gf"
 local t = G.com()
 
 function t:init()
+    if G.is_editor then 
+        return
+    end
     self.gameModeBtn = self.obj.getChildByName('HostGame')
 
     self.startGameBtn = self.obj.getChildByName('StartGame')
