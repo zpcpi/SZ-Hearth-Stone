@@ -7,26 +7,22 @@ local t = G.api
 -- key:cardDbfID  value:cardData
 local cardDbfIdDataDict = {}
 
-local function ReadData(stream, index)
-    return table.remove(stream, index)
-end
-
-local function ReadVarint(stream)
-    local shift = 0
+local function ReadVarint(bytes)
+    local length = 0
 	local result = 0
 	while true do
-		local c = ReadData(stream, 1)
-        if c == nil or c == "" then
+		local byte = table.remove(bytes, 1)
+        if byte == nil or byte == "" then
             G.call('提示_添加提示', '卡牌代码不正确')
             print('Unexpected EOF while reading varint')
             return 0
         end
-		local i = string.byte(c)
-		result = result | ((i & 0x7f) << shift)
-		shift = shift + 7
-		if i & 0x80 == 0 then
+        local value = byte & 0x7f
+		result = result | (value << (length * 7))
+		if byte & 0x80 ~= 0x80 then
             break
         end
+        length = length + 1
     end
 	return result
 end
@@ -66,7 +62,7 @@ t['收藏_解析卡组代码'] = function (string_cardcode)
     end
     -- 依次解析卡组数据
     -- 第一元素是 保留字节 0x00
-    if ReadData(varintList, 1) ~= string.byte('\0') then
+    if table.remove(varintList, 1) ~= string.byte('\0') then
         G.call('提示_添加提示', '卡牌代码不正确')
         return
     end
@@ -80,33 +76,46 @@ t['收藏_解析卡组代码'] = function (string_cardcode)
     -- 第三个是 模式(1 为狂野, 2 为标准)
     local format = ReadVarint(varintList)
     print('format', format)
-	-- format = _read_varint(data)
-	-- try:
-	-- 	format = FormatType(format)
-	-- except ValueError:
-	-- 	raise ValueError("Unsupported FormatType in deckstring %r" % (format))
 
-	-- heroes: CardList = []
-	-- num_heroes = _read_varint(data)
-	-- for i in range(num_heroes):
-	-- 	heroes.append(_read_varint(data))
+    local heroCount = ReadVarint(varintList)
+    print('hero count', heroCount)
+    local heroList = {}
+    for i = 1, heroCount do 
+        local hero = ReadVarint(varintList)
+        print('hero', hero)
+        table.insert(heroList, hero)
+    end
 
-	-- cards: CardIncludeList = []
-	-- num_cards_x1 = _read_varint(data)
-	-- for i in range(num_cards_x1):
-	-- 	card_id = _read_varint(data)
-	-- 	cards.append((card_id, 1))
+    local cardDbfIdList = {}
+    local singleCardCount = ReadVarint(varintList)
+    for i = 1, singleCardCount do 
+        local cardDbfID = ReadVarint(varintList)
+        table.insert(cardDbfIdList, cardDbfID)
+    end
 
-	-- num_cards_x2 = _read_varint(data)
-	-- for i in range(num_cards_x2):
-	-- 	card_id = _read_varint(data)
-	-- 	cards.append((card_id, 2))
+    local doubleCardCount = ReadVarint(varintList)
+    for i = 1, doubleCardCount do 
+        local cardDbfID = ReadVarint(varintList)
+        table.insert(cardDbfIdList, cardDbfID)
+        table.insert(cardDbfIdList, cardDbfID)
+    end
 
-	-- num_cards_xn = _read_varint(data)
-	-- for i in range(num_cards_xn):
-	-- 	card_id = _read_varint(data)
-	-- 	count = _read_varint(data)
-	-- 	cards.append((card_id, count))
+    local multiCardCount = ReadVarint(varintList)
+    for i = 1, multiCardCount do 
+        local cardDbfID = ReadVarint(varintList)
+        local cardCount = ReadVarint(varintList)
+        for j = 1, cardCount do 
+            table.insert(cardDbfIdList, cardDbfID)
+        end
+    end
+
+    for _, cardDbfID in ipairs(cardDbfIdList) do 
+        if cardDbfIdDataDict[cardDbfID] ~= nil then 
+            print(cardDbfIdDataDict[cardDbfID].showname)
+        else
+            print('--== Cannot find dbf id:', cardDbfID)
+        end
+    end
 end
 
     
