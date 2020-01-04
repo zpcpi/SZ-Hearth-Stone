@@ -39,7 +39,7 @@ t['收藏_生成卡片DbfID映射表'] = function ()
 end
 
 --ret=o_deck
-t['收藏_解析卡组代码'] = function (string_cardcode)
+t['收藏_解析卡组代码'] = function (string_cardcode, boolean_need_create_inst)
     -- 先把卡组 base64 编码的代码解析成二进制
     local bin = G.zzbase64_decode(string_cardcode)
     -- 再把二进制解析成十六进制字符串
@@ -105,7 +105,12 @@ t['收藏_解析卡组代码'] = function (string_cardcode)
         end
     end
 
-    local o_deck = {}
+    local o_deck
+    if boolean_need_create_inst then 
+        o_deck = G.NewInst('o_deck')
+    else
+        o_deck = {}
+    end
     o_deck['卡组名称'] = '新卡组'
     o_deck['模式'] = '任意'
     if mode == 1 then 

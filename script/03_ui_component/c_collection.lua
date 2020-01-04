@@ -44,6 +44,9 @@ function t:init()
     self.startCardIndex = 1
     self.cardProfession = nil
 
+    self.importCardButton = self.obj.getChildByName('ImportButton')
+    self.cardCodeTextNode = self.obj.getChildByName('CardCode').getChildByName('CardCodeText')
+
     if not G.is_editor then
         self:UpdateProfessionMark()
         self:UpdateCardCollection()
@@ -88,6 +91,12 @@ function t:click(tar)
             local deckData = G.QueryName(deckID)
             self:EditDeck(deckData)
         end
+    elseif self.currentEditDeck == nil and tar == self.importCardButton then 
+        local o_deck = G.call('收藏_解析卡组代码', self.cardCodeTextNode.text, true)
+        if o_deck then 
+            self:EditDeck(o_deck)
+        end
+        self.cardCodeTextNode.text = ''
     end
 end
 
