@@ -470,6 +470,7 @@ t =
 {
     '技能效果_战场光环',
     'self',
+    'card',
     {
         'function',
         {},
@@ -486,7 +487,7 @@ t =
 lua = function (self, info, card)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_战场光环",self,(function()
+	return G.call("技能效果_战场光环",self,card,(function()
 		return G.call("技能效果_攻击",1)
 	end),(function()
 		return G.call("技能效果_攻击",-1)
@@ -531,6 +532,7 @@ t =
 {
     '技能效果_战场光环',
     'self',
+    'card',
     {
         'function',
         {},
@@ -547,7 +549,7 @@ t =
 lua = function (self, info, card)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_战场光环",self,(function()
+	return G.call("技能效果_战场光环",self,card,(function()
 		return G.call("技能效果_攻击",1)
 	end),(function()
 		return G.call("技能效果_攻击",-1)
@@ -1243,6 +1245,7 @@ t =
 {
     '技能效果_战场光环',
     'self',
+    'card',
     {
         'function',
         {},
@@ -1267,7 +1270,7 @@ t =
 lua = function (self, info, card)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_战场光环",self,(function()
+	return G.call("技能效果_战场光环",self,card,(function()
 		return G.call("技能效果_特性",{"冲锋"})
 	end),(function()
 		return G.call("技能效果_特性",nil,nil,{"冲锋"})

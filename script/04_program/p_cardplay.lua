@@ -1445,14 +1445,13 @@ t['技能效果_设置攻击力'] = function (int_变动值)
     effect_action_iter(o_skill_info_效果信息, nil, init, action)
 end
 
-t['技能效果_战场光环'] = function (o_skill, func_add, func_del)
+t['技能效果_战场光环'] = function (o_skill, Caster, func_add, func_del)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
         return
     end
 
-    local Caster = o_skill_info_效果信息['Caster']
     local func_filer = G.call('卡牌数据_制作过滤器', o_skill, Caster)
 
     aura_add_buff(func_filer, func_add, func_del, 
