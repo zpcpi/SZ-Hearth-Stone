@@ -27,22 +27,17 @@ t['对决_开始'] = function()
         G.call('房间_分配绝对身份')
         G.call('网络通用_广播消息', '对决_开始')
     end
-    G.call('对决_初始化对决角色', '我方')
     -- 初始化卡牌实例表
     G.call('卡牌实例表_初始化')
-
+    
     G.call('对决_初始化战场', G.misc().对决类型)
     G.call('对决_初始化我方对决牌库')
+    G.call('对决_初始化对决角色', '我方')
     G.start_program('对决_决定初始卡牌')
     G.start_program('对决_流程控制')
 end
 
 t['对决_决定初始卡牌'] = function()
-    -- TODO：设置英雄
-    G.call('角色_战场_设置英雄', '我方', G.call('卡牌实例化', G.QueryName(0x100600aa)))
-    G.call('角色_战场_设置英雄技能', '我方', G.call('卡牌实例化', G.QueryName(0x1006001a)))
-    G.call('角色_战场_设置武器', '我方', G.call('卡牌实例化', G.QueryName(0x1006006e)))
-
     -- TODO: 先抽 3(?) 张
     for i = 1, 3 do 
         G.call('角色_牌库抽取卡牌', '我方', '我方')
@@ -165,15 +160,24 @@ t['对决_初始化对决角色'] = function(estr_player_相对身份)
         G.call('提示_添加提示', '卡组模板数据不正确')
         return 
     end
+
+    -- TODO: 暂时读取卡组的第一英雄作为角色英雄
+    local hero = o_deck_卡组.英雄[1]
+    -- TODO: 暂时读取英雄的第一衍生卡作为角色技能
+    local skill = G.QueryName(hero).局外数据.衍生卡[1]
+
+    G.call('角色_战场_设置英雄', '我方', G.call('卡牌实例化', G.QueryName(hero)))
+    G.call('角色_战场_设置英雄技能', '我方', G.call('卡牌实例化', G.QueryName(skill)))
+
     -- TODO: 暂时读取卡组的第一职业作为角色职业
-    local i_profession_职业 = o_deck_卡组.职业[1]
-    local o_battle_role_对决角色 = {}
-    o_battle_role_对决角色.生命值 = G.call('对决_获取初始生命值')
-    o_battle_role_对决角色.职业 = i_profession_职业
-    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
-    G['对决角色'] = G['对决角色'] or {}
-    G['对决角色'][estr_absolute_id_type_绝对身份] = o_battle_role_对决角色
-    return o_battle_role_对决角色
+    -- local i_profession_职业 = o_deck_卡组.职业[1]
+    -- local o_battle_role_对决角色 = {}
+    -- o_battle_role_对决角色.生命值 = G.call('对决_获取初始生命值')
+    -- o_battle_role_对决角色.职业 = i_profession_职业
+    -- local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
+    -- G['对决角色'] = G['对决角色'] or {}
+    -- G['对决角色'][estr_absolute_id_type_绝对身份] = o_battle_role_对决角色
+    -- return o_battle_role_对决角色
 end
 
 --ret=int
@@ -227,7 +231,7 @@ end
 
 --ret=boolean
 t['对决_卡组模板是否有效'] = function(o_deck_卡组)
-    return type(o_deck_卡组) == 'table' and type(o_deck_卡组.职业) == 'table' and #o_deck_卡组.职业 > 0
+    return type(o_deck_卡组) == 'table' and type(o_deck_卡组.英雄) == 'table' and #o_deck_卡组.英雄 > 0
 end
 
 --ret=o_deck
