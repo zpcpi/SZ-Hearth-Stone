@@ -305,6 +305,8 @@ local single_damage = function ()
     local init = function ()
     end
     local action = function ()
+        local Caster = o_skill_info_效果信息['Caster']
+
         local int_伤害值 = o_skill_info_效果信息['逐个伤害数值']
         local Target = o_skill_info_效果信息['逐个伤害目标']
 
@@ -320,6 +322,7 @@ local single_damage = function ()
         -- 造成伤害
         if int_伤害值 then
             G.call('card_造成伤害', Target, int_伤害值)
+            G.trig_event('逻辑_卡牌造成伤害', Caster, Target, int_伤害值)
         end
     end
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_直接伤害', init, action)
@@ -1740,7 +1743,7 @@ t['技能目标_选取随从'] = function (estr_player_相对身份, filter)
     o_skill_info_效果信息['Target'] = TargetList
 end
 
-t['技能目标_剔除目标'] = function (o_card_delTargetList)
+t['技能目标_剔除目标'] = function (_o_card_delTargetList)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -1749,15 +1752,41 @@ t['技能目标_剔除目标'] = function (o_card_delTargetList)
 
     local TargetList = o_skill_info_效果信息['Target'] or {}
 
-    if type(o_card_delTargetList) == 'table' then
+    if type(_o_card_delTargetList) == 'table' then
         for i = #TargetList, 1, -1 do
             local Target = TargetList[i]
-            for _,v in ipairs(o_card_delTargetList) do
+            for _,v in ipairs(_o_card_delTargetList) do
                 if v.name == Target.name then
                     table.remove(TargetList, i)
                     break
                 end
             end
+        end
+    end
+
+    o_skill_info_效果信息['Target'] = TargetList
+end
+
+t['技能目标_添加目标'] = function (_o_card_addTargetList)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local TargetList = o_skill_info_效果信息['Target'] or {}
+
+    if type(_o_card_addTargetList) == 'table' then
+        for _,v in ipairs(_o_card_addTargetList) do
+            for _,Target in ipairs(TargetList) do
+                if v.name == Target.name then
+                    -- 不能重复加
+                    goto next
+                end
+            end
+
+            table.insert(TargetList, v)
+            ::next::
         end
     end
 

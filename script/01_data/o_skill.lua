@@ -1436,6 +1436,51 @@ end
 		},
 	},
 	{
+		['name']=0x10130025,
+		['showname']='冻结-随从攻击',
+		['技能类型']={
+			[1]='被动',
+		},
+		['逻辑功能']={
+			[1]={
+				['注册时机']='上场',
+				['是否重复触发']=true,
+				['触发时机']={
+t =
+{'$逻辑_卡牌造成伤害','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_卡牌造成伤害",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能目标_添加目标','info.逐个伤害目标'},
+    {
+        '技能效果_特性',
+        {'$冻结'}
+    }
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能目标_添加目标",info.逐个伤害目标)
+		_ = G.call("技能效果_特性",{"冻结"})
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130003,
 		['showname']='爪击-护甲、本回合攻击',
 		['逻辑功能']={
