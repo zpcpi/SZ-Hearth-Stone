@@ -733,7 +733,7 @@ t['逻辑注册_攻击次数重置_回合开始'] = function ()
     end
 end
 
-t['逻辑注册_攻击次数设置_单个召唤'] = function ()
+t['逻辑注册_攻击次数设置_单个上场'] = function ()
     local Target = G.event_info()
 
     if true then
@@ -742,6 +742,9 @@ t['逻辑注册_攻击次数设置_单个召唤'] = function ()
     
     if G.call('卡牌条件_卡牌特性判断', Target, {'冲锋'}) or G.call('卡牌条件_卡牌特性判断', Target, {'突袭'}) then
         card_init_accack_count(Target)
+    else
+        G.call('卡牌属性_设置', Target, '攻击次数', '当前值', 0)
+        G.call('卡牌属性_设置', Target, '攻击次数', '浮动值', 0)
     end
 
     -- 上场时属性设置
@@ -869,7 +872,7 @@ t['通用逻辑_默认流程注册'] = function ()
     G.addListener('逻辑注册_水晶设置', {'流程_回合开始', player}, cond, EVENT_PRIOR.设置水晶数, EVENT_GROUP.设置水晶数)
     G.addListener('逻辑注册_抽牌', {'流程_回合开始', player}, cond, EVENT_PRIOR.抽牌, EVENT_GROUP.抽牌)
     G.addListener('逻辑注册_攻击次数重置_回合开始', {'流程_回合开始', player}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
-    G.addListener('逻辑注册_攻击次数设置_单个召唤', {'逻辑_随从召唤'}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
+    G.addListener('逻辑注册_攻击次数设置_单个上场', {'逻辑_随从上场'}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
     G.addListener('逻辑注册_攻击状态设置_回合结束', {'流程_回合结束', player}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
 
     -- 特定逻辑
@@ -1641,6 +1644,55 @@ t['技能效果_奥数飞弹'] = function (int_随机次数, int_单个伤害, f
     -- 通过这一步造成伤害
     action()
     G.trig_event('逻辑_技能效果_法伤伤害', o_skill_info_效果信息)
+end
+
+t['技能效果_变形'] = function (i_card_变形卡牌ID, boolean_是否保留浮动值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+    end
+    local action = function ()
+        local TargetList = o_skill_info_效果信息['Target']
+        for _,Target in ipairs(TargetList) do
+            -- 清空数据
+            Target['卡牌属性'] = nil
+            Target['逻辑数据'] = nil
+            Target.root = i_card_变形卡牌ID
+            rawset(Target, 'delete_key', nil)
+            setmetatable(Target, getmetatable(G.QueryName(i_card_变形卡牌ID)))
+
+            -- 动态数据调整
+            local 动态数据 = Target['动态数据']
+            动态数据['当前属性'] = {}
+            动态数据['特性层数'] = {}
+            if boolean_是否保留浮动值 then
+            else
+                动态数据['浮动属性'] = {}
+            end
+
+            -- TODO：清空监听相关内容，通过事件抛出就行
+            local player = G.call('房间_获取相对身份', 动态数据['所有者'])
+            G.call('技能效果_效果树_执行子效果', 
+                        {
+                            ['Player'] = player,
+                            ['Caster'] = Target,
+                            ['MinionPos'] = nil, -- TODO，获取一下位置
+                        }, 
+                        function ()
+                            G.call('卡牌使用_上场')
+                            G.call('卡牌使用_随从召唤')
+                        end
+                    )
+
+            -- TODO，临时处理，后面需要动画来管理
+            G.trig_event('卡牌实例_信息更新', Target)
+        end
+    end
+    effect_action_iter(o_skill_info_效果信息, nil, init, action)
 end
 
 -- ============================================

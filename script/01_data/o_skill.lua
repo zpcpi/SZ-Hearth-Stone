@@ -669,6 +669,35 @@ end
 		},
 	},
 	{
+		['name']=0x10130022,
+		['showname']='变形术-变形',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_变形',0x10060073,false},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_变形",268828787,false)
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x1013000b,
 		['showname']='幸运币-本回合水晶',
 		['逻辑功能']={
