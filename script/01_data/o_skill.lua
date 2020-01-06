@@ -756,6 +756,35 @@ end
 		},
 	},
 	{
+		['name']=0x10130023,
+		['showname']='火球术-伤害',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_法伤伤害',6},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_法伤伤害",6)
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130002,
 		['showname']='激活-本回合水晶',
 		['逻辑功能']={
@@ -1033,6 +1062,44 @@ lua = function (self, info, card)
 		local _ = nil
 		_ = G.call("技能目标_选取随从","敌方1")
 		_ = G.call("技能效果_法伤伤害",1)
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130024,
+		['showname']='烈焰风暴-群体伤害',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能目标_选取随从','$敌方1'},
+    {'技能效果_法伤伤害',4}
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能目标_选取随从","敌方1")
+		_ = G.call("技能效果_法伤伤害",4)
 		return _
 	end)()
 end
