@@ -213,6 +213,36 @@ end
 		},
 	},
 	{
+		['name']=0x1013002a,
+		['showname']='火焰冲击-伤害',
+		['postfix']='英雄技能',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_英雄技能使用','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_英雄技能使用",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_英雄技能伤害',1},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_英雄技能伤害",1)
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130010,
 		['showname']='追踪术-牌库3选1',
 		['逻辑功能']={
@@ -322,6 +352,35 @@ lua = function (self, info, card)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_添加BUFF",269680679)
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130028,
+		['showname']='力量祝福-添加buff',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_添加BUFF',0x10130029},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_添加BUFF",269680681)
 end
 ,
 },
@@ -1361,6 +1420,36 @@ lua = function (self, info, card)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_特性",{"圣盾"})
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130029,
+		['showname']='力量祝福-buff',
+		['postfix']='攻击+3',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='添加',
+				['触发时机']={
+t =
+{'$逻辑_技能添加','nil','self'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_技能添加",nil,self}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_攻击',3},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_攻击",3)
 end
 ,
 },
