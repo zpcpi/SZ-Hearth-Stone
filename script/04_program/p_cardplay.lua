@@ -346,16 +346,18 @@ t['卡牌使用_武器装备'] = function ()
     local action = function ()
         local Caster = o_skill_info_效果信息['Caster']
         local cardtype = get_attr(Caster, '逻辑数据', '类型')
+        local player = '我方'
 
         if cardtype == 0x10090006 then
             -- 老武器摧毁
             -- TODO，玩家归属判断
-            local old_weapon = G.call('角色_战场_获取武器', '我方')
+            local old_weapon = G.call('角色_战场_获取武器', player)
             if old_weapon then
-                G.trig_event('逻辑_武器摧毁', Caster)
+                G.trig_event('逻辑_武器摧毁', old_weapon)
             end
             -- 武器卡
             G.trig_event('逻辑_武器装备', Caster)
+            G.call('角色_战场_设置武器', player, Caster)
         end
 
         -- todo，记录
@@ -594,11 +596,6 @@ local normal_attck = function ()
                 effect_action_iter(beatback_info, '逻辑_技能效果_反击伤害', init, action)
             end
           )
-end
-
-t['技能效果_英雄技能伤害'] = function (int_伤害值)
-
-
 end
 
 t['技能效果_效果树_执行子效果'] = function (skill_info, action)
@@ -1001,6 +998,36 @@ t['逻辑注册_武器功能_回合结束'] = function ()
     end
 end
 
+t['逻辑注册_武器功能_消耗耐久'] = function ()
+    local o_skill_info_效果信息 = G.event_info()
+
+    if o_skill_info_效果信息 then
+        local Caster = o_skill_info_效果信息['Caster']
+        local hero = G.call('角色_战场_获取英雄', '我方')
+
+        if (Caster == hero) then
+            local weapon = G.call('角色_战场_获取武器', '我方')
+            if G.call('卡牌条件_卡牌特性判断', weapon, {'武器开启'}) then
+                -- 武器对自己造成一点伤害
+                G.call('技能效果_效果树_执行子效果',
+                        {
+                            ['Player'] = '我方',
+                            ['Caster'] = weapon,
+                            ['逐个伤害数值'] = 1,
+                            ['逐个伤害目标'] = weapon,
+
+                            ['伤害数值'] = {},
+                            ['最终伤害目标'] = {},
+                        },
+                        function ()
+                            single_damage()
+                        end
+                    )
+            end
+        end
+    end
+end
+
 -- 特定逻辑
 t['逻辑注册_战吼'] = function ()
     local info = G.event_info()
@@ -1118,6 +1145,7 @@ t['通用逻辑_默认流程注册'] = function ()
     G.addListener('逻辑注册_武器功能_武器摧毁', {'逻辑_武器摧毁'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
     G.addListener('逻辑注册_武器功能_攻击力变化', {'逻辑_卡牌属性更新', nil, '攻击'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
     G.addListener('逻辑注册_武器功能_回合结束', {'流程_回合结束', player}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
+    G.addListener('逻辑注册_武器功能_消耗耐久', {'逻辑_卡牌攻击'}, cond, EVENT_PRIOR.武器耐久, EVENT_GROUP.武器耐久)
 
     -- 特定逻辑
     G.addListener('逻辑注册_战吼', {'逻辑关键词_战吼前'}, cond, prior_base, group_system)
