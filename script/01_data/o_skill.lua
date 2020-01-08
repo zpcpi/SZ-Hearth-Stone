@@ -300,6 +300,35 @@ end
 		},
 	},
 	{
+		['name']=0x10130026,
+		['showname']='保护之手-添加buff',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_添加BUFF',0x10130027},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_添加BUFF",269680679)
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130012,
 		['showname']='动物伙伴-招1',
 		['逻辑功能']={
@@ -1299,6 +1328,39 @@ lua = function (self, info, card)
 		_ = G.call("技能效果_特性",{"嘲讽"})
 		return _
 	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130027,
+		['showname']='保护之手-buff',
+		['postfix']='圣盾',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='添加',
+				['触发时机']={
+t =
+{'$逻辑_技能添加','nil','self'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_技能添加",nil,self}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    '技能效果_特性',
+    {'$圣盾'}
+},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_特性",{"圣盾"})
 end
 ,
 },
