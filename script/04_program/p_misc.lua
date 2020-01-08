@@ -9,6 +9,9 @@ t['com_set_value'] = function (com, attr, value)
     com[attr] = value
 end
 
+t['get_event_info'] = function ()
+    return G.event_info()
+end
 
 t['asdasd'] = function ()
     local rlib = G.call('Create_Randomlib', G.QueryName(0x100c0003))

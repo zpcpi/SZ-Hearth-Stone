@@ -1005,22 +1005,24 @@ t['逻辑注册_武器功能_消耗耐久'] = function ()
 
         if (Caster == hero) then
             local weapon = G.call('角色_战场_获取武器', '我方')
-            if G.call('卡牌条件_卡牌特性判断', weapon, {'武器开启'}) then
-                -- 武器对自己造成一点伤害
-                G.call('技能效果_效果树_执行子效果',
-                        {
-                            ['Player'] = '我方',
-                            ['Caster'] = weapon,
-                            ['逐个伤害数值'] = 1,
-                            ['逐个伤害目标'] = weapon,
+            if weapon then
+                if G.call('卡牌条件_卡牌特性判断', weapon, {'武器开启'}) then
+                    -- 武器对自己造成一点伤害
+                    G.call('技能效果_效果树_执行子效果',
+                            {
+                                ['Player'] = '我方',
+                                ['Caster'] = weapon,
+                                ['逐个伤害数值'] = 1,
+                                ['逐个伤害目标'] = weapon,
 
-                            ['伤害数值'] = {},
-                            ['最终伤害目标'] = {},
-                        },
-                        function ()
-                            single_damage()
-                        end
-                    )
+                                ['伤害数值'] = {},
+                                ['最终伤害目标'] = {},
+                            },
+                            function ()
+                                single_damage()
+                            end
+                        )
+                end
             end
         end
     end
@@ -1126,6 +1128,7 @@ t['通用逻辑_默认流程注册'] = function ()
     G.addListener('逻辑注册_初始化', {'逻辑_卡牌初始化'}, cond, EVENT_PRIOR.first, group_system)
     G.addListener('逻辑注册_别人初始化', {'卡牌实例_信息更新'}, cond, EVENT_PRIOR.first, group_system)
     G.addListener('逻辑注册_上场', {'逻辑_随从上场前'}, cond, prior_base, group_system)
+    G.addListener('逻辑注册_上场', {'逻辑_武器上场前'}, cond, prior_base, group_system)
     G.addListener('逻辑注册_上手', {'逻辑_卡牌上手前'}, cond, prior_base, group_system)
     G.addListener('逻辑注册_生效', {'逻辑_卡牌生效'}, cond, prior_base, group_system)
     G.addListener('逻辑注册_添加', {'逻辑_技能添加前'}, cond, prior_base, group_system)
@@ -1206,7 +1209,7 @@ t['卡牌使用_攻击'] = function ()
     effect_action_iter(o_skill_info_效果信息, '逻辑_卡牌攻击', init, action)
 end
 
-t['技能效果_法伤伤害'] = function (int_伤害值)
+t['技能效果_法术伤害'] = function (int_伤害值)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -1231,7 +1234,7 @@ t['技能效果_法伤伤害'] = function (int_伤害值)
             single_damage()
         end
     end
-    effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_法伤伤害', init, action)
+    effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_法术伤害', init, action)
 end
 
 t['技能效果_英雄技能伤害'] = function (int_伤害值)
@@ -1262,6 +1265,62 @@ t['技能效果_英雄技能伤害'] = function (int_伤害值)
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_英雄技能伤害', init, action)
 end
 
+t['技能效果_随从伤害'] = function (int_伤害值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+        o_skill_info_效果信息['原始伤害数值'] = int_伤害值
+        o_skill_info_效果信息['伤害类型'] = '随从'
+    end
+    local action = function ()
+        local int_中间伤害值 = o_skill_info_效果信息['中间伤害数值'] or o_skill_info_效果信息['原始伤害数值']
+        local TargetList = o_skill_info_效果信息['Target'] or {}
+        local _int_伤害数值 = {}
+
+        o_skill_info_效果信息['最终伤害目标'] = {}
+        o_skill_info_效果信息['伤害数值'] = _int_伤害数值
+
+        for k,Target in ipairs(TargetList) do
+            o_skill_info_效果信息['逐个伤害数值'] = int_中间伤害值
+            o_skill_info_效果信息['逐个伤害目标'] = Target
+            single_damage()
+        end
+    end
+    effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_随从伤害', init, action)
+end
+
+t['技能效果_武器伤害'] = function (int_伤害值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+        o_skill_info_效果信息['原始伤害数值'] = int_伤害值
+        o_skill_info_效果信息['伤害类型'] = '武器'
+    end
+    local action = function ()
+        local int_中间伤害值 = o_skill_info_效果信息['中间伤害数值'] or o_skill_info_效果信息['原始伤害数值']
+        local TargetList = o_skill_info_效果信息['Target'] or {}
+        local _int_伤害数值 = {}
+
+        o_skill_info_效果信息['最终伤害目标'] = {}
+        o_skill_info_效果信息['伤害数值'] = _int_伤害数值
+
+        for k,Target in ipairs(TargetList) do
+            o_skill_info_效果信息['逐个伤害数值'] = int_中间伤害值
+            o_skill_info_效果信息['逐个伤害目标'] = Target
+            single_damage()
+        end
+    end
+    effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_武器伤害', init, action)
+end
+
 t['技能效果_法术治疗'] = function (int_治疗值)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
@@ -1288,6 +1347,90 @@ t['技能效果_法术治疗'] = function (int_治疗值)
         end
     end
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_法术治疗', init, action)
+end
+
+t['技能效果_英雄技能治疗'] = function (int_治疗值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+        o_skill_info_效果信息['原始治疗数值'] = int_治疗值
+        o_skill_info_效果信息['治疗类型'] = '英雄技能'
+    end
+    local action = function ()
+        local int_中间治疗值 = o_skill_info_效果信息['中间治疗数值'] or o_skill_info_效果信息['原始治疗数值']
+        local TargetList = o_skill_info_效果信息['Target'] or {}
+        local _int_治疗数值 = {}
+
+        o_skill_info_效果信息['最终治疗目标'] = {}
+        o_skill_info_效果信息['治疗数值'] = _int_治疗数值
+
+        for k,Target in ipairs(TargetList) do
+            o_skill_info_效果信息['逐个治疗数值'] = int_中间治疗值
+            o_skill_info_效果信息['逐个治疗目标'] = Target
+            single_heal()
+        end
+    end
+    effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_英雄技能治疗', init, action)
+end
+
+t['技能效果_随从治疗'] = function (int_治疗值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+        o_skill_info_效果信息['原始治疗数值'] = int_治疗值
+        o_skill_info_效果信息['治疗类型'] = '随从'
+    end
+    local action = function ()
+        local int_中间治疗值 = o_skill_info_效果信息['中间治疗数值'] or o_skill_info_效果信息['原始治疗数值']
+        local TargetList = o_skill_info_效果信息['Target'] or {}
+        local _int_治疗数值 = {}
+
+        o_skill_info_效果信息['最终治疗目标'] = {}
+        o_skill_info_效果信息['治疗数值'] = _int_治疗数值
+
+        for k,Target in ipairs(TargetList) do
+            o_skill_info_效果信息['逐个治疗数值'] = int_中间治疗值
+            o_skill_info_效果信息['逐个治疗目标'] = Target
+            single_heal()
+        end
+    end
+    effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_随从治疗', init, action)
+end
+
+t['技能效果_武器治疗'] = function (int_治疗值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+        o_skill_info_效果信息['原始治疗数值'] = int_治疗值
+        o_skill_info_效果信息['治疗类型'] = '武器'
+    end
+    local action = function ()
+        local int_中间治疗值 = o_skill_info_效果信息['中间治疗数值'] or o_skill_info_效果信息['原始治疗数值']
+        local TargetList = o_skill_info_效果信息['Target'] or {}
+        local _int_治疗数值 = {}
+
+        o_skill_info_效果信息['最终治疗目标'] = {}
+        o_skill_info_效果信息['治疗数值'] = _int_治疗数值
+
+        for k,Target in ipairs(TargetList) do
+            o_skill_info_效果信息['逐个治疗数值'] = int_中间治疗值
+            o_skill_info_效果信息['逐个治疗目标'] = Target
+            single_heal()
+        end
+    end
+    effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_武器治疗', init, action)
 end
 
 t['技能效果_本回合当前水晶'] = function (int_变动值)
@@ -1870,31 +2013,12 @@ t['技能效果_奥数飞弹'] = function (int_随机次数, int_单个伤害, f
     end
 
     local init = function ()
-        o_skill_info_效果信息['原始伤害数值'] = int_伤害值
-        o_skill_info_效果信息['伤害类型'] = '法术'
-    end
-    local action = function ()
-        local int_中间伤害值 = o_skill_info_效果信息['中间伤害数值'] or o_skill_info_效果信息['原始伤害数值']
-        local TargetList = o_skill_info_效果信息['Target'] or {}
-        local _int_伤害数值 = {}
-
-        o_skill_info_效果信息['最终伤害目标'] = {}
-        o_skill_info_效果信息['伤害数值'] = _int_伤害数值
-
-        for k,Target in ipairs(TargetList) do
-            o_skill_info_效果信息['逐个伤害数值'] = int_中间伤害值
-            o_skill_info_效果信息['逐个伤害目标'] = Target
-            single_damage()
-        end
-    end
-
-    local init = function ()
         o_skill_info_效果信息['原始伤害数值'] = int_随机次数
         o_skill_info_效果信息['伤害类型'] = '法术'
     end
     -- 通过这一步来收到法伤加成
     init()
-    G.trig_event('逻辑_技能效果_法伤伤害前', o_skill_info_效果信息)
+    G.trig_event('逻辑_技能效果_法术伤害前', o_skill_info_效果信息)
 
     local action = function ()
         local int_伤害目标数量 = o_skill_info_效果信息['中间伤害数值'] or o_skill_info_效果信息['原始伤害数值']
@@ -1915,7 +2039,7 @@ t['技能效果_奥数飞弹'] = function (int_随机次数, int_单个伤害, f
     end
     -- 通过这一步造成伤害
     action()
-    G.trig_event('逻辑_技能效果_法伤伤害', o_skill_info_效果信息)
+    G.trig_event('逻辑_技能效果_法术伤害', o_skill_info_效果信息)
 end
 
 t['技能效果_变形'] = function (i_card_变形卡牌ID, boolean_是否保留浮动值)
