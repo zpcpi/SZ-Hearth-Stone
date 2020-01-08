@@ -35,7 +35,9 @@ t['角色_添加手牌_绝对身份'] = function(estr_absolute_id_type_绝对身
     misc_attr_check('手牌信息', estr_absolute_id_type_绝对身份)
     local o_card_卡牌 = G.QueryName(i_card_卡牌)
     if o_card_卡牌 then
-        o_card_卡牌['动态数据']['卡牌位置'] = '手牌'
+        if o_card_卡牌['动态数据'] then
+            o_card_卡牌['动态数据']['卡牌位置'] = '手牌'
+        end
         table.insert(o_misc.手牌信息[estr_absolute_id_type_绝对身份], o_card_卡牌)
     end
 end
@@ -70,7 +72,9 @@ t['角色_战场_设置英雄_绝对身份'] = function(estr_absolute_id_type_�
     local o_card_卡牌 = G.QueryName(i_card_卡牌)
     misc_attr_check('英雄信息')
     if o_card_卡牌 then
-        o_card_卡牌['动态数据']['卡牌位置'] = '战场'
+        if o_card_卡牌['动态数据'] then
+            o_card_卡牌['动态数据']['卡牌位置'] = '战场'
+        end
         o_misc.英雄信息[estr_absolute_id_type_绝对身份] = o_card_卡牌
     end
 end
@@ -90,7 +94,9 @@ t['角色_战场_设置英雄技能_绝对身份'] = function(estr_absolute_id_t
     local o_card_卡牌 = G.QueryName(i_card_卡牌)
     misc_attr_check('英雄技能信息')
     if o_card_卡牌 then
-        o_card_卡牌['动态数据']['卡牌位置'] = '战场'
+        if o_card_卡牌['动态数据'] then
+            o_card_卡牌['动态数据']['卡牌位置'] = '战场'
+        end
         o_misc.英雄技能信息[estr_absolute_id_type_绝对身份] = o_card_卡牌
     end
 end
@@ -102,7 +108,9 @@ t['角色_战场_设置武器_绝对身份'] = function(estr_absolute_id_type_�
     local o_card_卡牌 = G.QueryName(i_card_卡牌)
     misc_attr_check('武器信息')
     if o_card_卡牌 then
-        o_card_卡牌['动态数据']['卡牌位置'] = '战场'
+        if o_card_卡牌['动态数据'] then
+            o_card_卡牌['动态数据']['卡牌位置'] = '战场'
+        end
         o_misc.武器信息[estr_absolute_id_type_绝对身份] = o_card_卡牌
     end
 end
@@ -125,7 +133,9 @@ t['角色_战场_添加随从_绝对身份'] = function(estr_absolute_id_type_�
     misc_attr_check('随从信息', estr_absolute_id_type_绝对身份)
 
     if o_card_卡牌 then
-        o_card_卡牌['动态数据']['卡牌位置'] = '战场'
+        if o_card_卡牌['动态数据'] then
+            o_card_卡牌['动态数据']['卡牌位置'] = '战场'
+        end
         local 随从信息 = o_misc.随从信息[estr_absolute_id_type_绝对身份]
         if int_随从编号 > #随从信息 then
             int_随从编号 = #随从信息 + 1
@@ -134,8 +144,6 @@ t['角色_战场_添加随从_绝对身份'] = function(estr_absolute_id_type_�
         end
         table.insert(随从信息, int_随从编号, o_card_卡牌)
     end
-
-
 end
 
 --hide=true
