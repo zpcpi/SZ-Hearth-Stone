@@ -108,6 +108,14 @@ t['角色_战场_设置武器_绝对身份'] = function(estr_absolute_id_type_�
 end
 
 --hide=true
+t['角色_战场_获取武器_绝对身份'] = function(estr_absolute_id_type_绝对身份, i_card_卡牌)
+    local o_misc = G.misc()
+
+    misc_attr_check('武器信息')
+    return o_misc.武器信息[estr_absolute_id_type_绝对身份]
+end
+
+--hide=true
 t['角色_战场_添加随从_绝对身份'] = function(estr_absolute_id_type_绝对身份, i_card_卡牌, int_随从编号)
     local o_misc = G.misc()
     local int_当前随从数量 = G.call('角色_获取随从数量_绝对身份', estr_absolute_id_type_绝对身份)

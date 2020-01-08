@@ -67,7 +67,8 @@ t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_�
 
     elseif cardtype == 0x10090006 then
         -- 武器卡
-
+        -- 有特殊处理，需要考虑新旧武器替换
+        G.call('卡牌使用_使用')
     end
 
     -- 逐个触发相关事件
@@ -210,6 +211,13 @@ t['卡牌使用_使用'] = function ()
         elseif cardtype == 0x10090005 then
             -- 法术
             G.trig_event('逻辑_法术牌打出', Caster)
+        elseif cardtype == 0x10090006 then
+            -- 武器卡
+
+            --上场，战吼，更新武器
+            G.call('卡牌使用_上场')
+            G.call('卡牌关键词_战吼')
+            G.call('卡牌使用_武器装备')
         end
 
         -- todo，记录
@@ -227,6 +235,16 @@ t['卡牌使用_上场'] = function ()
     local get_attr = CARD_GET_ATTR
 
     local init = function ()
+        local Caster = o_skill_info_效果信息['Caster']
+        local cardtype = get_attr(Caster, '逻辑数据', '类型')
+
+        if cardtype == 0x10090004 then
+            -- 随从
+            G.trig_event('逻辑_随从上场前', Caster)
+        elseif cardtype == 0x10090006 then
+            -- 武器卡
+            G.trig_event('逻辑_武器上场前', Caster)
+        end
     end
     local action = function ()
         local Caster = o_skill_info_效果信息['Caster']
@@ -234,13 +252,52 @@ t['卡牌使用_上场'] = function ()
 
         if cardtype == 0x10090004 then
             -- 随从
-            G.trig_event('逻辑_随从上场前', Caster)
             G.trig_event('逻辑_随从上场', Caster)
+        elseif cardtype == 0x10090006 then
+            -- 武器卡
+            G.trig_event('逻辑_武器上场', Caster)
         end
 
         -- todo，记录
     end
     effect_action_iter(o_skill_info_效果信息, '逻辑_卡牌上场', init, action)
+end
+
+t['卡牌关键词_战吼'] = function ()
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local get_attr = CARD_GET_ATTR
+
+    local init = function ()
+        -- 如果没有目标，那么根据指令id随机选一个目标
+        local Caster = o_skill_info_效果信息['Caster']
+        local cardtype = get_attr(Caster, '逻辑数据', '类型')
+
+        if cardtype == 0x10090004 then
+            -- 随从
+            G.trig_event('逻辑_随从战吼前', Caster)
+        elseif cardtype == 0x10090006 then
+            -- 武器卡
+            G.trig_event('逻辑_武器战吼前', Caster)
+        end
+    end
+    local action = function ()
+        local Caster = o_skill_info_效果信息['Caster']
+        local cardtype = get_attr(Caster, '逻辑数据', '类型')
+
+        if cardtype == 0x10090004 then
+            -- 随从
+            G.trig_event('逻辑_随从战吼', Caster)
+        elseif cardtype == 0x10090006 then
+            -- 武器卡
+            G.trig_event('逻辑_武器战吼', Caster)
+        end
+    end
+    effect_action_iter(o_skill_info_效果信息, '逻辑关键词_战吼', init, action)
 end
 
 t['卡牌使用_随从召唤'] = function ()
@@ -268,22 +325,42 @@ t['卡牌使用_随从召唤'] = function ()
     effect_action_iter(o_skill_info_效果信息, nil, init, action)
 end
 
-t['卡牌关键词_战吼'] = function ()
+t['卡牌使用_武器装备'] = function ()
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
         return
     end
 
+    local get_attr = CARD_GET_ATTR
+
     local init = function ()
+        local Caster = o_skill_info_效果信息['Caster']
+        local cardtype = get_attr(Caster, '逻辑数据', '类型')
+
+        if cardtype == 0x10090006 then
+            -- 武器卡
+            G.trig_event('逻辑_武器装备前', Caster)
+        end
     end
     local action = function ()
-        -- 如果没有目标，那么根据指令id随机选一个目标
         local Caster = o_skill_info_效果信息['Caster']
+        local cardtype = get_attr(Caster, '逻辑数据', '类型')
 
-        G.trig_event('逻辑_随从战吼', Caster)
+        if cardtype == 0x10090006 then
+            -- 老武器摧毁
+            -- TODO，玩家归属判断
+            local old_weapon = G.call('角色_战场_获取武器', '我方')
+            if old_weapon then
+                G.trig_event('逻辑_武器摧毁', Caster)
+            end
+            -- 武器卡
+            G.trig_event('逻辑_武器装备', Caster)
+        end
+
+        -- todo，记录
     end
-    effect_action_iter(o_skill_info_效果信息, '逻辑关键词_战吼', init, action)
+    effect_action_iter(o_skill_info_效果信息, nil, init, action)
 end
 
 
@@ -420,7 +497,6 @@ local aura_add_buff = function (func_filer, func_add, func_del, _earg_光环添�
                     func_add
                 )
         end
-        G.call('tLua_add_multlisteners', infolist)
     end
     local del_buff_iter = function ()
         local Target = G.event_info()
@@ -436,7 +512,6 @@ local aura_add_buff = function (func_filer, func_add, func_del, _earg_光环添�
                     func_del
                 )
         end
-        G.call('tLua_add_multlisteners', infolist)
     end
     local del_aure_iter = function ()
         G.call('技能效果_效果树_执行子效果',
@@ -453,6 +528,7 @@ local aura_add_buff = function (func_filer, func_add, func_del, _earg_光环添�
         local info = {
             [1] = earg,
             [2] = add_buff_iter,
+            [6] = true,
         }
         table.insert(infolist, info)
     end
@@ -460,6 +536,7 @@ local aura_add_buff = function (func_filer, func_add, func_del, _earg_光环添�
         local info = {
             [1] = earg,
             [2] = del_buff_iter,
+            [6] = true,
         }
         table.insert(infolist, info)
     end
@@ -633,6 +710,7 @@ t['逻辑注册_初始化'] = function ()
         ['卡牌位置'] = '牌库',
         ['所有者'] = G.call('系统_获取当前玩家信息').绝对身份,
         ['特性层数'] = {},
+        ['武器旧攻击'] = 0,
     }
     if card['逻辑数据'] then
         if card['逻辑数据']['卡牌特性'] then
@@ -716,7 +794,7 @@ t['逻辑注册_抽牌'] = function ()
     G.call('角色_牌库抽取卡牌', '我方', '我方')
 end
 
-local card_init_accack_count = function (Target, int_已攻击次数)
+local card_init_attack_count = function (Target, int_已攻击次数)
     G.call('卡牌属性_设置', Target, '攻击次数', '当前值', int_已攻击次数 or 0)
     if G.call('卡牌条件_卡牌特性判断', Target, {'超级风怒'}) then
         G.call('卡牌属性_设置', Target, '攻击次数', '浮动值', 4)
@@ -727,12 +805,31 @@ local card_init_accack_count = function (Target, int_已攻击次数)
     end
 end
 
+local hero_init_attack_count = function (Hero, Weapon, int_已攻击次数)
+    G.call('卡牌属性_设置', Hero, '攻击次数', '当前值', int_已攻击次数 or 0)
+    if G.call('卡牌条件_卡牌特性判断', Hero, {'超级风怒'}) or G.call('卡牌条件_卡牌特性判断', Weapon, {'超级风怒'}) then
+        G.call('卡牌属性_设置', Hero, '攻击次数', '浮动值', 4)
+    elseif G.call('卡牌条件_卡牌特性判断', Hero, {'风怒'}) or G.call('卡牌条件_卡牌特性判断', Weapon, {'风怒'}) then
+        G.call('卡牌属性_设置', Hero, '攻击次数', '浮动值', 2)
+    else
+        G.call('卡牌属性_设置', Hero, '攻击次数', '浮动值', 1)
+    end
+end
+
 t['逻辑注册_攻击次数重置_回合开始'] = function ()
     local MinionList = G.call('角色_获取随从列表', '我方') or {}
-    table.insert(MinionList, G.call('角色_战场_获取英雄', '我方'))
-
     for _,Target in ipairs(MinionList) do
-        card_init_accack_count(Target)
+        card_init_attack_count(Target)
+    end
+
+    local hero = G.call('角色_战场_获取英雄', '我方')
+    local weapon = G.call('角色_战场_获取武器', '我方')
+    
+    if weapon then
+        -- 有武器的情况下，特殊处理
+        hero_init_attack_count(hero, weapon)
+    else
+        card_init_attack_count(hero)
     end
 end
 
@@ -744,7 +841,7 @@ t['逻辑注册_攻击次数设置_单个上场'] = function ()
     end
     
     if G.call('卡牌条件_卡牌特性判断', Target, {'冲锋'}) or G.call('卡牌条件_卡牌特性判断', Target, {'突袭'}) then
-        card_init_accack_count(Target)
+        card_init_attack_count(Target)
     else
         G.call('卡牌属性_设置', Target, '攻击次数', '当前值', 0)
         G.call('卡牌属性_设置', Target, '攻击次数', '浮动值', 0)
@@ -771,7 +868,6 @@ end
 
 t['逻辑注册_攻击状态设置_回合结束'] = function ()
     local MinionList = G.call('角色_获取随从列表', '我方') or {}
-    table.insert(MinionList, G.call('角色_战场_获取英雄', '我方'))
 
     for _,Target in ipairs(MinionList) do
         local del_flag = {}
@@ -796,6 +892,115 @@ t['逻辑注册_攻击状态设置_回合结束'] = function ()
     end
 end
 
+local weapon_open = function (weapon)
+    if G.call('卡牌条件_卡牌特性判断', weapon, nil, {'武器开启'}) then
+        -- 如果武器关闭的，则打开武器
+        G.call('技能效果_效果树_执行子效果',
+                {
+                    ['Player'] = '我方',
+                    ['Caster'] = weapon,
+                    ['Target'] = {weapon},
+                },
+                function ()
+                    G.call('技能效果_特性', {'武器开启'})
+                end
+            )
+        
+        -- 添加攻击力
+        local hero = G.call('角色_战场_获取英雄', '我方')
+        local cur_value = G.call('卡牌属性_获取', weapon, '攻击', '当前值') or 0
+        local hero_attack = G.call('卡牌属性_获取', hero, '攻击', '浮动值') or 0
+
+        G.call('卡牌属性_设置', hero, '攻击', '浮动值', hero_attack + cur_value)
+        weapon['动态数据']['武器旧攻击'] = cur_value
+    end
+end
+
+local weapon_close = function (weapon)
+    if G.call('卡牌条件_卡牌特性判断', weapon, {'武器开启'}) then
+        -- 如果武器打开的，则关闭武器
+        G.call('技能效果_效果树_执行子效果',
+                {
+                    ['Player'] = '我方',
+                    ['Caster'] = weapon,
+                    ['Target'] = {weapon},
+                },
+                function ()
+                    G.call('技能效果_特性', nil, {'武器开启'})
+                end
+            )
+        
+        -- 清除攻击力
+        local hero = G.call('角色_战场_获取英雄', '我方')
+        local cur_value = G.call('卡牌属性_获取', weapon, '攻击', '当前值') or 0
+        local hero_attack = G.call('卡牌属性_获取', hero, '攻击', '浮动值') or 0
+
+        G.call('卡牌属性_设置', hero, '攻击', '浮动值', hero_attack - cur_value)
+        weapon['动态数据']['武器旧攻击'] = 0
+    end
+end
+
+t['逻辑注册_武器功能_回合开始'] = function ()
+    local weapon = G.call('角色_战场_获取武器', '我方')
+    if weapon then
+        weapon_open(weapon)
+    end
+end
+
+t['逻辑注册_武器功能_武器添加'] = function ()
+    if G.call('对决_当前是否是我方回合') then
+        -- 默认情况下，我方回合武器才生效
+    else
+        return
+    end
+
+    -- 走到这里，说明武器攻击可以加
+    local weapon = G.event_info()
+    if weapon then
+        weapon_open(weapon)
+    end
+end
+
+t['逻辑注册_武器功能_武器摧毁'] = function ()
+    local tar = G.event_info()
+    local weapon = G.call('角色_战场_获取武器', '我方')
+
+    if (tar == weapon) then
+        weapon_close(weapon)
+
+        -- TODO，触发亡语
+    end
+end
+
+t['逻辑注册_武器功能_攻击力变化'] = function ()
+    local tar = G.event_info()
+    local weapon = G.call('角色_战场_获取武器', '我方')
+
+    if (tar == weapon) then
+        if G.call('卡牌条件_卡牌特性判断', weapon, {'武器开启'}) then
+            -- 获取武器攻击力变化
+            local old_value = weapon['动态数据']['武器旧攻击'] or 0
+            local cur_value = G.call('卡牌属性_获取', weapon, '攻击', '当前值') or 0
+            local delta_value = cur_value - old_value
+
+            -- 获取英雄攻击力浮动值
+            local hero = G.call('角色_战场_获取英雄', '我方')
+            local hero_attack = G.call('卡牌属性_获取', hero, '攻击', '浮动值') or 0
+
+            -- 攻击力修改
+            G.call('卡牌属性_设置', hero, '攻击', '浮动值', hero_attack + delta_value)
+            weapon['动态数据']['武器旧攻击'] = cur_value
+        end
+    end
+end
+
+t['逻辑注册_武器功能_回合结束'] = function ()
+    local weapon = G.call('角色_战场_获取武器', '我方')
+    if weapon then
+        weapon_close(weapon)
+    end
+end
+
 -- 特定逻辑
 t['逻辑注册_战吼'] = function ()
     local info = G.event_info()
@@ -808,7 +1013,7 @@ t['逻辑注册_冲锋添加'] = function ()
     local Target = G.event_info()
 
     if G.call('卡牌条件_卡牌特性判断', Target, {'首回合召唤'}) then
-        card_init_accack_count(Target, G.call('卡牌属性_获取', Target, '攻击次数', '当前值'))
+        card_init_attack_count(Target, G.call('卡牌属性_获取', Target, '攻击次数', '当前值'))
     end
 end
 
@@ -877,6 +1082,13 @@ t['通用逻辑_默认流程注册'] = function ()
     G.addListener('逻辑注册_攻击次数重置_回合开始', {'流程_回合开始', player}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
     G.addListener('逻辑注册_攻击次数设置_单个上场', {'逻辑_随从上场'}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
     G.addListener('逻辑注册_攻击状态设置_回合结束', {'流程_回合结束', player}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
+
+    -- 武器相关处理
+    G.addListener('逻辑注册_武器功能_回合开始', {'流程_回合开始', player}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
+    G.addListener('逻辑注册_武器功能_武器添加', {'逻辑_武器装备'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
+    G.addListener('逻辑注册_武器功能_武器摧毁', {'逻辑_武器摧毁'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
+    G.addListener('逻辑注册_武器功能_攻击力变化', {'逻辑_卡牌属性更新', nil, '攻击'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
+    G.addListener('逻辑注册_武器功能_回合结束', {'流程_回合结束', player}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
 
     -- 特定逻辑
     G.addListener('逻辑注册_战吼', {'逻辑关键词_战吼前'}, cond, prior_base, group_system)
@@ -1462,7 +1674,8 @@ t['技能效果_战场光环'] = function (o_skill, Caster, func_add, func_del)
 
     aura_add_buff(func_filer, func_add, func_del, 
                     { -- 光环添加事件
-                        {'逻辑_随从上场'}
+                        {'逻辑_随从上场'},
+                        {'逻辑_武器上场'},
                     },
                     { -- 光环buff删除事件
 
@@ -1687,7 +1900,9 @@ t['技能效果_变形'] = function (i_card_变形卡牌ID, boolean_是否保留
                         }, 
                         function ()
                             G.call('卡牌使用_上场')
-                            G.call('卡牌使用_随从召唤')
+
+                            -- 变形只有上场，不是召唤
+                            -- G.call('卡牌使用_随从召唤')
                         end
                     )
 
@@ -1803,7 +2018,7 @@ t['技能目标_随机选择'] = function (int_选择数量, i_randomlib_type_�
     local TargetList = o_skill_info_效果信息['Target'] or {}
     local rlib = G.call('Create_Randomlib', G.QueryName(i_randomlib_type_选择类型 or 0x100c0001))
     for _,tar in ipairs(TargetList) do
-        rlib:添加数据({tar, 1})
+        rlib:添加数据({tar, 100})
     end
     rlib:初始化(true, true)
 
@@ -2120,7 +2335,7 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
         tattr[estr_cardattr_enum_属性名] = cur_value
         
         -- 临时，应该加入动画队列中
-        G.trig_event('UI_卡牌属性更新', o_card_当前卡牌.name, estr_cardattr_enum_属性名)
+        G.trig_event('逻辑_卡牌属性更新', o_card_当前卡牌, estr_cardattr_enum_属性名)
     elseif estr_cardattr_type_属性类型 == '最大值' then
         -- 最大值不能直接设置
     elseif estr_cardattr_type_属性类型 == '浮动值' then
@@ -2131,7 +2346,7 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
         tattr[estr_cardattr_enum_属性名] = cur_value
 
         -- 临时，应该加入动画队列中
-        G.trig_event('UI_卡牌属性更新', o_card_当前卡牌.name, estr_cardattr_enum_属性名)
+        G.trig_event('逻辑_卡牌属性更新', o_card_当前卡牌, estr_cardattr_enum_属性名)
     elseif estr_cardattr_type_属性类型 == '光环值' then
         dyn_data = o_card_当前卡牌['动态数据']
         tattr = dyn_data['光环属性']
@@ -2140,7 +2355,7 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
         tattr[estr_cardattr_enum_属性名] = cur_value
 
         -- 临时，应该加入动画队列中
-        G.trig_event('UI_卡牌属性更新', o_card_当前卡牌.name, estr_cardattr_enum_属性名)
+        G.trig_event('逻辑_卡牌属性更新', o_card_当前卡牌, estr_cardattr_enum_属性名)
     elseif estr_cardattr_type_属性类型 == '原始值' then
         tattr = o_card_当前卡牌['卡牌属性']
         tattr[estr_cardattr_enum_属性名] = value_iter(int_value)

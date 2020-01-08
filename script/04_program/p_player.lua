@@ -114,6 +114,12 @@ t['角色_战场_设置武器'] = function(estr_player_相对身份, o_card_卡�
 end
 
 --hide=true
+t['角色_战场_获取武器'] = function(estr_player_相对身份)
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
+    return G.call('角色_战场_获取武器_绝对身份', estr_absolute_id_type_绝对身份)
+end
+
+--hide=true
 t['角色_战场_添加随从'] = function(estr_player_相对身份, o_card_卡牌, int_随从编号)
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
     local int_当前随从数量 = G.call('角色_获取随从数量_绝对身份', estr_absolute_id_type_绝对身份)

@@ -190,9 +190,9 @@ t['CardCom_SetData'] = function (com, o_card)
         end
     
         local key = 'card_attrchange|' .. tostring(com)
-        G.removeListener(key, 'UI_卡牌属性更新')
+        G.removeListener(key, '逻辑_卡牌属性更新')
         G.api[key] = update_data
-        G.addListener(key, {'UI_卡牌属性更新', o_card.name})
+        G.addListener(key, {'逻辑_卡牌属性更新', o_card})
     end
 end
 
