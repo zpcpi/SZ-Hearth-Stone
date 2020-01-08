@@ -580,28 +580,28 @@ local t = {
 				['type']='o_card_attr',
 			},
 			[3]={
-				['name']='光环属性',
+				['name']='武器属性',
 				['type']='o_card_attr',
 			},
 			[4]={
-				['name']='当前属性',
+				['name']='光环属性',
 				['type']='o_card_attr',
 			},
 			[5]={
+				['name']='当前属性',
+				['type']='o_card_attr',
+			},
+			[6]={
 				['name']='卡牌位置',
 				['type']='estr_cardpos_type',
 			},
-			[6]={
+			[7]={
 				['name']='所有者',
 				['type']='estr_absolute_id_type',
 			},
-			[7]={
+			[8]={
 				['name']='特性层数',
 				['type']='any',
-			},
-			[8]={
-				['name']='武器旧攻击',
-				['type']='int',
 			},
 		},
 	},

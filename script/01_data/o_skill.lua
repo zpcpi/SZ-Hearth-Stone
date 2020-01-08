@@ -388,6 +388,35 @@ end
 		},
 	},
 	{
+		['name']=0x1013002b,
+		['showname']='谦逊-添加buff',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_添加BUFF',0x1013002c},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_添加BUFF",269680684)
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130012,
 		['showname']='动物伙伴-招1',
 		['逻辑功能']={
@@ -1450,6 +1479,36 @@ lua = function (self, info, card)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_攻击",3)
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x1013002c,
+		['showname']='谦逊-buff',
+		['postfix']='攻击变1',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='添加',
+				['触发时机']={
+t =
+{'$逻辑_技能添加','nil','self'},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_技能添加",nil,self}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_设置攻击力',1},
+lua = function (self, info, card)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_设置攻击力",1)
 end
 ,
 },

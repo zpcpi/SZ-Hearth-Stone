@@ -702,12 +702,12 @@ t['逻辑注册_初始化'] = function ()
     card['动态数据'] = {
         ['当前注册事件'] = {},
         ['浮动属性'] = {},
+        ['武器属性'] = {},
         ['光环属性'] = {},
         ['当前属性'] = {},
         ['卡牌位置'] = '牌库',
         ['所有者'] = G.call('系统_获取当前玩家信息').绝对身份,
         ['特性层数'] = {},
-        ['武器旧攻击'] = 0,
     }
     if card['逻辑数据'] then
         if card['逻辑数据']['卡牌特性'] then
@@ -900,16 +900,14 @@ local weapon_open = function (weapon)
                 },
                 function ()
                     G.call('技能效果_特性', {'武器开启'})
+
+                    -- 添加攻击力
+                    local hero = G.call('角色_战场_获取英雄', '我方')
+                    local cur_value = G.call('卡牌属性_获取', hero, '攻击', '武器值') or 0
+                    local weapon_value = G.call('卡牌属性_获取', weapon, '攻击', '当前值') or 0
+                    G.call('卡牌属性_设置', hero, '攻击', '武器值', cur_value + weapon_value)
                 end
             )
-        
-        -- 添加攻击力
-        local hero = G.call('角色_战场_获取英雄', '我方')
-        local cur_value = G.call('卡牌属性_获取', weapon, '攻击', '当前值') or 0
-        local hero_attack = G.call('卡牌属性_获取', hero, '攻击', '浮动值') or 0
-
-        G.call('卡牌属性_设置', hero, '攻击', '浮动值', hero_attack + cur_value)
-        weapon['动态数据']['武器旧攻击'] = cur_value
     end
 end
 
@@ -924,16 +922,14 @@ local weapon_close = function (weapon)
                 },
                 function ()
                     G.call('技能效果_特性', nil, {'武器开启'})
+
+                    -- 清除攻击力
+                    local hero = G.call('角色_战场_获取英雄', '我方')
+                    local cur_value = G.call('卡牌属性_获取', hero, '攻击', '武器值') or 0
+                    local weapon_value = G.call('卡牌属性_获取', weapon, '攻击', '当前值') or 0
+                    G.call('卡牌属性_设置', hero, '攻击', '武器值', cur_value - weapon_value)
                 end
             )
-        
-        -- 清除攻击力
-        local hero = G.call('角色_战场_获取英雄', '我方')
-        local cur_value = G.call('卡牌属性_获取', weapon, '攻击', '当前值') or 0
-        local hero_attack = G.call('卡牌属性_获取', hero, '攻击', '浮动值') or 0
-
-        G.call('卡牌属性_设置', hero, '攻击', '浮动值', hero_attack - cur_value)
-        weapon['动态数据']['武器旧攻击'] = 0
     end
 end
 
@@ -975,18 +971,18 @@ t['逻辑注册_武器功能_攻击力变化'] = function ()
 
     if (tar == weapon) then
         if G.call('卡牌条件_卡牌特性判断', weapon, {'武器开启'}) then
-            -- 获取武器攻击力变化
-            local old_value = weapon['动态数据']['武器旧攻击'] or 0
-            local cur_value = G.call('卡牌属性_获取', weapon, '攻击', '当前值') or 0
-            local delta_value = cur_value - old_value
-
-            -- 获取英雄攻击力浮动值
-            local hero = G.call('角色_战场_获取英雄', '我方')
-            local hero_attack = G.call('卡牌属性_获取', hero, '攻击', '浮动值') or 0
-
-            -- 攻击力修改
-            G.call('卡牌属性_设置', hero, '攻击', '浮动值', hero_attack + delta_value)
-            weapon['动态数据']['武器旧攻击'] = cur_value
+            G.call('技能效果_效果树_执行子效果',
+                    {
+                        ['Player'] = '我方',
+                        ['Caster'] = weapon,
+                        ['Target'] = {weapon},
+                    },
+                    function ()
+                        -- 攻击力修改
+                        local hero = G.call('角色_战场_获取英雄', '我方')
+                        G.call('卡牌属性_设置', hero, '攻击', '武器值', G.call('卡牌属性_获取', weapon, '攻击', '当前值') or 0)
+                    end
+                )
         end
     end
 end
@@ -2349,10 +2345,11 @@ t['卡牌属性_获取'] = function (o_card_当前卡牌, estr_cardattr_enum_属
                G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '最大值')
     elseif estr_cardattr_type_属性类型 == '最大值' then
         local buff_v = G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '浮动值')
+        local weap_v = G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '武器值')
         local area_v = G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '光环值')
         local orig_v = G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '原始值')
-        if buff_v or area_v then
-            return value_iter((buff_v or 0) + (area_v or 0) + (orig_v or 0))
+        if buff_v or weap_v or area_v then
+            return value_iter((buff_v or 0) + (weap_v or 0) + (area_v or 0) + (orig_v or 0))
         else
             -- 都没有赋值，那就是原始值
             return orig_v
@@ -2360,6 +2357,10 @@ t['卡牌属性_获取'] = function (o_card_当前卡牌, estr_cardattr_enum_属
     elseif estr_cardattr_type_属性类型 == '浮动值' then
         dyn_data = o_card_当前卡牌['动态数据'] or {}
         tattr = dyn_data['浮动属性'] or {}
+        return value_iter(tattr[estr_cardattr_enum_属性名])
+    elseif estr_cardattr_type_属性类型 == '武器值' then
+        dyn_data = o_card_当前卡牌['动态数据'] or {}
+        tattr = dyn_data['武器属性'] or {}
         return value_iter(tattr[estr_cardattr_enum_属性名])
     elseif estr_cardattr_type_属性类型 == '光环值' then
         dyn_data = o_card_当前卡牌['动态数据'] or {}
@@ -2399,6 +2400,15 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
     elseif estr_cardattr_type_属性类型 == '浮动值' then
         dyn_data = o_card_当前卡牌['动态数据']
         tattr = dyn_data['浮动属性']
+
+        local cur_value = value_iter(int_value)
+        tattr[estr_cardattr_enum_属性名] = cur_value
+
+        -- 临时，应该加入动画队列中
+        G.trig_event('逻辑_卡牌属性更新', o_card_当前卡牌, estr_cardattr_enum_属性名)
+    elseif estr_cardattr_type_属性类型 == '武器值' then
+        dyn_data = o_card_当前卡牌['动态数据']
+        tattr = dyn_data['武器属性']
 
         local cur_value = value_iter(int_value)
         tattr[estr_cardattr_enum_属性名] = cur_value
