@@ -596,6 +596,14 @@ local t = {
 				['id']='Attr',
 				['type']='estr_cardattr_enum',
 			},
+			[3]={
+				['id']='Type',
+				['type']='estr_cardattr_type',
+			},
+			[4]={
+				['id']='OldValue',
+				['type']='int',
+			},
 		},
 	},
 	{
