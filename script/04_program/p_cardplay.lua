@@ -2296,6 +2296,27 @@ t['技能效果_消灭目标'] = function ()
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_消灭目标', init, action)
 end
 
+t['技能效果_心灵视界'] = function (int_获取数量, estr_player_相对身份)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+    end
+    local action = function ()
+        local cardlist = G.call('网络通讯_请求信息', 
+                                    estr_player_相对身份, 
+                                    {'网络通讯_技能效果_获知随机卡牌', int_获取数量, '手牌', true}
+                                )
+        for _, cardname in ipairs(cardlist or {}) do
+            G.call('技能效果_创建手牌', cardname, false, true)
+        end
+    end
+    effect_action_iter(o_skill_info_效果信息, nil, init, action)
+end
+
 -- ============================================
 -- ============================================
 -- ============================================
@@ -2464,9 +2485,13 @@ local function get_card_dbname(i_card_卡牌)
     return G.GetTextOwner((i_card_卡牌 >> 16) - 0x7000)
 end
 
-t['卡牌实例化_信息更新'] = function (i_card_卡牌, _string_attr, _value)
+t['网络通讯_卡牌实例化_信息更新'] = function (i_card_卡牌, _string_attr, _value)
     local o_card_卡牌 = G.QueryName(i_card_卡牌)
     if o_card_卡牌 then
+    elseif i_card_卡牌 == 0 then
+        local dbname = G.misc().卡牌实例表
+        o_card_卡牌 = G.NewInst(dbname)
+        i_card_卡牌 = o_card_卡牌.name
     else
         o_card_卡牌 = {['name']=i_card_卡牌,}
         G.DBAdd(o_card_卡牌, get_card_dbname(i_card_卡牌))
@@ -2496,16 +2521,17 @@ t['卡牌实例化_信息更新'] = function (i_card_卡牌, _string_attr, _valu
     end
 
     G.trig_event('卡牌实例_信息更新', o_card_卡牌)
+    return i_card_卡牌
 end
 
-t['卡牌实例化_信息更新_预处理'] = function (o_card_卡牌, _string_attr)
-    if o_card_卡牌 then
+local card_get_value = function (card, _attr)
+    if card then
         local _value = {}
-        for k,attr in ipairs(_string_attr or {}) do
+        for k,attr in ipairs(_attr or {}) do
             if type(attr) == 'string' then
-                _value[k] = o_card_卡牌[attr]
+                _value[k] = card[attr]
             elseif type(attr) == 'table' then
-                local t = o_card_卡牌
+                local t = card
                 local v
                 for _,sub_attr in ipairs(attr) do
                     if type(t) == 'table' then
@@ -2520,7 +2546,14 @@ t['卡牌实例化_信息更新_预处理'] = function (o_card_卡牌, _string_a
             end
         end
 
-        G.call('网络通用_广播消息', '卡牌实例化_信息更新', o_card_卡牌.name, _string_attr, _value)
+        return _value
+    end
+end
+
+t['卡牌实例化_信息更新_预处理'] = function (o_card_卡牌, _string_attr)
+    local _value = card_get_value(o_card_卡牌, _string_attr)
+    if _value then
+        G.call('网络通用_广播消息', '网络通讯_卡牌实例化_信息更新', o_card_卡牌.name, _string_attr, _value)
     end
 end
 -- ============================================
@@ -2760,5 +2793,102 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
     elseif estr_cardattr_type_属性类型 == '原始值' then
         tattr = o_card_当前卡牌['卡牌属性']
         tattr[estr_cardattr_enum_属性名] = value_iter(int_value)
+    end
+end
+
+-- ============================================
+-- ============================================
+-- ============================================
+-- 网络交互接口
+-- ============================================
+-- ============================================
+-- ============================================
+local cardplay_net_communication_count = 0
+local create_net_name = function ()
+    local count = cardplay_net_communication_count + 1
+    cardplay_net_communication_count = count
+
+    local estr_absolute_id_type_本地玩家绝对身份 = G.call('房间_获取绝对身份', '我方')
+
+    return '|#cp_net#|#' .. estr_absolute_id_type_本地玩家绝对身份 .. '#|' .. count
+end
+
+t['网络通讯_返回信息'] = function (estr_absolute_id_type_目标身份, estr_absolute_id_type_发起者身份, farg, name)
+    local estr_absolute_id_type_本地玩家身份 = G.call('房间_获取绝对身份', '我方')
+
+    if estr_absolute_id_type_本地玩家身份 == estr_absolute_id_type_目标身份 then
+        -- 判断自身是否是合法的接收者
+        G.trig_event('网络交互', name, farg)
+    end
+end
+
+t['网络通讯_接收信息'] = function (estr_absolute_id_type_目标身份, estr_absolute_id_type_发起者身份, farg, name)
+    local estr_absolute_id_type_本地玩家身份 = G.call('房间_获取绝对身份', '我方')
+
+    if estr_absolute_id_type_本地玩家身份 == estr_absolute_id_type_目标身份 then
+        -- 判断自身是否是合法的接收者
+        local return_farg = G.call(farg or {})
+        G.call('网络通用_广播消息', '网络通讯_返回信息',
+                                   estr_absolute_id_type_发起者身份,
+                                   estr_absolute_id_type_目标身份,
+                                   return_farg,
+                                   name)
+    end
+end
+
+t['网络通讯_请求信息'] = function (estr_player_目标身份, farg)
+    local estr_absolute_id_type_发起者身份 = G.call('房间_获取绝对身份', '我方')
+    local estr_absolute_id_type_目标身份 = G.call('房间_获取绝对身份', estr_player_目标身份)
+    
+    local name = create_net_name()
+    G.start_program('网络通用_广播消息', '网络通讯_接收信息', 
+                                        estr_absolute_id_type_目标身份,
+                                        estr_absolute_id_type_发起者身份,
+                                        farg,
+                                        name)
+
+    -- 等待返回
+    G.wait1('网络交互', name)
+    local _, return_farg = G.event_info()
+    return G.call(return_farg or {})
+end
+
+t['网络通讯_技能效果_获知随机卡牌'] = function (int_数量, estr_cardpos_type_卡牌来源, boolean_是否复制, boolean_是否明牌)
+    local all_cards = G.misc()['实例化卡牌列表']
+    local TargetList
+
+    if estr_cardpos_type_卡牌来源 == '卡组' then
+        -- TODO，卡组的卡需要特殊记录
+        return 
+    else
+        TargetList = G.call('array_filter', all_cards, function (t)
+            return G.call('卡牌条件_卡牌所处位置判断', t, {estr_cardpos_type_卡牌来源})
+        end)
+    end
+    
+    local rlib = G.call('Create_Randomlib', G.QueryName(0x100c0002))
+    for _, card in ipairs(TargetList or {}) do
+        rlib:添加数据({card, 100})
+    end
+    rlib:初始化(false, true)
+
+    local result = rlib(int_数量)
+    local list = {}
+
+    local attr_list = {'root', '卡牌属性', '逻辑数据', '动态数据'}
+    if boolean_是否复制 then
+        for k, card in ipairs(result) do
+            if boolean_是否明牌 then
+                G.call('卡牌实例化_信息更新_预处理', card, attr_list)
+            end
+            table.insert(list, {'网络通讯_卡牌实例化_信息更新', 0, attr_list, card_get_value(card, attr_list)})
+        end
+        return {'farg_array_run', list}
+    else
+        for k, card in ipairs(result) do
+            G.call('卡牌实例化_信息更新_预处理', card, attr_list)
+            table.insert(list, card.name)
+        end
+        return {'return', list}
     end
 end

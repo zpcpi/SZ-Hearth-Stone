@@ -13,6 +13,10 @@ t['get_event_info'] = function ()
     return G.event_info()
 end
 
+t['return'] = function (v)
+    return v
+end
+
 t['asdasd'] = function ()
     local rlib = G.call('Create_Randomlib', G.QueryName(0x100c0003))
 
@@ -43,8 +47,7 @@ t['asdasd'] = function ()
 end
 
 t['zpc_test'] = function (count)
-    local rlib = G.call('卡牌随机库_获取', 0x10140001)
-    G.show_table(rlib)
+    G.call('网络通讯_请求信息', '敌方1', {'网络通讯_技能效果_获知随机卡牌', 1, '手牌', true})
 end
 
 t['zpc_test2'] = function (a)
