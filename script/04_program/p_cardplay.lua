@@ -456,21 +456,29 @@ local single_heal = function ()
     local init = function ()
     end
     local action = function ()
+        local Caster = o_skill_info_效果信息['Caster']
+
         local int_治疗值 = o_skill_info_效果信息['逐个治疗数值']
         local Target = o_skill_info_效果信息['逐个治疗目标']
 
-        local _int_治疗数值 = o_skill_info_效果信息['治疗数值']
-        local TargetList = o_skill_info_效果信息['最终治疗目标']
-
-        local index = #_int_治疗数值 + 1
-
-        -- 治疗值记录下来
-        _int_治疗数值[index] = int_治疗值
-        TargetList[index] = Target
+        -- 控制治疗，防止溢出
+        local cur_hp = G.call('卡牌属性_获取', Target, '生命', '当前值') or 0
+        local max_hp = G.call('卡牌属性_获取', Target, '生命', '最大值') or 0
+        int_治疗值 = math.min(int_治疗值 or 0, max_hp - cur_hp)
 
         -- 造成治疗
-        if int_治疗值 then
+        if int_治疗值 > 0 then
+            local _int_治疗数值 = o_skill_info_效果信息['治疗数值']
+            local TargetList = o_skill_info_效果信息['最终治疗目标']
+    
+            local index = #_int_治疗数值 + 1
+    
+            -- 治疗值记录下来
+            _int_治疗数值[index] = int_治疗值
+            TargetList[index] = Target
+
             G.call('card_造成治疗', Target, int_治疗值)
+            G.trig_event('逻辑_卡牌造成治疗', Caster, Target, int_治疗值)
         end
     end
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_直接治疗', init, action)
