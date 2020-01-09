@@ -2296,7 +2296,7 @@ t['技能效果_消灭目标'] = function ()
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_消灭目标', init, action)
 end
 
-t['技能效果_心灵视界'] = function (int_获取数量, estr_player_相对身份)
+t['技能效果_牧师脏牌'] = function (int_获取数量, estr_cardpos_type_卡牌来源)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -2307,8 +2307,8 @@ t['技能效果_心灵视界'] = function (int_获取数量, estr_player_相对�
     end
     local action = function ()
         local cardlist = G.call('网络通讯_请求信息', 
-                                    estr_player_相对身份, 
-                                    {'网络通讯_技能效果_获知随机卡牌', int_获取数量, '手牌', true}
+                                    '敌方1', 
+                                    {'网络通讯_技能效果_获知随机卡牌', int_获取数量, estr_cardpos_type_卡牌来源, true}
                                 )
         for _, cardname in ipairs(cardlist or {}) do
             G.call('技能效果_创建手牌', cardname, false, true)

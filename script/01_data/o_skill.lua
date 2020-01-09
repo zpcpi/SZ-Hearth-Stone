@@ -2386,11 +2386,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_心灵视界',1,'$敌方1'},
+{'技能效果_牧师脏牌',1,'$手牌'},
 lua = function (self, info, card)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_心灵视界",1,"敌方1")
+	return G.call("技能效果_牧师脏牌",1,"手牌")
 end
 ,
 },
