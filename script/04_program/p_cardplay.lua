@@ -311,7 +311,6 @@ t['卡牌使用_武器装备'] = function ()
         local old_weapon = G.call('角色_战场_获取武器', player)
         if old_weapon then
             -- 这里只是打上标记
-            G.trig_event('逻辑_武器摧毁', old_weapon)
             G.call('技能效果_效果树_执行子效果',
                     {
                         ['Player'] = o_skill_info_效果信息['Player'],
@@ -1000,18 +999,6 @@ t['逻辑注册_武器功能_武器摧毁'] = function ()
 
     if (tar == weapon) then
         weapon_close(weapon)
-
-        -- 标记为等待死亡，等待死亡结算
-        G.call('技能效果_效果树_执行子效果',
-                {
-                    ['Player'] = '我方',
-                    ['Caster'] = weapon,
-                    ['Target'] = {weapon},
-                },
-                function ()
-                    G.call('技能效果_特性', {'等待死亡'})
-                end
-            )
     end
 end
 

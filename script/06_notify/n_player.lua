@@ -142,7 +142,9 @@ function noti.角色_战场_移除武器_绝对身份(estr_absolute_id_type_绝�
 
     script_动画系统:add_animquest(
         G.call('动画系统_创建quest_自定义', script_动画系统, true, 200, {
-            {script_战场英雄组件.delData, script_战场英雄组件, false, false, true},
+            {   n=5,
+                script_战场英雄组件.delData, script_战场英雄组件, false, false, true
+            },
         })
     )
 end
