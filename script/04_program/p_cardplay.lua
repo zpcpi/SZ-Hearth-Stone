@@ -280,12 +280,7 @@ t['卡牌使用_随从召唤'] = function ()
     end
     local action = function ()
         local Caster = o_skill_info_效果信息['Caster']
-        local cardtype = get_attr(Caster, '逻辑数据', '类型')
-
-        if cardtype == 0x10090004 then
-            -- 随从
-            G.trig_event('逻辑_随从召唤', Caster)
-        end
+        G.trig_event('逻辑_随从召唤', Caster)
 
         -- todo，记录
     end
@@ -303,29 +298,36 @@ t['卡牌使用_武器装备'] = function ()
 
     local init = function ()
         local Caster = o_skill_info_效果信息['Caster']
-        local cardtype = get_attr(Caster, '逻辑数据', '类型')
-
-        if cardtype == 0x10090006 then
-            -- 武器卡
-            G.trig_event('逻辑_武器装备前', Caster)
-        end
+        
+        G.trig_event('逻辑_武器装备前', Caster)
     end
     local action = function ()
         local Caster = o_skill_info_效果信息['Caster']
         local cardtype = get_attr(Caster, '逻辑数据', '类型')
         local player = '我方'
 
-        if cardtype == 0x10090006 then
-            -- 老武器摧毁
-            -- TODO，玩家归属判断
-            local old_weapon = G.call('角色_战场_获取武器', player)
-            if old_weapon then
-                G.trig_event('逻辑_武器摧毁', old_weapon)
-            end
-            -- 武器卡
-            G.trig_event('逻辑_武器装备', Caster)
-            G.call('角色_战场_设置武器', player, Caster)
+        -- 老武器摧毁
+        -- TODO，玩家归属判断
+        local old_weapon = G.call('角色_战场_获取武器', player)
+        if old_weapon then
+            -- 这里只是打上标记
+            G.trig_event('逻辑_武器摧毁', old_weapon)
+            G.call('技能效果_效果树_执行子效果',
+                    {
+                        ['Player'] = o_skill_info_效果信息['Player'],
+                        ['Caster'] = Caster,
+                        ['Target'] = {old_weapon},
+                    },
+                    function ()
+                        G.call('技能效果_消灭目标')
+                    end
+                )
+            G.call('技能效果_死亡结算')
         end
+        -- 武器卡
+        -- TODO，先判断下武器还在不在
+        G.call('角色_战场_设置武器', player, Caster)
+        G.trig_event('逻辑_武器装备', Caster)
 
         -- todo，记录
     end
@@ -999,7 +1001,17 @@ t['逻辑注册_武器功能_武器摧毁'] = function ()
     if (tar == weapon) then
         weapon_close(weapon)
 
-        -- TODO，触发亡语
+        -- 标记为等待死亡，等待死亡结算
+        G.call('技能效果_效果树_执行子效果',
+                {
+                    ['Player'] = '我方',
+                    ['Caster'] = weapon,
+                    ['Target'] = {weapon},
+                },
+                function ()
+                    G.call('技能效果_特性', {'等待死亡'})
+                end
+            )
     end
 end
 
@@ -1129,8 +1141,8 @@ t['逻辑注册_卡牌死亡结算'] = function ()
         local TargetList = o_skill_info_效果信息['Target'] or {}
 
         for _,Target in ipairs(TargetList) do
-            local cardtype = (t['逻辑数据'] or {})['类型']
-            local cardpos = (t['动态数据'] or {})['卡牌位置']
+            local cardtype = (Target['逻辑数据'] or {})['类型']
+            local cardpos = (Target['动态数据'] or {})['卡牌位置']
 
             if cardtype == 0x10090001 then
                 -- 英雄
@@ -1147,15 +1159,37 @@ t['逻辑注册_卡牌死亡结算'] = function ()
                             function ()
                                 -- 触发亡语
                                 G.call('卡牌关键词_亡语')
+
+                                -- 亡语之后删除单位
+                                if G.call('卡牌条件_卡牌特性判断', Target, {'等待死亡'}) then
+                                    local player = G.call('房间_获取相对身份', Target['动态数据']['所有者'])
+                                    G.call('角色_战场_移除随从', player, Target)
+                                end
                             end
                         )
-                    if G.call('卡牌条件_卡牌特性判断', Target, {'等待死亡'}) then
-                        local player = G.call('房间_获取相对身份', Target['动态数据']['所有者'])
-                        G.call('角色_战场_移除随从', player, Target)
-                    end
                 end
             elseif cardtype == 0x10090006 then
                 -- 武器
+                if cardpos == '牌库' then
+                elseif cardpos == '手牌' then
+                elseif cardpos == '战场' then
+                    local cur_info = {
+                        ['Player'] = o_skill_info_效果信息['Player'],
+                        ['Caster'] = Target,
+                    }
+                    G.call('技能效果_效果树_执行子效果', cur_info,
+                            function ()
+                                -- 触发亡语
+                                G.call('卡牌关键词_亡语')
+                                if G.call('卡牌条件_卡牌特性判断', Target, {'等待死亡'}) then
+                                    G.trig_event('逻辑_武器摧毁', Target)
+            
+                                    local player = G.call('房间_获取相对身份', Target['动态数据']['所有者'])
+                                    G.call('角色_战场_移除武器', player, Target)
+                                end
+                            end
+                        )
+                end
             end
 
         end
@@ -2249,6 +2283,22 @@ t['技能效果_死亡结算'] = function ()
                 effect_action_iter(cur_info, '逻辑_卡牌死亡结算', init, action)
             end
         )
+end
+
+t['技能效果_消灭目标'] = function ()
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+    end
+    local action = function ()
+        G.call('技能效果_特性', {'等待死亡'})
+    end
+
+    effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_消灭目标', init, action)
 end
 
 -- ============================================
