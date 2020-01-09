@@ -134,6 +134,17 @@ t['角色_战场_添加随从'] = function(estr_player_相对身份, o_card_卡�
     end
 end
 
+t['角色_战场_移除随从'] = function(estr_player_相对身份, o_card_卡牌)
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
+
+    local MinionList = G.call('角色_获取随从列表', estr_player_相对身份)
+    if (o_card_卡牌 ~= nil) and (G.call('array_get_element_index', MinionList, o_card_卡牌) ~= nil) then
+        local i_card_卡牌 = o_card_卡牌.name
+        G.call('角色_战场_移除随从_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
+        G.call('网络通用_广播消息', '角色_战场_移除随从_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
+    end
+end
+
 --hide=true
 t['角色_获取随从数量'] = function(estr_player_相对身份)
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)

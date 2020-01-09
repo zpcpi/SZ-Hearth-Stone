@@ -146,6 +146,27 @@ t['角色_战场_添加随从_绝对身份'] = function(estr_absolute_id_type_�
     end
 end
 
+t['角色_战场_移除随从_绝对身份'] = function(estr_absolute_id_type_绝对身份, i_card_卡牌)
+    local o_misc = G.misc()
+    local int_当前随从数量 = G.call('角色_获取随从数量_绝对身份', estr_absolute_id_type_绝对身份)
+    o_misc.随从数量[estr_absolute_id_type_绝对身份] = int_当前随从数量 - 1
+
+    local o_card_卡牌 = G.QueryName(i_card_卡牌)
+    misc_attr_check('随从信息', estr_absolute_id_type_绝对身份)
+    if o_card_卡牌 then
+        if o_card_卡牌['动态数据'] then
+            o_card_卡牌['动态数据']['卡牌位置'] = '坟场'
+        end
+        local 随从信息 = o_misc.随从信息[estr_absolute_id_type_绝对身份]
+        for k,tar in ipairs(随从信息) do
+            if tar == o_card_卡牌 then
+                table.remove(随从信息, k)
+                break
+            end
+        end
+    end
+end
+
 --hide=true
 t['角色_获取随从数量_绝对身份'] = function(estr_absolute_id_type_绝对身份)
     local o_misc = G.misc()

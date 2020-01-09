@@ -143,6 +143,26 @@ function noti.角色_战场_添加随从_绝对身份(estr_absolute_id_type_绝�
     script_战场随从组件:set_minion_pos()
 end
 
+function noti.角色_战场_移除随从_绝对身份(estr_absolute_id_type_绝对身份, i_card_卡牌)
+    local o_misc = G.misc()
+    local script_战场 = o_misc.主战场系统
+    local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
+
+    local script_战场随从组件
+    if estr_player_相对身份 == '我方' then
+        script_战场随从组件 = script_战场.selfBattleminion.c_battleminion_self
+    elseif estr_player_相对身份 == '敌方1' then
+        script_战场随从组件 = script_战场.enemyBattleminion.c_battleminion_enemy
+    else
+        return
+    end
+
+    local o_card_卡牌 = G.QueryName(i_card_卡牌)
+    local del_count = script_战场随从组件:get_cardindex_byobj(script_战场随从组件:get_obj_bycard(o_card_卡牌))
+    script_战场随从组件:removeCard(del_count)
+    script_战场随从组件:set_minion_pos()
+end
+
 function noti.角色_设置水晶数据_绝对身份(estr_absolute_id_type_绝对身份, estr_mana_type_修改类型, int_value)
     local o_misc = G.misc()
     local script_战场 = o_misc.主战场系统
