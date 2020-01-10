@@ -2405,9 +2405,48 @@ t['技能效果_牧师精控'] = function ()
                         G.call('角色_战场_移除随从', owner, Target)
 
                         Target['动态数据']['所有者'] = G.call('房间_获取绝对身份', player)
+
+                        -- TODO，判断场面是否满了
                         G.call('角色_战场_添加随从', player, Target)
 
                         G.call('卡牌使用_上场')
+                    end
+                )
+        end
+    end
+    effect_action_iter(o_skill_info_效果信息, nil, init, action)
+end
+
+t['技能效果_潜行者闷棍'] = function ()
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+    end
+    local action = function ()
+        local TargetList = o_skill_info_效果信息['Target']
+
+        for _, Target in ipairs(TargetList or {}) do
+            local owner = G.call('房间_获取相对身份', Target['动态数据']['所有者'])
+            G.call('技能效果_效果树_执行子效果',
+                    {
+                        ['Player'] = owner,
+                        ['Caster'] = Target,
+                        ['Target'] = {Target},
+                    },
+                    function ()
+                        local int_手牌数量 = G.call('角色_获取手牌数量', owner)
+
+                        if (int_手牌数量 < HANDCARDS_MAX_COUNT) then
+                            -- 手牌没有满，移动回手牌
+                            G.call('角色_战场_移除随从', owner, Target)
+                            G.call('技能效果_创建手牌', Target.name, false, true)
+                        else
+                            G.call('技能效果_消灭目标')
+                        end
                     end
                 )
         end

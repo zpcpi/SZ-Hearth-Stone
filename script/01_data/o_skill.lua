@@ -410,6 +410,35 @@ end
 		},
 	},
 	{
+		['name']=0x1013004b,
+		['showname']='闷棍-战场回手',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_潜行者闷棍'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_潜行者闷棍")
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130046,
 		['showname']='刀扇-群体伤害,抽牌',
 		['逻辑功能']={
