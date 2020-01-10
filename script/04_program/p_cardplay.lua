@@ -1104,14 +1104,6 @@ t['逻辑注册_战吼'] = function ()
     trigger_iter(card, '战吼')
 end
 
--- 死亡
-t['逻辑注册_死亡'] = function ()
-    local info = G.event_info()
-    local card = info['Caster']
-
-    trigger_iter(card, '死亡')
-end
-
 t['逻辑注册_卡牌死亡结算'] = function ()
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
@@ -1214,7 +1206,13 @@ t['逻辑注册_卡牌死亡结算'] = function ()
     effect_action_iter(o_skill_info_效果信息, nil, init, action)
 end
 
+-- 死亡
+t['逻辑注册_死亡'] = function ()
+    local info = G.event_info()
+    local card = info['Caster']
 
+    trigger_iter(card, '死亡')
+end
 
 t['逻辑注册_冲锋添加'] = function ()
     local Target = G.event_info()
@@ -1254,7 +1252,42 @@ t['逻辑注册_回合结束_冻结删除判断'] = function ()
     end
 end
 
+t['逻辑注册_圣盾前置条件'] = function ()
+    local o_skill_info_效果信息 = G.event_info()
+
+    if o_skill_info_效果信息 then
+        local Target = o_skill_info_效果信息['逐个伤害目标']
+        local int_伤害值 = o_skill_info_效果信息['逐个伤害数值']
+
+        -- 被击者有圣盾
+        -- 目标是随从
+        return G.call('卡牌条件_卡牌特性判断', Target, {'圣盾'}) and
+               (int_伤害值 > 0)
+    end
+end
+
 t['逻辑注册_圣盾抵消伤害'] = function ()
+    local o_skill_info_效果信息 = G.event_info()
+
+    if o_skill_info_效果信息 then
+        local Target = o_skill_info_效果信息['逐个伤害目标']
+        -- 抵消伤害
+        o_skill_info_效果信息['逐个伤害数值'] = 0
+        -- 去除圣盾
+        G.call('技能效果_效果树_执行子效果',
+                {
+                    ['Player'] = '我方',
+                    ['Caster'] = Target,
+                    ['Target'] = {Target},
+                },
+                function ()
+                    G.call('技能效果_特性', nil, {'圣盾'})
+                end
+            )
+    end
+end
+
+t['逻辑注册_剧毒前置条件'] = function ()
     local o_skill_info_效果信息 = G.event_info()
 
     if o_skill_info_效果信息 then
@@ -1262,24 +1295,29 @@ t['逻辑注册_圣盾抵消伤害'] = function ()
         local Target = o_skill_info_效果信息['逐个伤害目标']
         local int_伤害值 = o_skill_info_效果信息['逐个伤害数值']
 
-        if int_伤害值 > 0 then
-            if G.call('卡牌条件_卡牌特性判断', Target, {'圣盾'}) then
-                -- 抵消伤害
-                o_skill_info_效果信息['逐个伤害数值'] = 0
+        -- 攻击者有剧毒
+        -- 目标是随从
+        return G.call('卡牌条件_卡牌特性判断', Caster, {'剧毒'}) and
+               G.call('卡牌条件_卡牌类型判断', Target, {0x10090004}) and
+               (int_伤害值 > 0)
+    end
+end
 
-                -- 去除圣盾
-                G.call('技能效果_效果树_执行子效果',
-                        {
-                            ['Player'] = '我方',
-                            ['Caster'] = Target,
-                            ['Target'] = {Target},
-                        },
-                        function ()
-                            G.call('技能效果_特性', nil, {'圣盾'})
-                        end
-                    )
-            end
-        end
+t['逻辑注册_剧毒消灭对方'] = function ()
+    local o_skill_info_效果信息 = G.event_info()
+    if o_skill_info_效果信息 then
+        local Target = o_skill_info_效果信息['逐个伤害目标']
+
+        G.call('技能效果_效果树_执行子效果',
+                {
+                    ['Player'] = '我方',
+                    ['Caster'] = Target,
+                    ['Target'] = {Target},
+                },
+                function ()
+                    G.call('技能效果_消灭目标')
+                end
+            )
     end
 end
 
@@ -1343,9 +1381,12 @@ t['通用逻辑_默认流程注册'] = function ()
 
     -- 冻结解除
     G.addListener('逻辑注册_回合结束_冻结删除判断', {'流程_回合结束', player}, cond, EVENT_PRIOR.冻结解除, EVENT_GROUP.冻结解除)
-
+    
     -- 圣盾
-    G.addListener('逻辑注册_圣盾抵消伤害', {'逻辑_技能效果_直接伤害前'}, cond, EVENT_PRIOR.圣盾, EVENT_GROUP.圣盾)
+    G.addListener('逻辑注册_圣盾抵消伤害', {'逻辑_技能效果_直接伤害前'}, t['逻辑注册_圣盾前置条件'], EVENT_PRIOR.圣盾, EVENT_GROUP.圣盾)
+    
+    -- 剧毒
+    G.addListener('逻辑注册_剧毒消灭对方', {'逻辑_技能效果_直接伤害'}, t['逻辑注册_剧毒前置条件'], EVENT_PRIOR.剧毒, EVENT_GROUP.剧毒)
 
 
     -- 沉默
