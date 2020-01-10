@@ -2339,6 +2339,41 @@ t['技能效果_牧师脏牌'] = function (int_获取数量, estr_cardpos_type_�
     effect_action_iter(o_skill_info_效果信息, nil, init, action)
 end
 
+t['技能效果_牧师精控'] = function ()
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+    
+    local init = function ()
+    end
+    local action = function ()
+        local player = o_skill_info_效果信息['Player']
+        local TargetList = o_skill_info_效果信息['Target']
+
+        for _, Target in ipairs(TargetList or {}) do
+            G.call('技能效果_效果树_执行子效果',
+                    {
+                        ['Player'] = player,
+                        ['Caster'] = Target,
+                        ['Target'] = {Target},
+                    },
+                    function ()
+                        local owner = G.call('房间_获取相对身份', Target['动态数据']['所有者'])
+                        G.call('角色_战场_移除随从', owner, Target)
+
+                        Target['动态数据']['所有者'] = G.call('房间_获取绝对身份', player)
+                        G.call('角色_战场_添加随从', player, Target)
+
+                        G.call('卡牌使用_上场')
+                    end
+                )
+        end
+    end
+    effect_action_iter(o_skill_info_效果信息, nil, init, action)
+end
+
 -- ============================================
 -- ============================================
 -- ============================================

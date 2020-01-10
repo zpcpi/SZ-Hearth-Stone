@@ -92,6 +92,35 @@ end
 		},
 	},
 	{
+		['name']=0x1013003e,
+		['showname']='精神控制-控制随从',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_牧师精控'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_牧师精控")
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x1013003a,
 		['showname']='暗言术：灭-消灭目标',
 		['逻辑功能']={
