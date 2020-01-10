@@ -13,7 +13,7 @@ local t = {
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -23,7 +23,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_法术伤害',2},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_法术伤害",2)
@@ -42,7 +42,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -52,7 +52,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_法术伤害',2},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_法术伤害",2)
@@ -71,7 +71,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -81,7 +81,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_消灭目标'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_消灭目标")
@@ -100,7 +100,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -110,7 +110,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_消灭目标'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_消灭目标")
@@ -129,7 +129,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -177,7 +177,7 @@ t =
         }
     }
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -217,7 +217,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -231,7 +231,7 @@ t =
     {'技能效果_法术伤害',3},
     {'技能效果_抽牌'}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -255,7 +255,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -272,7 +272,7 @@ t =
         {'$冻结'}
     }
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -296,7 +296,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -321,7 +321,7 @@ t =
         }
     }
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_奥数飞弹",3,1,(function()
@@ -348,7 +348,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -364,7 +364,7 @@ t =
         {'$我方','$末尾',0x10060029}
     }
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_召唤",{{"我方","末尾",268828713},{"我方","末尾",268828713}})
@@ -384,7 +384,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_英雄技能使用','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_英雄技能使用",card}
@@ -406,7 +406,7 @@ t =
     },
     {'技能效果_英雄技能伤害',2}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -435,7 +435,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_英雄技能使用','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_英雄技能使用",card}
@@ -445,7 +445,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_英雄技能伤害',1},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_英雄技能伤害",1)
@@ -465,7 +465,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_英雄技能使用','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_英雄技能使用",card}
@@ -475,7 +475,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_英雄技能治疗',2},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_英雄技能治疗",2)
@@ -494,7 +494,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -504,7 +504,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_追踪术',3},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_追踪术",3)
@@ -523,7 +523,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -533,7 +533,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_添加BUFF',0x10130016},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_添加BUFF",269680662)
@@ -552,7 +552,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_随从战吼','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_随从战吼",card}
@@ -562,7 +562,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_添加BUFF',0x10130018},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_添加BUFF",269680664)
@@ -581,7 +581,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_随从战吼','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_随从战吼",card}
@@ -611,7 +611,7 @@ t =
     },
     'info.Player'
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function(player_38)
@@ -638,7 +638,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -648,7 +648,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_添加BUFF',0x10130027},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_添加BUFF",269680679)
@@ -667,7 +667,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -677,7 +677,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_添加BUFF',0x10130029},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_添加BUFF",269680681)
@@ -696,7 +696,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -706,7 +706,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_添加BUFF',0x10130031},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_添加BUFF",269680689)
@@ -725,7 +725,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -735,7 +735,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_添加BUFF',0x1013002c},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_添加BUFF",269680684)
@@ -754,7 +754,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -773,7 +773,7 @@ t =
         }
     }
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_召唤",{{"我方","末尾",G.call("卡牌随机库_获取ID",269746177,true)}})
@@ -793,7 +793,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_英雄技能使用','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_英雄技能使用",card}
@@ -808,7 +808,7 @@ t =
         {'$我方','$末尾',0x10060035}
     }
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_召唤",{{"我方","末尾",268828725}})
@@ -839,7 +839,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -858,7 +858,7 @@ t =
     {'技能效果_法术伤害',5},
     {'技能效果_法术伤害',3}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function ()
@@ -883,7 +883,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -898,7 +898,7 @@ t =
     {'技能目标_随机选择',2,0x100c0002},
     {'技能效果_法术伤害',3}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -939,7 +939,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_随从上场','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_随从上场",card}
@@ -965,7 +965,7 @@ t =
         {'技能效果_攻击',-1}
     }
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_战场光环",self,card,(function()
@@ -1001,7 +1001,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_随从上场','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_随从上场",card}
@@ -1027,7 +1027,7 @@ t =
         {'技能效果_攻击',-1}
     }
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_战场光环",self,card,(function()
@@ -1051,7 +1051,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_英雄技能使用','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_英雄技能使用",card}
@@ -1066,7 +1066,7 @@ t =
     {'技能效果_护甲',1},
     {'技能效果_本回合攻击',1}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -1091,7 +1091,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1101,7 +1101,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_抽牌'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_抽牌")
@@ -1120,7 +1120,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1134,7 +1134,7 @@ t =
     {'技能效果_抽牌'},
     {'技能效果_抽牌'}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -1158,7 +1158,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1168,7 +1168,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_变形',0x10060073,false},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_变形",268828787,false)
@@ -1187,7 +1187,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1197,7 +1197,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_本回合当前水晶',1},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_本回合当前水晶",1)
@@ -1216,7 +1216,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1226,7 +1226,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_法术伤害',1},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_法术伤害",1)
@@ -1245,7 +1245,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1255,7 +1255,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_法术伤害',6},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_法术伤害",6)
@@ -1274,7 +1274,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1284,7 +1284,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_本回合当前水晶',1},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_本回合当前水晶",1)
@@ -1303,7 +1303,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1313,7 +1313,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_添加BUFF',0x10130005},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_添加BUFF",269680645)
@@ -1332,7 +1332,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1342,7 +1342,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_法术治疗',8},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_法术治疗",8)
@@ -1361,7 +1361,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1371,7 +1371,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_法术治疗',6},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_法术治疗",6)
@@ -1394,7 +1394,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_卡牌攻击前'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_卡牌攻击前"}
@@ -1418,7 +1418,7 @@ t =
     'info.Player',
     'info.Caster'
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function(player_38,caster_47)
@@ -1444,7 +1444,7 @@ t =
         {'技能效果_武器治疗',2}
     }
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_效果树_执行子效果",{["Caster"] = card,["Player"] = info.Player,["Target"] = {info.Caster}},(function()
@@ -1465,7 +1465,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1492,7 +1492,7 @@ t =
         }
     }
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -1520,7 +1520,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1535,7 +1535,7 @@ t =
     {'技能目标_选取英雄','$我方'},
     {'技能效果_本回合攻击',2}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -1560,7 +1560,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1592,7 +1592,7 @@ t =
         }
     }
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -1625,7 +1625,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1639,7 +1639,7 @@ t =
     {'技能目标_选取随从','$敌方1'},
     {'技能效果_法术伤害',1}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -1663,7 +1663,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1678,7 +1678,7 @@ t =
     {'技能目标_选取随从','$敌方1'},
     {'技能效果_法术伤害',2}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -1703,7 +1703,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1717,7 +1717,7 @@ t =
     {'技能目标_选取随从','$敌方1'},
     {'技能效果_法术伤害',4}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -1741,7 +1741,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1758,7 +1758,7 @@ t =
         {'$冻结'}
     }
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -1782,7 +1782,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -1796,7 +1796,7 @@ t =
     {'技能效果_法术伤害',5},
     {'技能效果_抽牌'}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -1821,7 +1821,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_技能添加','nil','self'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_技能添加",nil,self}
@@ -1839,7 +1839,7 @@ t =
         {'$嘲讽'}
     }
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -1865,7 +1865,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_技能添加','nil','self'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_技能添加",nil,self}
@@ -1875,7 +1875,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_设置生命上限',1},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_设置生命上限",1)
@@ -1895,7 +1895,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_技能添加','nil','self'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_技能添加",nil,self}
@@ -1913,7 +1913,7 @@ t =
         {'$嘲讽'}
     }
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -1939,7 +1939,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_技能添加','nil','self'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_技能添加",nil,self}
@@ -1952,7 +1952,7 @@ t =
     '技能效果_特性',
     {'$圣盾'}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_特性",{"圣盾"})
@@ -1972,7 +1972,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_技能添加','nil','self'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_技能添加",nil,self}
@@ -1982,7 +1982,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_攻击',3},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_攻击",3)
@@ -2002,7 +2002,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_技能添加','nil','self'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_技能添加",nil,self}
@@ -2016,7 +2016,7 @@ t =
     {'技能效果_生命上限',4},
     {'技能效果_攻击',4}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -2041,7 +2041,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_技能添加','nil','self'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_技能添加",nil,self}
@@ -2051,7 +2051,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_设置攻击力',1},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_设置攻击力",1)
@@ -2085,7 +2085,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_随从上场','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_随从上场",card}
@@ -2119,7 +2119,7 @@ t =
         }
     }
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_战场光环",self,card,(function()
@@ -2159,7 +2159,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_随从召唤'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_随从召唤"}
@@ -2177,7 +2177,7 @@ t =
     },
     {'技能效果_抽牌'}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function ()
@@ -2213,7 +2213,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_卡牌造成治疗'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_卡牌造成治疗"}
@@ -2231,7 +2231,7 @@ t =
     },
     {'技能效果_抽牌'}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function ()
@@ -2258,7 +2258,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_卡牌造成伤害','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_卡牌造成伤害",card}
@@ -2275,7 +2275,7 @@ t =
         {'$冻结'}
     }
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -2299,7 +2299,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -2314,7 +2314,7 @@ t =
     {'技能效果_护甲',2},
     {'技能效果_本回合攻击',2}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -2339,7 +2339,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -2353,7 +2353,7 @@ t =
     {'技能目标_选取英雄','$我方'},
     {'技能效果_法术治疗',5}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()
@@ -2377,7 +2377,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -2387,7 +2387,7 @@ end
 				['触发逻辑']={
 t =
 {'技能效果_牧师脏牌',1,'$手牌'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_牧师脏牌",1,"手牌")
@@ -2406,7 +2406,7 @@ end
 				['触发时机']={
 t =
 {'$逻辑_法术牌打出','card'},
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return {"逻辑_法术牌打出",card}
@@ -2420,7 +2420,7 @@ t =
     {'技能效果_生命上限',2},
     {'技能效果_抽牌'}
 },
-lua = function (self, info, card)
+lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function()

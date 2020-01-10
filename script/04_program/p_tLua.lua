@@ -866,7 +866,7 @@ t['tLua_code'] = function(ast)
     tabc = 0
     assert(type(ast) == "table")
 
-    tl('function (self, info, card)\n')
+    tl('function (self, card, info, data)\n')
         tabc = tabc + 1
         tlt('local G = require "gf"\n')
         tlt('local t = G.api\n')

@@ -679,8 +679,8 @@ local create_trigger_name = function (event)
     return '|#trigger#|#' .. event .. '#|' .. count
 end
 
-local trigger_iter = function (estr_cardevent_inittype_类型, card, skill)
-    local iter = function (skill, trigger)
+local trigger_iter = function (card, estr_cardevent_inittype_类型, skillname, count)
+    local iter = function (skill, index, trigger)
         local 是否重复触发 = trigger['是否重复触发']
         local 触发时机 = (trigger['触发时机'] or {})['lua']
         local 触发条件 = (trigger['触发条件'] or {})['lua']
@@ -690,12 +690,13 @@ local trigger_iter = function (estr_cardevent_inittype_类型, card, skill)
 
         local earg = nil
         local condi = nil
+        local skill_dynamic_data = {}
         if type(触发时机) == 'function' then
-            earg = 触发时机(skill, get_cur_effect_info(), card)
+            earg = 触发时机(skill, card, get_cur_effect_info(), skill_dynamic_data)
         end
         if earg and type(触发条件) == 'function' then
             condi = function ()
-                return 触发条件(skill, get_cur_effect_info(), card)
+                return 触发条件(skill, card, get_cur_effect_info(), skill_dynamic_data)
             end
         end
         if earg and type(触发逻辑) == 'function' then
@@ -703,21 +704,28 @@ local trigger_iter = function (estr_cardevent_inittype_类型, card, skill)
             local key = create_trigger_name(event_name)
             if 是否重复触发 then
                 t[key] = function ()
-                    return 触发逻辑(skill, get_cur_effect_info(), card)
+                    return 触发逻辑(skill, card, get_cur_effect_info(), skill_dynamic_data)
                 end
             else
                 t[key] = function ()
                     G.removeListener(key, event_name)
                     t[key] = nil
-                    card['动态数据']['当前注册事件'][key] = nil
-                    return 触发逻辑(skill, get_cur_effect_info(), card)
+                    card['动态数据_事件']['当前注册事件'][key] = nil
+                    return 触发逻辑(skill, card, get_cur_effect_info(), skill_dynamic_data)
                 end
             end
             G.addListener(key, earg, condi, 优先级, 分组)
 
             -- 绑定到卡牌信息上
-            local card_trglist = card['动态数据']['当前注册事件']
-            card_trglist[key] = event_name
+            local card_trglist = card['动态数据_事件']['当前注册事件']
+            card_trglist[key] = {
+                ['事件名'] = event_name,
+                ['注册类型'] = estr_cardevent_inittype_类型,
+                ['技能'] = skill.name,
+                ['技能名称'] = skill.showname,
+                ['逻辑编号'] = index,
+                ['技能动态数据'] = skill_dynamic_data,
+            }
         end
     end
 
@@ -725,9 +733,18 @@ local trigger_iter = function (estr_cardevent_inittype_类型, card, skill)
         for _,s in ipairs(skill_list or {}) do
             local skill = G.QueryName(s)
             if skill and skill['逻辑功能'] then
-                for _,trigger in ipairs(skill['逻辑功能']) do
+                if count then
+                    -- 只注册制定编号
+                    local trigger = skill['逻辑功能'][count] or {}
                     if trigger['注册时机'] == estr_cardevent_inittype_类型 then
-                        iter(skill, trigger)
+                        iter(skill, count, trigger)
+                    end
+                else
+                    -- 符合条件的全部注册
+                    for index,trigger in ipairs(skill['逻辑功能']) do
+                        if trigger['注册时机'] == estr_cardevent_inittype_类型 then
+                            iter(skill, index, trigger)
+                        end
                     end
                 end
             end
@@ -735,8 +752,8 @@ local trigger_iter = function (estr_cardevent_inittype_类型, card, skill)
     end
 
     local get_attr = CARD_GET_ATTR
-    if skill then
-        for_skill_list({skill})
+    if skillname then
+        for_skill_list({skillname})
     else
         local 卡牌效果 = get_attr(card, '逻辑数据', '卡牌效果')
         for_skill_list(卡牌效果)
@@ -747,7 +764,6 @@ end
 t['逻辑注册_初始化'] = function ()
     local card = G.event_info()
     card['动态数据'] = {
-        ['当前注册事件'] = {},
         ['浮动属性'] = {},
         ['武器属性'] = {},
         ['光环属性'] = {},
@@ -755,6 +771,9 @@ t['逻辑注册_初始化'] = function ()
         ['卡牌位置'] = '牌库',
         ['所有者'] = G.call('系统_获取当前玩家信息').绝对身份,
         ['特性层数'] = {},
+    }
+    card['动态数据_事件'] = {
+        ['当前注册事件'] = {},
     }
     if card['逻辑数据'] then
         if card['逻辑数据']['卡牌特性'] then
@@ -789,11 +808,14 @@ t['逻辑注册_初始化'] = function ()
         misc['别人实例化卡牌反查表'][card.name] = true
     end
 
-    trigger_iter('初始', card)
+    trigger_iter(card, '初始')
 end
 
 t['逻辑注册_别人初始化'] = function ()
     local card = G.event_info()
+    card['动态数据_事件'] = {
+        ['当前注册事件'] = {},
+    }
 
     local misc = G.misc()
     if misc['别人实例化卡牌反查表'][card.name] then
@@ -806,12 +828,12 @@ end
 t['逻辑注册_上场'] = function ()
     local card = G.event_info()
 
-    trigger_iter('上场', card)
+    trigger_iter(card, '上场')
 end
 
 t['逻辑注册_上手'] = function ()
     local card = G.event_info()
-    trigger_iter('上手', card)
+    trigger_iter(card, '上手')
 end
 
 t['逻辑注册_生效'] = function ()
@@ -819,14 +841,14 @@ t['逻辑注册_生效'] = function ()
     local card = info['Caster']
 
     -- 判断是否能够生效
-    trigger_iter('生效', card)
+    trigger_iter(card, '生效')
 end
 
 t['逻辑注册_添加'] = function ()
     local card, skill = G.event_info()
 
     -- 判断是否能够生效
-    trigger_iter('添加', card, skill.name)
+    trigger_iter(card, '添加', skill.name)
 end
 
 -- 特定流程
@@ -1079,7 +1101,7 @@ t['逻辑注册_战吼'] = function ()
     local info = G.event_info()
     local card = info['Caster']
 
-    trigger_iter('战吼', card)
+    trigger_iter(card, '战吼')
 end
 
 -- 死亡
@@ -1087,7 +1109,7 @@ t['逻辑注册_死亡'] = function ()
     local info = G.event_info()
     local card = info['Caster']
 
-    trigger_iter('死亡', card)
+    trigger_iter(card, '死亡')
 end
 
 t['逻辑注册_卡牌死亡结算'] = function ()
@@ -1265,12 +1287,12 @@ t['逻辑反注册_沉默'] = function ()
     -- 沉默或者移除时传card
     local card = G.event_info()
 
-    local card_trglist = card['动态数据']['当前注册事件']
+    local card_trglist = card['动态数据_事件']['当前注册事件']
     for key,event_name in pairs(card_trglist or {}) do
         G.removeListener(key, event_name)
         t[key] = nil
     end
-    card['动态数据']['当前注册事件'] = {}
+    card['动态数据_事件']['当前注册事件'] = {}
     card['卡牌效果'] = {}
 
     -- 其他修改
