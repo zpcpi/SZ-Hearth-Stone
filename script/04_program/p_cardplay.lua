@@ -2396,6 +2396,20 @@ t['技能目标_选取英雄'] = function (estr_player_相对身份)
     o_skill_info_效果信息['Target'] = TargetList
 end
 
+t['技能目标_选取武器'] = function (estr_player_相对身份)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local info_player = o_skill_info_效果信息['Player']
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份, info_player)
+    local TargetList = o_skill_info_效果信息['Target'] or {}
+    table.insert(TargetList, G.call('角色_战场_获取武器_绝对身份', estr_absolute_id_type_绝对身份))
+    o_skill_info_效果信息['Target'] = TargetList
+end
+
 t['技能目标_选取随从'] = function (estr_player_相对身份, filter)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
