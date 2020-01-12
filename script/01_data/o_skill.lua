@@ -1189,6 +1189,36 @@ end
 		},
 	},
 	{
+		['name']=0x1013004c,
+		['showname']='匕首精通-装备武器',
+		['postfix']='英雄技能',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_英雄技能使用','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_英雄技能使用",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_装备武器',0x1006004c},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_装备武器",268828748)
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130014,
 		['showname']='杀戮命令-伤害',
 		['目标筛选']={n=8,[1] = '卡牌条件_目标通用过滤器',

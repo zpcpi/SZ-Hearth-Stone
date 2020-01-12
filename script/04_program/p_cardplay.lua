@@ -2454,6 +2454,41 @@ t['技能效果_潜行者闷棍'] = function ()
     effect_action_iter(o_skill_info_效果信息, nil, init, action)
 end
 
+t['技能效果_装备武器'] = function (i_card_武器卡牌ID, boolean_是否是实例)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local estr_player_相对身份 = o_skill_info_效果信息['Player']
+    if estr_player_相对身份 then
+        local init = function ()
+        end
+        local action = function ()
+            -- TODO，缺少处理
+            local o_card_添加卡牌实例
+            if boolean_是否是实例 then
+                o_card_添加卡牌实例 = G.QueryName(i_card_武器卡牌ID)
+            else
+                o_card_添加卡牌实例 = G.call('卡牌实例化', G.QueryName(i_card_武器卡牌ID))
+            end
+
+            G.call('技能效果_效果树_执行子效果',
+                    {
+                        ['Player'] = o_skill_info_效果信息['Player'],
+                        ['Caster'] = o_card_添加卡牌实例,
+                    },
+                    function ()
+                        G.call('卡牌使用_上场')
+                        G.call('卡牌使用_武器装备')
+                    end
+                )
+        end
+        effect_action_iter(o_skill_info_效果信息, nil, init, action)
+    end
+end
+
 -- ============================================
 -- ============================================
 -- ============================================
