@@ -7,8 +7,9 @@ local t ={
 			[3] = 'o_category',
 			[4] = 'o_profession',
 			[5] = 'o_race',
-			[6] = 'o_rank',
-			[7] = 'o_skill',
+			[6] = 'o_randomiter',
+			[7] = 'o_rank',
+			[8] = 'o_skill',
 		},
 		[2] = {
 			name = '系统',
