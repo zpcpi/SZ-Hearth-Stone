@@ -1947,6 +1947,91 @@ end
 		},
 	},
 	{
+		['name']=0x1013005a,
+		['showname']='牺牲契约-消灭恶魔,回血',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'map',
+    {
+        'function',
+        {'tar'},
+        {},
+        {
+            'block',
+            {
+                '技能效果_效果树_执行子效果',
+                {
+                    ['Player'] = 'info.Player',
+                    ['Target'] = {'table','tar'}
+                },
+                {
+                    'function',
+                    {},
+                    {},
+                    {'技能效果_消灭目标'}
+                }
+            },
+            {
+                '技能效果_效果树_执行子效果',
+                {
+                    ['Player'] = 'info.Player'
+                },
+                {
+                    'function',
+                    {},
+                    {},
+                    {
+                        'block',
+                        {'技能目标_选取英雄','$我方'},
+                        {'技能效果_法术治疗',5}
+                    }
+                }
+            }
+        }
+    },
+    'info.Target'
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return t["tLua_MAP"]((function(tar_49)
+		return (function()
+			local _ = nil
+			_ = G.call("技能效果_效果树_执行子效果",{["Player"] = info.Player,["Target"] = {tar_49}},(function()
+				return G.call("技能效果_消灭目标")
+			end))
+			_ = G.call("技能效果_效果树_执行子效果",{["Player"] = info.Player},(function()
+				return (function()
+					local _ = nil
+					_ = G.call("技能目标_选取英雄","我方")
+					_ = G.call("技能效果_法术治疗",5)
+					return _
+				end)()
+			end))
+			return _
+		end)()
+	end),info.Target)
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130023,
 		['showname']='火球术-伤害',
 		['逻辑功能']={
