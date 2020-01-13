@@ -6,11 +6,15 @@ local G = require "gf"
 local t = G.com()
 
 function t:init()
+    if G.is_editor then 
+        return
+    end
     self.ipAddressText = self.obj.getChildByName('IPAddress')
     self.connectStatusText = self.obj.getChildByName('ConnectStatus')
     self.connectBtn = self.obj.getChildByName('Connect')
     self.cancelBtn = self.obj.getChildByName('Cancel')
     self.cancelConnectBtn = self.obj.getChildByName('CancelConnect')
+    self.ipAddressText.text = G.call('网络通用_获取本机IP地址')
 
     self.connectStatusText.visible = false
     self.cancelConnectBtn.visible = false
