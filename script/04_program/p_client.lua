@@ -19,14 +19,14 @@ t['客机_连接主机'] = function(string_hostip)
         string_hostip = string.sub(string_hostip, 1, pos - 1)
         G.netPort = tonumber(portStr)
     end
-    G.call('客机_输出连接信息', '正在连接中...')
+    G.call('客机_输出连接信息', '正在连接中...\n' .. string.format('%s:%s', tostring(string_hostip), tostring(G.netPort)))
     if G.tcpClientSocket then 
         G.tcpClientSocket:close()
     end
     G.tcpClientSocket = lsocket.tcp()
     local hostSocket, err = G.tcpClientSocket:connect(string_hostip, G.netPort)
     if not hostSocket then
-        G.call('客机_输出连接信息', '连接失败!\n' .. err)
+        G.call('客机_输出连接信息', '连接失败!\n' .. string.format('%s:%s\n', tostring(string_hostip), tostring(G.netPort)) .. err)
         return
     end
     G.connectList = {G.tcpClientSocket}

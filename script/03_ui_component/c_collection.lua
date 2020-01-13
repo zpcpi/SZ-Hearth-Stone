@@ -73,10 +73,10 @@ function t:click(tar)
         if tar.data ~= nil and tar.data ~= 0 then 
             local heroID = math.floor(tar.data)
             G.call('收藏_新建卡组', {heroID}, self.newDeckNameNode.text or '新卡组')
-            self:HideProfessionList()
+            self:HideHeroList()
         end
     elseif self.currentEditDeck == nil and tar == self.newDeckButton then 
-        self:ShowProfessionList()        
+        self:ShowHeroList()        
     elseif self.currentEditDeck ~= nil and tar == self.endDeckEditButton then 
         self:EndDeckEdit()
     elseif self.currentEditDeck ~= nil and tar.parent == self.deckInfoParent then
@@ -286,7 +286,29 @@ function t:EndDeckEdit()
     G.call('收藏_进入收藏界面')
 end
 
-function t:ShowProfessionList()
+function t:GetHeroDesc(o_card)
+    if o_card == nil then 
+        return ''
+    end
+
+    local desc = ''
+    local heroName = tostring(o_card.showname)
+    desc = desc .. heroName .. '( '
+    if o_card.逻辑数据 and o_card.逻辑数据.职业 then 
+        for _, i_profession in ipairs(o_card.逻辑数据.职业) do 
+            local o_profession = G.QueryName(i_profession)
+            if o_profession then 
+                local professionName = o_profession.showname
+                desc = desc .. '[03]' .. professionName .. '[ff] '
+            end
+        end
+    end
+    desc = desc .. ')'
+
+    return desc
+end
+
+function t:ShowHeroList()
     self.heroScrollView.visible = true
     self.heroChoiceButtonParent.removeAllChildren()
     
@@ -296,14 +318,15 @@ function t:ShowProfessionList()
             local o_node_英雄 = G.Clone(self.heroChoiceButtonTemplate)
             o_node_英雄.visible = true
             self.heroChoiceButtonParent.addChild(o_node_英雄)
+            local heroDesc = self:GetHeroDesc(o_card_英雄)
             local textNode = o_node_英雄.getChildByName('Name')
-            textNode.text = o_card_英雄.showname
+            textNode.text = heroDesc
             o_node_英雄.data = o_card_英雄.name
         end
     end
 end
 
-function t:HideProfessionList()
+function t:HideHeroList()
     self.heroScrollView.visible = false
 end
 

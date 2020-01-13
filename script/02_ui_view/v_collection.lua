@@ -2,12 +2,12 @@
 
 ]]
 local G = require 'gf'
-local c_scrollview = require 'c_scrollview'
-local c_layout_v = require 'c_layout_v'
-local c_perfectsize = require 'c_perfectsize'
-local c_card_manager = require 'c_card_manager'
-local c_layout_h = require 'c_layout_h'
 local c_button = require 'c_button'
+local c_layout_h = require 'c_layout_h'
+local c_perfectsize = require 'c_perfectsize'
+local c_layout_v = require 'c_layout_v'
+local c_card_manager = require 'c_card_manager'
+local c_scrollview = require 'c_scrollview'
 local c_collection = require 'c_collection'
 local tp,tc,com,tk
 tc = G.Entity()
@@ -867,14 +867,6 @@ tp = tc
 					--end
 				tp = tp.parent
 				--end
-			tp.c_perfectsize = setmetatable({}, c_perfectsize)
-			com = tp.c_perfectsize
-			com['height'] =true
-			com['expheight'] =0.000
-			com['minheight'] =nil
-			com['width'] =false
-			com['expwidth'] =nil
-			com['minwidth'] =nil
 			tp.c_layout_v = setmetatable({}, c_layout_v)
 			com = tp.c_layout_v
 			com['alignment_h'] =1.000
@@ -884,6 +876,14 @@ tp = tc
 			com['startSpaceY'] =0.000
 			com['changePivot'] =false
 			com['changeAnchor'] =false
+			tp.c_perfectsize = setmetatable({}, c_perfectsize)
+			com = tp.c_perfectsize
+			com['height'] =true
+			com['expheight'] =0.000
+			com['minheight'] =nil
+			com['width'] =false
+			com['expwidth'] =nil
+			com['minwidth'] =nil
 			tp = tp.parent
 			--end
 			tc = G.Entity()
@@ -1158,8 +1158,8 @@ tp = tc
 	tc = G.Quad()
 	tp.addChild(tc)
 	tc.name = 'HeroScrollView'
-	tc.left = -124.000
-	tc.right = 126.000
+	tc.left = -320.000
+	tc.right = 320.000
 	tc.bottom = -315.000
 	tc.top = 235.000
 	tc.mouseEnabled = true
@@ -1238,8 +1238,7 @@ tp = tc
 			tc.name = 'HeroInfo'
 			tc.pivotX = 0.000
 			tc.pivotY = 1.000
-			tc.left = 2.500
-			tc.right = 247.500
+			tc.right = 640.000
 			tc.bottom = -60.000
 			tc.top = 0.000
 			tc.anchor = 0x64640000
@@ -1271,14 +1270,6 @@ tp = tc
 				--end
 			tp = tp.parent
 			--end
-		tp.c_perfectsize = setmetatable({}, c_perfectsize)
-		com = tp.c_perfectsize
-		com['height'] =true
-		com['expheight'] =0.000
-		com['minheight'] =nil
-		com['width'] =false
-		com['expwidth'] =nil
-		com['minwidth'] =nil
 		tp.c_layout_v = setmetatable({}, c_layout_v)
 		com = tp.c_layout_v
 		com['alignment_h'] =1.000
@@ -1288,6 +1279,14 @@ tp = tc
 		com['startSpaceY'] =0.000
 		com['changePivot'] =false
 		com['changeAnchor'] =false
+		tp.c_perfectsize = setmetatable({}, c_perfectsize)
+		com = tp.c_perfectsize
+		com['height'] =true
+		com['expheight'] =0.000
+		com['minheight'] =nil
+		com['width'] =false
+		com['expwidth'] =nil
+		com['minwidth'] =nil
 		tp = tp.parent
 		--end
 		tc = G.Entity()

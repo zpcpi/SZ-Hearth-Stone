@@ -18,7 +18,8 @@ t['主机_建立连接'] = function()
     G.tcpServerSocket = lsocket.tcp()
     G.tcpServerSocket:settimeout(0)
     G.netPort = tonumber(DEFAULT_NET_PORT)
-    while not G.tcpServerSocket:bind('127.0.0.1', G.netPort) do 
+    local string_本机IP地址 = G.call('网络通用_获取本机IP地址')
+    while not G.tcpServerSocket:bind(string_本机IP地址, G.netPort) do 
         if G.netPort > 9999 then 
             G.call('房间_退出房间')
             G.call('提示_添加提示', '无法建立房间, 请检查端口占用情况')
