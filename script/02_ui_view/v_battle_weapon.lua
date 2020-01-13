@@ -154,10 +154,10 @@ tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '生命值数值'
-				tc.left = 5.000
-				tc.right = 5.000
-				tc.bottom = -2.132
-				tc.top = 32.868
+				tc.left = -15.658
+				tc.right = 19.342
+				tc.bottom = 6.289
+				tc.top = 41.289
 				tc.scaleX = 1.400
 				tc.scaleY = 1.400
 				tc.font = 0x63500000

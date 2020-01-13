@@ -128,30 +128,36 @@ t['CardCom_SetData'] = function (com, o_card)
     end
 
     -- 战场随从数据
-    local obj_show_iter = function (objname, flag)
+    local obj_show_iter = function (objname, flag, unflag)
         if com[objname] then
-            if G.call('卡牌条件_卡牌特性判断', o_card, {flag}) then
+            if G.call('卡牌条件_卡牌特性判断', o_card, flag, unflag) then
                 com[objname].visible = true
             else
                 com[objname].visible = false
             end
         end
     end
-    obj_show_iter('剧毒框', '剧毒')
-    obj_show_iter('吸血框', '吸血')
-    obj_show_iter('超杀框', '超杀')
+    obj_show_iter('剧毒框', {'剧毒'})
+    obj_show_iter('吸血框', {'吸血'})
+    obj_show_iter('超杀框', {'超杀'})
 
-    obj_show_iter('被动框', '被动')
-    obj_show_iter('亡语框', '亡语')
-    obj_show_iter('光环框', '光环')
+    obj_show_iter('被动框', {'被动'})
+    obj_show_iter('亡语框', {'亡语'})
+    obj_show_iter('光环框', {'光环'})
 
-    obj_show_iter('嘲讽框', '嘲讽')
+    obj_show_iter('嘲讽框', {'嘲讽'})
 
-    obj_show_iter('圣盾框', '圣盾')
-    obj_show_iter('复生框', '复生')
-    obj_show_iter('免疫框', '免疫')
+    obj_show_iter('圣盾框', {'圣盾'})
+    obj_show_iter('复生框', {'复生'})
+    obj_show_iter('免疫框', {'免疫'})
 
-    obj_show_iter('冻结框', '冻结')
+    obj_show_iter('冻结框', {'冻结'})
+
+    if o_card_type.name == 0x10090006 then
+        -- 武器卡
+        obj_show_iter('遮挡板', nil, {'武器开启'})
+        obj_show_iter('攻击力', {'武器开启'})
+    end
 
     if com['攻击框'] then
         if G.call('角色攻击次数判断', {['Caster']=o_card}) then
@@ -190,9 +196,9 @@ t['CardCom_SetData'] = function (com, o_card)
         end
     
         local key = 'card_attrchange|' .. tostring(com)
-        G.removeListener(key, 'UI_卡牌属性更新')
+        G.removeListener(key, '逻辑_卡牌属性更新')
         G.api[key] = update_data
-        G.addListener(key, {'UI_卡牌属性更新', o_card.name})
+        G.addListener(key, {'逻辑_卡牌属性更新', o_card})
     end
 end
 

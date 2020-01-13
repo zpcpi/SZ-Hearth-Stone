@@ -67,6 +67,14 @@ t['fargboolean_not'] = function(fargboolean_condition)
     return not G.call(fargboolean_condition)
 end
 
+--hide=true
+--type=farg
+t['farg_run'] = function (farg)
+    return G.call(farg)
+end
 
-
-
+--hide=true
+--type=farg
+t['farg_array_run'] = function (_farg)
+    return G.call('array_map', _farg, G.call)
+end

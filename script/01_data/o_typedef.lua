@@ -389,6 +389,10 @@ local t = {
 				['name']='动态数据',
 				['type']='o_dynamic_data',
 			},
+			[6]={
+				['name']='动态数据_事件',
+				['type']='o_dynamic_eventdata',
+			},
 		},
 	},
 	{
@@ -572,11 +576,11 @@ local t = {
 		['showname']='卡牌动态数据',
 		['define']={
 			[1]={
-				['name']='当前注册事件',
-				['type']='any',
+				['name']='浮动属性',
+				['type']='o_card_attr',
 			},
 			[2]={
-				['name']='浮动属性',
+				['name']='武器属性',
 				['type']='o_card_attr',
 			},
 			[3]={
@@ -752,6 +756,46 @@ local t = {
 			[2]={
 				['name']='品质颜色',
 				['type']='color',
+			},
+		},
+	},
+	{
+		['name']='o_dynamic_eventdata',
+		['showname']='品质',
+		['define']={
+			[1]={
+				['name']='当前注册事件',
+				['type']='_o_card_eventinfo',
+			},
+		},
+	},
+	{
+		['name']='o_card_eventinfo',
+		['showname']='品质',
+		['define']={
+			[1]={
+				['name']='事件名',
+				['type']='even',
+			},
+			[2]={
+				['name']='注册类型',
+				['type']='estr_cardevent_inittype',
+			},
+			[3]={
+				['name']='技能',
+				['type']='i_skill',
+			},
+			[4]={
+				['name']='技能名称',
+				['type']='string',
+			},
+			[5]={
+				['name']='逻辑编号',
+				['type']='int',
+			},
+			[6]={
+				['name']='技能动态数据',
+				['type']='any',
 			},
 		},
 	},

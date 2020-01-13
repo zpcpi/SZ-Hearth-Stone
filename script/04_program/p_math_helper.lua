@@ -425,7 +425,7 @@ t['Create_Randomlib'] = function (o_randomlib_type_随机库类型)
 
         local result = {}
         local funs = o_randomlib_type_随机库类型['求值功能']
-        for i = 1, count, 1 do
+        for i = 1, (count or 0), 1 do
             result[i] = G.call(funs, self)
         end
         return result

@@ -199,13 +199,16 @@ local create_listener_name = function (event)
     return '|#tLua_listener#|#' .. event .. '#|' .. count
 end
 
-t['tLua_add_listener'] = function (earg_注册事件, func_执行函数, cond, prior, group)
+t['tLua_add_listener'] = function (earg_注册事件, func_执行函数, cond, prior, group, is_repeat)
     if earg_注册事件 and type(earg_注册事件[1]) == 'string' then
         local event_name = earg_注册事件[1]
         local key = create_listener_name(event_name)
         t[key] = function ()
-            G.removeListener(key, event_name)
-            t[key] = nil
+            if is_repeat then
+            else
+                G.removeListener(key, event_name)
+                t[key] = nil
+            end
             return func_执行函数()
         end
         G.addListener(key, earg_注册事件, cond, prior or EVENT_PRIOR.base, group)
@@ -233,18 +236,23 @@ t['tLua_add_multlisteners'] = function (_listener_info)
         local func_条件函数 = info[3]
         local int_prior = info[4] or prior_base
         local string_group = info[5]
+        local is_repeat = info[6]
 
         if earg_注册事件 and type(earg_注册事件[1]) == 'string' then
             local event_name = earg_注册事件[1]
             local key = create_listener_name(event_name)
             t[key] = function ()
-                del_iter()
+                if is_repeat then
+                else
+                    del_iter()
+                end
                 return func_执行函数()
             end
             G.addListener(key, earg_注册事件, func_条件函数, int_prior, string_group)
             table.insert(api_info, {key, event_name})
         end
     end
+    return api_info
 end
 
 --=================================================
@@ -858,7 +866,7 @@ t['tLua_code'] = function(ast)
     tabc = 0
     assert(type(ast) == "table")
 
-    tl('function (self, info, card)\n')
+    tl('function (self, card, info, data)\n')
         tabc = tabc + 1
         tlt('local G = require "gf"\n')
         tlt('local t = G.api\n')
