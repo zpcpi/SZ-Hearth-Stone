@@ -2204,7 +2204,8 @@ t['技能效果_召唤'] = function (datas)
             if type(cardid) == 'number' then
                 o_card_召唤单位 = G.call('卡牌实例化', G.QueryName(cardid))
             elseif type(cardid) == 'table' then
-
+            else
+                break
             end
 
             local index
@@ -2763,19 +2764,22 @@ local cardflag_iter = function (data, flag)
     return false
 end
 
-t['卡牌条件_卡牌阵营判断'] = function (o_card_比对卡牌, o_card_当前卡牌, estr_side_阵营)
+--ret=boolean
+t['卡牌条件_卡牌阵营判断'] = function(o_card_比对卡牌, o_card_当前卡牌, estr_side_阵营)
     local p1 = (o_card_比对卡牌['动态数据'] or {})['所有者']
     local p2 = (o_card_当前卡牌['动态数据'] or {})['所有者']
 
     return G.call('房间_身份阵营关系', p1, p2) == estr_side_阵营
 end
 
-t['卡牌条件_卡牌类型判断'] = function (o_card_当前卡牌, _i_cardtype_卡牌类型)
+--ret=boolean
+t['卡牌条件_卡牌类型判断'] = function(o_card_当前卡牌, _i_cardtype_卡牌类型)
     local i_cardtype_当前卡牌类型 = (o_card_当前卡牌['逻辑数据'] or {})['类型']
     return G.call('array_get_element_index', _i_cardtype_卡牌类型, i_cardtype_当前卡牌类型) ~= nil
 end
 
-t['卡牌条件_卡牌所处位置判断'] = function (o_card_比对卡牌, o_card_当前卡牌, _estr_cardpos_type_所处位置)
+--ret=boolean
+t['卡牌条件_卡牌所处位置判断'] = function(o_card_比对卡牌, o_card_当前卡牌, _estr_cardpos_type_所处位置)
     local estr_cardpos_type_当前卡牌所处位置 = (o_card_当前卡牌['动态数据'] or {})['卡牌位置']
     if estr_cardpos_type_当前卡牌所处位置 then
         for _,cardpos in ipairs(_estr_cardpos_type_所处位置) do
@@ -2800,12 +2804,14 @@ t['卡牌条件_卡牌所处位置判断'] = function (o_card_比对卡牌, o_ca
     return false
 end
 
-t['卡牌条件_卡牌种族判断'] = function (o_card_当前卡牌, _i_race_种族)
+--ret=boolean
+t['卡牌条件_卡牌种族判断'] = function(o_card_当前卡牌, _i_race_种族)
     local i_race_当前卡牌种族 = (o_card_当前卡牌['逻辑数据'] or {})['种族']
     return G.call('array_get_element_index', _i_race_种族, i_race_当前卡牌种族) ~= nil
 end
 
-t['卡牌条件_卡牌特性判断'] = function (o_card_当前卡牌, _string_满足特性, _string_排除特性)
+--ret=boolean
+t['卡牌条件_卡牌特性判断'] = function(o_card_当前卡牌, _string_满足特性, _string_排除特性)
     local data = (o_card_当前卡牌['逻辑数据'] or {})['卡牌特性'] or {}
 
     for _,flag in ipairs(_string_满足特性 or {}) do
@@ -2824,11 +2830,17 @@ t['卡牌条件_卡牌特性判断'] = function (o_card_当前卡牌, _string_�
     return true
 end
 
-t['卡牌条件_控制特定卡牌'] = function (estr_player_相对身份, o_card_原始卡牌)
+--ret=boolean
+t['卡牌条件_控制特定卡牌'] = function(estr_player_相对身份, o_card_原始卡牌)
     local MinionList = G.call('角色_获取随从列表', estr_player_相对身份)
 
-    
-
+    local root_id = o_card_原始卡牌.root
+    for _, Target in ipairs(MinionList) do
+        if Target.root == root_id then
+            return true
+        end
+    end
+    return false
 end
 
 --ret=boolean

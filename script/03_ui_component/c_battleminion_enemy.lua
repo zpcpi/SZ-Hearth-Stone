@@ -95,8 +95,13 @@ end
 function t:replaceBlank(o_card_卡牌)
     if o_card_卡牌 then
         local count = self.随从占位编号
-        self:removeBlank()
-        return self:addMinion(o_card_卡牌, count)
+        if count and (count > 0) then
+            self:removeBlank()
+            return self:addMinion(o_card_卡牌, count)
+        else
+            local card_obj = self:get_obj_bycard(o_card_卡牌)
+            return card_obj, self:get_cardindex_byobj(card_obj)
+        end
     end
 end
 
@@ -147,6 +152,7 @@ end
 function t:removeBlank()
     if self.随从占位编号 > 0 then
         self:removeCard(self.随从占位编号)
+        self.随从占位编号 = 0
     end
 end
 
