@@ -3216,6 +3216,69 @@ end
 		},
 	},
 	{
+		['name']=0x1013005b,
+		['showname']='火舌图腾-相邻攻击',
+		['postfix']='+2攻击',
+		['技能类型']={
+			[1]='光环',
+		},
+		['目标筛选']={n=8,[1] = '卡牌条件_目标通用过滤器',
+			[3]='我方',
+			[4]={
+				[1]=0x10090004,
+			},
+			[5]={
+				[1]='相邻',
+			},
+			[9]=true,
+		},
+		['逻辑功能']={
+			[1]={
+				['注册时机']='上场',
+				['触发时机']={
+t =
+{'$逻辑_随从上场','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_随从上场",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    '技能效果_战场光环',
+    'self',
+    'card',
+    {
+        'function',
+        {},
+        {},
+        {'技能效果_攻击',2}
+    },
+    {
+        'function',
+        {},
+        {},
+        {'技能效果_攻击',-2}
+    }
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_战场光环",self,card,(function()
+		return G.call("技能效果_攻击",2)
+	end),(function()
+		return G.call("技能效果_攻击",-2)
+	end))
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x1013001a,
 		['showname']='饥饿的秃鹫-招野兽抽牌',
 		['技能类型']={
