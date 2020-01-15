@@ -1231,10 +1231,7 @@ t['逻辑注册_冲锋删除'] = function ()
 end
 
 t['逻辑注册_回合结束_冻结删除判断'] = function ()
-    local MinionList = G.call('角色_获取随从列表', '我方') or {}
-    table.insert(MinionList, G.call('角色_战场_获取英雄', '我方'))
-    
-    for _,Target in ipairs(MinionList) do
+    local iter = function (Target)
         if G.call('卡牌条件_卡牌特性判断', Target, {'冻结'}) then
             if G.call('角色攻击次数判断', {['Caster']=Target}) then
                 G.call('技能效果_效果树_执行子效果',
@@ -1250,6 +1247,12 @@ t['逻辑注册_回合结束_冻结删除判断'] = function ()
             end
         end
     end
+
+    local MinionList = G.call('角色_获取随从列表', '我方') or {}
+    for _,Target in ipairs(MinionList) do
+        iter(Target)
+    end
+    iter(G.call('角色_战场_获取英雄', '我方'))
 end
 
 t['逻辑注册_圣盾前置条件'] = function ()
@@ -2819,6 +2822,13 @@ t['卡牌条件_卡牌特性判断'] = function (o_card_当前卡牌, _string_�
     end
 
     return true
+end
+
+t['卡牌条件_控制特定卡牌'] = function (estr_player_相对身份, o_card_原始卡牌)
+    local MinionList = G.call('角色_获取随从列表', estr_player_相对身份)
+
+    
+
 end
 
 --ret=boolean
