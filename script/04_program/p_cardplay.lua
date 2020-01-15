@@ -1324,6 +1324,27 @@ t['逻辑注册_剧毒消灭对方'] = function ()
     end
 end
 
+t['逻辑注册_风怒添加'] = function ()
+    local Target = G.event_info()
+
+    local max = G.call('卡牌属性_获取', Target, '攻击次数', '浮动值') or 0
+    if (max < 2) then
+        G.call('卡牌属性_设置', Target, '攻击次数', '浮动值', 2)
+    end
+end
+
+t['逻辑注册_风怒删除'] = function ()
+    local Target = G.event_info()
+
+    if G.call('卡牌条件_卡牌特性判断', Target, {'超级风怒'}) then
+    else
+        local max = G.call('卡牌属性_获取', Target, '攻击次数', '浮动值') or 0
+        if (max > 1) then
+            G.call('卡牌属性_设置', Target, '攻击次数', '浮动值', max - 1)
+        end
+    end
+end
+
 t['逻辑反注册_沉默'] = function ()
     -- 沉默或者移除时传card
     local card = G.event_info()
@@ -1391,6 +1412,9 @@ t['通用逻辑_默认流程注册'] = function ()
     -- 剧毒
     G.addListener('逻辑注册_剧毒消灭对方', {'逻辑_技能效果_直接伤害'}, t['逻辑注册_剧毒前置条件'], EVENT_PRIOR.剧毒, EVENT_GROUP.剧毒)
 
+    -- 风怒
+    G.addListener('逻辑注册_风怒添加', {'逻辑_卡牌特性设置', nil, '风怒'}, cond, prior_base, EVENT_GROUP.风怒)
+    G.addListener('逻辑注册_风怒删除', {'逻辑_卡牌特性删除', nil, '风怒'}, cond, prior_base, EVENT_GROUP.风怒)
 
     -- 沉默
     -- G.addListener('逻辑反注册_沉默', {''}, cond, prior_base, group_system)
