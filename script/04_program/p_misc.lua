@@ -54,6 +54,14 @@ t['zpc_test2'] = function (a)
     G.trig_event('asd', a)
 end
 
+t['zpc_mlist'] = function ()
+    local MinionList = G.call('角色_获取随从列表', '我方')
+    
+    for k,v in ipairs(MinionList) do
+        print('asd', k, v.showname)
+    end
+end
+
 --ret=o_excel
 t['card数据处理'] = function(o_excel_xxxx)
     local function o_save(typedict_GetTable)

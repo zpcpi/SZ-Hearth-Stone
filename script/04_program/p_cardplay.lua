@@ -1231,10 +1231,7 @@ t['逻辑注册_冲锋删除'] = function ()
 end
 
 t['逻辑注册_回合结束_冻结删除判断'] = function ()
-    local MinionList = G.call('角色_获取随从列表', '我方') or {}
-    table.insert(MinionList, G.call('角色_战场_获取英雄', '我方'))
-    
-    for _,Target in ipairs(MinionList) do
+    local iter = function (Target)
         if G.call('卡牌条件_卡牌特性判断', Target, {'冻结'}) then
             if G.call('角色攻击次数判断', {['Caster']=Target}) then
                 G.call('技能效果_效果树_执行子效果',
@@ -1250,6 +1247,12 @@ t['逻辑注册_回合结束_冻结删除判断'] = function ()
             end
         end
     end
+
+    local MinionList = G.call('角色_获取随从列表', '我方') or {}
+    for _,Target in ipairs(MinionList) do
+        iter(Target)
+    end
+    iter(G.call('角色_战场_获取英雄', '我方'))
 end
 
 t['逻辑注册_圣盾前置条件'] = function ()
@@ -1321,6 +1324,27 @@ t['逻辑注册_剧毒消灭对方'] = function ()
     end
 end
 
+t['逻辑注册_风怒添加'] = function ()
+    local Target = G.event_info()
+
+    local max = G.call('卡牌属性_获取', Target, '攻击次数', '浮动值') or 0
+    if (max < 2) then
+        G.call('卡牌属性_设置', Target, '攻击次数', '浮动值', 2)
+    end
+end
+
+t['逻辑注册_风怒删除'] = function ()
+    local Target = G.event_info()
+
+    if G.call('卡牌条件_卡牌特性判断', Target, {'超级风怒'}) then
+    else
+        local max = G.call('卡牌属性_获取', Target, '攻击次数', '浮动值') or 0
+        if (max > 1) then
+            G.call('卡牌属性_设置', Target, '攻击次数', '浮动值', max - 1)
+        end
+    end
+end
+
 t['逻辑反注册_沉默'] = function ()
     -- 沉默或者移除时传card
     local card = G.event_info()
@@ -1388,6 +1412,9 @@ t['通用逻辑_默认流程注册'] = function ()
     -- 剧毒
     G.addListener('逻辑注册_剧毒消灭对方', {'逻辑_技能效果_直接伤害'}, t['逻辑注册_剧毒前置条件'], EVENT_PRIOR.剧毒, EVENT_GROUP.剧毒)
 
+    -- 风怒
+    G.addListener('逻辑注册_风怒添加', {'逻辑_卡牌特性设置', nil, '风怒'}, cond, prior_base, EVENT_GROUP.风怒)
+    G.addListener('逻辑注册_风怒删除', {'逻辑_卡牌特性删除', nil, '风怒'}, cond, prior_base, EVENT_GROUP.风怒)
 
     -- 沉默
     -- G.addListener('逻辑反注册_沉默', {''}, cond, prior_base, group_system)
@@ -2201,7 +2228,8 @@ t['技能效果_召唤'] = function (datas)
             if type(cardid) == 'number' then
                 o_card_召唤单位 = G.call('卡牌实例化', G.QueryName(cardid))
             elseif type(cardid) == 'table' then
-
+            else
+                break
             end
 
             local index
@@ -2760,29 +2788,54 @@ local cardflag_iter = function (data, flag)
     return false
 end
 
-t['卡牌条件_卡牌阵营判断'] = function (o_card_比对卡牌, o_card_当前卡牌, estr_side_阵营)
+--ret=boolean
+t['卡牌条件_卡牌阵营判断'] = function(o_card_比对卡牌, o_card_当前卡牌, estr_side_阵营)
     local p1 = (o_card_比对卡牌['动态数据'] or {})['所有者']
     local p2 = (o_card_当前卡牌['动态数据'] or {})['所有者']
 
     return G.call('房间_身份阵营关系', p1, p2) == estr_side_阵营
 end
 
-t['卡牌条件_卡牌类型判断'] = function (o_card_当前卡牌, _i_cardtype_卡牌类型)
+--ret=boolean
+t['卡牌条件_卡牌类型判断'] = function(o_card_当前卡牌, _i_cardtype_卡牌类型)
     local i_cardtype_当前卡牌类型 = (o_card_当前卡牌['逻辑数据'] or {})['类型']
     return G.call('array_get_element_index', _i_cardtype_卡牌类型, i_cardtype_当前卡牌类型) ~= nil
 end
 
-t['卡牌条件_卡牌所处位置判断'] = function (o_card_当前卡牌, _estr_cardpos_type_所处位置)
+--ret=boolean
+t['卡牌条件_卡牌所处位置判断'] = function(o_card_比对卡牌, o_card_当前卡牌, _estr_cardpos_type_所处位置)
     local estr_cardpos_type_当前卡牌所处位置 = (o_card_当前卡牌['动态数据'] or {})['卡牌位置']
-    return G.call('array_get_element_index', _estr_cardpos_type_所处位置, estr_cardpos_type_当前卡牌所处位置) ~= nil
+    if estr_cardpos_type_当前卡牌所处位置 then
+        for _,cardpos in ipairs(_estr_cardpos_type_所处位置) do
+            if cardpos == '卡组' then
+            elseif cardpos == '相邻' then
+                if estr_cardpos_type_当前卡牌所处位置 == '战场' then
+                    local player = G.call('房间_获取相对身份', (o_card_当前卡牌['动态数据'] or {})['所有者'])
+                    local cur_index = G.call('角色_获取随从编号', player, o_card_当前卡牌) or -1
+                    local comp_index = G.call('角色_获取随从编号', player, o_card_比对卡牌) or -1
+
+                    -- 战场上相邻
+                    if math.abs(comp_index - cur_index) == 1 then
+                        return true
+                    end
+                end
+            elseif cardpos == '对面' then
+            elseif estr_cardpos_type_当前卡牌所处位置 == cardpos then
+                return true
+            end
+        end
+    end
+    return false
 end
 
-t['卡牌条件_卡牌种族判断'] = function (o_card_当前卡牌, _i_race_种族)
+--ret=boolean
+t['卡牌条件_卡牌种族判断'] = function(o_card_当前卡牌, _i_race_种族)
     local i_race_当前卡牌种族 = (o_card_当前卡牌['逻辑数据'] or {})['种族']
     return G.call('array_get_element_index', _i_race_种族, i_race_当前卡牌种族) ~= nil
 end
 
-t['卡牌条件_卡牌特性判断'] = function (o_card_当前卡牌, _string_满足特性, _string_排除特性)
+--ret=boolean
+t['卡牌条件_卡牌特性判断'] = function(o_card_当前卡牌, _string_满足特性, _string_排除特性)
     local data = (o_card_当前卡牌['逻辑数据'] or {})['卡牌特性'] or {}
 
     for _,flag in ipairs(_string_满足特性 or {}) do
@@ -2799,6 +2852,19 @@ t['卡牌条件_卡牌特性判断'] = function (o_card_当前卡牌, _string_�
     end
 
     return true
+end
+
+--ret=boolean
+t['卡牌条件_控制特定卡牌'] = function(estr_player_相对身份, o_card_原始卡牌)
+    local MinionList = G.call('角色_获取随从列表', estr_player_相对身份)
+
+    local root_id = o_card_原始卡牌.root
+    for _, Target in ipairs(MinionList) do
+        if Target.root == root_id then
+            return true
+        end
+    end
+    return false
 end
 
 --ret=boolean
@@ -2831,18 +2897,51 @@ t['卡牌数据_制作过滤器'] = function (o_skill, Caster)
     local farg_光环过滤器 = o_skill['目标筛选']
     local func_filer
     if farg_光环过滤器[1] == '卡牌条件_目标通用过滤器' then
+        local estr_side_阵营 = farg_光环过滤器[3]
+        local _i_cardtype_卡牌类型 = farg_光环过滤器[4]
+        local _estr_cardpos_type_所处位置 = farg_光环过滤器[5]
+        local _i_race_种族 = farg_光环过滤器[6]
+        local _string_满足特性 = farg_光环过滤器[7]
+        local _string_排除特性 = farg_光环过滤器[8]
         local boolean_排除自身 = farg_光环过滤器[9]
         func_filer = function (tar)
-            if boolean_排除自身 and (tar == Caster) then
-                return false
-            end
-            if farg_光环过滤器[3] then
-                if G.call('卡牌条件_卡牌阵营判断', Caster, tar, farg_光环过滤器[3]) then
+            if estr_side_阵营 then
+                if G.call('卡牌条件_卡牌阵营判断', Caster, tar, estr_side_阵营) then
                 else
                     return false
                 end
             end
-            return G.call('卡牌条件_目标通用过滤器', tar, nil, farg_光环过滤器[4], farg_光环过滤器[5], farg_光环过滤器[6], farg_光环过滤器[7], farg_光环过滤器[8])
+            if _i_cardtype_卡牌类型 then
+                if G.call('卡牌条件_卡牌类型判断', tar, _i_cardtype_卡牌类型) then
+                else
+                    return false
+                end
+            end
+            if _estr_cardpos_type_所处位置 then
+                if G.call('卡牌条件_卡牌所处位置判断', Caster, tar, _estr_cardpos_type_所处位置) then
+                else
+                    return false
+                end
+            end
+            if _i_race_种族 then
+                if G.call('卡牌条件_卡牌种族判断', tar, _i_race_种族) then
+                else
+                    return false
+                end
+            end
+            if _string_满足特性 or _string_排除特性 then
+                if G.call('卡牌条件_卡牌特性判断', tar, _string_满足特性, _string_排除特性) then
+                else
+                    return false
+                end
+            end
+            if boolean_排除自身 then
+                if tar ~= Caster then
+                else
+                    return false
+                end
+            end
+            return true
         end
     end
 

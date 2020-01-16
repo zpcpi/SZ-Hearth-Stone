@@ -613,7 +613,16 @@ t['卡牌注册指令_完成'] = function (o_order_info_当前指令信息)
     local script_己方战场随从 = script_战场.selfBattleminion.c_battleminion_self
     script_己方战场随从:can_pick_state(true)
     script_己方战场随从:can_show_state(true)
-    script_己方战场随从:removeBlank()
+    local index = o_order_info_当前指令信息['MinionPos']
+    if index then
+        local Caster = o_order_info_当前指令信息['Caster']
+        local card_obj
+        card_obj, index = script_己方战场随从:replaceBlank(Caster)
+        o_order_info_当前指令信息['MinionPos'] = index
+        script_己方战场随从:set_minion_pos()
+    else
+        script_己方战场随从:removeBlank()
+    end
     script_战场.selfBattlehero.c_battlehero_self:can_pick_state(true)
 	script_战场.selfBattlehero.c_battlehero_self:can_show_state(true)
     script_战场.enemyBattlehero.c_battlehero_enemy:can_show_state(true)
