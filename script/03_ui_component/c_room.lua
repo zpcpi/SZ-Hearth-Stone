@@ -75,7 +75,9 @@ function t:UpdateDeckInfo()
 end
 
 function t:UpdateGameModeInfo()
-    self.gameModeBtn.c_button.text = G.call('对决_获取当前游戏模式')
+    local i_game_mode_游戏模式 = G.call('对决_获取当前游戏模式')
+    local o_game_mode_游戏模式 = G.QueryName(i_game_mode_游戏模式)
+    self.gameModeBtn.c_button.text = o_game_mode_游戏模式.模式名称
 end
 
 function t:click(tar)
@@ -103,10 +105,8 @@ function t:click(tar)
         G.call('对决_设置对决卡组', o_deck_卡组)
         self:HideDeckList()
     elseif tar.parent == self.modeListContent then
-        local int_模式index = math.floor(tar.data)
-        local modeList = G.call('对决_获取游戏模式列表')
-        local gameMode = modeList[int_模式index]
-        G.call('对决_设置对决模式', gameMode)
+        local i_game_mode_游戏模式 = math.floor(tar.data)
+        G.call('对决_设置游戏模式', i_game_mode_游戏模式)
         self:HideModeList()
     end
 end
@@ -141,11 +141,12 @@ end
 function t:ShowModeList()
     self.modeListNode.visible = true
     self.modeListContent.removeAllChildren()
-    local modeList = G.call('对决_获取游戏模式列表')
-    for index, gameMode in ipairs(modeList) do 
+    local _i_game_mode_游戏模式列表 = G.call('对决_获取游戏模式列表')
+    for index, i_game_mode_游戏模式 in ipairs(_i_game_mode_游戏模式列表) do 
         local gameModeBtn = G.Clone(self.gameModeBtn)
-        gameModeBtn.c_button.text = gameMode
-        gameModeBtn.data = index
+        local o_game_mode_游戏模式 = G.QueryName(i_game_mode_游戏模式)
+        gameModeBtn.c_button.text = o_game_mode_游戏模式.模式名称
+        gameModeBtn.data = i_game_mode_游戏模式
         self.modeListContent.addChild(gameModeBtn)
     end
 end

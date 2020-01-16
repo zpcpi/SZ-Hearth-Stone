@@ -70,24 +70,13 @@ t['房间_清空玩家列表'] = function()
 end
 
 t['房间_是否满足开始条件'] = function()
-    local o_misc = G.misc()
-
-    if type(o_misc.房间玩家列表) ~= 'table' then 
-        G.call('系统_输出信息', '人数不足， 无法开始游戏！')
-        return false
-    end
-    local o_deck_卡组 = G.call('对决_获取对决卡组')
-    if not G.call('收藏_卡组是否有效', o_deck_卡组) then 
-        G.call('系统_输出信息', '需要选择一副有效卡组')
-        return false
-    end
-    if G.misc().对决类型 == '1v1' then 
-        return #o_misc.房间玩家列表 == 2
-    elseif G.misc().对决类型 == '2v2' then 
-        return #o_misc.房间玩家列表 == 4
+    local i_game_mode_游戏模式 = G.call('对决_获取当前游戏模式')
+    local o_game_mode_游戏模式 = G.QueryName(i_game_mode_游戏模式)
+    if o_game_mode_游戏模式 == nil then 
+        G.call('系统_输出信息', '请先选择游戏模式')
+        return 
     else
-        G.call('系统_输出信息', '请选择游戏模式')
-        return false
+        return G.call(o_game_mode_游戏模式.开始条件)
     end
 end
 
@@ -123,13 +112,17 @@ end
 t['房间_获取绝对身份'] = function(estr_player_相对身份, estr_player_对照相对身份)
     local any_当前玩家信息 = G.call('系统_获取当前玩家信息')
     local estr_absolute_id_type_本地玩家绝对身份 = any_当前玩家信息.绝对身份
+    local i_game_mode_游戏模式 = G.call('对决_获取当前游戏模式')
 
+    -- TODO: 映射表应该和 游戏模式 强关联, 所以应该存放在游戏模式中
     local l2a_mapping
     local a2l_mapping
-    if G.misc().对决类型 == '1v1' then 
+    if i_game_mode_游戏模式 == 0x10150001 or i_game_mode_游戏模式 == 0x10150002 then 
+        -- 1v1
         l2a_mapping = PLAYER_MAPPING_L2A_1v1
         a2l_mapping = PLAYER_MAPPING_A2L_1v1
-    elseif G.misc().对决类型 == '2v2' then 
+    elseif i_game_mode_游戏模式 == 0x10150003 then 
+        -- 2v2
         l2a_mapping = PLAYER_MAPPING_L2A_2v2
         a2l_mapping = PLAYER_MAPPING_A2L_2v2
     else
@@ -164,12 +157,15 @@ end
 t['房间_获取相对身份'] = function(estr_absolute_id_type_绝对身份)
     local any_当前玩家信息 = G.call('系统_获取当前玩家信息')
     local estr_absolute_id_type_本地玩家绝对身份 = any_当前玩家信息.绝对身份
+    local i_game_mode_游戏模式 = G.call('对决_获取当前游戏模式')
+
+    -- TODO: 映射表应该和 游戏模式 强关联, 所以应该存放在游戏模式中
     
     local l2a_mapping
     local a2l_mapping
-    if G.misc().对决类型 == '1v1' then 
+    if i_game_mode_游戏模式 == 0x10150001 or i_game_mode_游戏模式 == 0x10150002 then 
         a2l_mapping = PLAYER_MAPPING_A2L_1v1
-    elseif G.misc().对决类型 == '2v2' then 
+    elseif i_game_mode_游戏模式 == 0x10150003 then 
         a2l_mapping = PLAYER_MAPPING_A2L_2v2
     else
         goto next
@@ -189,10 +185,13 @@ t['房间_获取相对身份'] = function(estr_absolute_id_type_绝对身份)
 end
 
 t['房间_身份阵营关系'] = function(estr_absolute_id_type_绝对身份1, estr_absolute_id_type_绝对身份2)
+    local i_game_mode_游戏模式 = G.call('对决_获取当前游戏模式')
+
+    -- TODO: 映射表应该和 游戏模式 强关联, 所以应该存放在游戏模式中
     local l2a_mapping
-    if G.misc().对决类型 == '1v1' then 
+    if i_game_mode_游戏模式 == 0x10150001 or i_game_mode_游戏模式 == 0x10150002 then 
         l2a_mapping = PLAYER_MAPPING_L2A_1v1
-    elseif G.misc().对决类型 == '2v2' then 
+    elseif i_game_mode_游戏模式 == 0x10150003 then 
         l2a_mapping = PLAYER_MAPPING_L2A_2v2
     else
         goto next
@@ -241,11 +240,9 @@ end
 t['房间_分配绝对身份'] = function()
     local any_玩家信息列表 = G.call('房间_获取玩家信息列表')
     local _any_可用身份列表 = {}
-    if G.misc().对决类型 == '1v1' then 
-        _any_可用身份列表 = {'红1', '蓝1'}
-    elseif G.misc().对决类型 == '2v2' then 
-        _any_可用身份列表 = {'红1', '蓝1', '红2', '蓝2'}
-    end
+    local i_game_mode_游戏模式 = G.call('对决_获取当前游戏模式')
+    local o_game_mode_游戏模式 = G.QueryName(i_game_mode_游戏模式)
+    _any_可用身份列表 = o_game_mode_游戏模式.可分配身份列表
     for i = 1, #any_玩家信息列表 do 
         local int_随机数 = G.random(1, #_any_可用身份列表)
         any_玩家信息列表[i].绝对身份 = table.remove(_any_可用身份列表, int_随机数)

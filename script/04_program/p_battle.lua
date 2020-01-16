@@ -5,13 +5,21 @@ local G = require "gf"
 local L = {}
 local t = G.api
 
-t['对决_初始化战场'] = function(estr_battle_type_对决类型)
-
+t['对决_初始化战场'] = function(i_game_mode_游戏模式)
+    -- TODO: 根据游戏模式入口函数初始化战场
+    local o_game_mode_游戏模式 = G.QueryName(i_game_mode_游戏模式)
+    if o_game_mode_游戏模式 == nil then 
+        G.call('系统_输出信息', '游戏模式错误！')
+        return
+    end
+    G.call(o_game_mode_游戏模式.初始化函数名)
 end
 
---ret=estr_battle_type
-t['对决_获取对决类型'] = function()
-    return G.misc().对决类型
+t['对决_初始化1v1战场'] = function()
+end
+
+t['对决_初始化2v2战场'] = function()
+    -- TODO: 2v2 游戏模式初始化
 end
 
 t['对决_开始'] = function()
@@ -30,7 +38,7 @@ t['对决_开始'] = function()
     -- 初始化卡牌实例表
     G.call('卡牌实例表_初始化')
     
-    G.call('对决_初始化战场', G.misc().对决类型)
+    G.call('对决_初始化战场', G.call('对决_获取当前游戏模式'))
     G.call('对决_初始化我方对决牌库')
     G.call('对决_初始化对决角色', '我方')
     G.start_program('对决_决定初始卡牌')
@@ -106,13 +114,15 @@ end
 
 t['对决_获取上一个行动绝对角色身份'] = function()
     local any_玩家绝对身份 = G.call('房间_获取绝对身份', '我方')
-    if G.misc().对决类型 == '1v1' then
+    -- TODO: 身份映射表应该设置在 游戏模式 数据中
+    local i_game_mode_游戏模式 = G.call('对决_获取当前游戏模式')
+    if i_game_mode_游戏模式 == 0x10150001 or i_game_mode_游戏模式 == 0x10150002 then
         if any_玩家绝对身份 == '红1' then 
             return '蓝1'
         else
             return '红1'
         end
-    elseif G.misc().对决类型 == '2v2' then
+    elseif i_game_mode_游戏模式 == 0x10150003 then
         -- TODO: 2v2 行动顺序待定
     end
     print('[p_battle] -> Error! Cannot find last act player!')
@@ -250,19 +260,24 @@ t['对决_投降'] = function()
     -- TODO: 投降碎裂的动画接入, 界面显示也需要进入动画队列
 end
 
---ret=_estr_battle_type
+--ret=_i_game_mode
 t['对决_获取游戏模式列表'] = function()
-    return G.GetEnumValue('estr_battle_type') or {}
+    local _o_game_mode_游戏模式列表 = G.DBTable('o_game_mode')
+    local _i_game_mode_游戏模式列表 = {}
+    for _, o_game_mode_游戏模式 in ipairs(_o_game_mode_游戏模式列表) do 
+        table.insert(_i_game_mode_游戏模式列表, o_game_mode_游戏模式.name)
+    end
+    return _i_game_mode_游戏模式列表
 end
 
-t['对决_设置对决模式'] = function(estr_battle_type_对决模式)
-    G.misc().对决类型 = estr_battle_type_对决模式
+t['对决_设置游戏模式'] = function(i_game_mode_对决模式)
+    G.misc().游戏模式 = i_game_mode_对决模式
     if G.call('网络通用_能否广播') then 
-        G.call('网络通用_广播消息', '对决_设置对决模式', estr_battle_type_对决模式)
+        G.call('网络通用_广播消息', '对决_设置游戏模式', i_game_mode_对决模式)
     end
 end
 
---ret=estr_battle_type
+--ret=i_game_mode
 t['对决_获取当前游戏模式'] = function()
-    return G.misc().对决类型 or '1v1'
+    return G.misc().游戏模式 or 0x10150001
 end
