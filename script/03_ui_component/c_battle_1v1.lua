@@ -142,6 +142,7 @@ function t:clear_popline()
     for _,ui_line in ipairs(self.popline_list) do
         ui_line.parent:removeChild(ui_line)
         ui_line.visible = false
+        ui_line.c_pop_pointline = nil
     end
 
     self.popline_list = {}

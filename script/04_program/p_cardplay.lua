@@ -321,7 +321,7 @@ t['卡牌使用_武器装备'] = function ()
                         G.call('技能效果_消灭目标')
                     end
                 )
-            G.call('技能效果_死亡结算')
+            -- G.call('技能效果_死亡结算')
         end
         -- 武器卡
         -- TODO，先判断下武器还在不在
@@ -439,8 +439,19 @@ local single_damage = function ()
 
         -- 造成伤害
         if int_伤害值 then
+            local old_hp = G.call('卡牌属性_获取', Target, '生命', '当前值')
+
             G.call('card_造成伤害', Target, int_伤害值)
             G.trig_event('逻辑_卡牌造成伤害', Caster, Target, int_伤害值)
+            
+            local cur_hp = G.call('卡牌属性_获取', Target, '生命', '当前值')
+            if (old_hp > 0) and (cur_hp <= 0) then
+                -- 是当前卡牌造成的击杀
+                local misc = G.misc()
+                local KillterList = misc['击杀者列表'] or {}
+                misc['击杀者列表'] = KillterList
+                KillterList[Target] = Caster
+            end
         end
     end
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_直接伤害', init, action)
@@ -1984,6 +1995,35 @@ t['技能效果_特性'] = function (_string_添加特性, _string_移除特性,
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_当前特性变化', init, action)
 end
 
+t['技能效果_本回合特性'] = function (_string_添加特性)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+    end
+    local action = function ()
+        G.call('技能效果_特性', _string_添加特性)
+
+        G.call('tLua_add_multlisteners', {
+            {
+                {"流程_回合结束"},
+                function ()
+                    G.call('技能效果_特性', nil, _string_添加特性)
+                end,
+                nil,
+                EVENT_PRIOR.last,
+                nil
+            }
+        })
+    end
+
+    effect_action_iter(o_skill_info_效果信息, nil, init, action)
+end
+
 t['技能效果_添加BUFF'] = function (i_skill_buffID)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
@@ -2515,6 +2555,37 @@ t['技能效果_装备武器'] = function (i_card_武器卡牌ID, boolean_是否
         end
         effect_action_iter(o_skill_info_效果信息, nil, init, action)
     end
+end
+
+t['技能效果_弃牌'] = function (int_编号)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local estr_player_相对身份 = o_skill_info_效果信息['Player']
+    local count = G.call('角色_获取手牌数量', estr_player_相对身份)
+    if count > 0 then
+        if int_编号 then
+            if int_编号 <= count then
+            else
+                return
+            end
+        else
+            int_编号 = math.random(count)
+        end
+    else
+        return
+    end
+
+    local init = function ()
+        o_skill_info_效果信息['弃牌编号'] = int_编号
+    end
+    local action = function ()
+        G.call('角色_移除手牌', estr_player_相对身份, int_编号)
+    end
+    effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_弃牌', init, action)
 end
 
 -- ============================================

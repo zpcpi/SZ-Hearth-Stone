@@ -34,6 +34,35 @@ end
 		},
 	},
 	{
+		['name']=0x10130062,
+		['showname']='暗影箭-伤害',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_法术伤害',4},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_法术伤害",4)
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130038,
 		['showname']='神圣惩击-伤害',
 		['逻辑功能']={
@@ -1031,6 +1060,84 @@ end
 		},
 	},
 	{
+		['name']=0x10130060,
+		['showname']='魔犬-战吼弃牌',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='战吼',
+				['触发时机']={
+t =
+{'$逻辑_随从战吼','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_随从战吼",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_弃牌'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_弃牌")
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130065,
+		['showname']='恐惧地狱火-群体伤害',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='战吼',
+				['触发时机']={
+t =
+{'$逻辑_随从战吼','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_随从战吼",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能目标_选取英雄','$敌方1'},
+    {'技能目标_选取随从','$敌方1'},
+    {'技能目标_选取随从','$我方'},
+    {'技能目标_选取英雄','$我方'},
+    {
+        '技能目标_剔除目标',
+        {'table','card'}
+    },
+    {'技能效果_随从伤害',1}
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能目标_选取英雄","敌方1")
+		_ = G.call("技能目标_选取随从","敌方1")
+		_ = G.call("技能目标_选取随从","我方")
+		_ = G.call("技能目标_选取英雄","我方")
+		_ = G.call("技能目标_剔除目标",{card})
+		_ = G.call("技能效果_随从伤害",1)
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130055,
 		['showname']='风语者-战吼加buff',
 		['逻辑功能']={
@@ -1947,6 +2054,44 @@ end
 		},
 	},
 	{
+		['name']=0x1013005d,
+		['showname']='灵魂之火-伤害,弃牌',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能效果_法术伤害',4},
+    {'技能效果_弃牌'}
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能效果_法术伤害",4)
+		_ = G.call("技能效果_弃牌")
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x1013005a,
 		['showname']='牺牲契约-消灭恶魔,回血',
 		['逻辑功能']={
@@ -2032,6 +2177,92 @@ end
 		},
 	},
 	{
+		['name']=0x10130061,
+		['showname']='吸取生命-伤害,回血',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'map',
+    {
+        'function',
+        {'tar'},
+        {},
+        {
+            'block',
+            {
+                '技能效果_效果树_执行子效果',
+                {
+                    ['Caster'] = 'card',
+                    ['Player'] = 'info.Player',
+                    ['Target'] = {'table','tar'}
+                },
+                {
+                    'function',
+                    {},
+                    {},
+                    {'技能效果_法术伤害',2}
+                }
+            },
+            {
+                '技能效果_效果树_执行子效果',
+                {
+                    ['Player'] = 'info.Player'
+                },
+                {
+                    'function',
+                    {},
+                    {},
+                    {
+                        'block',
+                        {'技能目标_选取英雄','$我方'},
+                        {'技能效果_法术治疗',2}
+                    }
+                }
+            }
+        }
+    },
+    'info.Target'
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return t["tLua_MAP"]((function(tar_49)
+		return (function()
+			local _ = nil
+			_ = G.call("技能效果_效果树_执行子效果",{["Caster"] = card,["Player"] = info.Player,["Target"] = {tar_49}},(function()
+				return G.call("技能效果_法术伤害",2)
+			end))
+			_ = G.call("技能效果_效果树_执行子效果",{["Player"] = info.Player},(function()
+				return (function()
+					local _ = nil
+					_ = G.call("技能目标_选取英雄","我方")
+					_ = G.call("技能效果_法术治疗",2)
+					return _
+				end)()
+			end))
+			return _
+		end)()
+	end),info.Target)
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x1013005c,
 		['showname']='死亡缠绕-伤害,击杀抽牌',
 		['逻辑功能']={
@@ -2071,7 +2302,11 @@ t =
                     {'技能效果_法术伤害',1},
                     {
                         'if',
-                        true,
+                        {
+                            '<=',
+                            {'卡牌属性_获取','tar','$生命','$当前值'},
+                            0
+                        },
                         {'技能效果_抽牌'}
                     }
                 }
@@ -2089,7 +2324,7 @@ lua = function (self, card, info, data)
 				local _ = nil
 				_ = G.call("技能效果_法术伤害",1)
 				_ = (function ()
-					if(true)then
+					if(t["tLua_LE"](G.call("卡牌属性_获取",tar_49,"生命","当前值"),0))then
 						return G.call("技能效果_抽牌")
 					end
 				end)()
@@ -2184,6 +2419,35 @@ lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_添加BUFF",269680645)
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x1013005e,
+		['showname']='腐蚀术-添加buff',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_添加BUFF',0x1013005f},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_添加BUFF",269680735)
 end
 ,
 },
@@ -2629,6 +2893,50 @@ end
 		},
 	},
 	{
+		['name']=0x10130063,
+		['showname']='地狱烈焰-群体伤害',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能目标_选取英雄','$敌方1'},
+    {'技能目标_选取随从','$敌方1'},
+    {'技能目标_选取随从','$我方'},
+    {'技能目标_选取英雄','$我方'},
+    {'技能效果_法术伤害',3}
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能目标_选取英雄","敌方1")
+		_ = G.call("技能目标_选取随从","敌方1")
+		_ = G.call("技能目标_选取随从","我方")
+		_ = G.call("技能目标_选取英雄","我方")
+		_ = G.call("技能效果_法术伤害",3)
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130024,
 		['showname']='烈焰风暴-群体伤害',
 		['逻辑功能']={
@@ -2783,6 +3091,53 @@ lua = function (self, card, info, data)
 		_ = G.call("技能效果_特性",{"嘲讽"})
 		return _
 	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x1013005f,
+		['showname']='腐蚀术-buff',
+		['postfix']='消灭目标',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='添加',
+				['触发时机']={
+t =
+{
+    '$流程_回合开始',
+    {'房间_获取绝对身份','info.Player'}
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"流程_回合开始",G.call("房间_获取绝对身份",info.Player)}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    '技能效果_效果树_执行子效果',
+    {
+        ['Player'] = {'get_event_info'},
+        ['Target'] = {'table','card'}
+    },
+    {
+        'function',
+        {},
+        {},
+        {'技能效果_消灭目标'}
+    }
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_效果树_执行子效果",{["Player"] = G.call("get_event_info"),["Target"] = {card}},(function()
+		return G.call("技能效果_消灭目标")
+	end))
 end
 ,
 },
