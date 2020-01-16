@@ -1036,11 +1036,7 @@ end
 
 t['逻辑注册_武器功能_武器摧毁'] = function ()
     local tar = G.event_info()
-    local weapon = G.call('角色_战场_获取武器', '我方')
-
-    if (tar == weapon) then
-        weapon_close(weapon)
-    end
+    weapon_close(tar)
 end
 
 t['逻辑注册_武器功能_攻击力变化'] = function ()
@@ -2012,7 +2008,11 @@ t['技能效果_本回合特性'] = function (_string_添加特性)
             {
                 {"流程_回合结束"},
                 function ()
-                    G.call('技能效果_特性', nil, _string_添加特性)
+                    G.call('技能效果_效果树_执行子效果', o_skill_info_效果信息,
+                        function ()
+                            G.call('技能效果_特性', nil, nil, _string_添加特性)
+                        end
+                    )
                 end,
                 nil,
                 EVENT_PRIOR.last,

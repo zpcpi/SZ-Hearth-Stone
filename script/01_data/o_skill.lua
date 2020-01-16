@@ -302,6 +302,35 @@ end
 		},
 	},
 	{
+		['name']=0x1013006b,
+		['showname']='斩杀-消灭目标',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_消灭目标'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_消灭目标")
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x1013003e,
 		['showname']='精神控制-控制随从',
 		['逻辑功能']={
@@ -1311,6 +1340,35 @@ end
 		},
 	},
 	{
+		['name']=0x10130068,
+		['showname']='冲锋-添加buff',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_添加BUFF',0x10130069},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_添加BUFF",269680745)
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130040,
 		['showname']='神圣之灵-添加buff',
 		['逻辑功能']={
@@ -1648,6 +1706,45 @@ end
 		},
 	},
 	{
+		['name']=0x10130067,
+		['showname']='全副武装-护甲',
+		['postfix']='英雄技能',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_英雄技能使用','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_英雄技能使用",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能目标_选取英雄','$我方'},
+    {'技能效果_护甲',2}
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能目标_选取英雄","我方")
+		_ = G.call("技能效果_护甲",2)
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130014,
 		['showname']='杀戮命令-伤害',
 		['目标筛选']={n=8,[1] = '卡牌条件_目标通用过滤器',
@@ -1735,6 +1832,46 @@ lua = function (self, card, info, data)
 		_ = G.call("技能目标_选取随从","敌方1")
 		_ = G.call("技能目标_随机选择",2,269221890)
 		_ = G.call("技能效果_法术伤害",3)
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x1013006d,
+		['showname']='顺劈斩-俩目标伤害',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能目标_选取随从','$敌方1'},
+    {'技能目标_随机选择',2,0x100c0002},
+    {'技能效果_法术伤害',2}
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能目标_选取随从","敌方1")
+		_ = G.call("技能目标_随机选择",2,269221890)
+		_ = G.call("技能效果_法术伤害",2)
 		return _
 	end)()
 end
@@ -2978,6 +3115,46 @@ end
 		},
 	},
 	{
+		['name']=0x1013006a,
+		['showname']='旋风斩-群体伤害',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能目标_选取随从','$敌方1'},
+    {'技能目标_选取随从','$我方'},
+    {'技能效果_法术伤害',1}
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能目标_选取随从","敌方1")
+		_ = G.call("技能目标_选取随从","我方")
+		_ = G.call("技能效果_法术伤害",1)
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130024,
 		['showname']='烈焰风暴-群体伤害',
 		['逻辑功能']={
@@ -3286,6 +3463,51 @@ lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_特性",{"圣盾"})
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130069,
+		['showname']='冲锋-buff',
+		['postfix']='冲锋,不能攻击英雄',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='添加',
+				['触发时机']={
+t =
+{'$逻辑_技能添加','nil','self'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_技能添加",nil,self}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {
+        '技能效果_特性',
+        {'$冲锋'}
+    },
+    {
+        '技能效果_本回合特性',
+        {'$不能攻击英雄'}
+    }
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能效果_特性",{"冲锋"})
+		_ = G.call("技能效果_本回合特性",{"不能攻击英雄"})
+		return _
+	end)()
 end
 ,
 },
@@ -3684,6 +3906,70 @@ end
 		},
 	},
 	{
+		['name']=0x1013006e,
+		['showname']='战歌指挥官-冲锋加攻击',
+		['技能类型']={
+			[1]='光环',
+		},
+		['目标筛选']={n=8,[1] = '卡牌条件_目标通用过滤器',
+			[3]='我方',
+			[4]={
+				[1]=0x10090004,
+			},
+			[5]={
+				[1]='战场',
+			},
+			[7]={
+				[1]='冲锋',
+			},
+		},
+		['逻辑功能']={
+			[1]={
+				['注册时机']='上场',
+				['触发时机']={
+t =
+{'$逻辑_随从上场','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_随从上场",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    '技能效果_战场光环',
+    'self',
+    'card',
+    {
+        'function',
+        {},
+        {},
+        {'技能效果_攻击',1}
+    },
+    {
+        'function',
+        {},
+        {},
+        {'技能效果_攻击',-1}
+    }
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_战场光环",self,card,(function()
+		return G.call("技能效果_攻击",1)
+	end),(function()
+		return G.call("技能效果_攻击",-1)
+	end))
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x1013005b,
 		['showname']='火舌图腾-相邻攻击',
 		['postfix']='+2攻击',
@@ -3944,6 +4230,44 @@ end
 		},
 	},
 	{
+		['name']=0x1013006c,
+		['showname']='英勇打击-本回合攻击',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能目标_选取英雄','$我方'},
+    {'技能效果_本回合攻击',4}
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能目标_选取英雄","我方")
+		_ = G.call("技能效果_本回合攻击",4)
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130036,
 		['showname']='圣光闪耀-治疗英雄',
 		['逻辑功能']={
@@ -4039,6 +4363,46 @@ lua = function (self, card, info, data)
 	return (function()
 		local _ = nil
 		_ = G.call("技能效果_生命上限",2)
+		_ = G.call("技能效果_抽牌")
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x1013006f,
+		['showname']='盾牌格挡-护甲,抽牌',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能目标_选取英雄','$我方'},
+    {'技能效果_护甲',5},
+    {'技能效果_抽牌'}
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能目标_选取英雄","我方")
+		_ = G.call("技能效果_护甲",5)
 		_ = G.call("技能效果_抽牌")
 		return _
 	end)()
