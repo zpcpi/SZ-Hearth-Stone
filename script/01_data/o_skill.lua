@@ -2032,6 +2032,78 @@ end
 		},
 	},
 	{
+		['name']=0x1013005c,
+		['showname']='死亡缠绕-伤害,击杀抽牌',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'map',
+    {
+        'function',
+        {'tar'},
+        {},
+        {
+            '技能效果_效果树_执行子效果',
+            {
+                ['Caster'] = 'card',
+                ['Player'] = 'info.Player',
+                ['Target'] = {'table','tar'}
+            },
+            {
+                'function',
+                {},
+                {},
+                {
+                    'block',
+                    {'技能效果_法术伤害',1},
+                    {
+                        'if',
+                        true,
+                        {'技能效果_抽牌'}
+                    }
+                }
+            }
+        }
+    },
+    'info.Target'
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return t["tLua_MAP"]((function(tar_49)
+		return G.call("技能效果_效果树_执行子效果",{["Caster"] = card,["Player"] = info.Player,["Target"] = {tar_49}},(function()
+			return (function()
+				local _ = nil
+				_ = G.call("技能效果_法术伤害",1)
+				_ = (function ()
+					if(true)then
+						return G.call("技能效果_抽牌")
+					end
+				end)()
+				return _
+			end)()
+		end))
+	end),info.Target)
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130023,
 		['showname']='火球术-伤害',
 		['逻辑功能']={
