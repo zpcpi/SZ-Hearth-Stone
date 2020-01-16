@@ -1196,6 +1196,35 @@ end
 		},
 	},
 	{
+		['name']=0x10130070,
+		['showname']='巫医-战吼治疗',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='战吼',
+				['触发时机']={
+t =
+{'$逻辑_随从战吼','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_随从战吼",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_随从治疗',2},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_随从治疗",2)
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130058,
 		['showname']='火元素-战吼伤害',
 		['逻辑功能']={
