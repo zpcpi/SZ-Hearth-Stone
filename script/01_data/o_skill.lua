@@ -1607,6 +1607,47 @@ end
 		},
 	},
 	{
+		['name']=0x10130066,
+		['showname']='生命分流-伤害,抽牌',
+		['postfix']='英雄技能',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_英雄技能使用','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_英雄技能使用",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能目标_选取英雄','$我方'},
+    {'技能效果_英雄技能伤害',2},
+    {'技能效果_抽牌'}
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能目标_选取英雄","我方")
+		_ = G.call("技能效果_英雄技能伤害",2)
+		_ = G.call("技能效果_抽牌")
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130014,
 		['showname']='杀戮命令-伤害',
 		['目标筛选']={n=8,[1] = '卡牌条件_目标通用过滤器',
