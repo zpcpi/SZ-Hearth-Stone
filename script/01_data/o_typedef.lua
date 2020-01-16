@@ -163,8 +163,8 @@ local t = {
 				['type']='any',
 			},
 			[12]={
-				['name']='对决类型',
-				['type']='any',
+				['name']='游戏模式',
+				['type']='i_game_mode',
 			},
 			[13]={
 				['name']='玩家信息',
@@ -1131,6 +1131,27 @@ local t = {
 			[4]={
 				['name']='英雄卡片',
 				['type']='i_card',
+			},
+		},
+	},
+	{
+		['name']='o_game_mode',
+		['define']={
+			[1]={
+				['name']='模式名称',
+				['type']='string',
+			},
+			[2]={
+				['name']='开始条件',
+				['type']='funsboolean',
+			},
+			[3]={
+				['name']='初始化函数名',
+				['type']='funs',
+			},
+			[4]={
+				['name']='可分配身份列表',
+				['type']='_estr_absolute_id_type',
 			},
 		},
 	},

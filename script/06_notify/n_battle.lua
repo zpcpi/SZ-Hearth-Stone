@@ -1,13 +1,14 @@
 local G = require "gf"
 local noti = G.notify
 
-function noti.对决_初始化战场(estr_battle_type_对决类型)
-    if estr_battle_type_对决类型 == '1v1' then 
-        G.addUI('v_battle_1v1')
-        noti.作弊系统_初始化作弊系统ui()
-    elseif estr_battle_type_对决类型 == '2v2' then 
-    end
+function noti.对决_初始化1v1战场()
+    G.addUI('v_battle_1v1')
+    noti.作弊系统_初始化作弊系统ui()
     G.removeUI('v_room')
+end
+
+function noti.对决_初始化2v2战场()
+    -- TODO: 2v2 游戏模式初始化
 end
 
 function noti.对决_设置对决卡组()
@@ -17,7 +18,7 @@ function noti.对决_设置对决卡组()
     end
 end
 
-function noti.对决_设置对决模式()
+function noti.对决_设置游戏模式()
     local v_room = G.getUI('v_room')
     if v_room then 
         v_room.c_room:UpdateGameModeInfo()
