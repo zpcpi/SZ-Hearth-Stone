@@ -46,13 +46,6 @@ t['房间_删除玩家信息'] = function(o_room_player_玩家)
     end
 end
 
-t['房间_更新房间信息'] = function(estr_battle_type_对决类型)
-    G.misc().对决类型 = estr_battle_type_对决类型
-    if G.call('网络通用_能否广播') then 
-        G.call('网络通用_广播消息', '房间_更新房间信息', estr_battle_type_对决类型)
-    end
-end
-
 t['房间_获取玩家信息列表'] = function()
     return G.misc().房间玩家列表 or {}
 end

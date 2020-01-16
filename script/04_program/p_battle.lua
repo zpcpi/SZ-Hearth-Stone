@@ -249,3 +249,20 @@ t['对决_投降'] = function()
     G.call('对决_结算_相对身份', '我方', false)
     -- TODO: 投降碎裂的动画接入, 界面显示也需要进入动画队列
 end
+
+--ret=_estr_battle_type
+t['对决_获取游戏模式列表'] = function()
+    return G.GetEnumValue('estr_battle_type') or {}
+end
+
+t['对决_设置对决模式'] = function(estr_battle_type_对决模式)
+    G.misc().对决类型 = estr_battle_type_对决模式
+    if G.call('网络通用_能否广播') then 
+        G.call('网络通用_广播消息', '对决_设置对决模式', estr_battle_type_对决模式)
+    end
+end
+
+--ret=estr_battle_type
+t['对决_获取当前游戏模式'] = function()
+    return G.misc().对决类型 or '1v1'
+end

@@ -17,6 +17,13 @@ function noti.对决_设置对决卡组()
     end
 end
 
+function noti.对决_设置对决模式()
+    local v_room = G.getUI('v_room')
+    if v_room then 
+        v_room.c_room:UpdateGameModeInfo()
+    end
+end
+
 function noti.对决_结算_相对身份(estr_player_相对身份, boolean_是否胜利)
     if not G.call('房间_是否同一阵营_相对身份', estr_player_相对身份, '我方') then 
         boolean_是否胜利 = not boolean_是否胜利

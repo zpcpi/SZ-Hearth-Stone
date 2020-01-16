@@ -9,8 +9,6 @@ function t:init()
     if G.is_editor then 
         return
     end
-    self.gameModeBtn = self.obj.getChildByName('HostGame')
-
     self.startGameBtn = self.obj.getChildByName('StartGame')
     self.prepareBtn = self.obj.getChildByName('Prepare')
     if G.call('主机_是主机') then 
@@ -32,6 +30,11 @@ function t:init()
     self.infoTextTemp = self.roomInfoParent.getChildByName('TextTemplate')
     self.infoTextTemp.visible = false
 
+    self.gameModeBtn = self.obj.getChildByName('GameMode')
+    self.modeListNode = self.obj.getChildByName('ModeList')
+    self.modeListNode.visible = false
+    self.modeListContent = self.modeListNode.getChildByName('content')
+
     self.deckButton = self.obj.getChildByName('DeckInfo')
     self.deckList = self.obj.getChildByName('DeckList')
     self.deckList.visible = false
@@ -47,6 +50,7 @@ end
 function t:UpdateRoom()
     self.ipText.text = G.call('网络通用_获取本机IP地址') .. ':' .. G.call('网络通用_获取主机端口')
     self:UpdateRoomMember()
+    self:UpdateGameModeInfo()
     self:UpdateDeckInfo()
 end
 
@@ -70,8 +74,17 @@ function t:UpdateDeckInfo()
     self.deckButton.c_button.text = deckName
 end
 
+function t:UpdateGameModeInfo()
+    self.gameModeBtn.c_button.text = G.call('对决_获取当前游戏模式')
+end
+
 function t:click(tar)
     if tar == self.gameModeBtn then 
+        if self:IsModeListVisible() then 
+            self:HideModeList()
+        else
+            self:ShowModeList()
+        end
     elseif tar == self.startGameBtn then 
         G.call('对决_开始')
     elseif tar == self.prepareBtn then 
@@ -89,6 +102,12 @@ function t:click(tar)
         local o_deck_卡组 = G.QueryName(i_deck_卡组ID)
         G.call('对决_设置对决卡组', o_deck_卡组)
         self:HideDeckList()
+    elseif tar.parent == self.modeListContent then
+        local int_模式index = math.floor(tar.data)
+        local modeList = G.call('对决_获取游戏模式列表')
+        local gameMode = modeList[int_模式index]
+        G.call('对决_设置对决模式', gameMode)
+        self:HideModeList()
     end
 end
 
@@ -117,6 +136,26 @@ end
 
 function t:IsDeckListVisible()
     return self.deckList.visible
+end
+
+function t:ShowModeList()
+    self.modeListNode.visible = true
+    self.modeListContent.removeAllChildren()
+    local modeList = G.call('对决_获取游戏模式列表')
+    for index, gameMode in ipairs(modeList) do 
+        local gameModeBtn = G.Clone(self.gameModeBtn)
+        gameModeBtn.c_button.text = gameMode
+        gameModeBtn.data = index
+        self.modeListContent.addChild(gameModeBtn)
+    end
+end
+
+function t:HideModeList()
+    self.modeListNode.visible = false
+end
+
+function t:IsModeListVisible()
+    return self.modeListNode.visible
 end
 
 return t

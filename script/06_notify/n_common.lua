@@ -12,6 +12,10 @@ function noti.主机_新建房间()
     G.changeUI('v_room')
 end
 
+function noti.游戏_单人模式()
+    G.changeUI('v_room')
+end
+
 function noti.房间_退出房间()
     G.changeUI('v_main_menu')
 end

@@ -6,6 +6,7 @@ local G = require "gf"
 local t = G.com()
 
 function t:init()
+    self.singleGameBtn = self.obj.getChildByName('SingleGame')
     self.hostGameBtn = self.obj.getChildByName('HostGame')
     self.connectGameBtn = self.obj.getChildByName('ConnectGame')
     self.collectionBtn = self.obj.getChildByName('Collection')
@@ -18,7 +19,9 @@ function t:init()
 end
 
 function t:click(tar)
-    if tar == self.hostGameBtn then 
+    if tar == self.singleGameBtn then
+        G.call('游戏_单人模式')
+    elseif tar == self.hostGameBtn then 
         G.call('主机_新建房间')
     elseif tar == self.connectGameBtn then 
         G.addUI('v_connect')

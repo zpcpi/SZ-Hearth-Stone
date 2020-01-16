@@ -45,7 +45,7 @@ t['主机_连接建立成功回调'] = function()
     local any_当前玩家 = G.call('系统_获取当前玩家信息')
     any_当前玩家.是主机 = true
     G.call('房间_更新玩家信息', any_当前玩家)
-    G.call('房间_更新房间信息', '1v1')
+    G.call('对决_设置对决模式', G.call('对决_获取当前游戏模式'))
 end
 
 --hide=true
