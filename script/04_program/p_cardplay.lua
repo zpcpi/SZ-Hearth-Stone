@@ -2965,21 +2965,7 @@ t['卡牌条件_控制特定卡牌'] = function(estr_player_相对身份, o_card
 end
 
 --ret=boolean
-t['卡牌条件_目标通用过滤器'] = function(o_card_当前卡牌, estr_side_阵营, _i_cardtype_卡牌类型, _estr_cardpos_type_所处位置, _i_race_种族, _string_满足特性, _string_排除特性, boolean_排除自身)
-    local result = true
-    if result and _i_cardtype_卡牌类型 then
-        result = G.call('卡牌条件_卡牌类型判断', o_card_当前卡牌, _i_cardtype_卡牌类型)
-    end
-    if result and _estr_cardpos_type_所处位置 then
-        result = G.call('卡牌条件_卡牌所处位置判断', o_card_当前卡牌, _estr_cardpos_type_所处位置)
-    end
-    if result and _i_race_种族 then
-        result = G.call('卡牌条件_卡牌种族判断', o_card_当前卡牌, _i_race_种族)
-    end
-    if result and (_string_满足特性 or _string_排除特性) then
-        result = G.call('卡牌条件_卡牌特性判断', o_card_当前卡牌, _string_满足特性, _string_排除特性)
-    end
-    return result
+t['卡牌条件_目标通用过滤器'] = function(estr_side_阵营, _i_cardtype_卡牌类型, _estr_cardpos_type_所处位置, _i_race_种族, _string_满足特性, _string_排除特性, boolean_排除自身)
 end
 
 -- ============================================
@@ -2994,13 +2980,13 @@ t['卡牌数据_制作过滤器'] = function (o_skill, Caster)
     local farg_光环过滤器 = o_skill['目标筛选']
     local func_filer
     if farg_光环过滤器[1] == '卡牌条件_目标通用过滤器' then
-        local estr_side_阵营 = farg_光环过滤器[3]
-        local _i_cardtype_卡牌类型 = farg_光环过滤器[4]
-        local _estr_cardpos_type_所处位置 = farg_光环过滤器[5]
-        local _i_race_种族 = farg_光环过滤器[6]
-        local _string_满足特性 = farg_光环过滤器[7]
-        local _string_排除特性 = farg_光环过滤器[8]
-        local boolean_排除自身 = farg_光环过滤器[9]
+        local estr_side_阵营 = farg_光环过滤器[2]
+        local _i_cardtype_卡牌类型 = farg_光环过滤器[3]
+        local _estr_cardpos_type_所处位置 = farg_光环过滤器[4]
+        local _i_race_种族 = farg_光环过滤器[5]
+        local _string_满足特性 = farg_光环过滤器[6]
+        local _string_排除特性 = farg_光环过滤器[7]
+        local boolean_排除自身 = farg_光环过滤器[8]
         func_filer = function (tar)
             if estr_side_阵营 then
                 if G.call('卡牌条件_卡牌阵营判断', Caster, tar, estr_side_阵营) then
