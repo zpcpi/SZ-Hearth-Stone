@@ -222,7 +222,9 @@ end
 
 -- 控件删除
 function t:delete()
-    self.obj.parent:removeChild(self)
+    local obj = self.obj
+    obj.parent:removeChild(obj)
+    obj.c_animactor = nil
 end
 
 -- 判断动画是否继续

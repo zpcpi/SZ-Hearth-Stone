@@ -547,10 +547,10 @@ local Gr = {'tLua',
                      P'/'/'tLua_DIV' +
                      P'%'/'tLua_MOD' +
                      P'=='/'tLua_EQUAL' + 
-                     P'>'/'tLua_GT' + 
-                     P'<'/'tLua_LT' + 
                      P'>='/'tLua_GE' + 
                      P'<='/'tLua_LE' + 
+                     P'>'/'tLua_GT' + 
+                     P'<'/'tLua_LT' + 
                      P'and'/'tLua_AND' + 
                      P'or'/'tLua_OR' + 
                      P'not'/'tLua_NOT' +
