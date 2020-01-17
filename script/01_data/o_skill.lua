@@ -1090,7 +1090,7 @@ end
 	},
 	{
 		['name']=0x10130078,
-		['showname']='破碎残阳祭司-添加buff',
+		['showname']='破碎残阳祭司-战吼添加buff',
 		['逻辑功能']={
 			[1]={
 				['注册时机']='战吼',
@@ -1111,6 +1111,47 @@ lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_添加BUFF",269680761)
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130083,
+		['showname']='霜狼督军-战吼添加buff',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='战吼',
+				['触发时机']={
+t =
+{'$逻辑_随从战吼','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_随从战吼",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {
+        '技能目标_添加目标',
+        {'table','card'}
+    },
+    {'技能效果_添加BUFF',0x10130082}
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能目标_添加目标",{card})
+		_ = G.call("技能效果_添加BUFF",269680770)
+		return _
+	end)()
 end
 ,
 },
@@ -1305,6 +1346,35 @@ lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_随从伤害",1)
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130081,
+		['showname']='雷矛特种兵-战吼伤害',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='战吼',
+				['触发时机']={
+t =
+{'$逻辑_随从战吼','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_随从战吼",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_随从伤害',2},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_随从伤害",2)
 end
 ,
 },
@@ -1545,6 +1615,9 @@ end
 	{
 		['name']=0x1013007d,
 		['showname']='古拉巴什狂暴者-受伤加buff',
+		['技能类型']={
+			[1]='被动',
+		},
 		['逻辑功能']={
 			[1]={
 				['注册时机']='上场',
@@ -3467,6 +3540,46 @@ end
 		},
 	},
 	{
+		['name']=0x10130080,
+		['showname']='暗鳞治愈者-战吼群体治疗',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='战吼',
+				['触发时机']={
+t =
+{'$逻辑_随从战吼','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_随从战吼",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    'block',
+    {'技能目标_选取英雄','$我方'},
+    {'技能目标_选取随从','$我方'},
+    {'技能效果_随从治疗',2}
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local _ = nil
+		_ = G.call("技能目标_选取英雄","我方")
+		_ = G.call("技能目标_选取随从","我方")
+		_ = G.call("技能效果_随从治疗",2)
+		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130063,
 		['showname']='地狱烈焰-群体伤害',
 		['逻辑功能']={
@@ -3864,6 +3977,66 @@ lua = function (self, card, info, data)
 		_ = G.call("技能效果_生命上限",1)
 		_ = G.call("技能效果_攻击",1)
 		return _
+	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130082,
+		['showname']='霜狼督军-buff',
+		['postfix']='+n/+n',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='添加',
+				['触发时机']={
+t =
+{'$逻辑_技能添加','nil','self'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_技能添加",nil,self}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    {
+        'function',
+        {},
+        {
+            {'player','info.Player'},
+            {
+                'count',
+                {
+                    '-',
+                    {'角色_获取随从数量','player'},
+                    1
+                }
+            }
+        },
+        {
+            'block',
+            {'技能效果_生命上限','count'},
+            {'技能效果_攻击','count'}
+        }
+    }
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local player_64 = info.Player
+		local count_119 = t["tLua_SUB"](G.call("角色_获取随从数量",player_64),1)
+		return (function()
+			local _ = nil
+			_ = G.call("技能效果_生命上限",count_119)
+			_ = G.call("技能效果_攻击",count_119)
+			return _
+		end)()
 	end)()
 end
 ,
@@ -4492,6 +4665,86 @@ lua = function (self, card, info, data)
 		return G.call("技能效果_攻击",1)
 	end),(function()
 		return G.call("技能效果_攻击",-1)
+	end))
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130084,
+		['showname']='暴风城勇士-光环+1/+1',
+		['技能类型']={
+			[1]='光环',
+		},
+		['目标筛选']={n=8,[1] = '卡牌条件_目标通用过滤器',
+			[3]='我方',
+			[4]={
+				[1]=0x10090004,
+			},
+			[5]={
+				[1]='战场',
+			},
+			[9]=true,
+		},
+		['逻辑功能']={
+			[1]={
+				['注册时机']='上场',
+				['触发时机']={
+t =
+{'$逻辑_随从上场','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_随从上场",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    '技能效果_战场光环',
+    'self',
+    'card',
+    {
+        'function',
+        {},
+        {},
+        {
+            'block',
+            {'技能效果_生命上限',1},
+            {'技能效果_攻击',1}
+        }
+    },
+    {
+        'function',
+        {},
+        {},
+        {
+            'block',
+            {'技能效果_生命上限',-1},
+            {'技能效果_攻击',-1}
+        }
+    }
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_战场光环",self,card,(function()
+		return (function()
+			local _ = nil
+			_ = G.call("技能效果_生命上限",1)
+			_ = G.call("技能效果_攻击",1)
+			return _
+		end)()
+	end),(function()
+		return (function()
+			local _ = nil
+			_ = G.call("技能效果_生命上限",-1)
+			_ = G.call("技能效果_攻击",-1)
+			return _
+		end)()
 	end))
 end
 ,
