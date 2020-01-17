@@ -5035,6 +5035,114 @@ end
 		},
 	},
 	{
+		['name']=0x10130085,
+		['showname']='法术强度-随从',
+		['技能类型']={
+			[1]='被动',
+		},
+		['逻辑功能']={
+			[1]={
+				['注册时机']='上场',
+				['是否重复触发']=true,
+				['触发时机']={
+t =
+{'$逻辑_技能效果_法术伤害前'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_技能效果_法术伤害前"}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    {
+        'function',
+        {},
+        {
+            {
+                'v',
+                {'卡牌属性_获取','card','$法术伤害','$当前值'}
+            }
+        },
+        {'技能效果_法术强度生效','v'}
+    }
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return (function()
+		local v_81 = G.call("卡牌属性_获取",card,"法术伤害","当前值")
+		return G.call("技能效果_法术强度生效",v_81)
+	end)()
+end
+,
+},
+				['优先级']=100,
+			},
+		},
+	},
+	{
+		['name']=0x10130086,
+		['showname']='治疗图腾-群体治疗',
+		['技能类型']={
+			[1]='被动',
+		},
+		['逻辑功能']={
+			[1]={
+				['注册时机']='上场',
+				['是否重复触发']=true,
+				['触发时机']={
+t =
+{'$流程_回合结束','card.动态数据.所有者'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"流程_回合结束",card.动态数据.所有者}
+end
+,
+},
+				['触发逻辑']={
+t =
+{
+    '技能效果_效果树_执行子效果',
+    {
+        ['Caster'] = 'card',
+        ['Player'] = {
+            '房间_获取相对身份',
+            {'get_event_info'}
+        }
+    },
+    {
+        'function',
+        {},
+        {},
+        {
+            'block',
+            {'技能目标_选取随从','$我方'},
+            {'技能效果_随从治疗',1}
+        }
+    }
+},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_效果树_执行子效果",{["Caster"] = card,["Player"] = G.call("房间_获取相对身份",G.call("get_event_info"))},(function()
+		return (function()
+			local _ = nil
+			_ = G.call("技能目标_选取随从","我方")
+			_ = G.call("技能效果_随从治疗",1)
+			return _
+		end)()
+	end))
+end
+,
+},
+			},
+		},
+	},
+	{
 		['name']=0x10130003,
 		['showname']='爪击-护甲、本回合攻击',
 		['逻辑功能']={

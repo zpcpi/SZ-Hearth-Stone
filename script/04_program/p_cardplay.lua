@@ -1694,6 +1694,26 @@ t['技能效果_武器治疗'] = function (int_治疗值)
     effect_action_iter(o_skill_info_效果信息, '逻辑_技能效果_武器治疗', init, action)
 end
 
+t['技能效果_法术强度生效'] = function (int_法术强度)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
+    end
+
+    local init = function ()
+    end
+    local action = function ()
+        local 伤害类型 = o_skill_info_效果信息['伤害类型']
+        if 伤害类型 == '法术' then
+            local int_中间伤害值 = o_skill_info_效果信息['中间伤害数值'] or o_skill_info_效果信息['原始伤害数值'] or 0
+            o_skill_info_效果信息['中间伤害数值'] = int_中间伤害值 + math.max(int_法术强度 or 0, 0)
+        end
+    end
+
+    effect_action_iter(o_skill_info_效果信息, nil, init, action)
+end
+
 t['技能效果_本回合当前水晶'] = function (int_变动值)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
