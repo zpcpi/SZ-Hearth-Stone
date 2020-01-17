@@ -215,7 +215,7 @@ t =
     {
         '技能目标_选取随从',
         '$我方',
-        {'卡牌数据_制作过滤器','self','card'}
+        {'卡牌数据_制作过滤器','self.目标筛选','card'}
     },
     {'技能效果_添加BUFF',0x1013004f}
 },
@@ -224,7 +224,7 @@ lua = function (self, card, info, data)
 	local t = G.api
 	return (function()
 		local _ = nil
-		_ = G.call("技能目标_选取随从","我方",G.call("卡牌数据_制作过滤器",self,card))
+		_ = G.call("技能目标_选取随从","我方",G.call("卡牌数据_制作过滤器",self.目标筛选,card))
 		_ = G.call("技能效果_添加BUFF",269680719)
 		return _
 	end)()
@@ -2660,7 +2660,7 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_本回合当前水晶',1}  ,
+{'技能效果_本回合当前水晶',1},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
@@ -4916,7 +4916,7 @@ t =
     'if',
     {
         'apply',
-        {'卡牌数据_制作过滤器','self','card'},
+        {'卡牌数据_制作过滤器','self.目标筛选','card'},
         'info.Caster'
     },
     {'技能效果_抽牌'}
@@ -4925,7 +4925,7 @@ lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function ()
-		if(G.call(G.call("卡牌数据_制作过滤器",self,card),info.Caster))then
+		if(G.call(G.call("卡牌数据_制作过滤器",self.目标筛选,card),info.Caster))then
 			return G.call("技能效果_抽牌")
 		end
 	end)()
@@ -4970,7 +4970,7 @@ t =
     'if',
     {
         'apply',
-        {'卡牌数据_制作过滤器','self','card'},
+        {'卡牌数据_制作过滤器','self.目标筛选','card'},
         'info.逐个治疗目标'
     },
     {'技能效果_抽牌'}
@@ -4979,7 +4979,7 @@ lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function ()
-		if(G.call(G.call("卡牌数据_制作过滤器",self,card),info.逐个治疗目标))then
+		if(G.call(G.call("卡牌数据_制作过滤器",self.目标筛选,card),info.逐个治疗目标))then
 			return G.call("技能效果_抽牌")
 		end
 	end)()

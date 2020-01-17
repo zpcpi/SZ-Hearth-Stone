@@ -2183,7 +2183,7 @@ t['技能效果_战场光环'] = function (o_skill, Caster, func_add, func_del)
         return
     end
 
-    local func_filer = G.call('卡牌数据_制作过滤器', o_skill, Caster)
+    local func_filer = G.call('卡牌数据_制作过滤器', o_skill['目标筛选'], Caster)
 
     aura_add_buff(func_filer, func_add, func_del, 
                     { -- 光环添加事件
@@ -2976,17 +2976,16 @@ end
 -- ============================================
 -- ============================================
 
-t['卡牌数据_制作过滤器'] = function (o_skill, Caster)
-    local farg_光环过滤器 = o_skill['目标筛选']
+t['卡牌数据_制作过滤器'] = function (farg_目标过滤器, Caster)
     local func_filer
-    if farg_光环过滤器[1] == '卡牌条件_目标通用过滤器' then
-        local estr_side_阵营 = farg_光环过滤器[2]
-        local _i_cardtype_卡牌类型 = farg_光环过滤器[3]
-        local _estr_cardpos_type_所处位置 = farg_光环过滤器[4]
-        local _i_race_种族 = farg_光环过滤器[5]
-        local _string_满足特性 = farg_光环过滤器[6]
-        local _string_排除特性 = farg_光环过滤器[7]
-        local boolean_排除自身 = farg_光环过滤器[8]
+    if farg_目标过滤器[1] == '卡牌条件_目标通用过滤器' then
+        local estr_side_阵营 = farg_目标过滤器[2]
+        local _i_cardtype_卡牌类型 = farg_目标过滤器[3]
+        local _estr_cardpos_type_所处位置 = farg_目标过滤器[4]
+        local _i_race_种族 = farg_目标过滤器[5]
+        local _string_满足特性 = farg_目标过滤器[6]
+        local _string_排除特性 = farg_目标过滤器[7]
+        local boolean_排除自身 = farg_目标过滤器[8]
         func_filer = function (tar)
             if estr_side_阵营 then
                 if G.call('卡牌条件_卡牌阵营判断', Caster, tar, estr_side_阵营) then
@@ -3032,7 +3031,7 @@ t['卡牌数据_制作过滤器'] = function (o_skill, Caster)
 end
 
 t['卡牌数据_获取过滤后数量'] = function (o_skill, Caster)
-    local func_filer = G.call('卡牌数据_制作过滤器', o_skill, Caster)
+    local func_filer = G.call('卡牌数据_制作过滤器', o_skill['目标筛选'], Caster)
     local all_cards = G.misc()['实例化卡牌列表']
 
     return #G.call('array_filter', all_cards, func_filer)
