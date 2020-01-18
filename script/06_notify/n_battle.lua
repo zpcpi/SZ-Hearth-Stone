@@ -3,7 +3,7 @@ local noti = G.notify
 
 function noti.对决_初始化1v1战场()
     G.addUI('v_battle_1v1')
-    noti.作弊系统_初始化作弊系统ui()
+    G.noti_call('作弊系统_初始化作弊系统ui')
     G.removeUI('v_room')
 end
 

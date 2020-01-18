@@ -9,23 +9,22 @@
             "request": "launch",
             "internalConsoleOptions": "openOnFirstSessionStart",
             "name": "LuaPanda",
-            "program": "D:/Project/minieditor/project/SZ-Hearth-Stone/script/",
-            "cwd": "D:/Project/minieditor/project/SZ-Hearth-Stone/script/",
+            "cwd": "D:/Project/minieditor",
             "pathCaseSensitivity": true,
             "docPathReplace": [],
             "luaFileExtension": "lua",
             "connectionPort": 8818,
             "stopOnEntry": true,
             "useCHook": true,
-            "logLevel": 1
+            "logLevel": 1,
+            "autoPathMode": true
         },
         {
             "type": "lua",
             "request": "launch",
             "internalConsoleOptions": "neverOpen",
             "name": "LuaPanda-DebugFile",
-            "program": "D:/Project/minieditor/project/SZ-Hearth-Stone/script/",
-            "cwd": "D:/Project/minieditor/project/SZ-Hearth-Stone/script/",
+            "cwd": "D:/Project/minieditor",
             "pathCaseSensitivity": true,
             "luaPath": "",
             "packagePath": [],
@@ -33,7 +32,8 @@
             "connectionPort": 8818,
             "stopOnEntry": true,
             "useCHook": true,
-            "logLevel": 1
+            "logLevel": 1,
+            "autoPathMode": true
         }
     ]
 }

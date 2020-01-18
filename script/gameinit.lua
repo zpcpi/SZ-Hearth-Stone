@@ -1,11 +1,3 @@
--- rdebug = require('remotedebug')
--- console = require('mare/hostvm/console')
--- debugger = require('mare/hostvm/debugger')
--- rdebug.start('debug-test') -- {pause=true}
-
--- lua调试模块
--- local breakSocketHandle,debugXpCall = require("luaide/luadebug")("localhost",7003)
--- require("luaide/mobdebug").start()
 NEW_DATA_TEST_FZT = false
 SAVE_EVENT_COUNT = 0
 SAVE_EVENT_COUNT_LIST = {}
@@ -70,4 +62,4 @@ G.SetDefaultAnim('prepare')
 c.SetMainloop(G.main)
 
 c.SetWinName(c.UtfToGbk(' 山寨炉石')) 
-require("LuaPanda")
+LuaPanda = require("LuaPanda")
