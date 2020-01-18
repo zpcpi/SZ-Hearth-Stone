@@ -76,6 +76,13 @@ t['tLua_EQUAL'] = function (...)
     return comp_op_iter(iter, true, ...)
 end
 
+t['tLua_NE'] = function (...)
+    local iter = function (a,b)
+        return a~=b
+    end
+    return comp_op_iter(iter, true, ...)
+end
+
 t['tLua_GT'] = function (...)
     local iter = function (a,b)
         return a>b
@@ -444,7 +451,7 @@ local Gr = {'tLua',
     Name      = str_kw(-V"Reserved" * C(V"Ident")),
     Reserved  = V"Keywords" * -V"IdRest",
     Keywords  = P"+" + "-" + "*" + "/" + "//" + 
-                "==" + ">" + "<" + ">=" + "<=" + 'and' + 'or' + 'not' + 
+                "==" + "~=" + ">" + "<" + ">=" + "<=" + 'and' + 'or' + 'not' + 
                 "map" + 'append' + 'apply' + 'filter' + 'foldl' + 'foldr' + 
                 "if" + "while" + "repeat" + "block" + "function" + 'set' + 'table' + 
                 "listener" +
@@ -547,6 +554,7 @@ local Gr = {'tLua',
                      P'/'/'tLua_DIV' +
                      P'%'/'tLua_MOD' +
                      P'=='/'tLua_EQUAL' + 
+                     P'~='/'tLua_NE' + 
                      P'>='/'tLua_GE' + 
                      P'<='/'tLua_LE' + 
                      P'>'/'tLua_GT' + 

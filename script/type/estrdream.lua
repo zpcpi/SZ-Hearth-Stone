@@ -29,4 +29,6 @@ t.estr_ui_battlehero_type = {'英雄', '英雄技能', '武器'}
 
 t.estr_game_mode = {'任意', '标准', '狂野'}
 
+t.estr_comptype = {'>', '<', '==', '>=', '<=', '~='}
+
 return t
