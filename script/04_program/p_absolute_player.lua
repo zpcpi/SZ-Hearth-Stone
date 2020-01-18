@@ -68,7 +68,7 @@ end
 --hide=true
 t['角色_战场_设置英雄_绝对身份'] = function(estr_absolute_id_type_绝对身份, i_card_卡牌)
     local o_misc = G.misc()
-
+    
     local o_card_卡牌 = G.QueryName(i_card_卡牌)
     misc_attr_check('英雄信息')
     if o_card_卡牌 then

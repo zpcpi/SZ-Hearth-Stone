@@ -34,3 +34,6 @@ end
 
 t['提示_播放提示'] = function(string_提示内容)
 end
+
+t['提示_显示弹框提示'] = function(string_提示内容, farg_确认回调)
+end

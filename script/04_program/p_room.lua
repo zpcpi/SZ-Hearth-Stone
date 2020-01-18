@@ -76,6 +76,13 @@ t['房间_是否满足开始条件'] = function()
         G.call('系统_输出信息', '请先选择游戏模式')
         return 
     else
+        if G.call('房间_获取玩家数') < (o_game_mode_游戏模式.玩家数要求 or 0) then 
+            local farg_填满电脑玩家 = {
+                [1] = '战斗AI_空位补全AI'
+            }
+            G.call('提示_显示弹框提示', '当前房间人数不足，是否让电脑填满空位？', farg_填满电脑玩家)
+            return false
+        end
         return G.call(o_game_mode_游戏模式.开始条件)
     end
 end
@@ -266,4 +273,12 @@ t['房间_退出房间'] = function()
     G.connectList = nil
     G.tcpServerSocket = nil
     G.tcpClientSocket = nil
+end
+
+--ret=int
+t['房间_获取玩家数'] = function()
+    if type(G.misc().房间玩家列表) ~= 'table' then 
+        return 0
+    end
+    return #G.misc().房间玩家列表
 end

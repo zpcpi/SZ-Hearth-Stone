@@ -178,16 +178,6 @@ t['对决_初始化对决角色'] = function(estr_player_相对身份)
 
     G.call('角色_战场_设置英雄', '我方', G.call('卡牌实例化', G.QueryName(hero)))
     G.call('角色_战场_设置英雄技能', '我方', G.call('卡牌实例化', G.QueryName(skill)))
-
-    -- TODO: 暂时读取卡组的第一职业作为角色职业
-    -- local i_profession_职业 = o_deck_卡组.职业[1]
-    -- local o_battle_role_对决角色 = {}
-    -- o_battle_role_对决角色.生命值 = G.call('对决_获取初始生命值')
-    -- o_battle_role_对决角色.职业 = i_profession_职业
-    -- local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
-    -- G['对决角色'] = G['对决角色'] or {}
-    -- G['对决角色'][estr_absolute_id_type_绝对身份] = o_battle_role_对决角色
-    -- return o_battle_role_对决角色
 end
 
 --ret=int
