@@ -1157,6 +1157,14 @@ local t = {
 				['name']='可分配身份列表',
 				['type']='_estr_absolute_id_type',
 			},
+			[5]={
+				['name']='AI数要求',
+				['type']='int',
+			},
+			[6]={
+				['name']='玩家数要求',
+				['type']='int',
+			},
 		},
 	},
 	{
