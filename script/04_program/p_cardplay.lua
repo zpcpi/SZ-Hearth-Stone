@@ -2965,6 +2965,29 @@ t['卡牌条件_控制特定卡牌'] = function(estr_player_相对身份, o_card
 end
 
 --ret=boolean
+t['卡牌条件_目标属性比较'] = function(o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, estr_comptype_比较方式, int_value)
+    local cur_value = G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型)
+
+    local comp_mapping = {
+        ['>']  = 'tLua_GT',
+        ['<']  = 'tLua_LT',
+        ['=='] = 'tLua_EQUAL',
+        ['>='] = 'tLua_GE',
+        ['<='] = 'tLua_LE',
+        ['~='] = 'tLua_NE',
+    }
+
+    return G.call(comp_mapping[estr_comptype_比较方式], cur_value, int_value)
+end
+
+--ret=boolean
+t['卡牌条件_目标满血'] = function(o_card_当前卡牌)
+    local cur_hp = G.call('卡牌属性_获取', o_card_当前卡牌, '生命', '当前值') or 0
+    local max_hp = G.call('卡牌属性_获取', o_card_当前卡牌, '生命', '最大值') or 0
+    return cur_hp == max_hp
+end
+
+--ret=boolean
 t['卡牌条件_目标通用过滤器'] = function(estr_side_阵营, _i_cardtype_卡牌类型, _estr_cardpos_type_所处位置, _i_race_种族, _string_满足特性, _string_排除特性, boolean_排除自身)
 end
 
@@ -2978,7 +3001,39 @@ end
 
 t['卡牌数据_制作过滤器'] = function (farg_目标过滤器, Caster)
     local func_filer
-    if farg_目标过滤器[1] == '卡牌条件_目标通用过滤器' then
+    if farg_目标过滤器[1] == 'fargboolean_and' then
+        local filerlist = {}
+        for k,farg in ipairs(farg_目标过滤器[2] or {}) do
+            filerlist[k] = G.call('卡牌数据_制作过滤器', farg, Caster)
+        end
+        func_filer = function (tar)
+            for _,iter in ipairs(filerlist) do
+                if iter(tar) then
+                else
+                    return false
+                end
+            end
+            return true
+        end
+    elseif farg_目标过滤器[1] == 'fargboolean_or' then
+        local filerlist = {}
+        for k,farg in ipairs(farg_目标过滤器[2] or {}) do
+            filerlist[k] = G.call('卡牌数据_制作过滤器', farg, Caster)
+        end
+        func_filer = function (tar)
+            for _,iter in ipairs(filerlist) do
+                if iter(tar) then
+                    return true
+                end
+            end
+            return false
+        end
+    elseif farg_目标过滤器[1] == 'fargboolean_not' then
+        local iter = G.call('卡牌数据_制作过滤器', farg_目标过滤器[2], Caster)
+        func_filer = function (tar)
+            return not iter(tar)
+        end
+    elseif farg_目标过滤器[1] == '卡牌条件_目标通用过滤器' then
         local estr_side_阵营 = farg_目标过滤器[2]
         local _i_cardtype_卡牌类型 = farg_目标过滤器[3]
         local _estr_cardpos_type_所处位置 = farg_目标过滤器[4]
@@ -3024,6 +3079,12 @@ t['卡牌数据_制作过滤器'] = function (farg_目标过滤器, Caster)
                 end
             end
             return true
+        end
+    else
+        -- 需要约定，farg的第二个参数添目标
+        func_filer = function (tar)
+            farg_目标过滤器[2] = tar
+            return G.call(farg_目标过滤器)
         end
     end
 

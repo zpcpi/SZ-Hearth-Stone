@@ -641,6 +641,10 @@ local t = {
 				['name']='Player',
 				['type']='estr_player',
 			},
+			[8]={
+				['name']='Condition',
+				['type']='_any',
+			},
 		},
 	},
 	{

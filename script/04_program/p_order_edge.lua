@@ -256,17 +256,22 @@ end
 
 t['卡牌选择目标_条件'] = function (o_order_info_当前指令信息)
     local Target, tar_obj = G.event_info()
-
-    -- 肯定不能自己选自己
     local Caster = o_order_info_当前指令信息['Caster']
-    if Caster == Target then
-        return false
-    end
+
+    -- 免疫通用处理
 
     -- 条件判断
+    table_attr_check(o_order_info_当前指令信息, 'Target')
+    table_attr_check(o_order_info_当前指令信息, 'Condition')
+    local count = #o_order_info_当前指令信息['Target'] + 1
+    local condi = o_order_info_当前指令信息['Condition']
+    if condi[count] then
+    else
+        -- 制作条件
+        condi[count] = G.call('卡牌数据_制作过滤器', Caster['逻辑数据']['目标条件'][count], Caster)
+    end
 
-
-    return true
+    return condi[count](Target)
 end
 
 t['卡牌选择目标_修改数据'] = function (o_order_info_当前指令信息)

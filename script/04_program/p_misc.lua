@@ -74,13 +74,8 @@ t['card数据处理'] = function(o_excel_xxxx)
 
     for k,v in ipairs(cardlist) do
         if v['逻辑数据'] then
-            local t = v['逻辑数据']
-
-            if t['职业'] then
-                t['职业xx'] = {
-                    t['职业']
-                }
-                t['职业'] = nil
+            if v['逻辑数据']['目标指向文本'] then
+                v['逻辑数据']['目标指向文本'] = v['逻辑数据']['目标指向文本'][1]
             end
         end
     end
