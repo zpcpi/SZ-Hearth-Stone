@@ -1182,6 +1182,10 @@ local t = {
 				['name']='AI行为树',
 				['type']='o_behavior_tree',
 			},
+			[4]={
+				['name']='支持游戏模式',
+				['type']='o_game_mode',
+			},
 		},
 	},
 	{
