@@ -1168,6 +1168,23 @@ local t = {
 		},
 	},
 	{
+		['name']='o_battle_ai',
+		['define']={
+			[1]={
+				['name']='AI名称',
+				['type']='string',
+			},
+			[2]={
+				['name']='AI卡组',
+				['type']='o_deck',
+			},
+			[3]={
+				['name']='AI行为树',
+				['type']='o_behavior_tree',
+			},
+		},
+	},
+	{
 		['name']='o_skill_info',
 		['define']={
 			[1]={
