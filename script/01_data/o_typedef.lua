@@ -1180,15 +1180,37 @@ local t = {
 			},
 			[2]={
 				['name']='AI卡组',
-				['type']='o_deck',
+				['type']='i_deck',
 			},
 			[3]={
 				['name']='AI行为树',
-				['type']='o_behavior_tree',
+				['type']='i_behavior_tree',
 			},
 			[4]={
 				['name']='支持游戏模式',
-				['type']='o_game_mode',
+				['type']='_i_game_mode',
+			},
+		},
+	},
+	{
+		['name']='o_behavior_tree',
+		['define']={
+			[1]={
+				['name']='根节点',
+				['type']='o_behavior_tree_node',
+			},
+		},
+	},
+	{
+		['name']='o_behavior_tree_node',
+		['define']={
+			[1]={
+				['name']='判断条件',
+				['type']='funsboolean',
+			},
+			[2]={
+				['name']='执行逻辑',
+				['type']='farg',
 			},
 		},
 	},
