@@ -872,6 +872,10 @@ local t = {
 				['name']='绝对身份',
 				['type']='estr_absolute_id_type',
 			},
+			[6]={
+				['name']='是AI',
+				['type']='boolean',
+			},
 		},
 	},
 	{
