@@ -57,9 +57,16 @@ t['战斗AI_获取随机AI玩家'] = function()
 end
 
 t['战斗AI_AI空位补全AI'] = function()
-    print('--== 战斗AI_电脑空位补全AI')
-    -- TODO: 获取AI空位数量
-    -- TODO: AI空位补全 AI
+    local i_game_mode_游戏模式 = G.call('对决_获取当前游戏模式')
+    local o_game_mode_游戏模式 = G.QueryName(i_game_mode_游戏模式)
+    if o_game_mode_游戏模式 == nil then 
+        G.call('提示_添加提示', '游戏模式不存在 ' .. tostring(i_game_mode_游戏模式))
+        return
+    end
+    local int_需求AI数量 = o_game_mode_游戏模式.AI数要求 or 0
+    for i = 1, int_需求AI数量 do 
+        G.call('战斗AI_添加AI玩家')
+    end
 end
 
 --ret=string
