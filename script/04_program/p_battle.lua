@@ -53,10 +53,12 @@ end
 
 t['对决_初始化数据'] = function(o_room_player_玩家)
     G.call('对决_初始化对决牌库', o_room_player_玩家)
+    -- TODO: 完善初始化对决角色逻辑
     G.call('对决_初始化对决角色', '我方')
 end
 
 t['对决_初始化协程'] = function(o_room_player_玩家)
+    -- TODO: 完善初始化协程逻辑
     G.start_program('对决_决定初始卡牌')
     G.start_program('对决_流程控制')
 end
