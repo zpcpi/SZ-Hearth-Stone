@@ -1179,8 +1179,8 @@ local t = {
 		['name']='o_battle_ai',
 		['define']={
 			[1]={
-				['name']='AI名称',
-				['type']='string',
+				['name']='AI名称库',
+				['type']='_string',
 			},
 			[2]={
 				['name']='AI卡组',

@@ -276,9 +276,21 @@ t['房间_退出房间'] = function()
 end
 
 --ret=int
-t['房间_获取玩家数'] = function()
+t['房间_获取玩家数'] = function(boolean_是否获取真实玩家)
     if type(G.misc().房间玩家列表) ~= 'table' then 
         return 0
     end
-    return #G.misc().房间玩家列表
+    local int_玩家数 = 0
+    if boolean_是否获取真实玩家 == nil then 
+        int_玩家数 = #G.misc().房间玩家列表
+    else
+        for _, o_room_player_玩家 in ipairs(G.misc().房间玩家列表) do 
+            if o_room_player_玩家.AI == nil and boolean_是否获取真实玩家 then 
+                int_玩家数 = int_玩家数 + 1
+            elseif o_room_player_玩家.AI ~= nil and not boolean_是否获取真实玩家 then
+                int_玩家数 = int_玩家数 + 1
+            end
+        end
+    end
+    return int_玩家数
 end
