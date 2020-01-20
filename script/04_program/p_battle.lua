@@ -30,6 +30,7 @@ t['对决_开始'] = function()
         G.call('系统_输出信息', '有玩家没有准备就绪， 无法开始游戏！')
         return 
     end
+    G.call('战斗AI_AI空位补全AI')
     -- TODO: 根据游戏模式初始化数据
     if G.call('主机_是主机') then 
         G.call('房间_分配绝对身份')

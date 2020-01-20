@@ -873,8 +873,8 @@ local t = {
 				['type']='estr_absolute_id_type',
 			},
 			[6]={
-				['name']='是AI',
-				['type']='boolean',
+				['name']='AI',
+				['type']='i_battle_ai',
 			},
 		},
 	},
@@ -1184,7 +1184,7 @@ local t = {
 			},
 			[2]={
 				['name']='AI卡组',
-				['type']='i_deck',
+				['type']='_i_deck',
 			},
 			[3]={
 				['name']='AI行为树',

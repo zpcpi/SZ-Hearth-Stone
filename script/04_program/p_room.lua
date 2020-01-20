@@ -78,7 +78,7 @@ t['房间_是否满足开始条件'] = function()
     else
         if G.call('房间_获取玩家数') < (o_game_mode_游戏模式.玩家数要求 or 0) then 
             local farg_填满电脑玩家 = {
-                [1] = '战斗AI_空位补全AI'
+                [1] = '战斗AI_玩家空位补全AI'
             }
             G.call('提示_显示弹框提示', '当前房间人数不足，是否让电脑填满空位？', farg_填满电脑玩家)
             return false
