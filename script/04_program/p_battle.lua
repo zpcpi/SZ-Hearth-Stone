@@ -35,13 +35,28 @@ t['对决_开始'] = function()
     if G.call('主机_是主机') then 
         G.call('房间_分配绝对身份')
         G.call('网络通用_广播消息', '对决_开始')
+        -- AI 数据归主机管理
+        G.call('战斗AI_对决初始化')
     end
     -- 初始化卡牌实例表
     G.call('卡牌实例表_初始化')
     
+    local o_room_player_玩家 = G.call('房间_相对身份获取玩家信息', '我方')
+    G.call('对决_初始化界面')
+    G.call('对决_初始化数据', o_room_player_玩家)
+    G.call('对决_初始化协程', o_room_player_玩家)
+end
+
+t['对决_初始化界面'] = function()
     G.call('对决_初始化战场', G.call('对决_获取当前游戏模式'))
-    G.call('对决_初始化我方对决牌库')
+end
+
+t['对决_初始化数据'] = function(o_room_player_玩家)
+    G.call('对决_初始化对决牌库', o_room_player_玩家)
     G.call('对决_初始化对决角色', '我方')
+end
+
+t['对决_初始化协程'] = function(o_room_player_玩家)
     G.start_program('对决_决定初始卡牌')
     G.start_program('对决_流程控制')
 end
@@ -200,8 +215,16 @@ t['对决_获取初始生命值'] = function()
 end
 
 --ret=o_deck
-t['对决_初始化我方对决牌库'] = function()
+t['对决_初始化对决牌库'] = function(o_room_player_玩家)
     local o_deck_卡组 = G.call('对决_获取对决卡组')
+    if G.call('房间_获取相对身份', o_room_player_玩家.绝对身份) == '我方' then 
+        o_deck_卡组 = G.call('对决_获取对决卡组')
+    elseif o_room_player_玩家.AI ~= nil then 
+        local i_deck_卡组 = G.call('战斗AI_获取随机卡组', o_room_player_玩家.AI)
+        o_deck_卡组 = G.QueryName(i_deck_卡组)
+    else
+        -- TODO: 初始化其他玩家牌库?
+    end
     if not G.call('对决_卡组模板是否有效', o_deck_卡组) then 
         G.call('提示_添加提示', '卡组模板数据不正确')
         return 

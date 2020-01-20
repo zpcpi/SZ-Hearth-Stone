@@ -92,3 +92,22 @@ end
 t['战斗AI_获取随机名称'] = function()
     return '酒馆老板'
 end
+
+t['战斗AI_对决初始化'] = function()
+    local _o_room_player_AI玩家列表 = G.call('房间_获取玩家信息列表', false)
+    for _, o_room_player_AI玩家 in ipairs(_o_room_player_AI玩家列表) do 
+        G.call('对决_初始化数据', o_room_player_AI玩家)
+        G.call('对决_初始化协程', o_room_player_AI玩家)
+    end
+end
+
+--ret=i_deck
+t['战斗AI_获取随机卡组'] = function(i_battle_ai_AI)
+    local o_battle_ai_AI = G.QueryName(i_battle_ai_AI)
+    if o_battle_ai_AI == nil or o_battle_ai_AI.AI卡组 == nil or #o_battle_ai_AI.AI卡组 == 0 then 
+        G.call('提示_添加提示', 'AI没有可用卡组 ' .. tostring(i_battle_ai_AI))
+        return nil
+    end
+    local int_随机数 = math.random(1, #o_battle_ai_AI.AI卡组)
+    return o_battle_ai_AI.AI卡组[int_随机数]
+end

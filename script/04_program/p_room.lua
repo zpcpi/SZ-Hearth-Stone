@@ -46,10 +46,6 @@ t['房间_删除玩家信息'] = function(o_room_player_玩家)
     end
 end
 
-t['房间_获取玩家信息列表'] = function()
-    return G.misc().房间玩家列表 or {}
-end
-
 t['房间_是否是同一玩家'] = function(o_room_player_玩家1, o_room_player_玩家2)
     if type(o_room_player_玩家1) ~= 'table' or type(o_room_player_玩家2) ~= 'table' then 
         return false
@@ -101,11 +97,13 @@ t['房间_是否所有玩家准备就绪'] = function()
     return true
 end
 
+--ret=o_room_player
 t['房间_相对身份获取玩家信息'] = function(estr_player_相对身份)
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
     return G.call('房间_绝对身份获取玩家信息', estr_absolute_id_type_绝对身份)
 end
 
+--ret=o_room_player
 t['房间_绝对身份获取玩家信息'] = function(estr_absolute_id_type_绝对身份)
     local any_玩家信息列表 = G.call('房间_获取玩家信息列表')
     for _, any_玩家信息 in ipairs(any_玩家信息列表) do 
@@ -293,4 +291,21 @@ t['房间_获取玩家数'] = function(boolean_是否获取真实玩家)
         end
     end
     return int_玩家数
+end
+
+--ret=_o_room_player
+t['房间_获取玩家信息列表'] = function(boolean_是否获取真实玩家)
+    if boolean_是否获取真实玩家 == nil then 
+        return G.misc().房间玩家列表 or {}
+    else
+        local _o_room_player_玩家列表 = {}
+        for _, o_room_player_玩家 in ipairs(G.misc().房间玩家列表) do 
+            if o_room_player_玩家.AI == nil and boolean_是否获取真实玩家 then 
+                table.insert(_o_room_player_玩家列表, o_room_player_玩家)
+            elseif o_room_player_玩家.AI ~= nil and not boolean_是否获取真实玩家 then
+                table.insert(_o_room_player_玩家列表, o_room_player_玩家)
+            end
+        end
+        return _o_room_player_玩家列表
+    end
 end
