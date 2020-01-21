@@ -22,7 +22,6 @@ end
 
 function t:click(tar)
     if tar == self.confirmButton then 
-        LuaPanda.BP()
         if type(self.confirmCallbackFarg) == 'table' then 
             G.call(self.confirmCallbackFarg)
         end 

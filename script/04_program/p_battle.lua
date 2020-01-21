@@ -237,6 +237,7 @@ t['对决_初始化对决牌库'] = function(o_room_player_玩家)
     o_randomlib_随机牌库:初始化(false, true)
     o_randomlib_牌库底:初始化(false, true)
 
+    -- FIXME: 不能直接指定我方牌库
     G.misc()['我方牌库'] = {
         o_randomlib_牌库顶,
         o_randomlib_随机牌库,
