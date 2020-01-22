@@ -21,7 +21,6 @@ function t:setData(isWin)
 end
 
 function t:click(tar)
-    -- TODO: 点击之后返回房间
     local node = G.changeUI('v_room')
     if node then 
         node.c_room:UpdateRoom()

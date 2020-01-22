@@ -872,6 +872,10 @@ local t = {
 				['name']='绝对身份',
 				['type']='estr_absolute_id_type',
 			},
+			[6]={
+				['name']='AI',
+				['type']='i_battle_ai',
+			},
 		},
 	},
 	{
@@ -1168,6 +1172,49 @@ local t = {
 			[6]={
 				['name']='玩家数要求',
 				['type']='int',
+			},
+		},
+	},
+	{
+		['name']='o_battle_ai',
+		['define']={
+			[1]={
+				['name']='AI名称库',
+				['type']='_string',
+			},
+			[2]={
+				['name']='AI卡组',
+				['type']='_i_deck',
+			},
+			[3]={
+				['name']='AI行为树',
+				['type']='i_behavior_tree',
+			},
+			[4]={
+				['name']='支持游戏模式',
+				['type']='_i_game_mode',
+			},
+		},
+	},
+	{
+		['name']='o_behavior_tree',
+		['define']={
+			[1]={
+				['name']='根节点',
+				['type']='o_behavior_tree_node',
+			},
+		},
+	},
+	{
+		['name']='o_behavior_tree_node',
+		['define']={
+			[1]={
+				['name']='判断条件',
+				['type']='funsboolean',
+			},
+			[2]={
+				['name']='执行逻辑',
+				['type']='farg',
 			},
 		},
 	},

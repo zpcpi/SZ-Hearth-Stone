@@ -46,10 +46,6 @@ t['房间_删除玩家信息'] = function(o_room_player_玩家)
     end
 end
 
-t['房间_获取玩家信息列表'] = function()
-    return G.misc().房间玩家列表 or {}
-end
-
 t['房间_是否是同一玩家'] = function(o_room_player_玩家1, o_room_player_玩家2)
     if type(o_room_player_玩家1) ~= 'table' or type(o_room_player_玩家2) ~= 'table' then 
         return false
@@ -78,7 +74,7 @@ t['房间_是否满足开始条件'] = function()
     else
         if G.call('房间_获取玩家数') < (o_game_mode_游戏模式.玩家数要求 or 0) then 
             local farg_填满电脑玩家 = {
-                [1] = '战斗AI_空位补全AI'
+                [1] = '战斗AI_玩家空位补全AI'
             }
             G.call('提示_显示弹框提示', '当前房间人数不足，是否让电脑填满空位？', farg_填满电脑玩家)
             return false
@@ -101,11 +97,13 @@ t['房间_是否所有玩家准备就绪'] = function()
     return true
 end
 
+--ret=o_room_player
 t['房间_相对身份获取玩家信息'] = function(estr_player_相对身份)
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
     return G.call('房间_绝对身份获取玩家信息', estr_absolute_id_type_绝对身份)
 end
 
+--ret=o_room_player
 t['房间_绝对身份获取玩家信息'] = function(estr_absolute_id_type_绝对身份)
     local any_玩家信息列表 = G.call('房间_获取玩家信息列表')
     for _, any_玩家信息 in ipairs(any_玩家信息列表) do 
@@ -276,9 +274,38 @@ t['房间_退出房间'] = function()
 end
 
 --ret=int
-t['房间_获取玩家数'] = function()
+t['房间_获取玩家数'] = function(boolean_是否获取真实玩家)
     if type(G.misc().房间玩家列表) ~= 'table' then 
         return 0
     end
-    return #G.misc().房间玩家列表
+    local int_玩家数 = 0
+    if boolean_是否获取真实玩家 == nil then 
+        int_玩家数 = #G.misc().房间玩家列表
+    else
+        for _, o_room_player_玩家 in ipairs(G.misc().房间玩家列表) do 
+            if o_room_player_玩家.AI == nil and boolean_是否获取真实玩家 then 
+                int_玩家数 = int_玩家数 + 1
+            elseif o_room_player_玩家.AI ~= nil and not boolean_是否获取真实玩家 then
+                int_玩家数 = int_玩家数 + 1
+            end
+        end
+    end
+    return int_玩家数
+end
+
+--ret=_o_room_player
+t['房间_获取玩家信息列表'] = function(boolean_是否获取真实玩家)
+    if boolean_是否获取真实玩家 == nil then 
+        return G.misc().房间玩家列表 or {}
+    else
+        local _o_room_player_玩家列表 = {}
+        for _, o_room_player_玩家 in ipairs(G.misc().房间玩家列表) do 
+            if o_room_player_玩家.AI == nil and boolean_是否获取真实玩家 then 
+                table.insert(_o_room_player_玩家列表, o_room_player_玩家)
+            elseif o_room_player_玩家.AI ~= nil and not boolean_是否获取真实玩家 then
+                table.insert(_o_room_player_玩家列表, o_room_player_玩家)
+            end
+        end
+        return _o_room_player_玩家列表
+    end
 end

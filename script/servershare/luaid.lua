@@ -1,6 +1,8 @@
 local t = {}
 t[0x1f09]="o_animation"
 t[0x1001]="o_animquest"
+t[0x1016]="o_battle_ai"
+t[0x1017]="o_behavior_tree"
 t[0x1006]="o_card"
 t[0x1009]="o_cardtype"
 t[0x1011]="o_card_blueplayer1"

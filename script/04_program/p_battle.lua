@@ -6,7 +6,7 @@ local L = {}
 local t = G.api
 
 t['对决_初始化战场'] = function(i_game_mode_游戏模式)
-    -- TODO: 根据游戏模式入口函数初始化战场
+    -- 根据游戏模式入口函数初始化战场
     local o_game_mode_游戏模式 = G.QueryName(i_game_mode_游戏模式)
     if o_game_mode_游戏模式 == nil then 
         G.call('系统_输出信息', '游戏模式错误！')
@@ -30,47 +30,65 @@ t['对决_开始'] = function()
         G.call('系统_输出信息', '有玩家没有准备就绪， 无法开始游戏！')
         return 
     end
+    G.call('对决_初始化界面')
+    G.call('战斗AI_AI空位补全AI')
     -- TODO: 根据游戏模式初始化数据
     if G.call('主机_是主机') then 
         G.call('房间_分配绝对身份')
         G.call('网络通用_广播消息', '对决_开始')
+        -- AI 数据归主机管理
+        G.call('战斗AI_对决初始化')
     end
     -- 初始化卡牌实例表
     G.call('卡牌实例表_初始化')
     
-    G.call('对决_初始化战场', G.call('对决_获取当前游戏模式'))
-    G.call('对决_初始化我方对决牌库')
-    G.call('对决_初始化对决角色', '我方')
-    G.start_program('对决_决定初始卡牌')
-    G.start_program('对决_流程控制')
+    local o_room_player_玩家 = G.call('房间_相对身份获取玩家信息', '我方')
+    G.call('对决_初始化数据', o_room_player_玩家)
+    G.call('对决_初始化协程', o_room_player_玩家)
 end
 
-t['对决_决定初始卡牌'] = function()
+t['对决_初始化界面'] = function()
+    G.call('对决_初始化战场', G.call('对决_获取当前游戏模式'))
+end
+
+t['对决_初始化数据'] = function(o_room_player_玩家)
+    G.call('对决_初始化对决牌库', o_room_player_玩家)
+    G.call('对决_初始化对决角色', o_room_player_玩家)
+end
+
+t['对决_初始化协程'] = function(o_room_player_玩家)
+    -- TODO: 完善初始化协程逻辑
+    G.start_program('对决_决定初始卡牌', o_room_player_玩家)
+    G.start_program('对决_流程控制', o_room_player_玩家)
+end
+
+t['对决_决定初始卡牌'] = function(o_room_player_玩家)
+    local estr_player_相对身份 = G.call('房间_获取相对身份', o_room_player_玩家.绝对身份)
     -- TODO: 先抽 3(?) 张
     for i = 1, 3 do 
-        G.call('角色_牌库抽取卡牌', '我方', '我方')
+        G.call('角色_牌库抽取卡牌', estr_player_相对身份, estr_player_相对身份)
     end
 
     -- TODO: 等待换牌结束
     -- TODO: 换牌
-    if not G.call('对决_我方是否是先手') then 
+    if not G.call('对决_是否是先手身份', o_room_player_玩家.绝对身份) then 
         -- 后手添加硬币
         local o_card_硬币 = G.call('卡牌实例化', G.QueryName(0x1006000e))
-        G.call('角色_添加手牌', '我方', o_card_硬币, true)
+        G.call('角色_添加手牌', estr_player_相对身份, o_card_硬币, true)
     end
 end
 
-t['对决_流程控制'] = function()
+t['对决_流程控制'] = function(o_room_player_玩家)
+    local estr_player_相对身份 = G.call('房间_获取相对身份', o_room_player_玩家.绝对身份)
     G.call('对决_重置当前回合数')
-    if not G.call('对决_我方是否是先手') then 
+    if not G.call('对决_是否是先手身份', o_room_player_玩家.绝对身份) then 
         G.call('对决_等待对方回合结束')
     end
     while not G.call('对决_是否超过最大回合') do
-        G.call('对决_我方回合开始')
-        G.call('对决_更加当前回合数', 1)
-        G.call('对决_设置当前回合玩家绝对身份', G.call('房间_获取绝对身份', '我方'))
+        G.call('对决_回合开始', o_room_player_玩家)
+        G.call('对决_增加当前回合数', 1)
+        G.call('对决_设置当前回合玩家绝对身份', o_room_player_玩家.绝对身份)
         G.call('对决_等待我方回合结束')
-        G.call('对决_设置当前回合玩家绝对身份', G.call('房间_获取绝对身份', '敌方1'))
         -- TODO: 播放对方回合开始动画
         G.call('对决_等待对方回合结束')
     end
@@ -80,13 +98,13 @@ t['对决_重置当前回合数'] = function()
     G['当前回合数'] = 0
 end
 
-t['对决_更加当前回合数'] = function(int_回合数跨度)
+t['对决_增加当前回合数'] = function(int_回合数跨度)
     G['当前回合数'] = G['当前回合数'] or 0
     G['当前回合数'] = G['当前回合数'] + int_回合数跨度
 end
 
-t['对决_我方回合开始'] = function()
-    local any_玩家绝对身份 = G.call('房间_获取绝对身份', '我方')
+t['对决_回合开始'] = function(o_room_player_玩家)
+    local any_玩家绝对身份 = o_room_player_玩家.绝对身份
     G.trig_event('流程_回合开始', any_玩家绝对身份)
     G.call('网络通用_广播消息', '通用_触发事件', '流程_回合开始', any_玩家绝对身份)
 end
@@ -95,11 +113,6 @@ t['对决_我方回合结束'] = function()
     local any_玩家绝对身份 = G.call('房间_获取绝对身份', '我方')
     G.trig_event('流程_回合结束', any_玩家绝对身份)
     G.call('网络通用_广播消息', '通用_触发事件', '流程_回合结束', any_玩家绝对身份)
-end
-
-t['对决_我方是否是先手'] = function()
-    local any_玩家绝对身份 = G.call('房间_获取绝对身份', '我方')
-    return G.call('对决_是否是先手身份', any_玩家绝对身份)
 end
 
 t['对决_等待我方回合结束'] = function()
@@ -139,6 +152,9 @@ end
 
 t['对决_设置当前回合玩家绝对身份'] = function(any_绝对身份)
     G['当前回合玩家绝对身份'] = any_绝对身份
+    if G.call('网络通用_能否广播') then 
+        G.call('网络通用_广播消息', '对决_设置当前回合玩家绝对身份', any_绝对身份)
+    end
 end
 
 t['对决_获取当前回合玩家绝对身份'] = function()
@@ -164,8 +180,8 @@ t['对决_设置对决卡组'] = function(o_deck_卡组)
 end
 
 --ret=o_battle_role
-t['对决_初始化对决角色'] = function(estr_player_相对身份)
-    local o_deck_卡组 = G.call('对决_获取对决卡组')
+t['对决_初始化对决角色'] = function(o_room_player_玩家)
+    local o_deck_卡组 = G.call('对决_获取卡组模板', o_room_player_玩家)
     if not G.call('对决_卡组模板是否有效', o_deck_卡组) then
         G.call('提示_添加提示', '卡组模板数据不正确')
         return 
@@ -175,9 +191,9 @@ t['对决_初始化对决角色'] = function(estr_player_相对身份)
     local hero = o_deck_卡组.英雄[1]
     -- TODO: 暂时读取英雄的第一衍生卡作为角色技能
     local skill = G.QueryName(hero).局外数据.衍生卡[1]
-
-    G.call('角色_战场_设置英雄', '我方', G.call('卡牌实例化', G.QueryName(hero)))
-    G.call('角色_战场_设置英雄技能', '我方', G.call('卡牌实例化', G.QueryName(skill)))
+    local estr_player_相对身份 = G.call('房间_获取相对身份', o_room_player_玩家.绝对身份)
+    G.call('角色_战场_设置英雄', estr_player_相对身份, G.call('卡牌实例化', G.QueryName(hero)))
+    G.call('角色_战场_设置英雄技能', estr_player_相对身份, G.call('卡牌实例化', G.QueryName(skill)))
 end
 
 --ret=int
@@ -199,8 +215,8 @@ t['对决_获取初始生命值'] = function()
 end
 
 --ret=o_deck
-t['对决_初始化我方对决牌库'] = function()
-    local o_deck_卡组 = G.call('对决_获取对决卡组')
+t['对决_初始化对决牌库'] = function(o_room_player_玩家)
+    local o_deck_卡组 = G.call('对决_获取卡组模板', o_room_player_玩家)
     if not G.call('对决_卡组模板是否有效', o_deck_卡组) then 
         G.call('提示_添加提示', '卡组模板数据不正确')
         return 
@@ -221,6 +237,7 @@ t['对决_初始化我方对决牌库'] = function()
     o_randomlib_随机牌库:初始化(false, true)
     o_randomlib_牌库底:初始化(false, true)
 
+    -- FIXME: 不能直接指定我方牌库
     G.misc()['我方牌库'] = {
         o_randomlib_牌库顶,
         o_randomlib_随机牌库,
@@ -270,4 +287,18 @@ end
 --ret=i_game_mode
 t['对决_获取当前游戏模式'] = function()
     return G.misc().游戏模式 or 0x10150001
+end
+
+--ret=o_deck
+t['对决_获取卡组模板'] = function(o_room_player_玩家)
+    local o_deck_卡组 = nil
+    if G.call('房间_获取相对身份', o_room_player_玩家.绝对身份) == '我方' then 
+        o_deck_卡组 = G.call('对决_获取对决卡组')
+    elseif o_room_player_玩家.AI ~= nil then 
+        local i_deck_卡组 = G.call('战斗AI_获取随机卡组', o_room_player_玩家.AI)
+        o_deck_卡组 = G.QueryName(i_deck_卡组)
+    else
+        -- TODO: 初始化其他玩家牌库?
+    end
+    return o_deck_卡组
 end

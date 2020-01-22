@@ -1,5 +1,7 @@
 require "o_animation"
 require "o_animquest"
+require "o_battle_ai"
+require "o_behavior_tree"
 require "o_card"
 require "o_cardtype"
 require "o_card_blueplayer1"

@@ -23,7 +23,7 @@ end
 function t:click(tar)
     if tar == self.confirmButton then 
         if type(self.confirmCallbackFarg) == 'table' then 
-            G.start_program(self.confirmCallbackFarg)
+            G.call(self.confirmCallbackFarg)
         end 
         G.removeUI('v_common_popup')
     elseif tar == self.cancelButton then 
