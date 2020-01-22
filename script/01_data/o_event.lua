@@ -303,6 +303,27 @@ local t = {
 		},
 	},
 	{
+		['name']='逻辑_卡牌属性改变',
+		['arg']={
+			[1]={
+				['id']='Caster',
+				['type']='o_card',
+			},
+			[2]={
+				['id']='卡牌属性',
+				['type']='estr_cardattr_enum',
+			},
+			[3]={
+				['id']='属性类型',
+				['type']='estr_cardattr_type',
+			},
+			[4]={
+				['id']='OldValue',
+				['type']='int',
+			},
+		},
+	},
+	{
 		['name']='逻辑_卡牌死亡',
 		['arg']={
 			[1]={
@@ -698,7 +719,7 @@ local t = {
 		['name']='UI_鼠标进入手牌区',
 	},
 	{
-		['name']='逻辑_卡牌属性更新',
+		['name']='UI_卡牌属性更新',
 		['arg']={
 			[1]={
 				['id']='Caster',
@@ -706,15 +727,28 @@ local t = {
 			},
 			[2]={
 				['id']='Attr',
-				['type']='estr_cardattr_enum',
+				['type']='string',
 			},
 			[3]={
-				['id']='Type',
-				['type']='estr_cardattr_type',
-			},
-			[4]={
-				['id']='OldValue',
+				['id']='Value',
 				['type']='int',
+			},
+		},
+	},
+	{
+		['name']='UI_卡牌状态更新',
+		['arg']={
+			[1]={
+				['id']='Caster',
+				['type']='o_card',
+			},
+			[2]={
+				['id']='Attr',
+				['type']='string',
+			},
+			[3]={
+				['id']='IsShow',
+				['type']='boolean',
 			},
 		},
 	},

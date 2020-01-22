@@ -208,3 +208,43 @@ function noti.角色_设置水晶数据_绝对身份(estr_absolute_id_type_绝�
         })
     )
 end
+
+function noti.卡牌属性_设置(o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value)
+    local o_misc = G.misc()
+    local script_战场 = o_misc.主战场系统
+    local script_动画系统 = o_misc.技能动画系统
+    
+    local value = G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '当前值')
+    local attr
+
+    if estr_cardattr_enum_属性名 == '费用' then
+        attr = 'cost'
+    elseif estr_cardattr_enum_属性名 == '攻击' then
+        attr = 'atk'
+    elseif estr_cardattr_enum_属性名 == '生命' then
+        attr = 'hp'
+    elseif estr_cardattr_enum_属性名 == '护甲' then
+        attr = 'ap'
+    elseif estr_cardattr_enum_属性名 == '攻击次数' then
+        attr = '攻击框'
+        local is_show = false
+        
+        if G.call('角色攻击次数判断', {['Caster']=o_card_当前卡牌}) then
+            is_show = true
+        end
+
+        script_动画系统:add_animquest(
+            G.call('动画系统_创建quest_自定义', script_动画系统, true, 30, {
+                {G.trig_event, 'UI_卡牌状态更新', o_card_当前卡牌, attr, is_show},
+            })
+        )
+
+        return
+    end
+
+    script_动画系统:add_animquest(
+        G.call('动画系统_创建quest_自定义', script_动画系统, true, 30, {
+            {G.trig_event, 'UI_卡牌属性更新', o_card_当前卡牌, attr, value},
+        })
+    )
+end

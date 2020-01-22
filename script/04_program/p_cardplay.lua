@@ -1393,7 +1393,7 @@ t['通用逻辑_默认流程注册'] = function ()
     G.addListener('逻辑注册_武器功能_回合开始', {'流程_回合开始', player}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
     G.addListener('逻辑注册_武器功能_武器添加', {'逻辑_武器装备'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
     G.addListener('逻辑注册_武器功能_武器摧毁', {'逻辑_武器摧毁'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
-    G.addListener('逻辑注册_武器功能_攻击力变化', {'逻辑_卡牌属性更新', nil, '攻击'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
+    G.addListener('逻辑注册_武器功能_攻击力变化', {'逻辑_卡牌属性改变', nil, '攻击'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
     G.addListener('逻辑注册_武器功能_回合结束', {'流程_回合结束', player}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
     G.addListener('逻辑注册_武器功能_消耗耐久', {'逻辑_卡牌攻击'}, cond, EVENT_PRIOR.武器耐久, EVENT_GROUP.武器耐久)
 
@@ -3082,9 +3082,11 @@ t['卡牌数据_制作过滤器'] = function (farg_目标过滤器, Caster)
         end
     else
         -- 需要约定，farg的第二个参数添目标
-        func_filer = function (tar)
-            farg_目标过滤器[2] = tar
-            return G.call(farg_目标过滤器)
+        if (farg_目标过滤器[2] == nil) or (type(farg_目标过滤器[2]) == 'table') then
+            func_filer = function (tar)
+                farg_目标过滤器[2] = tar
+                return G.call(farg_目标过滤器)
+            end
         end
     end
 
@@ -3184,8 +3186,7 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
         local old_value = tattr[estr_cardattr_enum_属性名]
         tattr[estr_cardattr_enum_属性名] = cur_value
 
-        -- 临时，应该加入动画队列中
-        G.trig_event('逻辑_卡牌属性更新', o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, old_value)
+        G.trig_event('逻辑_卡牌属性改变', o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, old_value)
     elseif estr_cardattr_type_属性类型 == '最大值' then
         -- 最大值不能直接设置
     elseif estr_cardattr_type_属性类型 == '浮动值' then
@@ -3196,8 +3197,7 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
         local old_value = tattr[estr_cardattr_enum_属性名]
         tattr[estr_cardattr_enum_属性名] = cur_value
 
-        -- 临时，应该加入动画队列中
-        G.trig_event('逻辑_卡牌属性更新', o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, old_value)
+        G.trig_event('逻辑_卡牌属性改变', o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, old_value)
     elseif estr_cardattr_type_属性类型 == '武器值' then
         dyn_data = o_card_当前卡牌['动态数据']
         tattr = dyn_data['武器属性']
@@ -3206,8 +3206,7 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
         local old_value = tattr[estr_cardattr_enum_属性名]
         tattr[estr_cardattr_enum_属性名] = cur_value
 
-        -- 临时，应该加入动画队列中
-        G.trig_event('逻辑_卡牌属性更新', o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, old_value)
+        G.trig_event('逻辑_卡牌属性改变', o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, old_value)
     elseif estr_cardattr_type_属性类型 == '光环值' then
         dyn_data = o_card_当前卡牌['动态数据']
         tattr = dyn_data['光环属性']
@@ -3216,8 +3215,7 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
         local old_value = tattr[estr_cardattr_enum_属性名]
         tattr[estr_cardattr_enum_属性名] = cur_value
 
-        -- 临时，应该加入动画队列中
-        G.trig_event('逻辑_卡牌属性更新', o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, old_value)
+        G.trig_event('逻辑_卡牌属性改变', o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, old_value)
     elseif estr_cardattr_type_属性类型 == '原始值' then
         tattr = o_card_当前卡牌['卡牌属性']
         tattr[estr_cardattr_enum_属性名] = value_iter(int_value)

@@ -167,38 +167,32 @@ t['CardCom_SetData'] = function (com, o_card)
         end
     end
 
-    -- 临时，追加属性改变监听
-    -- 应该做成动画
-
-    -- 注册卡牌更新监听
+    -- 注册卡牌状态改变监听
     do
         local update_data = function ()
-            local _, attr = G.event_info()
-            local value = G.call('卡牌属性_获取', o_card, attr, '当前值')
-            if attr == '费用' then
-                attr = 'cost'
-            elseif attr == '攻击' then
-                attr = 'atk'
-            elseif attr == '生命' then
-                attr = 'hp'
-            elseif attr == '护甲' then
-                attr = 'ap'
-            elseif attr == '攻击次数' then
-                if com['攻击框'] then
-                    if G.call('角色攻击次数判断', {['Caster']=o_card}) then
-                        com['攻击框'].visible = true
-                    else
-                        com['攻击框'].visible = false
-                    end
-                end
+            local _, attr, is_show = G.event_info()
+            if com[attr] then
+                com[attr].visible = is_show
             end
+        end
+    
+        local key = 'card_flagchange|' .. tostring(com)
+        G.removeListener(key, 'UI_卡牌状态更新')
+        G.api[key] = update_data
+        G.addListener(key, {'UI_卡牌状态更新', o_card})
+    end
+
+    -- 注册卡牌属性改变监听
+    do
+        local update_data = function ()
+            local _, attr, value = G.event_info()
             com[attr] = value
         end
     
         local key = 'card_attrchange|' .. tostring(com)
-        G.removeListener(key, '逻辑_卡牌属性更新')
+        G.removeListener(key, 'UI_卡牌属性更新')
         G.api[key] = update_data
-        G.addListener(key, {'逻辑_卡牌属性更新', o_card})
+        G.addListener(key, {'UI_卡牌属性更新', o_card})
     end
 end
 
