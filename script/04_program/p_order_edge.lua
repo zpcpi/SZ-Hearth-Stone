@@ -257,6 +257,7 @@ end
 t['卡牌选择目标_条件'] = function (o_order_info_当前指令信息)
     local Target, tar_obj = G.event_info()
     local Caster = o_order_info_当前指令信息['Caster']
+    local OrderId = o_order_info_当前指令信息['OrderId']
 
     -- 免疫通用处理
 
@@ -268,7 +269,9 @@ t['卡牌选择目标_条件'] = function (o_order_info_当前指令信息)
     if condi[count] then
     else
         -- 制作条件
-        condi[count] = G.call('卡牌数据_制作过滤器', Caster['逻辑数据']['目标条件'][count], Caster)
+        if (OrderId == 0x10040004) then -- 随从_单目标指令
+            condi[count] = G.call('卡牌数据_制作过滤器', Caster['逻辑数据']['战吼目标条件'][count], Caster)
+        end
     end
 
     return condi[count](Target)

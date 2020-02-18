@@ -65,6 +65,7 @@ t['卡牌注册指令'] = function (o_card_使用卡牌, i_order_当前指令)
         local state_max = #o_order_当前指令['状态列表']
 
         G.call('卡牌注册指令_初始化', o_order_info_当前指令信息, o_card_使用卡牌)
+        o_order_info_当前指令信息['OrderId'] = i_order_当前指令
 
         local function init_order_edge()
             -- 注销当前指令信息

@@ -528,7 +528,7 @@ local t = {
 				['type']='fargboolean',
 			},
 			[12]={
-				['name']='目标条件',
+				['name']='战吼目标条件',
 				['type']='_fargboolean',
 			},
 			[13]={
@@ -644,6 +644,10 @@ local t = {
 			[8]={
 				['name']='Condition',
 				['type']='_any',
+			},
+			[9]={
+				['name']='OrderId',
+				['type']='int',
 			},
 		},
 	},
