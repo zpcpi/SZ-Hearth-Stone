@@ -25,6 +25,7 @@ t['房间_更新玩家信息'] = function(o_room_player_玩家)
     if not boolean_处理完毕 then 
         table.insert(o_misc.房间玩家列表, o_room_player_玩家)
     end
+
     if G.call('网络通用_能否广播') then 
         G.call('网络通用_广播消息', '房间_更新玩家信息', o_room_player_玩家)
     end
@@ -122,11 +123,11 @@ t['房间_获取绝对身份'] = function(estr_player_相对身份, estr_player_
     -- TODO: 映射表应该和 游戏模式 强关联, 所以应该存放在游戏模式中
     local l2a_mapping
     local a2l_mapping
-    if i_game_mode_游戏模式 == 0x10150001 or i_game_mode_游戏模式 == 0x10150002 then 
+    if (i_game_mode_游戏模式 == 0x10150001) or (i_game_mode_游戏模式 == 0x10150003) then 
         -- 1v1
         l2a_mapping = PLAYER_MAPPING_L2A_1v1
         a2l_mapping = PLAYER_MAPPING_A2L_1v1
-    elseif i_game_mode_游戏模式 == 0x10150003 then 
+    elseif (i_game_mode_游戏模式 == 0x10150002) then 
         -- 2v2
         l2a_mapping = PLAYER_MAPPING_L2A_2v2
         a2l_mapping = PLAYER_MAPPING_A2L_2v2
@@ -168,9 +169,9 @@ t['房间_获取相对身份'] = function(estr_absolute_id_type_绝对身份)
     
     local l2a_mapping
     local a2l_mapping
-    if i_game_mode_游戏模式 == 0x10150001 or i_game_mode_游戏模式 == 0x10150002 then 
+    if (i_game_mode_游戏模式 == 0x10150001) or (i_game_mode_游戏模式 == 0x10150003) then 
         a2l_mapping = PLAYER_MAPPING_A2L_1v1
-    elseif i_game_mode_游戏模式 == 0x10150003 then 
+    elseif (i_game_mode_游戏模式 == 0x10150002) then 
         a2l_mapping = PLAYER_MAPPING_A2L_2v2
     else
         goto next

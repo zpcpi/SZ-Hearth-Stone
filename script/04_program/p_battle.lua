@@ -129,13 +129,13 @@ t['对决_获取上一个行动绝对角色身份'] = function()
     local any_玩家绝对身份 = G.call('房间_获取绝对身份', '我方')
     -- TODO: 身份映射表应该设置在 游戏模式 数据中
     local i_game_mode_游戏模式 = G.call('对决_获取当前游戏模式')
-    if i_game_mode_游戏模式 == 0x10150001 or i_game_mode_游戏模式 == 0x10150002 then
+    if (i_game_mode_游戏模式 == 0x10150001) or (i_game_mode_游戏模式 == 0x10150003) then
         if any_玩家绝对身份 == '红1' then 
             return '蓝1'
         else
             return '红1'
         end
-    elseif i_game_mode_游戏模式 == 0x10150003 then
+    elseif (i_game_mode_游戏模式 == 0x10150002) then
         -- TODO: 2v2 行动顺序待定
     end
     print('[p_battle] -> Error! Cannot find last act player!')
