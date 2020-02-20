@@ -274,7 +274,11 @@ t['卡牌选择目标_条件'] = function (o_order_info_当前指令信息)
         end
     end
 
-    return condi[count](Target)
+    if condi[count] then
+        return condi[count](Target)
+    else
+        return true
+    end
 end
 
 t['卡牌选择目标_修改数据'] = function (o_order_info_当前指令信息)

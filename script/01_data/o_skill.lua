@@ -3291,7 +3291,7 @@ end
 	},
 	{
 		['name']=0x10130007,
-		['showname']='野蛮咆哮-本回合攻击',
+		['showname']='野蛮咆哮-添加buff',
 		['逻辑功能']={
 			[1]={
 				['注册时机']='生效',
@@ -3311,7 +3311,7 @@ t =
     'block',
     {'技能目标_选取随从','$我方'},
     {'技能目标_选取英雄','$我方'},
-    {'技能效果_本回合攻击',2}
+    {'技能效果_添加BUFF',0x10130087}
 },
 lua = function (self, card, info, data)
 	local G = require "gf"
@@ -3320,7 +3320,7 @@ lua = function (self, card, info, data)
 		local _ = nil
 		_ = G.call("技能目标_选取随从","我方")
 		_ = G.call("技能目标_选取英雄","我方")
-		_ = G.call("技能效果_本回合攻击",2)
+		_ = G.call("技能效果_添加BUFF",269680775)
 		return _
 	end)()
 end
@@ -3818,6 +3818,36 @@ lua = function (self, card, info, data)
 		_ = G.call("技能效果_特性",{"嘲讽"})
 		return _
 	end)()
+end
+,
+},
+			},
+		},
+	},
+	{
+		['name']=0x10130087,
+		['showname']='野蛮咆哮-buff',
+		['postfix']='+2攻击',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='添加',
+				['触发时机']={
+t =
+{'$逻辑_技能添加','nil','self'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_技能添加",nil,self}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_本回合攻击',2},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_本回合攻击",2)
 end
 ,
 },
