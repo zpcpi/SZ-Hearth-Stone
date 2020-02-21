@@ -255,7 +255,7 @@ end
 
 t['动画系统_汇总动画轴'] = function(_farg_动画轴生成函数)
     local result = {}
-    for _,farg in ipairs(_farg_动画轴生成函数) do
+    for _,farg in ipairs(_farg_动画轴生成函数 or {}) do
         G.call('array_union', result, G.call(farg))
     end
     return result

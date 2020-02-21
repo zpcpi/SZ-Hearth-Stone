@@ -153,10 +153,12 @@ t['CardCom_SetData'] = function (com, o_card)
 
     obj_show_iter('冻结框', {'冻结'})
 
-    if G.call('卡牌条件_卡牌特性判断', o_card, {'风怒'}) or G.call('卡牌条件_卡牌特性判断', o_card, {'超级风怒'}) then
-        com['风怒框'].visible = true
-    else
-        com['风怒框'].visible = false
+    if com['风怒框'] then
+        if G.call('卡牌条件_卡牌特性判断', o_card, {'风怒'}) or G.call('卡牌条件_卡牌特性判断', o_card, {'超级风怒'}) then
+            com['风怒框'].visible = true
+        else
+            com['风怒框'].visible = false
+        end
     end
 
     if o_card_type.name == 0x10090006 then
@@ -199,6 +201,23 @@ t['CardCom_SetData'] = function (com, o_card)
         G.removeListener(key, 'UI_卡牌属性更新')
         G.api[key] = update_data
         G.addListener(key, {'UI_卡牌属性更新', o_card})
+    end
+
+    -- 注册卡牌战斗信息监听
+    if com['战斗信息'] then
+        local show_info = function ()
+            local _, type, value = G.event_info()
+            if type == '伤害' then
+                com['战斗信息']:show_伤害信息(value)
+            elseif type == '治疗' then
+                com['战斗信息']:show_治疗信息(value)
+            end
+        end
+
+        local key = 'card_showinfo|' .. tostring(com)
+        G.removeListener(key, 'UI_卡牌战斗信息')
+        G.api[key] = show_info
+        G.addListener(key, {'UI_卡牌战斗信息', o_card})
     end
 end
 

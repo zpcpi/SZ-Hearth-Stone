@@ -403,7 +403,7 @@ local single_damage = function ()
         TargetList[index] = Target
 
         -- 造成伤害
-        if int_伤害值 then
+        if int_伤害值 > 0 then
             local old_hp = G.call('卡牌属性_获取', Target, '生命', '当前值')
 
             G.call('card_造成伤害', Target, int_伤害值)
@@ -3035,7 +3035,12 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
         G.trig_event('逻辑_卡牌属性改变', o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, old_value)
     elseif estr_cardattr_type_属性类型 == '原始值' then
         tattr = o_card_当前卡牌['卡牌属性']
-        tattr[estr_cardattr_enum_属性名] = value_iter(int_value)
+
+        local cur_value = value_iter(int_value)
+        local old_value = tattr[estr_cardattr_enum_属性名]
+        tattr[estr_cardattr_enum_属性名] = cur_value
+
+        G.trig_event('逻辑_卡牌属性改变', o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, old_value)
     end
 end
 

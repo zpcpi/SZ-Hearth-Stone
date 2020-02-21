@@ -45,6 +45,9 @@ function t:init()
     self.攻击框 = self.状态栏.getChildByName('攻击')
     self.风怒框 = self.状态栏.getChildByName('风怒')
 
+    self.战斗信息框 = self.obj.getChildByName('战斗信息')
+    self.战斗信息 = self.战斗信息框.c_battle_info
+
     self.setData = function (self, o_card)
         self.cur_card = o_card
         G.api['CardCom_SetData'](self, o_card)
@@ -56,6 +59,21 @@ end
 
 function t:getData()
     return self.cur_card
+end
+
+-- 控件删除
+function t:delete()
+    local key = 'card_flagchange|' .. tostring(self)
+    G.removeListener(key, 'UI_卡牌状态更新')
+    G.api[key] = nil
+
+    key = 'card_attrchange|' .. tostring(com)
+    G.removeListener(key, 'UI_卡牌属性更新')
+    G.api[key] = nil
+
+    key = 'card_showinfo|' .. tostring(com)
+    G.removeListener(key, 'UI_卡牌战斗信息')
+    G.api[key] = nil
 end
 
 return t

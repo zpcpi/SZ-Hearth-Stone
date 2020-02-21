@@ -31,4 +31,6 @@ t.estr_game_mode = {'任意', '标准', '狂野'}
 
 t.estr_comptype = {'>', '<', '==', '>=', '<=', '~='}
 
+t.estr_battleinfo_type = {'伤害', '治疗'}
+
 return t

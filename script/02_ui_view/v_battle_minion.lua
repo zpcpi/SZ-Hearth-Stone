@@ -2,7 +2,9 @@
 
 ]]
 local G = require 'gf'
+local c_animactor = require 'c_animactor'
 local c_battle_minion = require 'c_battle_minion'
+local c_battle_info = require 'c_battle_info'
 local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
@@ -436,6 +438,18 @@ tp = tc
 				--end
 			tp = tp.parent
 			--end
+		tp = tp.parent
+		--end
+		tc = G.loadUI('v_battle_info')
+		tc.prefab = true
+		tp.addChild(tc)
+		tc.name = '战斗信息'
+		tc.left = -640.000
+		tc.right = 640.000
+		tc.bottom = -360.000
+		tc.top = 360.000
+		tp = tc
+		tp.c_battle_info = setmetatable({}, c_battle_info)
 		tp = tp.parent
 		--end
 	tp.c_battle_minion = setmetatable({}, c_battle_minion)

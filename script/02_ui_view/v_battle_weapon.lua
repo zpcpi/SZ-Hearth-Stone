@@ -2,8 +2,10 @@
 
 ]]
 local G = require 'gf'
-local c_battle_weapon = require 'c_battle_weapon'
+local c_animactor = require 'c_animactor'
 local c_mintextquadsize = require 'c_mintextquadsize'
+local c_battle_info = require 'c_battle_info'
+local c_battle_weapon = require 'c_battle_weapon'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -154,8 +156,8 @@ tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '生命值数值'
-				tc.left = -15.658
-				tc.right = 19.342
+				tc.left = 1.842
+				tc.right = 1.842
 				tc.bottom = 6.289
 				tc.top = 41.289
 				tc.scaleX = 1.400
@@ -174,10 +176,22 @@ tp = tc
 			--end
 		tp = tp.parent
 		--end
+		tc = G.loadUI('v_battle_info')
+		tc.prefab = true
+		tp.addChild(tc)
+		tc.name = '战斗信息'
+		tc.left = -646.000
+		tc.right = 634.000
+		tc.bottom = -344.000
+		tc.top = 376.000
+		tp = tc
+		tp.c_battle_info = setmetatable({}, c_battle_info)
+		tp = tp.parent
+		--end
 	tp.c_battle_weapon = setmetatable({}, c_battle_weapon)
 	com = tp.c_battle_weapon
 	com['atk'] =nil
 	com['hp'] =nil
-	com['used'] =nil
+	com['used'] =false
 	tp = tp.parent
 	--end

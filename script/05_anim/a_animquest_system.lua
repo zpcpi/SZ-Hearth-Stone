@@ -55,7 +55,7 @@ local t = G.act
 
 --type=actor
 t['run_animquest_shaft'] = function(o_animactor, o_animquest_shaft)
-    if o_animquest_shaft and o_animquest_shaft.funs then
+    if o_animquest_shaft and (type(o_animquest_shaft) == 'table') and o_animquest_shaft.funs then
         local cur_index = 1
         while true do
             local nodeA = o_animquest_shaft['nodelist'][cur_index]

@@ -20,7 +20,7 @@ function noti.角色_添加手牌_绝对身份(estr_absolute_id_type_绝对身�
     end
 
     script_动画系统:add_animquest(
-        G.call('动画系统_创建quest_自定义', script_动画系统, true, 200, {
+        G.call('动画系统_创建quest_自定义', script_动画系统, false, 200, {
             {script_手牌组件.addCard, script_手牌组件, G.QueryName(i_card_卡牌)},
         })
     )
@@ -75,7 +75,7 @@ function noti.角色_战场_设置英雄_绝对身份(estr_absolute_id_type_绝�
     end
 
     script_动画系统:add_animquest(
-        G.call('动画系统_创建quest_自定义', script_动画系统, true, 200, {
+        G.call('动画系统_创建quest_自定义', script_动画系统, false, 200, {
             {script_战场英雄组件.setData, script_战场英雄组件, G.QueryName(i_card_卡牌)},
         })
     )
@@ -97,7 +97,7 @@ function noti.角色_战场_设置英雄技能_绝对身份(estr_absolute_id_typ
     end
 
     script_动画系统:add_animquest(
-        G.call('动画系统_创建quest_自定义', script_动画系统, true, 200, {
+        G.call('动画系统_创建quest_自定义', script_动画系统, false, 200, {
             {script_战场英雄组件.setData, script_战场英雄组件, G.QueryName(i_card_卡牌)},
         })
     )
@@ -119,7 +119,7 @@ function noti.角色_战场_设置武器_绝对身份(estr_absolute_id_type_绝�
     end
 
     script_动画系统:add_animquest(
-        G.call('动画系统_创建quest_自定义', script_动画系统, true, 200, {
+        G.call('动画系统_创建quest_自定义', script_动画系统, false, 200, {
             {script_战场英雄组件.setData, script_战场英雄组件, G.QueryName(i_card_卡牌)},
         })
     )
@@ -141,7 +141,7 @@ function noti.角色_战场_移除武器_绝对身份(estr_absolute_id_type_绝�
     end
 
     script_动画系统:add_animquest(
-        G.call('动画系统_创建quest_自定义', script_动画系统, true, 200, {
+        G.call('动画系统_创建quest_自定义', script_动画系统, false, 200, {
             {   n=5,
                 script_战场英雄组件.delData, script_战场英雄组件, false, false, true
             },
@@ -234,7 +234,7 @@ function noti.卡牌属性_设置(o_card_当前卡牌, estr_cardattr_enum_属性
         end
 
         script_动画系统:add_animquest(
-            G.call('动画系统_创建quest_自定义', script_动画系统, true, 30, {
+            G.call('动画系统_创建quest_自定义', script_动画系统, false, 30, {
                 {G.trig_event, 'UI_卡牌状态更新', o_card_当前卡牌, attr, is_show},
             })
         )
@@ -243,8 +243,32 @@ function noti.卡牌属性_设置(o_card_当前卡牌, estr_cardattr_enum_属性
     end
 
     script_动画系统:add_animquest(
-        G.call('动画系统_创建quest_自定义', script_动画系统, true, 30, {
+        G.call('动画系统_创建quest_自定义', script_动画系统, false, 30, {
             {G.trig_event, 'UI_卡牌属性更新', o_card_当前卡牌, attr, value},
+        })
+    )
+end
+
+function noti.card_造成伤害(o_card_目标卡牌, int_伤害值)
+    local o_misc = G.misc()
+    local script_战场 = o_misc.主战场系统
+    local script_动画系统 = o_misc.技能动画系统
+
+    script_动画系统:add_animquest(
+        G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
+            {G.trig_event, 'UI_卡牌战斗信息', o_card_目标卡牌, '伤害', int_伤害值},
+        })
+    )
+end
+
+function noti.card_造成治疗(o_card_目标卡牌, int_治疗值)
+    local o_misc = G.misc()
+    local script_战场 = o_misc.主战场系统
+    local script_动画系统 = o_misc.技能动画系统
+
+    script_动画系统:add_animquest(
+        G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
+            {G.trig_event, 'UI_卡牌战斗信息', o_card_目标卡牌, '治疗', int_治疗值},
         })
     )
 end

@@ -753,6 +753,23 @@ local t = {
 		},
 	},
 	{
+		['name']='UI_卡牌战斗信息',
+		['arg']={
+			[1]={
+				['id']='Caster',
+				['type']='o_card',
+			},
+			[2]={
+				['id']='Type',
+				['type']='estr_battleinfo_type',
+			},
+			[3]={
+				['id']='Value',
+				['type']='int',
+			},
+		},
+	},
+	{
 		['name']='UI_鼠标切换站位',
 		['arg']={
 			[1]={

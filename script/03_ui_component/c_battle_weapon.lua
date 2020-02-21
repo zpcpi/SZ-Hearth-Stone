@@ -25,6 +25,9 @@ function t:init()
     self.生命值 = self.属性值组合.getChildByName('生命值')
     self.生命值数值 = self.生命值.getChildByName('生命值数值')
 
+    self.战斗信息框 = self.obj.getChildByName('战斗信息')
+    self.战斗信息 = self.战斗信息框.c_battle_info
+
     self.setData = G.api['CardCom_SetData']
     self.set_atk = G.api['CardCom_SetAttr_hide']('atk', '攻击力数值', 'text', '攻击力')
     self.set_hp = G.api['CardCom_SetAttr']('hp', '生命值数值', 'text')
