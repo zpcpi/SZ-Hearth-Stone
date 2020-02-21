@@ -43,6 +43,7 @@ function t:init()
 
     self.冻结框 = self.状态栏.getChildByName('冻结')
     self.攻击框 = self.状态栏.getChildByName('攻击')
+    self.风怒框 = self.状态栏.getChildByName('风怒')
 
     self.setData = function (self, o_card)
         self.cur_card = o_card

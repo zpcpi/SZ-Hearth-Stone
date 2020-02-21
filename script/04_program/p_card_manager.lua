@@ -153,6 +153,12 @@ t['CardCom_SetData'] = function (com, o_card)
 
     obj_show_iter('冻结框', {'冻结'})
 
+    if G.call('卡牌条件_卡牌特性判断', o_card, {'风怒'}) or G.call('卡牌条件_卡牌特性判断', o_card, {'超级风怒'}) then
+        com['风怒框'].visible = true
+    else
+        com['风怒框'].visible = false
+    end
+
     if o_card_type.name == 0x10090006 then
         -- 武器卡
         obj_show_iter('遮挡板', nil, {'武器开启'})
