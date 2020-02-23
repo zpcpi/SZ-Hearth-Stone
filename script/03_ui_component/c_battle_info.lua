@@ -52,6 +52,7 @@ function t:runanim(obj)
     obj.x = 0
     obj.y = 0
     obj.visible = true
+    obj.alpha = 255
     obj.scaleX = 0.01
     obj.scaleY = 0.01
 
@@ -69,7 +70,10 @@ function t:runanim(obj)
 				}},
             },
             {
-                [1] = G.call('动画系统_创建quest_自定义', self.actor, true, 1000)
+                [1] = G.call('动画系统_创建quest_自定义', self.actor, true, 200),
+                [2] = G.call('动画系统_创建quest_自定义', self.actor, true, 500, {
+                    {'动画系统_多属性设置', '::Pic', {'alpha'}, {1}},
+                })
             })
         )
     self.actor:add_animquest(
