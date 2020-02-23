@@ -606,17 +606,8 @@ t['卡牌注册指令_完成'] = function (o_order_info_当前指令信息)
         copy_obj.parent:removeChild(copy_obj)
     end
 
-    -- 手牌中删除
-    local script_手牌组件 = script_战场.selfHandcard.c_handcards_self
-    local obj = o_order_info_当前指令信息['CasterObj']
-    local obj_index = script_手牌组件:get_cardindex_byobj(obj)
-    if obj_index > 0 then
-        -- 当前卡牌消耗，约定手牌obj的编号和逻辑编号一致
-        -- 如果每张卡都有实例的话，就不用这个方法了
-        G.call('角色_移除手牌', '我方', obj_index)
-    end
-
     -- 手牌状态恢复
+    local script_手牌组件 = script_战场.selfHandcard.c_handcards_self
     script_手牌组件:pickcard(nil)
     script_战场.enemyHandcard.c_handcards_enemy:can_show_state(true)
     
@@ -639,14 +630,6 @@ t['卡牌注册指令_完成'] = function (o_order_info_当前指令信息)
 	script_战场.selfBattlehero.c_battlehero_self:can_show_state(true)
     script_战场.enemyBattlehero.c_battlehero_enemy:can_show_state(true)
     script_战场.enemyBattleminion.c_battleminion_enemy:can_show_state(true)
-
-    -- 播放复位动画
-    local int_当前手牌数量 =  G.call('角色_获取手牌数量', '我方')
-    if int_当前手牌数量 > 0 then
-        script_动画系统:add_animquest(
-            G.call('动画系统_创建quest', script_动画系统, G.QueryName(script_手牌组件.AnimBaseID + int_当前手牌数量 - 1))
-        )
-    end
 end
 
 t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
@@ -675,10 +658,9 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
         end
     end
     script_战场:clear_popline()
-
-    local script_手牌组件 = script_战场.selfHandcard.c_handcards_self
-
+    
     -- 手牌状态恢复
+    local script_手牌组件 = script_战场.selfHandcard.c_handcards_self
     script_手牌组件:pickcard(nil)
     script_战场.enemyHandcard.c_handcards_enemy:can_show_state(true)
     

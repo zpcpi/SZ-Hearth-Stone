@@ -23,6 +23,13 @@ t['角色_添加手牌'] = function(estr_player_相对身份, o_card_卡牌, boo
 end
 
 --hide=true
+t['角色_获取手牌'] = function(estr_player_相对身份)
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
+
+    return G.call('角色_获取手牌_绝对身份', estr_absolute_id_type_绝对身份)
+end
+
+--hide=true
 t['角色_移除手牌'] = function(estr_player_相对身份, int_手牌序号)
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
     local int_当前手牌数量 = G.call('角色_获取手牌数量_绝对身份', estr_absolute_id_type_绝对身份)
@@ -32,6 +39,16 @@ t['角色_移除手牌'] = function(estr_player_相对身份, int_手牌序号)
 
         -- TODO，是否同步内容？
         G.call('网络通用_广播消息', '角色_移除手牌_绝对身份', estr_absolute_id_type_绝对身份, int_手牌序号)
+    end
+end
+
+--hide=true
+t['角色_移除手牌_byCard'] = function(estr_player_相对身份, o_card_卡牌)
+    local _o_card_手牌列表 = G.call('角色_获取手牌', estr_player_相对身份)
+    local int_index = G.call('array_get_element_index', _o_card_手牌列表, o_card_卡牌)
+
+    if int_index then
+        G.call('角色_移除手牌', estr_player_相对身份, int_index)
     end
 end
 

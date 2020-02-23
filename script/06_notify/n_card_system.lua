@@ -2,7 +2,7 @@ local G = require "gf"
 local noti = G.notify
 
 local function cardplay_infolist(...)
-    print(...)
+    --print(...)
 end
 
 local function cardplay_notify_create(func)

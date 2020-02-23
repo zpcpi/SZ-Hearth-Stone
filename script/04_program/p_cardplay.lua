@@ -61,14 +61,19 @@ t['卡牌使用_主流程_thread'] = function (estr_player_相对身份, o_order
         G.call('角色_战场_添加随从', estr_player_相对身份, Caster, index)
 
         G.call('卡牌使用_使用')
+
+        G.call('角色_移除手牌_byCard', estr_player_相对身份, Caster)
     elseif cardtype == 0x10090005 then
         -- 法术卡，执行使用逻辑
         G.call('卡牌使用_使用')
 
+        G.call('角色_移除手牌_byCard', estr_player_相对身份, Caster)
     elseif cardtype == 0x10090006 then
         -- 武器卡
         -- 有特殊处理，需要考虑新旧武器替换
         G.call('卡牌使用_使用')
+
+        G.call('角色_移除手牌_byCard', estr_player_相对身份, Caster)
     end
 
     -- 逐个触发相关事件
@@ -318,8 +323,6 @@ t['卡牌使用_武器装备'] = function ()
     end
     effect_action_iter(nil, nil, init, action)
 end
-
-
 
 
 
