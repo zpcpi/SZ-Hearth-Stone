@@ -1198,6 +1198,23 @@ local t = {
 				['name']='支持游戏模式',
 				['type']='_i_game_mode',
 			},
+			[5]={
+				['name']='AI逻辑',
+				['type']='_o_battle_ai_logic',
+			},
+		},
+	},
+	{
+		['name']='o_battle_ai_logic',
+		['define']={
+			[1]={
+				['name']='时机',
+				['type']='even',
+			},
+			[2]={
+				['name']='处理函数',
+				['type']='funs@ailogic',
+			},
 		},
 	},
 	{

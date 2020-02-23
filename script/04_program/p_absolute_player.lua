@@ -66,6 +66,15 @@ t['角色_获取手牌数量_绝对身份'] = function(estr_absolute_id_type_绝
 end
 
 --hide=true
+--ret=_o_card
+t['角色_获取手牌_绝对身份'] = function(estr_absolute_id_type_绝对身份)
+    local o_misc = G.misc()
+
+    misc_attr_check('手牌信息', estr_absolute_id_type_绝对身份)
+    return o_misc.手牌信息[estr_absolute_id_type_绝对身份] or {}
+end
+
+--hide=true
 t['角色_战场_设置英雄_绝对身份'] = function(estr_absolute_id_type_绝对身份, i_card_卡牌)
     local o_misc = G.misc()
     
@@ -99,6 +108,14 @@ t['角色_战场_设置英雄技能_绝对身份'] = function(estr_absolute_id_t
         end
         o_misc.英雄技能信息[estr_absolute_id_type_绝对身份] = o_card_卡牌
     end
+end
+
+--hide=true
+--ret=o_card
+t['角色_战场_获取英雄技能_绝对身份'] = function(estr_absolute_id_type_绝对身份)
+    local o_misc = G.misc()
+
+    return o_misc.英雄技能信息[estr_absolute_id_type_绝对身份] = o_card_卡牌
 end
 
 --hide=true

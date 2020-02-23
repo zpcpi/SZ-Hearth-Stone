@@ -82,58 +82,67 @@ t['对决_决定初始卡牌'] = function(o_room_player_玩家)
 end
 
 t['对决_流程控制'] = function(o_room_player_玩家)
-    local estr_player_相对身份 = G.call('房间_获取相对身份', o_room_player_玩家.绝对身份)
-    G.call('对决_重置当前回合数')
-    if not G.call('对决_是否是先手身份', o_room_player_玩家.绝对身份) then 
-        G.call('对决_等待对方回合结束')
+    local estr_absolute_id_type_绝对身份 = o_room_player_玩家.绝对身份
+    local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
+    G.call('对决_重置当前回合数', estr_absolute_id_type_绝对身份)
+    G.trig_event('流程_游戏开始', estr_absolute_id_type_绝对身份)
+    if not G.call('对决_是否是先手身份', estr_absolute_id_type_绝对身份) then 
+        G.call('对决_等待对方回合结束', estr_absolute_id_type_绝对身份)
     end
     while not G.call('对决_是否超过最大回合') do
+        G.call('对决_增加当前回合数', estr_absolute_id_type_绝对身份, 1)
+        G.call('对决_设置当前回合玩家绝对身份', estr_absolute_id_type_绝对身份)
         G.call('对决_回合开始', o_room_player_玩家)
-        G.call('对决_增加当前回合数', 1)
-        G.call('对决_设置当前回合玩家绝对身份', o_room_player_玩家.绝对身份)
-        G.call('对决_等待我方回合结束')
+        LuaPanda.BP()
+        G.call('对决_等待我方回合结束', estr_absolute_id_type_绝对身份)
+        LuaPanda.BP()
         -- TODO: 播放对方回合开始动画
-        G.call('对决_等待对方回合结束')
+        G.call('对决_等待对方回合结束', estr_absolute_id_type_绝对身份)
     end
+    -- TODO: 超过最大回合, 平局
 end
 
-t['对决_重置当前回合数'] = function()
-    G['当前回合数'] = 0
+t['对决_重置当前回合数'] = function(estr_absolute_id_type_绝对身份)
+    G[estr_absolute_id_type_绝对身份 .. '当前回合数'] = 0
 end
 
-t['对决_增加当前回合数'] = function(int_回合数跨度)
-    G['当前回合数'] = G['当前回合数'] or 0
-    G['当前回合数'] = G['当前回合数'] + int_回合数跨度
+t['对决_增加当前回合数'] = function(estr_absolute_id_type_绝对身份, int_回合数跨度)
+    G[estr_absolute_id_type_绝对身份 .. '当前回合数'] = G[estr_absolute_id_type_绝对身份 .. '当前回合数'] + int_回合数跨度
+end
+
+t['对决_获取当前回合数'] = function(estr_absolute_id_type_绝对身份)
+    return G[estr_absolute_id_type_绝对身份 .. '当前回合数'] or 0
 end
 
 t['对决_回合开始'] = function(o_room_player_玩家)
-    local any_玩家绝对身份 = o_room_player_玩家.绝对身份
-    G.trig_event('流程_回合开始', any_玩家绝对身份)
-    G.call('网络通用_广播消息', '通用_触发事件', '流程_回合开始', any_玩家绝对身份)
+    local estr_absolute_id_type_绝对身份 = o_room_player_玩家.绝对身份
+    G.trig_event('流程_回合开始', estr_absolute_id_type_绝对身份)
+    G.call('网络通用_广播消息', '通用_触发事件', '流程_回合开始', estr_absolute_id_type_绝对身份)
 end
 
-t['对决_我方回合结束'] = function()
-    local any_玩家绝对身份 = G.call('房间_获取绝对身份', '我方')
-    G.trig_event('流程_回合结束', any_玩家绝对身份)
-    G.call('网络通用_广播消息', '通用_触发事件', '流程_回合结束', any_玩家绝对身份)
+t['对决_回合结束'] = function(estr_absolute_id_type_绝对身份)
+    if estr_absolute_id_type_绝对身份 == nil then 
+        return
+    end
+    G.trig_event('流程_回合结束', estr_absolute_id_type_绝对身份)
+    G.call('网络通用_广播消息', '通用_触发事件', '流程_回合结束', estr_absolute_id_type_绝对身份)
 end
 
-t['对决_等待我方回合结束'] = function()
-    local any_玩家绝对身份 = G.call('房间_获取绝对身份', '我方')
-    G.wait1('流程_回合结束', any_玩家绝对身份)
+t['对决_等待我方回合结束'] = function(estr_absolute_id_type_绝对身份)
+    G.wait1('流程_回合结束', estr_absolute_id_type_绝对身份)
 end
 
-t['对决_等待对方回合结束'] = function()
-    local any_上一个行动玩家身份 = G.call('对决_获取上一个行动绝对角色身份')
-    G.wait1('流程_回合结束', any_上一个行动玩家身份)
+t['对决_等待对方回合结束'] = function(estr_absolute_id_type_绝对身份)
+    LuaPanda.BP()
+    local estr_absolute_id_type_上一个行动玩家身份 = G.call('对决_获取上一个行动角色绝对身份', estr_absolute_id_type_绝对身份)
+    G.wait1('流程_回合结束', estr_absolute_id_type_上一个行动玩家身份)
 end
 
-t['对决_获取上一个行动绝对角色身份'] = function()
-    local any_玩家绝对身份 = G.call('房间_获取绝对身份', '我方')
+t['对决_获取上一个行动角色绝对身份'] = function(estr_absolute_id_type_绝对身份)
     -- TODO: 身份映射表应该设置在 游戏模式 数据中
     local i_game_mode_游戏模式 = G.call('对决_获取当前游戏模式')
     if (i_game_mode_游戏模式 == 0x10150001) or (i_game_mode_游戏模式 == 0x10150003) then
-        if any_玩家绝对身份 == '红1' then 
+        if estr_absolute_id_type_绝对身份 == '红1' then 
             return '蓝1'
         else
             return '红1'
@@ -144,8 +153,9 @@ t['对决_获取上一个行动绝对角色身份'] = function()
     print('[p_battle] -> Error! Cannot find last act player!')
 end
 
-t['对决_是否是先手身份'] = function(any_玩家绝对身份)
-    return any_玩家绝对身份 == '红1'
+t['对决_是否是先手身份'] = function(estr_absolute_id_type_绝对身份)
+    -- TODO: 先手判断应该记录在表里面
+    return estr_absolute_id_type_绝对身份 == '红1'
 end
 
 t['对决_是否超过最大回合'] = function()

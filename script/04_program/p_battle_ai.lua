@@ -90,14 +90,31 @@ end
 
 --ret=string
 t['战斗AI_获取随机名称'] = function()
+    -- TODO: 从名称库中随机
     return '酒馆老板'
 end
 
 t['战斗AI_对决初始化'] = function()
     local _o_room_player_AI玩家列表 = G.call('房间_获取玩家信息列表', false)
+    LuaPanda.BP()
     for _, o_room_player_AI玩家 in ipairs(_o_room_player_AI玩家列表) do 
+        G.call('战斗AI_启动AI逻辑监听', o_room_player_AI玩家)
         G.call('对决_初始化数据', o_room_player_AI玩家)
         G.call('对决_初始化协程', o_room_player_AI玩家)
+    end
+end
+
+t['战斗AI_启动AI逻辑监听'] = function(o_room_player_AI玩家)
+    local i_battle_ai_AI = o_room_player_AI玩家.AI
+    local o_battle_ai_AI = G.QueryName(i_battle_ai_AI)
+    if o_battle_ai_AI.AI逻辑 == nil then 
+        return
+    end
+    local estr_absolute_id_type_AI绝对身份 = o_room_player_AI玩家.绝对身份
+    for _, o_battle_ai_logic_逻辑 in ipairs(o_battle_ai_AI.AI逻辑) do
+        local even_事件 = o_battle_ai_logic_逻辑.时机
+        local funs_回调 = o_battle_ai_logic_逻辑.处理函数
+        G.addListener(funs_回调, {even_事件, estr_absolute_id_type_AI绝对身份})
     end
 end
 
