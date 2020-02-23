@@ -30,8 +30,11 @@ function t:init()
     self.生命值 = self.属性值组合.getChildByName('生命值')
     self.生命值数值 = self.生命值.getChildByName('生命值数值')
 
-    self.setData = G.api['CardCom_SetData']
     self.set_cost = G.api['CardCom_SetAttr']('cost', '费用数值', 'text')
     self.set_hp = G.api['CardCom_SetAttr']('hp', '生命值数值', 'text')
+end
+
+function t:setData(...)
+    G.call('CardCom_SetData', self, ...)
 end
 return t

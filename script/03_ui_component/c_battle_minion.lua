@@ -48,13 +48,14 @@ function t:init()
     self.战斗信息框 = self.obj.getChildByName('战斗信息')
     self.战斗信息 = self.战斗信息框.c_battle_info
 
-    self.setData = function (self, o_card)
-        self.cur_card = o_card
-        G.api['CardCom_SetData'](self, o_card)
-    end
     self.set_atk = G.api['CardCom_SetAttr']('atk', '攻击力数值', 'text')
     self.set_hp = G.api['CardCom_SetAttr']('hp', '生命值数值', 'text')
     self.set_ap = G.api['CardCom_SetAttr_hide']('ap', '护甲值数值', 'text', '护甲值')
+end
+
+function t:setData(o_card)
+    self.cur_card = o_card
+    G.call('CardCom_SetData', self, o_card)
 end
 
 function t:getData()
