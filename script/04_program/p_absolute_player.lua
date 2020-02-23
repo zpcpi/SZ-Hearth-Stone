@@ -115,7 +115,7 @@ end
 t['角色_战场_获取英雄技能_绝对身份'] = function(estr_absolute_id_type_绝对身份)
     local o_misc = G.misc()
 
-    return o_misc.英雄技能信息[estr_absolute_id_type_绝对身份] = o_card_卡牌
+    return o_misc.英雄技能信息[estr_absolute_id_type_绝对身份]
 end
 
 --hide=true
