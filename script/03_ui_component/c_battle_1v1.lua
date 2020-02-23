@@ -120,8 +120,10 @@ function t:update()
 end
 
 function t:click(tar)
+    LuaPanda.BP()
     if G.call('对决_当前是否是我方回合') and tar == self.endTurnBtn then 
-        G.call('对决_我方回合结束')
+        local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', '我方')
+        G.call('对决_回合结束', estr_absolute_id_type_绝对身份)
     end
 end
 
@@ -151,8 +153,8 @@ end
 function t:update_end_turn_button()
     local string_按钮文字 = ''
     if G.call('对决_当前是否是我方回合') then 
-        -- TODO: 判断当前是否还有卡片可以使用
-        if true then
+        local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', '我方')    
+        if G.call('角色_是否剩余可用水晶', estr_absolute_id_type_绝对身份) then
             string_按钮文字 = '结束回合(黄)'
         else
             string_按钮文字 = '结束回合(绿)'

@@ -58,6 +58,13 @@ t['角色_获取手牌数量'] = function(estr_player_相对身份)
     return G.call('角色_获取手牌数量_绝对身份', estr_absolute_id_type_绝对身份)
 end
 
+--hide=true
+--ret=_o_card
+t['角色_获取手牌'] = function(estr_player_相对身份)
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
+    return G.call('角色_获取手牌_绝对身份', estr_absolute_id_type_绝对身份)
+end
+
 --ret=_o_randomlib
 t['角色_获取牌库'] = function(estr_player_牌库所属相对身份)
     local _o_randomlib_抽牌牌库
@@ -128,6 +135,13 @@ t['角色_战场_设置英雄技能'] = function(estr_player_相对身份, o_car
         G.call('卡牌实例化_信息更新_预处理', o_card_卡牌, {'root', '卡牌属性', '逻辑数据', '动态数据'})
         G.call('网络通用_广播消息', '角色_战场_设置英雄技能_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
     end
+end
+
+--hide=true
+--ret=o_card
+t['角色_战场_获取英雄技能'] = function(estr_player_相对身份)
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
+    return G.call('角色_战场_获取英雄技能_绝对身份', estr_absolute_id_type_绝对身份)
 end
 
 --hide=true
@@ -237,4 +251,30 @@ end
 t['角色_获取卡组'] = function(estr_player_相对身份)
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份) 
     return G.call('角色_获取卡组_绝对身份', estr_absolute_id_type_绝对身份)
+end
+
+--hide=true
+--ret=_o_card
+t['角色_获取可用卡牌'] = function(estr_absolute_id_type_绝对身份, boolean_包含技能)
+    local _o_card_可用卡牌 = {}
+    local int_剩余水晶数 = G.call('角色_获取水晶数据_绝对身份', estr_absolute_id_type_绝对身份, '当前值')
+    local _o_card_手牌列表 = G.call('角色_获取手牌_绝对身份', estr_absolute_id_type_绝对身份)
+    if boolean_包含技能 then 
+        local o_card_英雄技能 = G.call('角色_战场_获取英雄技能_绝对身份', estr_absolute_id_type_绝对身份)
+        table.insert(_o_card_手牌列表, o_card_英雄技能)
+    end
+    for _, o_card_手牌 in ipairs(_o_card_手牌列表) do 
+        local int_卡片费用 = G.call('卡牌属性_获取', o_card_手牌, '费用', '当前值')
+        if int_剩余水晶数 >= int_卡片费用 then 
+            table.insert(_o_card_可用卡牌, o_card_手牌)
+        end
+    end
+    return _o_card_可用卡牌
+end
+
+--hide=true
+--ret=boolean
+t['角色_是否剩余可用水晶'] = function(estr_absolute_id_type_绝对身份)
+    local _o_card_可用卡牌 = G.call('角色_获取可用卡牌', estr_absolute_id_type_绝对身份, true)
+    return #_o_card_可用卡牌 > 0
 end

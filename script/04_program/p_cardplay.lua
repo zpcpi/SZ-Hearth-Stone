@@ -1351,11 +1351,27 @@ t['逻辑反注册_沉默'] = function ()
     -- 其他修改
 end
 
+t['通用逻辑_角色相关流程注册'] = function (estr_absolute_id_type_绝对身份)
+    local cond = nil
+    
+    -- 特定流程
+    G.addListener('逻辑注册_水晶设置', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.设置水晶数, EVENT_GROUP.设置水晶数)
+    G.addListener('逻辑注册_抽牌', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.抽牌, EVENT_GROUP.抽牌)
+    G.addListener('逻辑注册_攻击次数重置_回合开始', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
+    G.addListener('逻辑注册_攻击状态设置_回合结束', {'流程_回合结束', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
+
+    -- 武器相关处理
+    G.addListener('逻辑注册_武器功能_回合开始', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
+    G.addListener('逻辑注册_武器功能_回合结束', {'流程_回合结束', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
+    
+    -- 冻结解除
+    G.addListener('逻辑注册_回合结束_冻结删除判断', {'流程_回合结束', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.冻结解除, EVENT_GROUP.冻结解除)
+end
+
 t['通用逻辑_默认流程注册'] = function ()
     local cond = nil
     local prior_base = EVENT_PRIOR.base
     local group_system = EVENT_GROUP.system
-    local player = G.call('房间_获取绝对身份', '我方')
     
     -- trigger注册
     G.addListener('逻辑注册_初始化', {'逻辑_卡牌初始化'}, cond, EVENT_PRIOR.first, group_system)
@@ -1367,18 +1383,12 @@ t['通用逻辑_默认流程注册'] = function ()
     G.addListener('逻辑注册_添加', {'逻辑_技能添加前'}, cond, prior_base, group_system)
 
     -- 特定流程
-    G.addListener('逻辑注册_水晶设置', {'流程_回合开始', player}, cond, EVENT_PRIOR.设置水晶数, EVENT_GROUP.设置水晶数)
-    G.addListener('逻辑注册_抽牌', {'流程_回合开始', player}, cond, EVENT_PRIOR.抽牌, EVENT_GROUP.抽牌)
-    G.addListener('逻辑注册_攻击次数重置_回合开始', {'流程_回合开始', player}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
     G.addListener('逻辑注册_攻击次数设置_单个上场', {'逻辑_随从上场'}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
-    G.addListener('逻辑注册_攻击状态设置_回合结束', {'流程_回合结束', player}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
 
     -- 武器相关处理
-    G.addListener('逻辑注册_武器功能_回合开始', {'流程_回合开始', player}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
     G.addListener('逻辑注册_武器功能_武器添加', {'逻辑_武器装备'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
     G.addListener('逻辑注册_武器功能_武器摧毁', {'逻辑_武器摧毁'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
     G.addListener('逻辑注册_武器功能_攻击力变化', {'逻辑_卡牌属性改变', nil, '攻击'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
-    G.addListener('逻辑注册_武器功能_回合结束', {'流程_回合结束', player}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
     G.addListener('逻辑注册_武器功能_消耗耐久', {'逻辑_卡牌攻击'}, cond, EVENT_PRIOR.武器耐久, EVENT_GROUP.武器耐久)
 
     -- 战吼
@@ -1394,9 +1404,6 @@ t['通用逻辑_默认流程注册'] = function ()
     G.addListener('逻辑注册_冲锋添加', {'逻辑_卡牌特性设置', nil, '冲锋'}, cond, prior_base, EVENT_GROUP.冲锋)
     G.addListener('逻辑注册_冲锋删除', {'逻辑_卡牌特性删除', nil, '冲锋'}, cond, prior_base, EVENT_GROUP.冲锋)
 
-    -- 冻结解除
-    G.addListener('逻辑注册_回合结束_冻结删除判断', {'流程_回合结束', player}, cond, EVENT_PRIOR.冻结解除, EVENT_GROUP.冻结解除)
-    
     -- 圣盾
     G.addListener('逻辑注册_圣盾抵消伤害', {'逻辑_技能效果_直接伤害前'}, t['逻辑注册_圣盾前置条件'], EVENT_PRIOR.圣盾, EVENT_GROUP.圣盾)
     
@@ -2612,6 +2619,7 @@ t['卡牌实例表_初始化'] = function ()
     misc['实例化卡牌列表'] = {}
     misc['别人实例化卡牌反查表'] = {}
     G.call('通用逻辑_默认流程注册')
+    G.call('通用逻辑_角色相关流程注册', estr_absolute_id_type_绝对身份)
 
     -- 效果信息堆栈建立
     misc.当前效果堆栈 = G.call('create_stack')
