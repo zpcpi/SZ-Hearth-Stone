@@ -34,7 +34,7 @@ t['AI逻辑_弱智酒馆老板_回合开始'] = function()
             Target = {o_card_敌方英雄},
             Player = estr_player_相对身份
         }
-        G.call('卡牌使用_主流程', estr_player_相对身份, o_order_info_当前指令信息)
+        G.call('卡牌使用_主流程_thread', estr_player_相对身份, o_order_info_当前指令信息)
     end
     if int_当前回合数 == 1 then
         G.call('提示_添加提示', '我要狠狠地踢你的屁股!')
