@@ -3,7 +3,8 @@
 ]]
 local G = require "gf"
 local L = {}
-local t = G.api
+local t = {}
+local real_t = G.api
 
 --特殊事件
 -- 逻辑_法术牌打出
@@ -83,7 +84,7 @@ t['卡牌使用_主流程_thread'] = function (estr_player_相对身份, o_order
     effect_stack.pop()
 end
 
-t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
+real_t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
     G.start_program('卡牌使用_主流程_thread', estr_player_相对身份, o_order_info_当前指令信息)
 end
 
@@ -109,7 +110,7 @@ t['卡牌攻击_主流程_thread'] = function (estr_player_相对身份, o_order
     effect_stack.pop()
 end
 
-t['卡牌攻击_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
+real_t['卡牌攻击_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
     G.start_program('卡牌攻击_主流程_thread', estr_player_相对身份, o_order_info_当前指令信息)
 end
 
@@ -807,6 +808,12 @@ t['逻辑注册_初始化'] = function ()
     trigger_iter(card, '初始')
 end
 
+real_t['逻辑注册_别人初始化前置条件'] = function ()
+    local card = G.event_info()
+    local misc = G.misc()
+    return misc['别人实例化卡牌反查表'][card.name] ~= true
+end
+
 t['逻辑注册_别人初始化'] = function ()
     local card = G.event_info()
     card['动态数据_事件'] = {
@@ -1266,7 +1273,7 @@ t['逻辑注册_回合结束_冻结删除判断_absolute'] = function ()
     iter(G.call('角色_战场_获取英雄', estr_player_相对身份))
 end
 
-t['逻辑注册_圣盾前置条件'] = function ()
+real_t['逻辑注册_圣盾前置条件'] = function ()
     local o_skill_info_效果信息 = G.event_info()
 
     if o_skill_info_效果信息 then
@@ -1300,7 +1307,7 @@ t['逻辑注册_圣盾抵消伤害'] = function ()
     end
 end
 
-t['逻辑注册_剧毒前置条件'] = function ()
+real_t['逻辑注册_剧毒前置条件'] = function ()
     local o_skill_info_效果信息 = G.event_info()
 
     if o_skill_info_效果信息 then
@@ -1372,7 +1379,7 @@ t['逻辑反注册_沉默'] = function ()
     -- 其他修改
 end
 
-t['通用逻辑_角色相关流程注册'] = function (estr_absolute_id_type_绝对身份)
+real_t['通用逻辑_角色相关流程注册'] = function (estr_absolute_id_type_绝对身份)
     local cond = nil
     
     -- 特定流程
@@ -1389,14 +1396,14 @@ t['通用逻辑_角色相关流程注册'] = function (estr_absolute_id_type_绝
     G.addListener('逻辑注册_回合结束_冻结删除判断_absolute', {'流程_回合结束', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.冻结解除, EVENT_GROUP.冻结解除)
 end
 
-t['通用逻辑_默认流程注册'] = function ()
+real_t['通用逻辑_默认流程注册'] = function ()
     local cond = nil
     local prior_base = EVENT_PRIOR.base
     local group_system = EVENT_GROUP.system
     
     -- trigger注册
     G.addListener('逻辑注册_初始化', {'逻辑_卡牌初始化'}, cond, EVENT_PRIOR.first, group_system)
-    G.addListener('逻辑注册_别人初始化', {'卡牌实例_信息更新'}, cond, EVENT_PRIOR.first, group_system)
+    G.addListener('逻辑注册_别人初始化', {'卡牌实例_信息更新'}, real_t['逻辑注册_别人初始化前置条件'], EVENT_PRIOR.first, group_system)
     G.addListener('逻辑注册_上场', {'逻辑_随从上场前'}, cond, prior_base, group_system)
     G.addListener('逻辑注册_上场', {'逻辑_武器上场前'}, cond, prior_base, group_system)
     G.addListener('逻辑注册_上手', {'逻辑_卡牌上手前'}, cond, prior_base, group_system)
@@ -1426,10 +1433,10 @@ t['通用逻辑_默认流程注册'] = function ()
     G.addListener('逻辑注册_冲锋删除', {'逻辑_卡牌特性删除', nil, '冲锋'}, cond, prior_base, EVENT_GROUP.冲锋)
 
     -- 圣盾
-    G.addListener('逻辑注册_圣盾抵消伤害', {'逻辑_技能效果_直接伤害前'}, t['逻辑注册_圣盾前置条件'], EVENT_PRIOR.圣盾, EVENT_GROUP.圣盾)
+    G.addListener('逻辑注册_圣盾抵消伤害', {'逻辑_技能效果_直接伤害前'}, real_t['逻辑注册_圣盾前置条件'], EVENT_PRIOR.圣盾, EVENT_GROUP.圣盾)
     
     -- 剧毒
-    G.addListener('逻辑注册_剧毒消灭对方', {'逻辑_技能效果_直接伤害'}, t['逻辑注册_剧毒前置条件'], EVENT_PRIOR.剧毒, EVENT_GROUP.剧毒)
+    G.addListener('逻辑注册_剧毒消灭对方', {'逻辑_技能效果_直接伤害'}, real_t['逻辑注册_剧毒前置条件'], EVENT_PRIOR.剧毒, EVENT_GROUP.剧毒)
 
     -- 风怒
     G.addListener('逻辑注册_风怒添加', {'逻辑_卡牌特性设置', nil, '风怒'}, cond, prior_base, EVENT_GROUP.风怒)
@@ -2613,7 +2620,7 @@ end
 -- ============================================
 -- ============================================
 -- ============================================
-t['卡牌实例表_初始化'] = function ()
+real_t['卡牌实例表_初始化'] = function ()
     G.newinst_cache['o_card_redplayer1'] = {}
     G.newinst_cache['o_card_redplayer2'] = {}
     G.newinst_cache['o_card_blueplayer1'] = {}
@@ -2646,7 +2653,7 @@ t['卡牌实例表_初始化'] = function ()
     misc.当前效果堆栈 = G.call('create_stack')
 end
 
-t['卡牌实例化'] = function (o_card_卡片模板)
+real_t['卡牌实例化'] = function (o_card_卡片模板)
     local dbname = G.misc().卡牌实例表
     local card = nil
     if dbname then
@@ -2663,7 +2670,7 @@ local function get_card_dbname(i_card_卡牌)
     return G.GetTextOwner((i_card_卡牌 >> 16) - 0x7000)
 end
 
-t['网络通讯_卡牌实例化_信息更新'] = function (i_card_卡牌, _string_attr, _value)
+real_t['网络通讯_卡牌实例化_信息更新'] = function (i_card_卡牌, _string_attr, _value)
     local o_card_卡牌 = G.QueryName(i_card_卡牌)
     if o_card_卡牌 then
     elseif i_card_卡牌 == 0 then
@@ -2728,7 +2735,7 @@ local card_get_value = function (card, _attr)
     end
 end
 
-t['卡牌实例化_信息更新_预处理'] = function (o_card_卡牌, _string_attr)
+real_t['卡牌实例化_信息更新_预处理'] = function (o_card_卡牌, _string_attr)
     local _value = card_get_value(o_card_卡牌, _string_attr)
     if _value then
         G.call('网络通用_广播消息', '网络通讯_卡牌实例化_信息更新', o_card_卡牌.name, _string_attr, _value)
@@ -2753,7 +2760,7 @@ local cardflag_iter = function (data, flag)
 end
 
 --ret=boolean
-t['卡牌条件_卡牌阵营判断'] = function(o_card_比对卡牌, o_card_当前卡牌, estr_side_阵营)
+real_t['卡牌条件_卡牌阵营判断'] = function(o_card_比对卡牌, o_card_当前卡牌, estr_side_阵营)
     local p1 = (o_card_比对卡牌['动态数据'] or {})['所有者']
     local p2 = (o_card_当前卡牌['动态数据'] or {})['所有者']
 
@@ -2761,13 +2768,13 @@ t['卡牌条件_卡牌阵营判断'] = function(o_card_比对卡牌, o_card_当�
 end
 
 --ret=boolean
-t['卡牌条件_卡牌类型判断'] = function(o_card_当前卡牌, _i_cardtype_卡牌类型)
+real_t['卡牌条件_卡牌类型判断'] = function(o_card_当前卡牌, _i_cardtype_卡牌类型)
     local i_cardtype_当前卡牌类型 = (o_card_当前卡牌['逻辑数据'] or {})['类型']
     return G.call('array_get_element_index', _i_cardtype_卡牌类型, i_cardtype_当前卡牌类型) ~= nil
 end
 
 --ret=boolean
-t['卡牌条件_卡牌所处位置判断'] = function(o_card_比对卡牌, o_card_当前卡牌, _estr_cardpos_type_所处位置)
+real_t['卡牌条件_卡牌所处位置判断'] = function(o_card_比对卡牌, o_card_当前卡牌, _estr_cardpos_type_所处位置)
     local estr_cardpos_type_当前卡牌所处位置 = (o_card_当前卡牌['动态数据'] or {})['卡牌位置']
     if estr_cardpos_type_当前卡牌所处位置 then
         for _,cardpos in ipairs(_estr_cardpos_type_所处位置) do
@@ -2793,13 +2800,13 @@ t['卡牌条件_卡牌所处位置判断'] = function(o_card_比对卡牌, o_car
 end
 
 --ret=boolean
-t['卡牌条件_卡牌种族判断'] = function(o_card_当前卡牌, _i_race_种族)
+real_t['卡牌条件_卡牌种族判断'] = function(o_card_当前卡牌, _i_race_种族)
     local i_race_当前卡牌种族 = (o_card_当前卡牌['逻辑数据'] or {})['种族']
     return G.call('array_get_element_index', _i_race_种族, i_race_当前卡牌种族) ~= nil
 end
 
 --ret=boolean
-t['卡牌条件_卡牌特性判断'] = function(o_card_当前卡牌, _string_满足特性, _string_排除特性)
+real_t['卡牌条件_卡牌特性判断'] = function(o_card_当前卡牌, _string_满足特性, _string_排除特性)
     local data = (o_card_当前卡牌['逻辑数据'] or {})['卡牌特性'] or {}
 
     for _,flag in ipairs(_string_满足特性 or {}) do
@@ -2819,7 +2826,7 @@ t['卡牌条件_卡牌特性判断'] = function(o_card_当前卡牌, _string_满
 end
 
 --ret=boolean
-t['卡牌条件_控制特定卡牌'] = function(estr_player_相对身份, o_card_原始卡牌)
+real_t['卡牌条件_控制特定卡牌'] = function(estr_player_相对身份, o_card_原始卡牌)
     local MinionList = G.call('角色_获取随从列表', estr_player_相对身份)
 
     local root_id = o_card_原始卡牌.root
@@ -2832,7 +2839,7 @@ t['卡牌条件_控制特定卡牌'] = function(estr_player_相对身份, o_card
 end
 
 --ret=boolean
-t['卡牌条件_目标属性比较'] = function(o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, estr_comptype_比较方式, int_value)
+real_t['卡牌条件_目标属性比较'] = function(o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, estr_comptype_比较方式, int_value)
     local cur_value = G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型)
 
     local comp_mapping = {
@@ -2848,14 +2855,14 @@ t['卡牌条件_目标属性比较'] = function(o_card_当前卡牌, estr_cardat
 end
 
 --ret=boolean
-t['卡牌条件_目标满血'] = function(o_card_当前卡牌)
+real_t['卡牌条件_目标满血'] = function(o_card_当前卡牌)
     local cur_hp = G.call('卡牌属性_获取', o_card_当前卡牌, '生命', '当前值') or 0
     local max_hp = G.call('卡牌属性_获取', o_card_当前卡牌, '生命', '最大值') or 0
     return cur_hp == max_hp
 end
 
 --ret=boolean
-t['卡牌条件_目标通用过滤器'] = function(estr_side_阵营, _i_cardtype_卡牌类型, _estr_cardpos_type_所处位置, _i_race_种族, _string_满足特性, _string_排除特性, boolean_排除自身)
+real_t['卡牌条件_目标通用过滤器'] = function(estr_side_阵营, _i_cardtype_卡牌类型, _estr_cardpos_type_所处位置, _i_race_种族, _string_满足特性, _string_排除特性, boolean_排除自身)
 end
 
 -- ============================================
@@ -2866,7 +2873,7 @@ end
 -- ============================================
 -- ============================================
 
-t['卡牌数据_制作过滤器'] = function (farg_目标过滤器, Caster)
+real_t['卡牌数据_制作过滤器'] = function (farg_目标过滤器, Caster)
     local func_filer
     if farg_目标过滤器[1] == 'fargboolean_and' then
         local filerlist = {}
@@ -2960,14 +2967,14 @@ t['卡牌数据_制作过滤器'] = function (farg_目标过滤器, Caster)
     return func_filer
 end
 
-t['卡牌数据_获取过滤后数量'] = function (o_skill, Caster)
+real_t['卡牌数据_获取过滤后数量'] = function (o_skill, Caster)
     local func_filer = G.call('卡牌数据_制作过滤器', o_skill['目标筛选'], Caster)
     local all_cards = G.misc()['实例化卡牌列表']
 
     return #G.call('array_filter', all_cards, func_filer)
 end
 
-t['卡牌数据_获取目标数量'] = function ()
+real_t['卡牌数据_获取目标数量'] = function ()
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -2984,7 +2991,7 @@ end
 -- ============================================
 -- ============================================
 -- ============================================
-t['卡牌属性_获取'] = function (o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型)
+real_t['卡牌属性_获取'] = function (o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型)
     if not o_card_当前卡牌 then
         return 
     end
@@ -3033,7 +3040,7 @@ t['卡牌属性_获取'] = function (o_card_当前卡牌, estr_cardattr_enum_属
     return result
 end
 
-t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value)
+real_t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value)
     if not o_card_当前卡牌 then
         return 
     end
@@ -3111,7 +3118,7 @@ local create_net_name = function ()
     return '|#cp_net#|#' .. estr_absolute_id_type_本地玩家绝对身份 .. '#|' .. count
 end
 
-t['网络通讯_返回信息'] = function (estr_absolute_id_type_目标身份, estr_absolute_id_type_发起者身份, farg, name)
+real_t['网络通讯_返回信息'] = function (estr_absolute_id_type_目标身份, estr_absolute_id_type_发起者身份, farg, name)
     local estr_absolute_id_type_本地玩家身份 = G.call('房间_获取绝对身份', '我方')
 
     if estr_absolute_id_type_本地玩家身份 == estr_absolute_id_type_目标身份 then
@@ -3120,7 +3127,7 @@ t['网络通讯_返回信息'] = function (estr_absolute_id_type_目标身份, e
     end
 end
 
-t['网络通讯_接收信息'] = function (estr_absolute_id_type_目标身份, estr_absolute_id_type_发起者身份, farg, name)
+real_t['网络通讯_接收信息'] = function (estr_absolute_id_type_目标身份, estr_absolute_id_type_发起者身份, farg, name)
     local estr_absolute_id_type_本地玩家身份 = G.call('房间_获取绝对身份', '我方')
 
     if estr_absolute_id_type_本地玩家身份 == estr_absolute_id_type_目标身份 then
@@ -3134,7 +3141,7 @@ t['网络通讯_接收信息'] = function (estr_absolute_id_type_目标身份, e
     end
 end
 
-t['网络通讯_请求信息'] = function (estr_player_目标身份, farg)
+real_t['网络通讯_请求信息'] = function (estr_player_目标身份, farg)
     local estr_absolute_id_type_发起者身份 = G.call('房间_获取绝对身份', '我方')
     local estr_absolute_id_type_目标身份 = G.call('房间_获取绝对身份', estr_player_目标身份)
     
@@ -3151,7 +3158,7 @@ t['网络通讯_请求信息'] = function (estr_player_目标身份, farg)
     return G.call(return_farg or {})
 end
 
-t['网络通讯_技能效果_获知随机卡牌'] = function (int_数量, estr_cardpos_type_卡牌来源, boolean_是否复制, boolean_是否明牌)
+real_t['网络通讯_技能效果_获知随机卡牌'] = function (int_数量, estr_cardpos_type_卡牌来源, boolean_是否复制, boolean_是否明牌)
     local all_cards = G.misc()['实例化卡牌列表']
     local TargetList
 
@@ -3188,5 +3195,26 @@ t['网络通讯_技能效果_获知随机卡牌'] = function (int_数量, estr_c
             table.insert(list, card.name)
         end
         return {'return', list}
+    end
+end
+
+-- ============================================
+-- ============================================
+-- ============================================
+-- 效果树处理
+-- ============================================
+-- ============================================
+-- ============================================
+
+local table_unpack = table.unpack
+for funs, iter in pairs(t) do
+    real_t[funs] = function (...)
+        -- print('1', funs)
+
+        local ret = {iter(...)}
+
+        -- print('2', funs)
+
+        return table_unpack(ret)
     end
 end
