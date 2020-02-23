@@ -36,11 +36,14 @@ t['对决_开始'] = function()
     if G.call('主机_是主机') then 
         G.call('房间_分配绝对身份')
         G.call('网络通用_广播消息', '对决_开始')
-        -- AI 数据归主机管理
-        G.call('战斗AI_对决初始化')
     end
     -- 初始化卡牌实例表
     G.call('卡牌实例表_初始化')
+    
+    -- AI 数据归主机管理
+    if G.call('主机_是主机') then 
+        G.call('战斗AI_对决初始化')
+    end
     
     local o_room_player_玩家 = G.call('房间_相对身份获取玩家信息', '我方')
     G.call('对决_初始化数据', o_room_player_玩家)
@@ -231,6 +234,17 @@ t['对决_初始化对决牌库'] = function(o_room_player_玩家)
         local o_card_卡片实例 = G.call('卡牌实例化', o_card_卡片模板)
 
         o_randomlib_随机牌库:添加数据({o_card_卡片实例, 1})
+    end
+
+    -- 如果是AI的卡，那么打上未知标签
+    if o_room_player_玩家.AI ~= nil then
+        G.call('技能效果_效果树_执行子效果', {
+            ['Target'] = G.call('array_map', o_randomlib_随机牌库.datas, function (data)
+                return data['value']
+            end),
+        }, function ()
+            G.call('技能效果_特性', {'未知'})
+        end)
     end
     
     o_randomlib_牌库顶:初始化(false, true)

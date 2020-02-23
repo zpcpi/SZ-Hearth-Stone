@@ -63,9 +63,16 @@ function t:start()
                             self.卡牌列表[index] = card
 
                             local text_obj = card_obj.getChildByName('卡牌信息')
-                            text_obj.text = card.showname
-                            text_obj.color = 品质['品质颜色']
-                            text_obj.outColor = 0x1
+                            if G.call('卡牌条件_卡牌特性判断', card, {'未知'}) then
+                                -- 卡牌是未知的
+                                text_obj.text = '未知卡牌'
+                                text_obj.color = 0xffffff
+                                text_obj.outColor = 0x1
+                            else
+                                text_obj.text = card.showname
+                                text_obj.color = 品质['品质颜色']
+                                text_obj.outColor = 0x1
+                            end
                         end
                     end
                 end

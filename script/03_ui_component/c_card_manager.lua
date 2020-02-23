@@ -16,7 +16,7 @@ function t:setData(o_card_卡片数据, boolean_isbattle)
     self.卡片实例.removeAllChildren()
     self.卡背框.visible = true
     self.cur_card = o_card_卡片数据
-    if not o_card_卡片数据 then 
+    if (not o_card_卡片数据) or (G.call('卡牌条件_卡牌特性判断', o_card_卡片数据, {'未知'})) then 
         self:delete()
         return 
     end
