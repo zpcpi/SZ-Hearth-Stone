@@ -9,7 +9,7 @@ local t = G.api
 -- 逻辑_法术牌打出
 -- 逻辑_英雄技能使用
 
-t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
+t['卡牌使用_主流程_thread'] = function (estr_player_相对身份, o_order_info_当前指令信息)
     local get_attr = CARD_GET_ATTR
 
     local effect_stack = G.misc().当前效果堆栈
@@ -78,7 +78,11 @@ t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_�
     effect_stack.pop()
 end
 
-t['卡牌攻击_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
+t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
+    G.start_program('卡牌使用_主流程_thread', estr_player_相对身份, o_order_info_当前指令信息)
+end
+
+t['卡牌攻击_主流程_thread'] = function (estr_player_相对身份, o_order_info_当前指令信息)
     local get_attr = CARD_GET_ATTR
 
     local effect_stack = G.misc().当前效果堆栈
@@ -98,6 +102,10 @@ t['卡牌攻击_主流程'] = function (estr_player_相对身份, o_order_info_�
 
     -- 执行完毕
     effect_stack.pop()
+end
+
+t['卡牌攻击_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
+    G.start_program('卡牌攻击_主流程_thread', estr_player_相对身份, o_order_info_当前指令信息)
 end
 
 -- ============================================
@@ -310,6 +318,10 @@ t['卡牌使用_武器装备'] = function ()
     end
     effect_action_iter(nil, nil, init, action)
 end
+
+
+
+
 
 t['卡牌关键词_战吼'] = function ()
     local get_attr = CARD_GET_ATTR
@@ -628,6 +640,12 @@ t['技能效果_效果树_执行子效果'] = function (skill_info, action)
     else
         local o_skill_info_效果信息 = effect_stack.top()
         skill_info['Parent'] = o_skill_info_效果信息
+
+        if o_skill_info_效果信息 then
+            local Childlist = o_skill_info_效果信息['Children'] or {}
+            table.insert(Childlist, skill_info)
+            o_skill_info_效果信息['Children'] = Childlist
+        end
     end
     effect_stack.push(skill_info)
 
