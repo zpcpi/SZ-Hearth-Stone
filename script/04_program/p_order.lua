@@ -101,7 +101,7 @@ t['卡牌注册指令'] = function (o_card_使用卡牌, i_order_当前指令)
                 G.call('卡牌注册指令_完成', o_order_info_当前指令信息)
 
                 -- 执行卡牌使用效果
-                G.start_program('卡牌使用_主流程', '我方', o_order_info_当前指令信息)
+                G.call('卡牌使用_主流程', '我方', o_order_info_当前指令信息)
             elseif state == -2 then
                 -- 执行失败
                 G.call('卡牌注册指令_退出', o_order_info_当前指令信息)
@@ -113,7 +113,7 @@ t['卡牌注册指令'] = function (o_card_使用卡牌, i_order_当前指令)
                 G.call('卡牌注册指令_完成', o_order_info_当前指令信息)
 
                 -- 执行卡牌攻击效果
-                G.start_program('卡牌攻击_主流程', '我方', o_order_info_当前指令信息)
+                G.call('卡牌攻击_主流程', '我方', o_order_info_当前指令信息)
 
                 -- 重新注册指令
                 G.call('卡牌注册指令', o_card_使用卡牌, i_order_当前指令)
@@ -122,7 +122,7 @@ t['卡牌注册指令'] = function (o_card_使用卡牌, i_order_当前指令)
                 G.call('卡牌注册指令_完成', o_order_info_当前指令信息)
 
                 -- 执行卡牌使用效果
-                G.start_program('卡牌使用_主流程', '我方', o_order_info_当前指令信息)
+                G.call('卡牌使用_主流程', '我方', o_order_info_当前指令信息)
 
                 -- 重新注册指令
                 G.call('卡牌注册指令', o_card_使用卡牌, i_order_当前指令)
