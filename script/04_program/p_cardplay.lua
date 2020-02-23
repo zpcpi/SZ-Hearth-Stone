@@ -848,12 +848,18 @@ t['逻辑注册_添加'] = function ()
 end
 
 -- 特定流程
-t['逻辑注册_水晶设置'] = function ()
-    G.call('角色_设置水晶数据_回合开始', '我方')
+t['逻辑注册_水晶设置_absolute'] = function ()
+    local absolute_player = G.event_info()
+    local estr_player_相对身份 = G.call('房间_获取相对身份', absolute_player)
+
+    G.call('角色_设置水晶数据_回合开始', estr_player_相对身份)
 end
 
-t['逻辑注册_抽牌'] = function ()
-    G.call('角色_牌库抽取卡牌', '我方', '我方')
+t['逻辑注册_抽牌_absolute'] = function ()
+    local absolute_player = G.event_info()
+    local estr_player_相对身份 = G.call('房间_获取相对身份', absolute_player)
+
+    G.call('角色_牌库抽取卡牌', estr_player_相对身份, estr_player_相对身份)
 end
 
 local card_init_attack_count = function (Target, int_已攻击次数)
@@ -878,14 +884,17 @@ local hero_init_attack_count = function (Hero, Weapon, int_已攻击次数)
     end
 end
 
-t['逻辑注册_攻击次数重置_回合开始'] = function ()
-    local MinionList = G.call('角色_获取随从列表', '我方') or {}
+t['逻辑注册_攻击次数重置_回合开始_absolute'] = function ()
+    local absolute_player = G.event_info()
+    local estr_player_相对身份 = G.call('房间_获取相对身份', absolute_player)
+
+    local MinionList = G.call('角色_获取随从列表', estr_player_相对身份) or {}
     for _,Target in ipairs(MinionList) do
         card_init_attack_count(Target)
     end
 
-    local hero = G.call('角色_战场_获取英雄', '我方')
-    local weapon = G.call('角色_战场_获取武器', '我方')
+    local hero = G.call('角色_战场_获取英雄', estr_player_相对身份)
+    local weapon = G.call('角色_战场_获取武器', estr_player_相对身份)
     
     if weapon then
         -- 有武器的情况下，特殊处理
@@ -928,8 +937,11 @@ t['逻辑注册_攻击次数设置_单个上场'] = function ()
         )
 end
 
-t['逻辑注册_攻击状态设置_回合结束'] = function ()
-    local MinionList = G.call('角色_获取随从列表', '我方') or {}
+t['逻辑注册_攻击状态设置_回合结束_absolute'] = function ()
+    local absolute_player = G.event_info()
+    local estr_player_相对身份 = G.call('房间_获取相对身份', absolute_player)
+
+    local MinionList = G.call('角色_获取随从列表', estr_player_相对身份) or {}
 
     for _,Target in ipairs(MinionList) do
         local del_flag = {}
@@ -942,7 +954,7 @@ t['逻辑注册_攻击状态设置_回合结束'] = function ()
 
             G.call('技能效果_效果树_执行子效果',
                     {
-                        ['Player'] = '我方',
+                        ['Player'] = estr_player_相对身份,
                         ['Caster'] = Target,
                         ['Target'] = {Target},
                     },
@@ -998,8 +1010,11 @@ local weapon_close = function (weapon)
     end
 end
 
-t['逻辑注册_武器功能_回合开始'] = function ()
-    local weapon = G.call('角色_战场_获取武器', '我方')
+t['逻辑注册_武器功能_回合开始_absolute'] = function ()
+    local absolute_player = G.event_info()
+    local estr_player_相对身份 = G.call('房间_获取相对身份', absolute_player)
+
+    local weapon = G.call('角色_战场_获取武器', estr_player_相对身份)
     if weapon then
         weapon_open(weapon)
     end
@@ -1048,8 +1063,11 @@ t['逻辑注册_武器功能_攻击力变化'] = function ()
     end
 end
 
-t['逻辑注册_武器功能_回合结束'] = function ()
-    local weapon = G.call('角色_战场_获取武器', '我方')
+t['逻辑注册_武器功能_回合结束_absolute'] = function ()
+    local absolute_player = G.event_info()
+    local estr_player_相对身份 = G.call('房间_获取相对身份', absolute_player)
+
+    local weapon = G.call('角色_战场_获取武器', estr_player_相对身份)
     if weapon then
         weapon_close(weapon)
     end
@@ -1220,13 +1238,16 @@ t['逻辑注册_冲锋删除'] = function ()
     end
 end
 
-t['逻辑注册_回合结束_冻结删除判断'] = function ()
+t['逻辑注册_回合结束_冻结删除判断_absolute'] = function ()
+    local absolute_player = G.event_info()
+    local estr_player_相对身份 = G.call('房间_获取相对身份', absolute_player)
+
     local iter = function (Target)
         if G.call('卡牌条件_卡牌特性判断', Target, {'冻结'}) then
             if G.call('角色攻击次数判断', {['Caster']=Target}) then
                 G.call('技能效果_效果树_执行子效果',
                         {
-                            ['Player'] = '我方',
+                            ['Player'] = estr_player_相对身份,
                             ['Caster'] = Target,
                             ['Target'] = {Target},
                         },
@@ -1238,11 +1259,11 @@ t['逻辑注册_回合结束_冻结删除判断'] = function ()
         end
     end
 
-    local MinionList = G.call('角色_获取随从列表', '我方') or {}
+    local MinionList = G.call('角色_获取随从列表', estr_player_相对身份) or {}
     for _,Target in ipairs(MinionList) do
         iter(Target)
     end
-    iter(G.call('角色_战场_获取英雄', '我方'))
+    iter(G.call('角色_战场_获取英雄', estr_player_相对身份))
 end
 
 t['逻辑注册_圣盾前置条件'] = function ()
@@ -1355,17 +1376,17 @@ t['通用逻辑_角色相关流程注册'] = function (estr_absolute_id_type_绝
     local cond = nil
     
     -- 特定流程
-    G.addListener('逻辑注册_水晶设置', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.设置水晶数, EVENT_GROUP.设置水晶数)
-    G.addListener('逻辑注册_抽牌', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.抽牌, EVENT_GROUP.抽牌)
-    G.addListener('逻辑注册_攻击次数重置_回合开始', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
-    G.addListener('逻辑注册_攻击状态设置_回合结束', {'流程_回合结束', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
+    G.addListener('逻辑注册_水晶设置_absolute', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.设置水晶数, EVENT_GROUP.设置水晶数)
+    G.addListener('逻辑注册_抽牌_absolute', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.抽牌, EVENT_GROUP.抽牌)
+    G.addListener('逻辑注册_攻击次数重置_回合开始_absolute', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
+    G.addListener('逻辑注册_攻击状态设置_回合结束_absolute', {'流程_回合结束', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
 
     -- 武器相关处理
-    G.addListener('逻辑注册_武器功能_回合开始', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
-    G.addListener('逻辑注册_武器功能_回合结束', {'流程_回合结束', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
+    G.addListener('逻辑注册_武器功能_回合开始_absolute', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
+    G.addListener('逻辑注册_武器功能_回合结束_absolute', {'流程_回合结束', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
     
     -- 冻结解除
-    G.addListener('逻辑注册_回合结束_冻结删除判断', {'流程_回合结束', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.冻结解除, EVENT_GROUP.冻结解除)
+    G.addListener('逻辑注册_回合结束_冻结删除判断_absolute', {'流程_回合结束', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.冻结解除, EVENT_GROUP.冻结解除)
 end
 
 t['通用逻辑_默认流程注册'] = function ()
