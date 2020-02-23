@@ -111,3 +111,12 @@ t['战斗AI_获取随机卡组'] = function(i_battle_ai_AI)
     local int_随机数 = math.random(1, #o_battle_ai_AI.AI卡组)
     return o_battle_ai_AI.AI卡组[int_随机数]
 end
+
+--ret=boolean
+t['战斗AI_是否是AI'] = function(estr_player_相对身份)
+    local o_room_player_玩家 = G.call('房间_相对身份获取玩家信息', estr_player_相对身份)
+    if o_room_player_玩家 ~= nil and o_room_player_玩家.AI ~= nil then 
+        return true
+    end
+    return false
+end

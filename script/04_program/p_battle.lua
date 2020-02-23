@@ -237,8 +237,10 @@ t['对决_初始化对决牌库'] = function(o_room_player_玩家)
     o_randomlib_随机牌库:初始化(false, true)
     o_randomlib_牌库底:初始化(false, true)
 
+    local estr_absolute_id_type_绝对身份 = o_room_player_玩家.绝对身份
+    local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
     -- FIXME: 不能直接指定我方牌库
-    G.misc()['我方牌库'] = {
+    G.misc()[estr_player_相对身份 .. '牌库'] = {
         o_randomlib_牌库顶,
         o_randomlib_随机牌库,
         o_randomlib_牌库底,

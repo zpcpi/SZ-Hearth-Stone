@@ -41,15 +41,28 @@ t['角色_获取手牌数量'] = function(estr_player_相对身份)
     return G.call('角色_获取手牌数量_绝对身份', estr_absolute_id_type_绝对身份)
 end
 
+--ret=_o_randomlib
 t['角色_获取牌库'] = function(estr_player_牌库所属相对身份)
     local _o_randomlib_抽牌牌库
-    if estr_player_牌库所属相对身份 == '我方' then
-        _o_randomlib_抽牌牌库 = G.misc()['我方牌库']
+    if G.call('角色_牌库数据是否在本地', estr_player_牌库所属相对身份) then
+        _o_randomlib_抽牌牌库 = G.misc()[estr_player_牌库所属相对身份 .. '牌库']
     else
         -- TODO: 如果要从别人的牌库抽取卡牌, 需要通过网络通知别人, 因为本地只有自己牌库的信息
         -- 交换下身份，通过网络发送该函数，这样就需要制作一个绝对接口
     end
     return _o_randomlib_抽牌牌库
+end
+
+--ret=boolean
+t['角色_牌库数据是否在本地'] = function(estr_player_牌库所属相对身份)
+    if estr_player_牌库所属相对身份 == '我方' then
+        -- 我方牌库的数据始终在本地
+        return true
+    elseif G.call('战斗AI_是否是AI', estr_player_牌库所属相对身份) and G.call('主机_是主机') then
+        -- 主机 AI 的数据也在本地
+        return true
+    end
+    return false
 end
 
 --hide=true

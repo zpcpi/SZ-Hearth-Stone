@@ -160,6 +160,7 @@ t['房间_获取绝对身份'] = function(estr_player_相对身份, estr_player_
     return ''
 end
 
+--ret=estr_player
 t['房间_获取相对身份'] = function(estr_absolute_id_type_绝对身份)
     local any_当前玩家信息 = G.call('系统_获取当前玩家信息')
     local estr_absolute_id_type_本地玩家绝对身份 = any_当前玩家信息.绝对身份
