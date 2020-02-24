@@ -3,7 +3,7 @@
 ]]
 local G = require "gf"
 local L = {}
-local t = G.api
+local t = {}
 local real_t = G.api
 
 --特殊事件
@@ -420,12 +420,12 @@ local single_damage = function ()
 
         -- 造成伤害
         if int_伤害值 > 0 then
-            local old_hp = G.call('卡牌属性_获取', Target, '生命', '当前值')
+            local old_hp = G.call('卡牌属性_获取', Target, '生命', '当前值') or 0
 
             G.call('card_造成伤害', Target, int_伤害值)
             G.trig_event('逻辑_卡牌造成伤害', Caster, Target, int_伤害值)
             
-            local cur_hp = G.call('卡牌属性_获取', Target, '生命', '当前值')
+            local cur_hp = G.call('卡牌属性_获取', Target, '生命', '当前值') or 0
             if (old_hp > 0) and (cur_hp <= 0) then
                 -- 是当前卡牌造成的击杀
                 local misc = G.misc()
@@ -700,13 +700,13 @@ local trigger_iter = function (card, estr_cardevent_inittype_类型, skillname, 
             local event_name = earg[1]
             local key = create_trigger_name(event_name)
             if 是否重复触发 then
-                t[key] = function ()
+                real_t[key] = function ()
                     return 触发逻辑(skill, card, get_cur_effect_info(), skill_dynamic_data)
                 end
             else
-                t[key] = function ()
+                real_t[key] = function ()
                     G.removeListener(key, event_name)
-                    t[key] = nil
+                    real_t[key] = nil
                     card['动态数据_事件']['当前注册事件'][key] = nil
                     return 触发逻辑(skill, card, get_cur_effect_info(), skill_dynamic_data)
                 end
@@ -3206,15 +3206,16 @@ end
 -- ============================================
 -- ============================================
 
--- local table_unpack = table.unpack
--- for funs, iter in pairs(t) do
---     real_t[funs] = function (...)
---         print('1', funs)
+local table_unpack = table.unpack
+for funs, iter in pairs(t) do
+    real_t[funs] = function (...)
+        -- 前置信息收集
 
---         local ret = {iter(...)}
+        -- 执行功能
+        iter(...)
 
---         print('2', funs)
+        -- 后置信息处理
 
---         return table_unpack(ret)
---     end
--- end
+        
+    end
+end

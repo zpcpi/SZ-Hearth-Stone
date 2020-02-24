@@ -264,7 +264,7 @@ t['角色_获取可用卡牌'] = function(estr_absolute_id_type_绝对身份, bo
         table.insert(_o_card_手牌列表, o_card_英雄技能)
     end
     for _, o_card_手牌 in ipairs(_o_card_手牌列表) do 
-        local int_卡片费用 = G.call('卡牌属性_获取', o_card_手牌, '费用', '当前值')
+        local int_卡片费用 = G.call('卡牌属性_获取', o_card_手牌, '费用', '当前值') or 0
         if int_剩余水晶数 >= int_卡片费用 then 
             table.insert(_o_card_可用卡牌, o_card_手牌)
         end
