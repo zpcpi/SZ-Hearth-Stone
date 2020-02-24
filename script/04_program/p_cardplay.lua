@@ -3,7 +3,7 @@
 ]]
 local G = require "gf"
 local L = {}
-local t = {}
+local t = G.api
 local real_t = G.api
 
 --特殊事件
@@ -3206,15 +3206,15 @@ end
 -- ============================================
 -- ============================================
 
-local table_unpack = table.unpack
-for funs, iter in pairs(t) do
-    real_t[funs] = function (...)
-        -- print('1', funs)
+-- local table_unpack = table.unpack
+-- for funs, iter in pairs(t) do
+--     real_t[funs] = function (...)
+--         print('1', funs)
 
-        local ret = {iter(...)}
+--         local ret = {iter(...)}
 
-        -- print('2', funs)
+--         print('2', funs)
 
-        return table_unpack(ret)
-    end
-end
+--         return table_unpack(ret)
+--     end
+-- end
