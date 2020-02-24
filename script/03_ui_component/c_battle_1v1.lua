@@ -116,7 +116,8 @@ function t:mouseMove()
 end
 
 function t:update()
-    self:update_end_turn_button()
+    -- FIXME: 不应该写在 update 中
+    -- self:update_end_turn_button()
 end
 
 function t:click(tar)
