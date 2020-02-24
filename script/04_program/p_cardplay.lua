@@ -398,8 +398,7 @@ end
 
 
 
-
-local single_damage = function ()
+t['single_damage'] = function ()
     local init = function (o_skill_info_效果信息)
     end
 
@@ -439,7 +438,7 @@ local single_damage = function ()
     effect_action_iter(nil, '逻辑_技能效果_直接伤害', init, action)
 end
 
-local single_heal = function ()
+t['single_heal'] = function ()
     local init = function (o_skill_info_效果信息)
     end
 
@@ -592,7 +591,7 @@ local aura_add_buff = function (func_filer, func_add, func_del, _earg_光环添�
     G.call('tLua_add_multlisteners', infolist)
 end
 
-local normal_attck = function ()
+t['normal_attck'] = function ()
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -616,7 +615,7 @@ local normal_attck = function ()
         for k,Target in ipairs(TargetList) do
             o_skill_info_效果信息['逐个伤害数值'] = int_中间伤害值
             o_skill_info_效果信息['逐个伤害目标'] = Target
-            single_damage()
+            G.call('single_damage')
         end
     end
 
@@ -828,18 +827,18 @@ t['逻辑注册_别人初始化'] = function ()
     end
 end
 
-t['逻辑注册_上场'] = function ()
+real_t['逻辑注册_上场'] = function ()
     local card = G.event_info()
 
     trigger_iter(card, '上场')
 end
 
-t['逻辑注册_上手'] = function ()
+real_t['逻辑注册_上手'] = function ()
     local card = G.event_info()
     trigger_iter(card, '上手')
 end
 
-t['逻辑注册_生效'] = function ()
+real_t['逻辑注册_生效'] = function ()
     local info = G.event_info()
     local card = info['Caster']
 
@@ -847,7 +846,7 @@ t['逻辑注册_生效'] = function ()
     trigger_iter(card, '生效')
 end
 
-t['逻辑注册_添加'] = function ()
+real_t['逻辑注册_添加'] = function ()
     local card, skill = G.event_info()
 
     -- 判断是否能够生效
@@ -1046,6 +1045,16 @@ t['逻辑注册_武器功能_武器摧毁'] = function ()
     weapon_close(tar)
 end
 
+real_t['逻辑注册_武器功能_攻击力变化前置条件'] = function ()
+    local tar,attr,type,old_value = G.event_info()
+
+    local get_attr = CARD_GET_ATTR
+    local cardtype = get_attr(tar, '逻辑数据', '类型')
+
+    -- 必须是武器卡的攻击发生变化
+    return cardtype == 0x10090006
+end
+
 t['逻辑注册_武器功能_攻击力变化'] = function ()
     local tar,attr,type,old_value = G.event_info()
     local weapon = G.call('角色_战场_获取武器', '我方')
@@ -1103,7 +1112,7 @@ t['逻辑注册_武器功能_消耗耐久'] = function ()
                                 ['最终伤害目标'] = {},
                             },
                             function ()
-                                single_damage()
+                                G.call('single_damage')
                             end
                         )
                 end
@@ -1416,7 +1425,7 @@ real_t['通用逻辑_默认流程注册'] = function ()
     -- 武器相关处理
     G.addListener('逻辑注册_武器功能_武器添加', {'逻辑_武器装备'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
     G.addListener('逻辑注册_武器功能_武器摧毁', {'逻辑_武器摧毁'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
-    G.addListener('逻辑注册_武器功能_攻击力变化', {'逻辑_卡牌属性改变', nil, '攻击'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
+    G.addListener('逻辑注册_武器功能_攻击力变化', {'逻辑_卡牌属性改变', nil, '攻击'}, real_t['逻辑注册_武器功能_攻击力变化前置条件'], EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
     G.addListener('逻辑注册_武器功能_消耗耐久', {'逻辑_卡牌攻击'}, cond, EVENT_PRIOR.武器耐久, EVENT_GROUP.武器耐久)
 
     -- 战吼
@@ -1472,7 +1481,7 @@ t['卡牌使用_攻击'] = function ()
                         ['Target'] = {Target},
                     }, 
                     function ()
-                        normal_attck()
+                        G.call('normal_attck')
 
                         -- 攻击次数累加
                         local cur = G.call('卡牌属性_获取', Caster, '攻击次数', '当前值') or 0
@@ -1501,7 +1510,7 @@ t['技能效果_法术伤害'] = function (int_伤害值)
         for k,Target in ipairs(TargetList) do
             o_skill_info_效果信息['逐个伤害数值'] = int_中间伤害值
             o_skill_info_效果信息['逐个伤害目标'] = Target
-            single_damage()
+            G.call('single_damage')
         end
     end
 
@@ -1525,7 +1534,7 @@ t['技能效果_英雄技能伤害'] = function (int_伤害值)
         for k,Target in ipairs(TargetList) do
             o_skill_info_效果信息['逐个伤害数值'] = int_中间伤害值
             o_skill_info_效果信息['逐个伤害目标'] = Target
-            single_damage()
+            G.call('single_damage')
         end
     end
 
@@ -1549,7 +1558,7 @@ t['技能效果_随从伤害'] = function (int_伤害值)
         for k,Target in ipairs(TargetList) do
             o_skill_info_效果信息['逐个伤害数值'] = int_中间伤害值
             o_skill_info_效果信息['逐个伤害目标'] = Target
-            single_damage()
+            G.call('single_damage')
         end
     end
 
@@ -1573,7 +1582,7 @@ t['技能效果_武器伤害'] = function (int_伤害值)
         for k,Target in ipairs(TargetList) do
             o_skill_info_效果信息['逐个伤害数值'] = int_中间伤害值
             o_skill_info_效果信息['逐个伤害目标'] = Target
-            single_damage()
+            G.call('single_damage')
         end
     end
 
@@ -1597,7 +1606,7 @@ t['技能效果_法术治疗'] = function (int_治疗值)
         for k,Target in ipairs(TargetList) do
             o_skill_info_效果信息['逐个治疗数值'] = int_中间治疗值
             o_skill_info_效果信息['逐个治疗目标'] = Target
-            single_heal()
+            G.call('single_heal')
         end
     end
 
@@ -1621,7 +1630,7 @@ t['技能效果_英雄技能治疗'] = function (int_治疗值)
         for k,Target in ipairs(TargetList) do
             o_skill_info_效果信息['逐个治疗数值'] = int_中间治疗值
             o_skill_info_效果信息['逐个治疗目标'] = Target
-            single_heal()
+            G.call('single_heal')
         end
     end
 
@@ -1645,7 +1654,7 @@ t['技能效果_随从治疗'] = function (int_治疗值)
         for k,Target in ipairs(TargetList) do
             o_skill_info_效果信息['逐个治疗数值'] = int_中间治疗值
             o_skill_info_效果信息['逐个治疗目标'] = Target
-            single_heal()
+            G.call('single_heal')
         end
     end
 
@@ -1669,7 +1678,7 @@ t['技能效果_武器治疗'] = function (int_治疗值)
         for k,Target in ipairs(TargetList) do
             o_skill_info_效果信息['逐个治疗数值'] = int_中间治疗值
             o_skill_info_效果信息['逐个治疗目标'] = Target
-            single_heal()
+            G.call('single_heal')
         end
     end
 
@@ -2247,7 +2256,7 @@ t['技能效果_奥数飞弹'] = function (int_随机次数, int_单个伤害, f
             for _,Target in ipairs(o_skill_info_效果信息['Target'] or {}) do
                 o_skill_info_效果信息['逐个伤害目标'] = Target
                 o_skill_info_效果信息['逐个伤害数值'] = int_单个伤害
-                single_damage()
+                G.call('single_damage')
             end
         end
     end
@@ -3206,16 +3215,56 @@ end
 -- ============================================
 -- ============================================
 
+local noti = G.notify
 local table_unpack = table.unpack
+local call_stack = G.call('create_stack')
+local last_call
 for funs, iter in pairs(t) do
     real_t[funs] = function (...)
         -- 前置信息收集
+        do
+            local last_call = call_stack.top()
+            local new_call = {
+                ['funs'] = funs,
+                ['children'] = {},
+            }
+            if last_call then
+                table.insert(last_call['children'], new_call)
+            end            
+            call_stack.push(new_call)
+
+            local skill_info = get_cur_effect_info()
+            if skill_info then
+                new_call['skill_info'] = {
+                    ['Player'] = skill_info['Player'],
+                    ['Caster'] = skill_info['Caster'],
+                }
+
+                if funs == 'single_damage' then
+                    new_call['skill_info']['Target'] = {skill_info['逐个伤害目标']}
+                elseif funs == 'single_heal' then
+                    new_call['skill_info']['Target'] = {skill_info['逐个治疗目标']}
+                else
+                    new_call['skill_info']['Target'] = {table_unpack(skill_info['Target'] or {})}
+                end
+            end
+        end
 
         -- 执行功能
         iter(...)
 
         -- 后置信息处理
-
-        
+        do
+            last_call = call_stack.pop()
+            if (funs == '卡牌使用_主流程_thread') or
+               (funs == '卡牌攻击_主流程_thread')
+            then
+                noti['卡牌逻辑效果整理'](last_call)
+            end
+        end
     end
+end
+
+real_t['卡牌逻辑树_获取最后调用'] = function ()
+    return last_call
 end
