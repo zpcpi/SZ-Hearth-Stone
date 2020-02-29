@@ -1392,17 +1392,17 @@ real_t['通用逻辑_角色相关流程注册'] = function (estr_absolute_id_typ
     local cond = nil
     
     -- 特定流程
-    G.addListener('逻辑注册_水晶设置_absolute', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.设置水晶数, EVENT_GROUP.设置水晶数)
-    G.addListener('逻辑注册_抽牌_absolute', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.抽牌, EVENT_GROUP.抽牌)
-    G.addListener('逻辑注册_攻击次数重置_回合开始_absolute', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
-    G.addListener('逻辑注册_攻击状态设置_回合结束_absolute', {'流程_回合结束', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
+    G.addListener('逻辑注册_水晶设置_absolute', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.SetMana, EVENT_GROUP.SetMana)
+    G.addListener('逻辑注册_抽牌_absolute', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.drawCard, EVENT_GROUP.drawCard)
+    G.addListener('逻辑注册_攻击次数重置_回合开始_absolute', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.setAttackCount, EVENT_GROUP.setAttackCount)
+    G.addListener('逻辑注册_攻击状态设置_回合结束_absolute', {'流程_回合结束', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.setAttackCount, EVENT_GROUP.setAttackCount)
 
     -- 武器相关处理
-    G.addListener('逻辑注册_武器功能_回合开始_absolute', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
-    G.addListener('逻辑注册_武器功能_回合结束_absolute', {'流程_回合结束', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
+    G.addListener('逻辑注册_武器功能_回合开始_absolute', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.weaponEffect, EVENT_GROUP.weaponEffect)
+    G.addListener('逻辑注册_武器功能_回合结束_absolute', {'流程_回合结束', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.weaponEffect, EVENT_GROUP.weaponEffect)
     
     -- 冻结解除
-    G.addListener('逻辑注册_回合结束_冻结删除判断_absolute', {'流程_回合结束', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.冻结解除, EVENT_GROUP.冻结解除)
+    G.addListener('逻辑注册_回合结束_冻结删除判断_absolute', {'流程_回合结束', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.cancelFrozen, EVENT_GROUP.cancelFrozen)
 end
 
 real_t['通用逻辑_默认流程注册'] = function ()
@@ -1420,13 +1420,13 @@ real_t['通用逻辑_默认流程注册'] = function ()
     G.addListener('逻辑注册_添加', {'逻辑_技能添加前'}, cond, prior_base, group_system)
 
     -- 特定流程
-    G.addListener('逻辑注册_攻击次数设置_单个上场', {'逻辑_随从上场'}, cond, EVENT_PRIOR.设置攻击次数, EVENT_GROUP.设置攻击次数)
+    G.addListener('逻辑注册_攻击次数设置_单个上场', {'逻辑_随从上场'}, cond, EVENT_PRIOR.setAttackCount, EVENT_GROUP.setAttackCount)
 
     -- 武器相关处理
-    G.addListener('逻辑注册_武器功能_武器添加', {'逻辑_武器装备'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
-    G.addListener('逻辑注册_武器功能_武器摧毁', {'逻辑_武器摧毁'}, cond, EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
-    G.addListener('逻辑注册_武器功能_攻击力变化', {'逻辑_卡牌属性改变', nil, '攻击'}, real_t['逻辑注册_武器功能_攻击力变化前置条件'], EVENT_PRIOR.武器功能, EVENT_GROUP.武器功能)
-    G.addListener('逻辑注册_武器功能_消耗耐久', {'逻辑_卡牌攻击'}, cond, EVENT_PRIOR.武器耐久, EVENT_GROUP.武器耐久)
+    G.addListener('逻辑注册_武器功能_武器添加', {'逻辑_武器装备'}, cond, EVENT_PRIOR.weaponEffect, EVENT_GROUP.weaponEffect)
+    G.addListener('逻辑注册_武器功能_武器摧毁', {'逻辑_武器摧毁'}, cond, EVENT_PRIOR.weaponEffect, EVENT_GROUP.weaponEffect)
+    G.addListener('逻辑注册_武器功能_攻击力变化', {'逻辑_卡牌属性改变', nil, '攻击'}, real_t['逻辑注册_武器功能_攻击力变化前置条件'], EVENT_PRIOR.weaponEffect, EVENT_GROUP.weaponEffect)
+    G.addListener('逻辑注册_武器功能_消耗耐久', {'逻辑_卡牌攻击'}, cond, EVENT_PRIOR.weaponDurability, EVENT_GROUP.weaponDurability)
 
     -- 战吼
     G.addListener('逻辑注册_战吼', {'逻辑关键词_战吼前'}, cond, prior_base, group_system)
@@ -1438,18 +1438,18 @@ real_t['通用逻辑_默认流程注册'] = function ()
     G.addListener('逻辑注册_死亡', {'逻辑关键词_亡语前'}, cond, prior_base, group_system)
 
     -- 冲锋
-    G.addListener('逻辑注册_冲锋添加', {'逻辑_卡牌特性设置', nil, '冲锋'}, cond, prior_base, EVENT_GROUP.冲锋)
-    G.addListener('逻辑注册_冲锋删除', {'逻辑_卡牌特性删除', nil, '冲锋'}, cond, prior_base, EVENT_GROUP.冲锋)
+    G.addListener('逻辑注册_冲锋添加', {'逻辑_卡牌特性设置', nil, '冲锋'}, cond, prior_base, EVENT_GROUP.charge)
+    G.addListener('逻辑注册_冲锋删除', {'逻辑_卡牌特性删除', nil, '冲锋'}, cond, prior_base, EVENT_GROUP.charge)
 
     -- 圣盾
-    G.addListener('逻辑注册_圣盾抵消伤害', {'逻辑_技能效果_直接伤害前'}, real_t['逻辑注册_圣盾前置条件'], EVENT_PRIOR.圣盾, EVENT_GROUP.圣盾)
+    G.addListener('逻辑注册_圣盾抵消伤害', {'逻辑_技能效果_直接伤害前'}, real_t['逻辑注册_圣盾前置条件'], EVENT_PRIOR.divineShield, EVENT_GROUP.divineShield)
     
     -- 剧毒
-    G.addListener('逻辑注册_剧毒消灭对方', {'逻辑_技能效果_直接伤害'}, real_t['逻辑注册_剧毒前置条件'], EVENT_PRIOR.剧毒, EVENT_GROUP.剧毒)
+    G.addListener('逻辑注册_剧毒消灭对方', {'逻辑_技能效果_直接伤害'}, real_t['逻辑注册_剧毒前置条件'], EVENT_PRIOR.poisonous, EVENT_GROUP.poisonous)
 
     -- 风怒
-    G.addListener('逻辑注册_风怒添加', {'逻辑_卡牌特性设置', nil, '风怒'}, cond, prior_base, EVENT_GROUP.风怒)
-    G.addListener('逻辑注册_风怒删除', {'逻辑_卡牌特性删除', nil, '风怒'}, cond, prior_base, EVENT_GROUP.风怒)
+    G.addListener('逻辑注册_风怒添加', {'逻辑_卡牌特性设置', nil, '风怒'}, cond, prior_base, EVENT_GROUP.Windfury)
+    G.addListener('逻辑注册_风怒删除', {'逻辑_卡牌特性删除', nil, '风怒'}, cond, prior_base, EVENT_GROUP.Windfury)
 
     -- 沉默
     -- G.addListener('逻辑反注册_沉默', {''}, cond, prior_base, group_system)
