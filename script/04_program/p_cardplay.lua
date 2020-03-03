@@ -47,12 +47,13 @@ t['卡牌使用_主流程_thread'] = function (estr_player_相对身份, o_order
 
     elseif cardtype == 0x10090003 then
         -- 英雄技能
+        G.call('卡牌使用_使用')
+
         -- 判断下是否在战场
         if get_attr(Caster, '动态数据', '卡牌位置') == '战场' then
-            G.trig_event('逻辑_英雄技能使用', Caster)
         else
             -- 不在战场，那么可能是在手牌使用的
-            G.call('卡牌使用_使用')
+            G.call('角色_移除手牌_byCard', estr_player_相对身份, Caster)
         end
     elseif cardtype == 0x10090004 then
         -- 随从卡，召唤随从
@@ -1089,35 +1090,40 @@ t['逻辑注册_武器功能_回合结束_absolute'] = function ()
     end
 end
 
-t['逻辑注册_武器功能_消耗耐久'] = function ()
-    local o_skill_info_效果信息 = G.event_info()
+real_t['逻辑注册_武器功能_消耗耐久前置条件'] = function ()
+    local skill_info = G.event_info()
 
-    if o_skill_info_效果信息 then
-        local Caster = o_skill_info_效果信息['Caster']
-        local hero = G.call('角色_战场_获取英雄', '我方')
+    if skill_info then
+        local Caster = skill_info['Caster']
+        local Player = skill_info['Player']
+        
+        if Caster and Player and (Player == '我方') then
+            local Hero = G.call("角色_战场_获取英雄", Player)
+            local Weapon = G.call('角色_战场_获取武器', Player)
 
-        if (Caster == hero) then
-            local weapon = G.call('角色_战场_获取武器', '我方')
-            if weapon then
-                if G.call('卡牌条件_卡牌特性判断', weapon, {'武器开启'}) then
-                    -- 武器对自己造成一点伤害
-                    G.call('技能效果_效果树_执行子效果',
-                            {
-                                ['Player'] = '我方',
-                                ['Caster'] = weapon,
-                                ['逐个伤害数值'] = 1,
-                                ['逐个伤害目标'] = weapon,
-
-                                ['伤害数值'] = {},
-                                ['最终伤害目标'] = {},
-                            },
-                            function ()
-                                G.call('single_damage')
-                            end
-                        )
-                end
-            end
+            return (Caster == Hero) and Weapon
         end
+    end
+end
+
+t['逻辑注册_武器功能_消耗耐久'] = function ()
+    local weapon = G.call('角色_战场_获取武器', '我方')
+    if G.call('卡牌条件_卡牌特性判断', weapon, {'武器开启'}) then
+        -- 武器对自己造成一点伤害
+        G.call('技能效果_效果树_执行子效果',
+                {
+                    ['Player'] = '我方',
+                    ['Caster'] = weapon,
+                    ['逐个伤害数值'] = 1,
+                    ['逐个伤害目标'] = weapon,
+
+                    ['伤害数值'] = {},
+                    ['最终伤害目标'] = {},
+                },
+                function ()
+                    G.call('single_damage')
+                end
+            )
     end
 end
 
@@ -1426,7 +1432,7 @@ real_t['通用逻辑_默认流程注册'] = function ()
     G.addListener('逻辑注册_武器功能_武器添加', {'逻辑_武器装备'}, cond, EVENT_PRIOR.weaponEffect, EVENT_GROUP.weaponEffect)
     G.addListener('逻辑注册_武器功能_武器摧毁', {'逻辑_武器摧毁'}, cond, EVENT_PRIOR.weaponEffect, EVENT_GROUP.weaponEffect)
     G.addListener('逻辑注册_武器功能_攻击力变化', {'逻辑_卡牌属性改变', nil, '攻击'}, real_t['逻辑注册_武器功能_攻击力变化前置条件'], EVENT_PRIOR.weaponEffect, EVENT_GROUP.weaponEffect)
-    G.addListener('逻辑注册_武器功能_消耗耐久', {'逻辑_卡牌攻击'}, cond, EVENT_PRIOR.weaponDurability, EVENT_GROUP.weaponDurability)
+    G.addListener('逻辑注册_武器功能_消耗耐久', {'逻辑_卡牌攻击'}, real_t['逻辑注册_武器功能_消耗耐久前置条件'], EVENT_PRIOR.weaponDurability, EVENT_GROUP.weaponDurability)
 
     -- 战吼
     G.addListener('逻辑注册_战吼', {'逻辑关键词_战吼前'}, cond, prior_base, group_system)
@@ -1493,196 +1499,138 @@ t['卡牌使用_攻击'] = function ()
     effect_action_iter(nil, '逻辑_卡牌攻击', init, action)
 end
 
-t['技能效果_法术伤害'] = function (int_伤害值)
-    local init = function (o_skill_info_效果信息)
-        o_skill_info_效果信息['原始伤害数值'] = int_伤害值
-        o_skill_info_效果信息['伤害类型'] = '法术'
-    end
-
-    local action = function (o_skill_info_效果信息)
-        local int_中间伤害值 = o_skill_info_效果信息['中间伤害数值'] or o_skill_info_效果信息['原始伤害数值']
-        local TargetList = o_skill_info_效果信息['Target'] or {}
-        local _int_伤害数值 = {}
-
-        o_skill_info_效果信息['最终伤害目标'] = {}
-        o_skill_info_效果信息['伤害数值'] = _int_伤害数值
-
-        for k,Target in ipairs(TargetList) do
-            o_skill_info_效果信息['逐个伤害数值'] = int_中间伤害值
-            o_skill_info_效果信息['逐个伤害目标'] = Target
-            G.call('single_damage')
+do -- 伤害流程
+    local iter = function (int_伤害值, estr_damage_type_伤害类型, str_事件名)
+        local init = function (o_skill_info_效果信息)
+            o_skill_info_效果信息['原始伤害数值'] = int_伤害值
+            o_skill_info_效果信息['伤害类型'] = estr_damage_type_伤害类型
         end
+
+        local action = function (o_skill_info_效果信息)
+            local int_中间伤害值 = o_skill_info_效果信息['中间伤害数值'] or o_skill_info_效果信息['原始伤害数值']
+            local TargetList = o_skill_info_效果信息['Target'] or {}
+            local _int_伤害数值 = {}
+
+            o_skill_info_效果信息['最终伤害目标'] = {}
+            o_skill_info_效果信息['伤害数值'] = _int_伤害数值
+
+            for k,Target in ipairs(TargetList) do
+                o_skill_info_效果信息['逐个伤害数值'] = int_中间伤害值
+                o_skill_info_效果信息['逐个伤害目标'] = Target
+                G.call('single_damage')
+            end
+        end
+
+        effect_action_iter(nil, str_事件名, init, action)
     end
 
-    effect_action_iter(nil, '逻辑_技能效果_法术伤害', init, action)
+    t['技能效果_法术伤害'] = function (int_伤害值)
+        iter(int_伤害值, '法术', '逻辑_技能效果_法术伤害')
+    end
+
+    t['技能效果_英雄技能伤害'] = function (int_伤害值)
+        iter(int_伤害值, '英雄技能', '逻辑_技能效果_英雄技能伤害')
+    end
+
+    t['技能效果_随从伤害'] = function (int_伤害值)
+        iter(int_伤害值, '随从', '逻辑_技能效果_随从伤害')
+    end
+
+    t['技能效果_武器伤害'] = function (int_伤害值)
+        iter(int_伤害值, '武器', '逻辑_技能效果_武器伤害')
+    end
 end
 
-t['技能效果_英雄技能伤害'] = function (int_伤害值)
-    local init = function (o_skill_info_效果信息)
-        o_skill_info_效果信息['原始伤害数值'] = int_伤害值
-        o_skill_info_效果信息['伤害类型'] = '英雄技能'
+real_t['技能效果_伤害'] = function (int_伤害值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
     end
 
-    local action = function (o_skill_info_效果信息)
-        local int_中间伤害值 = o_skill_info_效果信息['中间伤害数值'] or o_skill_info_效果信息['原始伤害数值']
-        local TargetList = o_skill_info_效果信息['Target'] or {}
-        local _int_伤害数值 = {}
+    local Caster = o_skill_info_效果信息['Caster']
+    local cardtype = (Caster['逻辑数据'] or {})['类型']
 
-        o_skill_info_效果信息['最终伤害目标'] = {}
-        o_skill_info_效果信息['伤害数值'] = _int_伤害数值
-
-        for k,Target in ipairs(TargetList) do
-            o_skill_info_效果信息['逐个伤害数值'] = int_中间伤害值
-            o_skill_info_效果信息['逐个伤害目标'] = Target
-            G.call('single_damage')
-        end
+    if cardtype == 0x10090003 then
+        -- 英雄技能
+        G.call('技能效果_英雄技能伤害', int_伤害值)
+    elseif cardtype == 0x10090004 then
+        -- 随从
+        G.call('技能效果_随从伤害', int_伤害值)
+    elseif cardtype == 0x10090005 then
+        -- 法术
+        G.call('技能效果_法术伤害', int_伤害值)
+    elseif cardtype == 0x10090006 then
+        -- 武器
+        G.call('技能效果_武器伤害', int_伤害值)
     end
-
-    effect_action_iter(nil, '逻辑_技能效果_英雄技能伤害', init, action)
 end
 
-t['技能效果_随从伤害'] = function (int_伤害值)
-    local init = function (o_skill_info_效果信息)
-        o_skill_info_效果信息['原始伤害数值'] = int_伤害值
-        o_skill_info_效果信息['伤害类型'] = '随从'
-    end
-
-    local action = function (o_skill_info_效果信息)
-        local int_中间伤害值 = o_skill_info_效果信息['中间伤害数值'] or o_skill_info_效果信息['原始伤害数值']
-        local TargetList = o_skill_info_效果信息['Target'] or {}
-        local _int_伤害数值 = {}
-
-        o_skill_info_效果信息['最终伤害目标'] = {}
-        o_skill_info_效果信息['伤害数值'] = _int_伤害数值
-
-        for k,Target in ipairs(TargetList) do
-            o_skill_info_效果信息['逐个伤害数值'] = int_中间伤害值
-            o_skill_info_效果信息['逐个伤害目标'] = Target
-            G.call('single_damage')
+do -- 治疗流程
+    local iter = function (int_治疗值, estr_heal_type_治疗类型, str_事件名)
+        local init = function (o_skill_info_效果信息)
+            o_skill_info_效果信息['原始治疗数值'] = int_治疗值
+            o_skill_info_效果信息['治疗类型'] = estr_heal_type_治疗类型
         end
+
+        local action = function (o_skill_info_效果信息)
+            local int_中间治疗值 = o_skill_info_效果信息['中间治疗数值'] or o_skill_info_效果信息['原始治疗数值']
+            local TargetList = o_skill_info_效果信息['Target'] or {}
+            local _int_治疗数值 = {}
+
+            o_skill_info_效果信息['最终治疗目标'] = {}
+            o_skill_info_效果信息['治疗数值'] = _int_治疗数值
+
+            for k,Target in ipairs(TargetList) do
+                o_skill_info_效果信息['逐个治疗数值'] = int_中间治疗值
+                o_skill_info_效果信息['逐个治疗目标'] = Target
+                G.call('single_heal')
+            end
+        end
+
+        effect_action_iter(nil, str_事件名, init, action)
     end
 
-    effect_action_iter(nil, '逻辑_技能效果_随从伤害', init, action)
+    t['技能效果_法术治疗'] = function (int_治疗值)
+        iter(int_治疗值, '法术', '逻辑_技能效果_法术治疗')
+    end
+
+    t['技能效果_英雄技能治疗'] = function (int_治疗值)
+        iter(int_治疗值, '英雄技能', '逻辑_技能效果_英雄技能治疗')
+    end
+
+    t['技能效果_随从治疗'] = function (int_治疗值)
+        iter(int_治疗值, '随从', '逻辑_技能效果_随从治疗')
+    end
+
+    t['技能效果_武器治疗'] = function (int_治疗值)
+        iter(int_治疗值, '武器', '逻辑_技能效果_武器治疗')
+    end
 end
 
-t['技能效果_武器伤害'] = function (int_伤害值)
-    local init = function (o_skill_info_效果信息)
-        o_skill_info_效果信息['原始伤害数值'] = int_伤害值
-        o_skill_info_效果信息['伤害类型'] = '武器'
+real_t['技能效果_治疗'] = function (int_治疗值)
+    local o_skill_info_效果信息 = get_cur_effect_info()
+    if o_skill_info_效果信息 then
+    else
+        return
     end
 
-    local action = function (o_skill_info_效果信息)
-        local int_中间伤害值 = o_skill_info_效果信息['中间伤害数值'] or o_skill_info_效果信息['原始伤害数值']
-        local TargetList = o_skill_info_效果信息['Target'] or {}
-        local _int_伤害数值 = {}
+    local Caster = o_skill_info_效果信息['Caster']
+    local cardtype = (Caster['逻辑数据'] or {})['类型']
 
-        o_skill_info_效果信息['最终伤害目标'] = {}
-        o_skill_info_效果信息['伤害数值'] = _int_伤害数值
-
-        for k,Target in ipairs(TargetList) do
-            o_skill_info_效果信息['逐个伤害数值'] = int_中间伤害值
-            o_skill_info_效果信息['逐个伤害目标'] = Target
-            G.call('single_damage')
-        end
+    if cardtype == 0x10090003 then
+        -- 英雄技能
+        G.call('技能效果_英雄技能治疗', int_治疗值)
+    elseif cardtype == 0x10090004 then
+        -- 随从
+        G.call('技能效果_随从治疗', int_治疗值)
+    elseif cardtype == 0x10090005 then
+        -- 法术
+        G.call('技能效果_法术治疗', int_治疗值)
+    elseif cardtype == 0x10090006 then
+        -- 武器
+        G.call('技能效果_武器治疗', int_治疗值)
     end
-
-    effect_action_iter(nil, '逻辑_技能效果_武器伤害', init, action)
-end
-
-t['技能效果_法术治疗'] = function (int_治疗值)
-    local init = function (o_skill_info_效果信息)
-        o_skill_info_效果信息['原始治疗数值'] = int_治疗值
-        o_skill_info_效果信息['治疗类型'] = '法术'
-    end
-
-    local action = function (o_skill_info_效果信息)
-        local int_中间治疗值 = o_skill_info_效果信息['中间治疗数值'] or o_skill_info_效果信息['原始治疗数值']
-        local TargetList = o_skill_info_效果信息['Target'] or {}
-        local _int_治疗数值 = {}
-
-        o_skill_info_效果信息['最终治疗目标'] = {}
-        o_skill_info_效果信息['治疗数值'] = _int_治疗数值
-
-        for k,Target in ipairs(TargetList) do
-            o_skill_info_效果信息['逐个治疗数值'] = int_中间治疗值
-            o_skill_info_效果信息['逐个治疗目标'] = Target
-            G.call('single_heal')
-        end
-    end
-
-    effect_action_iter(nil, '逻辑_技能效果_法术治疗', init, action)
-end
-
-t['技能效果_英雄技能治疗'] = function (int_治疗值)
-    local init = function (o_skill_info_效果信息)
-        o_skill_info_效果信息['原始治疗数值'] = int_治疗值
-        o_skill_info_效果信息['治疗类型'] = '英雄技能'
-    end
-
-    local action = function (o_skill_info_效果信息)
-        local int_中间治疗值 = o_skill_info_效果信息['中间治疗数值'] or o_skill_info_效果信息['原始治疗数值']
-        local TargetList = o_skill_info_效果信息['Target'] or {}
-        local _int_治疗数值 = {}
-
-        o_skill_info_效果信息['最终治疗目标'] = {}
-        o_skill_info_效果信息['治疗数值'] = _int_治疗数值
-
-        for k,Target in ipairs(TargetList) do
-            o_skill_info_效果信息['逐个治疗数值'] = int_中间治疗值
-            o_skill_info_效果信息['逐个治疗目标'] = Target
-            G.call('single_heal')
-        end
-    end
-
-    effect_action_iter(nil, '逻辑_技能效果_英雄技能治疗', init, action)
-end
-
-t['技能效果_随从治疗'] = function (int_治疗值)
-    local init = function (o_skill_info_效果信息)
-        o_skill_info_效果信息['原始治疗数值'] = int_治疗值
-        o_skill_info_效果信息['治疗类型'] = '随从'
-    end
-
-    local action = function (o_skill_info_效果信息)
-        local int_中间治疗值 = o_skill_info_效果信息['中间治疗数值'] or o_skill_info_效果信息['原始治疗数值']
-        local TargetList = o_skill_info_效果信息['Target'] or {}
-        local _int_治疗数值 = {}
-
-        o_skill_info_效果信息['最终治疗目标'] = {}
-        o_skill_info_效果信息['治疗数值'] = _int_治疗数值
-
-        for k,Target in ipairs(TargetList) do
-            o_skill_info_效果信息['逐个治疗数值'] = int_中间治疗值
-            o_skill_info_效果信息['逐个治疗目标'] = Target
-            G.call('single_heal')
-        end
-    end
-
-    effect_action_iter(nil, '逻辑_技能效果_随从治疗', init, action)
-end
-
-t['技能效果_武器治疗'] = function (int_治疗值)
-    local init = function (o_skill_info_效果信息)
-        o_skill_info_效果信息['原始治疗数值'] = int_治疗值
-        o_skill_info_效果信息['治疗类型'] = '武器'
-    end
-
-    local action = function (o_skill_info_效果信息)
-        local int_中间治疗值 = o_skill_info_效果信息['中间治疗数值'] or o_skill_info_效果信息['原始治疗数值']
-        local TargetList = o_skill_info_效果信息['Target'] or {}
-        local _int_治疗数值 = {}
-
-        o_skill_info_效果信息['最终治疗目标'] = {}
-        o_skill_info_效果信息['治疗数值'] = _int_治疗数值
-
-        for k,Target in ipairs(TargetList) do
-            o_skill_info_效果信息['逐个治疗数值'] = int_中间治疗值
-            o_skill_info_效果信息['逐个治疗目标'] = Target
-            G.call('single_heal')
-        end
-    end
-
-    effect_action_iter(nil, '逻辑_技能效果_武器治疗', init, action)
 end
 
 t['技能效果_法术强度生效'] = function (int_法术强度)
@@ -3270,8 +3218,4 @@ for funs, iter in pairs(t) do
             end
         end
     end
-end
-
-real_t['卡牌逻辑树_获取最后调用'] = function ()
-    return last_call
 end

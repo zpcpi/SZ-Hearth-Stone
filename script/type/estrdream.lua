@@ -19,7 +19,7 @@ t.estr_cardpos_type = {
 t.estr_minionpos_type = {'左邻', '右邻', '末尾'}
 
 t.estr_damage_type = {'法术', '英雄技能', '随从', '武器', '攻击', '疲劳', '直接'}
-t.estr_heal_type = {'法术', '英雄技能'}
+t.estr_heal_type = {'法术', '英雄技能', '随从', '武器'}
 
 t.estr_skill_type = {'被动', '亡语', '光环'}
 

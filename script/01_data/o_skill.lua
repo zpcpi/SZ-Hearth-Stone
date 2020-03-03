@@ -22,11 +22,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_法术伤害',2},
+{'技能效果_伤害',2},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_法术伤害",2)
+	return G.call("技能效果_伤害",2)
 end
 ,
 },
@@ -51,11 +51,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_法术伤害',4},
+{'技能效果_伤害',4},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_法术伤害",4)
+	return G.call("技能效果_伤害",4)
 end
 ,
 },
@@ -80,11 +80,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_法术伤害',2},
+{'技能效果_伤害',2},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_法术伤害",2)
+	return G.call("技能效果_伤害",2)
 end
 ,
 },
@@ -109,11 +109,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_法术伤害',2},
+{'技能效果_伤害',2},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_法术伤害",2)
+	return G.call("技能效果_伤害",2)
 end
 ,
 },
@@ -159,7 +159,7 @@ t =
                 'function',
                 {},
                 {},
-                {'技能效果_法术治疗','hp'}
+                {'技能效果_治疗','hp'}
             }
         }
     },
@@ -171,7 +171,7 @@ lua = function (self, card, info, data)
 	return t["tLua_MAP"]((function(tar_49)
 		local hp_97 = G.call("卡牌属性_获取",tar_49,"生命","最大值")
 		return G.call("技能效果_效果树_执行子效果",{["Player"] = info.Player,["Target"] = {tar_49}},(function()
-			return G.call("技能效果_法术治疗",hp_97)
+			return G.call("技能效果_治疗",hp_97)
 		end))
 	end),info.Target)
 end
@@ -255,7 +255,7 @@ t =
 {
     'block',
     {'技能目标_选取英雄','$敌方1'},
-    {'技能效果_法术伤害',3}
+    {'技能效果_伤害',3}
 },
 lua = function (self, card, info, data)
 	local G = require "gf"
@@ -263,7 +263,7 @@ lua = function (self, card, info, data)
 	return (function()
 		local _ = nil
 		_ = G.call("技能目标_选取英雄","敌方1")
-		_ = G.call("技能效果_法术伤害",3)
+		_ = G.call("技能效果_伤害",3)
 		return _
 	end)()
 end
@@ -451,7 +451,7 @@ t =
                 'block',
                 {'技能目标_选取英雄','$敌方1'},
                 {'技能目标_选取随从','$敌方1'},
-                {'技能效果_法术伤害',2}
+                {'技能效果_伤害',2}
             }
         }
     },
@@ -469,7 +469,7 @@ t =
                 'block',
                 {'技能目标_选取英雄','$我方'},
                 {'技能目标_选取随从','$我方'},
-                {'技能效果_法术治疗',2}
+                {'技能效果_治疗',2}
             }
         }
     }
@@ -484,7 +484,7 @@ lua = function (self, card, info, data)
 				local _ = nil
 				_ = G.call("技能目标_选取英雄","敌方1")
 				_ = G.call("技能目标_选取随从","敌方1")
-				_ = G.call("技能效果_法术伤害",2)
+				_ = G.call("技能效果_伤害",2)
 				return _
 			end)()
 		end))
@@ -493,7 +493,7 @@ lua = function (self, card, info, data)
 				local _ = nil
 				_ = G.call("技能目标_选取英雄","我方")
 				_ = G.call("技能目标_选取随从","我方")
-				_ = G.call("技能效果_法术治疗",2)
+				_ = G.call("技能效果_治疗",2)
 				return _
 			end)()
 		end))
@@ -525,7 +525,7 @@ end
 t =
 {
     'block',
-    {'技能效果_法术伤害',3},
+    {'技能效果_伤害',3},
     {'技能效果_抽牌'}
 },
 lua = function (self, card, info, data)
@@ -533,7 +533,7 @@ lua = function (self, card, info, data)
 	local t = G.api
 	return (function()
 		local _ = nil
-		_ = G.call("技能效果_法术伤害",3)
+		_ = G.call("技能效果_伤害",3)
 		_ = G.call("技能效果_抽牌")
 		return _
 	end)()
@@ -563,7 +563,7 @@ end
 t =
 {
     'block',
-    {'技能效果_法术伤害',1},
+    {'技能效果_伤害',1},
     {'技能效果_抽牌'}
 },
 lua = function (self, card, info, data)
@@ -571,7 +571,7 @@ lua = function (self, card, info, data)
 	local t = G.api
 	return (function()
 		local _ = nil
-		_ = G.call("技能效果_法术伤害",1)
+		_ = G.call("技能效果_伤害",1)
 		_ = G.call("技能效果_抽牌")
 		return _
 	end)()
@@ -631,7 +631,7 @@ t =
 {
     'block',
     {'技能目标_选取随从','$敌方1'},
-    {'技能效果_法术伤害',1},
+    {'技能效果_伤害',1},
     {'技能效果_抽牌'}
 },
 lua = function (self, card, info, data)
@@ -640,7 +640,7 @@ lua = function (self, card, info, data)
 	return (function()
 		local _ = nil
 		_ = G.call("技能目标_选取随从","敌方1")
-		_ = G.call("技能效果_法术伤害",1)
+		_ = G.call("技能效果_伤害",1)
 		_ = G.call("技能效果_抽牌")
 		return _
 	end)()
@@ -712,7 +712,7 @@ end
 t =
 {
     'block',
-    {'技能效果_法术伤害',3},
+    {'技能效果_伤害',3},
     {
         '技能效果_特性',
         {'$冻结'}
@@ -723,7 +723,7 @@ lua = function (self, card, info, data)
 	local t = G.api
 	return (function()
 		local _ = nil
-		_ = G.call("技能效果_法术伤害",3)
+		_ = G.call("技能效果_伤害",3)
 		_ = G.call("技能效果_特性",{"冻结"})
 		return _
 	end)()
@@ -753,7 +753,7 @@ end
 t =
 {
     'block',
-    {'技能效果_法术伤害',1},
+    {'技能效果_伤害',1},
     {
         '技能效果_特性',
         {'$冻结'}
@@ -764,7 +764,7 @@ lua = function (self, card, info, data)
 	local t = G.api
 	return (function()
 		local _ = nil
-		_ = G.call("技能效果_法术伤害",1)
+		_ = G.call("技能效果_伤害",1)
 		_ = G.call("技能效果_特性",{"冻结"})
 		return _
 	end)()
@@ -920,7 +920,7 @@ t =
         },
         {'技能目标_选取英雄','$敌方1'}
     },
-    {'技能效果_英雄技能伤害',2}
+    {'技能效果_伤害',2}
 },
 lua = function (self, card, info, data)
 	local G = require "gf"
@@ -932,7 +932,7 @@ lua = function (self, card, info, data)
 				return G.call("技能目标_选取英雄","敌方1")
 			end
 		end)()
-		_ = G.call("技能效果_英雄技能伤害",2)
+		_ = G.call("技能效果_伤害",2)
 		return _
 	end)()
 end
@@ -960,11 +960,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_英雄技能伤害',1},
+{'技能效果_伤害',1},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_英雄技能伤害",1)
+	return G.call("技能效果_伤害",1)
 end
 ,
 },
@@ -990,11 +990,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_英雄技能治疗',2},
+{'技能效果_治疗',2},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_英雄技能治疗",2)
+	return G.call("技能效果_治疗",2)
 end
 ,
 },
@@ -1215,7 +1215,7 @@ t =
         '技能目标_剔除目标',
         {'table','card'}
     },
-    {'技能效果_随从伤害',1}
+    {'技能效果_伤害',1}
 },
 lua = function (self, card, info, data)
 	local G = require "gf"
@@ -1227,7 +1227,7 @@ lua = function (self, card, info, data)
 		_ = G.call("技能目标_选取随从","我方")
 		_ = G.call("技能目标_选取英雄","我方")
 		_ = G.call("技能目标_剔除目标",{card})
-		_ = G.call("技能效果_随从伤害",1)
+		_ = G.call("技能效果_伤害",1)
 		return _
 	end)()
 end
@@ -1283,11 +1283,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_随从治疗',2},
+{'技能效果_治疗',2},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_随从治疗",2)
+	return G.call("技能效果_治疗",2)
 end
 ,
 },
@@ -1312,11 +1312,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_随从伤害',3},
+{'技能效果_伤害',3},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_随从伤害",3)
+	return G.call("技能效果_伤害",3)
 end
 ,
 },
@@ -1341,11 +1341,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_随从伤害',1},
+{'技能效果_伤害',1},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_随从伤害",1)
+	return G.call("技能效果_伤害",1)
 end
 ,
 },
@@ -1370,11 +1370,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_随从伤害',2},
+{'技能效果_伤害',2},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_随从伤害",2)
+	return G.call("技能效果_伤害",2)
 end
 ,
 },
@@ -1399,11 +1399,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_随从伤害',1},
+{'技能效果_伤害',1},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_随从伤害",1)
+	return G.call("技能效果_伤害",1)
 end
 ,
 },
@@ -1431,7 +1431,7 @@ t =
 {
     'block',
     {'技能目标_选取英雄','$敌方1'},
-    {'技能效果_随从伤害',3}
+    {'技能效果_伤害',3}
 },
 lua = function (self, card, info, data)
 	local G = require "gf"
@@ -1439,7 +1439,7 @@ lua = function (self, card, info, data)
 	return (function()
 		local _ = nil
 		_ = G.call("技能目标_选取英雄","敌方1")
-		_ = G.call("技能效果_随从伤害",3)
+		_ = G.call("技能效果_伤害",3)
 		return _
 	end)()
 end
@@ -1756,7 +1756,7 @@ t =
                 '技能目标_添加目标',
                 {'table','hero'}
             },
-            {'技能效果_随从治疗',6}
+            {'技能效果_治疗',6}
         }
     },
     'info.Player'
@@ -1769,7 +1769,7 @@ lua = function (self, card, info, data)
 		return (function()
 			local _ = nil
 			_ = G.call("技能目标_添加目标",{hero_89})
-			_ = G.call("技能效果_随从治疗",6)
+			_ = G.call("技能效果_治疗",6)
 			return _
 		end)()
 	end)(info.Player)
@@ -2155,7 +2155,7 @@ t =
 {
     'block',
     {'技能目标_选取英雄','$我方'},
-    {'技能效果_英雄技能伤害',2},
+    {'技能效果_伤害',2},
     {'技能效果_抽牌'}
 },
 lua = function (self, card, info, data)
@@ -2164,7 +2164,7 @@ lua = function (self, card, info, data)
 	return (function()
 		local _ = nil
 		_ = G.call("技能目标_选取英雄","我方")
-		_ = G.call("技能效果_英雄技能伤害",2)
+		_ = G.call("技能效果_伤害",2)
 		_ = G.call("技能效果_抽牌")
 		return _
 	end)()
@@ -2250,17 +2250,17 @@ t =
         {'卡牌数据_获取过滤后数量','self','card'},
         0
     },
-    {'技能效果_法术伤害',5},
-    {'技能效果_法术伤害',3}
+    {'技能效果_伤害',5},
+    {'技能效果_伤害',3}
 },
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return (function ()
 		if(t["tLua_GT"](G.call("卡牌数据_获取过滤后数量",self,card),0))then
-			return G.call("技能效果_法术伤害",5)
+			return G.call("技能效果_伤害",5)
 		else
-			return G.call("技能效果_法术伤害",3)
+			return G.call("技能效果_伤害",3)
 		end
 	end)()
 end
@@ -2291,7 +2291,7 @@ t =
     'block',
     {'技能目标_选取随从','$敌方1'},
     {'技能目标_随机选择',2,0x100c0002},
-    {'技能效果_法术伤害',3}
+    {'技能效果_伤害',3}
 },
 lua = function (self, card, info, data)
 	local G = require "gf"
@@ -2300,7 +2300,7 @@ lua = function (self, card, info, data)
 		local _ = nil
 		_ = G.call("技能目标_选取随从","敌方1")
 		_ = G.call("技能目标_随机选择",2,269221890)
-		_ = G.call("技能效果_法术伤害",3)
+		_ = G.call("技能效果_伤害",3)
 		return _
 	end)()
 end
@@ -2331,7 +2331,7 @@ t =
     'block',
     {'技能目标_选取随从','$敌方1'},
     {'技能目标_随机选择',2,0x100c0002},
-    {'技能效果_法术伤害',2}
+    {'技能效果_伤害',2}
 },
 lua = function (self, card, info, data)
 	local G = require "gf"
@@ -2340,7 +2340,7 @@ lua = function (self, card, info, data)
 		local _ = nil
 		_ = G.call("技能目标_选取随从","敌方1")
 		_ = G.call("技能目标_随机选择",2,269221890)
-		_ = G.call("技能效果_法术伤害",2)
+		_ = G.call("技能效果_伤害",2)
 		return _
 	end)()
 end
@@ -2689,11 +2689,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_法术伤害',1},
+{'技能效果_伤害',1},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_法术伤害",1)
+	return G.call("技能效果_伤害",1)
 end
 ,
 },
@@ -2720,7 +2720,7 @@ end
 t =
 {
     'block',
-    {'技能效果_法术伤害',4},
+    {'技能效果_伤害',4},
     {'技能效果_弃牌'}
 },
 lua = function (self, card, info, data)
@@ -2728,7 +2728,7 @@ lua = function (self, card, info, data)
 	local t = G.api
 	return (function()
 		local _ = nil
-		_ = G.call("技能效果_法术伤害",4)
+		_ = G.call("技能效果_伤害",4)
 		_ = G.call("技能效果_弃牌")
 		return _
 	end)()
@@ -2789,7 +2789,7 @@ t =
                     {
                         'block',
                         {'技能目标_选取英雄','$我方'},
-                        {'技能效果_法术治疗',5}
+                        {'技能效果_治疗',5}
                     }
                 }
             }
@@ -2810,7 +2810,7 @@ lua = function (self, card, info, data)
 				return (function()
 					local _ = nil
 					_ = G.call("技能目标_选取英雄","我方")
-					_ = G.call("技能效果_法术治疗",5)
+					_ = G.call("技能效果_治疗",5)
 					return _
 				end)()
 			end))
@@ -2860,7 +2860,7 @@ t =
                     'function',
                     {},
                     {},
-                    {'技能效果_法术伤害',2}
+                    {'技能效果_伤害',2}
                 }
             },
             {
@@ -2875,7 +2875,7 @@ t =
                     {
                         'block',
                         {'技能目标_选取英雄','$我方'},
-                        {'技能效果_法术治疗',2}
+                        {'技能效果_治疗',2}
                     }
                 }
             }
@@ -2890,13 +2890,13 @@ lua = function (self, card, info, data)
 		return (function()
 			local _ = nil
 			_ = G.call("技能效果_效果树_执行子效果",{["Caster"] = card,["Player"] = info.Player,["Target"] = {tar_49}},(function()
-				return G.call("技能效果_法术伤害",2)
+				return G.call("技能效果_伤害",2)
 			end))
 			_ = G.call("技能效果_效果树_执行子效果",{["Player"] = info.Player},(function()
 				return (function()
 					local _ = nil
 					_ = G.call("技能目标_选取英雄","我方")
-					_ = G.call("技能效果_法术治疗",2)
+					_ = G.call("技能效果_治疗",2)
 					return _
 				end)()
 			end))
@@ -2946,7 +2946,7 @@ t =
                 {},
                 {
                     'block',
-                    {'技能效果_法术伤害',1},
+                    {'技能效果_伤害',1},
                     {
                         'if',
                         {
@@ -2969,7 +2969,7 @@ lua = function (self, card, info, data)
 		return G.call("技能效果_效果树_执行子效果",{["Caster"] = card,["Player"] = info.Player,["Target"] = {tar_49}},(function()
 			return (function()
 				local _ = nil
-				_ = G.call("技能效果_法术伤害",1)
+				_ = G.call("技能效果_伤害",1)
 				_ = (function ()
 					if(t["tLua_LE"](G.call("卡牌属性_获取",tar_49,"生命","当前值"),0))then
 						return G.call("技能效果_抽牌")
@@ -3003,11 +3003,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_法术伤害',6},
+{'技能效果_伤害',6},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_法术伤害",6)
+	return G.call("技能效果_伤害",6)
 end
 ,
 },
@@ -3119,11 +3119,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_法术治疗',8},
+{'技能效果_治疗',8},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_法术治疗",8)
+	return G.call("技能效果_治疗",8)
 end
 ,
 },
@@ -3148,11 +3148,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_法术治疗',6},
+{'技能效果_治疗',6},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_法术治疗",6)
+	return G.call("技能效果_治疗",6)
 end
 ,
 },
@@ -3219,14 +3219,14 @@ t =
         'function',
         {},
         {},
-        {'技能效果_武器治疗',2}
+        {'技能效果_治疗',2}
     }
 },
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
 	return G.call("技能效果_效果树_执行子效果",{["Caster"] = card,["Player"] = info.Player,["Target"] = {info.Caster}},(function()
-		return G.call("技能效果_武器治疗",2)
+		return G.call("技能效果_治疗",2)
 	end))
 end
 ,
@@ -3416,7 +3416,7 @@ end
 t =
 {
     'block',
-    {'技能效果_法术伤害',4},
+    {'技能效果_伤害',4},
     {
         '技能效果_效果树_执行子效果',
         {
@@ -3432,7 +3432,7 @@ t =
                 {'技能目标_选取英雄','$敌方1'},
                 {'技能目标_选取随从','$敌方1'},
                 {'技能目标_剔除目标','info.Target'},
-                {'技能效果_法术伤害',1}
+                {'技能效果_伤害',1}
             }
         }
     }
@@ -3442,14 +3442,14 @@ lua = function (self, card, info, data)
 	local t = G.api
 	return (function()
 		local _ = nil
-		_ = G.call("技能效果_法术伤害",4)
+		_ = G.call("技能效果_伤害",4)
 		_ = G.call("技能效果_效果树_执行子效果",{["Caster"] = info.Caster,["Player"] = info.Player},(function()
 			return (function()
 				local _ = nil
 				_ = G.call("技能目标_选取英雄","敌方1")
 				_ = G.call("技能目标_选取随从","敌方1")
 				_ = G.call("技能目标_剔除目标",info.Target)
-				_ = G.call("技能效果_法术伤害",1)
+				_ = G.call("技能效果_伤害",1)
 				return _
 			end)()
 		end))
@@ -3482,7 +3482,7 @@ t =
 {
     'block',
     {'技能目标_选取随从','$敌方1'},
-    {'技能效果_法术伤害',1}
+    {'技能效果_伤害',1}
 },
 lua = function (self, card, info, data)
 	local G = require "gf"
@@ -3490,7 +3490,7 @@ lua = function (self, card, info, data)
 	return (function()
 		local _ = nil
 		_ = G.call("技能目标_选取随从","敌方1")
-		_ = G.call("技能效果_法术伤害",1)
+		_ = G.call("技能效果_伤害",1)
 		return _
 	end)()
 end
@@ -3521,7 +3521,7 @@ t =
     'block',
     {'技能目标_选取英雄','$敌方1'},
     {'技能目标_选取随从','$敌方1'},
-    {'技能效果_法术伤害',2}
+    {'技能效果_伤害',2}
 },
 lua = function (self, card, info, data)
 	local G = require "gf"
@@ -3530,7 +3530,7 @@ lua = function (self, card, info, data)
 		local _ = nil
 		_ = G.call("技能目标_选取英雄","敌方1")
 		_ = G.call("技能目标_选取随从","敌方1")
-		_ = G.call("技能效果_法术伤害",2)
+		_ = G.call("技能效果_伤害",2)
 		return _
 	end)()
 end
@@ -3561,7 +3561,7 @@ t =
     'block',
     {'技能目标_选取英雄','$我方'},
     {'技能目标_选取随从','$我方'},
-    {'技能效果_随从治疗',2}
+    {'技能效果_治疗',2}
 },
 lua = function (self, card, info, data)
 	local G = require "gf"
@@ -3570,7 +3570,7 @@ lua = function (self, card, info, data)
 		local _ = nil
 		_ = G.call("技能目标_选取英雄","我方")
 		_ = G.call("技能目标_选取随从","我方")
-		_ = G.call("技能效果_随从治疗",2)
+		_ = G.call("技能效果_治疗",2)
 		return _
 	end)()
 end
@@ -3603,7 +3603,7 @@ t =
     {'技能目标_选取随从','$敌方1'},
     {'技能目标_选取随从','$我方'},
     {'技能目标_选取英雄','$我方'},
-    {'技能效果_法术伤害',3}
+    {'技能效果_伤害',3}
 },
 lua = function (self, card, info, data)
 	local G = require "gf"
@@ -3614,7 +3614,7 @@ lua = function (self, card, info, data)
 		_ = G.call("技能目标_选取随从","敌方1")
 		_ = G.call("技能目标_选取随从","我方")
 		_ = G.call("技能目标_选取英雄","我方")
-		_ = G.call("技能效果_法术伤害",3)
+		_ = G.call("技能效果_伤害",3)
 		return _
 	end)()
 end
@@ -3645,7 +3645,7 @@ t =
     'block',
     {'技能目标_选取随从','$敌方1'},
     {'技能目标_选取随从','$我方'},
-    {'技能效果_法术伤害',1}
+    {'技能效果_伤害',1}
 },
 lua = function (self, card, info, data)
 	local G = require "gf"
@@ -3654,7 +3654,7 @@ lua = function (self, card, info, data)
 		local _ = nil
 		_ = G.call("技能目标_选取随从","敌方1")
 		_ = G.call("技能目标_选取随从","我方")
-		_ = G.call("技能效果_法术伤害",1)
+		_ = G.call("技能效果_伤害",1)
 		return _
 	end)()
 end
@@ -3684,7 +3684,7 @@ t =
 {
     'block',
     {'技能目标_选取随从','$敌方1'},
-    {'技能效果_法术伤害',4}
+    {'技能效果_伤害',4}
 },
 lua = function (self, card, info, data)
 	local G = require "gf"
@@ -3692,7 +3692,7 @@ lua = function (self, card, info, data)
 	return (function()
 		local _ = nil
 		_ = G.call("技能目标_选取随从","敌方1")
-		_ = G.call("技能效果_法术伤害",4)
+		_ = G.call("技能效果_伤害",4)
 		return _
 	end)()
 end
@@ -3762,7 +3762,7 @@ end
 t =
 {
     'block',
-    {'技能效果_法术伤害',5},
+    {'技能效果_伤害',5},
     {'技能效果_抽牌'}
 },
 lua = function (self, card, info, data)
@@ -3770,7 +3770,7 @@ lua = function (self, card, info, data)
 	local t = G.api
 	return (function()
 		local _ = nil
-		_ = G.call("技能效果_法术伤害",5)
+		_ = G.call("技能效果_伤害",5)
 		_ = G.call("技能效果_抽牌")
 		return _
 	end)()
@@ -5076,11 +5076,11 @@ end
 				['是否重复触发']=true,
 				['触发时机']={
 t =
-{'$逻辑_技能效果_法术伤害前'},
+{'$逻辑_技能效果_伤害前'},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return {"逻辑_技能效果_法术伤害前"}
+	return {"逻辑_技能效果_伤害前"}
 end
 ,
 },
@@ -5151,7 +5151,7 @@ t =
         {
             'block',
             {'技能目标_选取随从','$我方'},
-            {'技能效果_随从治疗',1}
+            {'技能效果_治疗',1}
         }
     }
 },
@@ -5162,7 +5162,7 @@ lua = function (self, card, info, data)
 		return (function()
 			local _ = nil
 			_ = G.call("技能目标_选取随从","我方")
-			_ = G.call("技能效果_随从治疗",1)
+			_ = G.call("技能效果_治疗",1)
 			return _
 		end)()
 	end))
@@ -5271,7 +5271,7 @@ t =
 {
     'block',
     {'技能目标_选取英雄','$我方'},
-    {'技能效果_法术治疗',5}
+    {'技能效果_治疗',5}
 },
 lua = function (self, card, info, data)
 	local G = require "gf"
@@ -5279,7 +5279,7 @@ lua = function (self, card, info, data)
 	return (function()
 		local _ = nil
 		_ = G.call("技能目标_选取英雄","我方")
-		_ = G.call("技能效果_法术治疗",5)
+		_ = G.call("技能效果_治疗",5)
 		return _
 	end)()
 end
