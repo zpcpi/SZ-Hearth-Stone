@@ -3244,6 +3244,13 @@ for funs, iter in pairs(t) do
                     new_call['skill_info']['Target'] = {skill_info['逐个伤害目标']}
                 elseif funs == 'single_heal' then
                     new_call['skill_info']['Target'] = {skill_info['逐个治疗目标']}
+                elseif funs == '技能效果_效果树_执行子效果' then
+                    local skill_info = ({...})[1]
+                    new_call['skill_info'] = {
+                        ['Player'] = skill_info['Player'],
+                        ['Caster'] = skill_info['Caster'],
+                        ['Target'] = {table_unpack(skill_info['Target'] or {})},
+                    }
                 else
                     new_call['skill_info']['Target'] = {table_unpack(skill_info['Target'] or {})}
                 end

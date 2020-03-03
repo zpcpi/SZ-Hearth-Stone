@@ -17,7 +17,7 @@ function noti.卡牌逻辑效果整理(last_call)
     end
 
     local function iter (funs, children, info)
-        tlt('- ' .. funs)
+        tlt('*[' .. funs .. ']')
         
         if info then
             -- 释放玩家
