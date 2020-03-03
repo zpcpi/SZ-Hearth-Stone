@@ -249,26 +249,3 @@ function noti.卡牌属性_设置(o_card_当前卡牌, estr_cardattr_enum_属性
     )
 end
 
-function noti.card_造成伤害(o_card_目标卡牌, int_伤害值)
-    local o_misc = G.misc()
-    local script_战场 = o_misc.主战场系统
-    local script_动画系统 = o_misc.技能动画系统
-
-    script_动画系统:add_animquest(
-        G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-            {G.trig_event, 'UI_卡牌战斗信息', o_card_目标卡牌, '伤害', int_伤害值},
-        })
-    )
-end
-
-function noti.card_造成治疗(o_card_目标卡牌, int_治疗值)
-    local o_misc = G.misc()
-    local script_战场 = o_misc.主战场系统
-    local script_动画系统 = o_misc.技能动画系统
-
-    script_动画系统:add_animquest(
-        G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-            {G.trig_event, 'UI_卡牌战斗信息', o_card_目标卡牌, '治疗', int_治疗值},
-        })
-    )
-end

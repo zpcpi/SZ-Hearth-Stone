@@ -3190,8 +3190,10 @@ for funs, iter in pairs(t) do
 
                 if funs == 'single_damage' then
                     new_call['skill_info']['Target'] = {skill_info['逐个伤害目标']}
+                    new_call['skill_info']['Value'] = {skill_info['逐个伤害数值']}
                 elseif funs == 'single_heal' then
                     new_call['skill_info']['Target'] = {skill_info['逐个治疗目标']}
+                    new_call['skill_info']['Value'] = {skill_info['逐个治疗数值']}
                 elseif funs == '技能效果_效果树_执行子效果' then
                     local skill_info = ({...})[1]
                     new_call['skill_info'] = {
@@ -3217,11 +3219,11 @@ for funs, iter in pairs(t) do
         -- 后置信息处理
         do
             last_call = call_stack.pop()
+
             if (funs == '卡牌使用_主流程_thread') or
                (funs == '卡牌攻击_主流程_thread')
             then
                 noti['卡牌逻辑效果整理'](last_call)
-                noti['卡牌动画效果整理'](last_call)
             end
         end
     end
