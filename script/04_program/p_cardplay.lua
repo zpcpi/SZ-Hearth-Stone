@@ -3204,8 +3204,14 @@ for funs, iter in pairs(t) do
             end
         end
 
+        -- 前置动画调用
+        noti.卡牌动画_前置调用(funs, ...)
+
         -- 执行功能
         iter(...)
+
+        -- 后置动画调用
+        noti.卡牌动画_后置调用(funs, ...)
 
         -- 后置信息处理
         do
@@ -3214,7 +3220,16 @@ for funs, iter in pairs(t) do
                (funs == '卡牌攻击_主流程_thread')
             then
                 noti['卡牌逻辑效果整理'](last_call)
+                noti['卡牌动画效果整理'](last_call)
             end
         end
     end
+end
+
+real_t['卡牌逻辑树_获取最后记录'] = function ()
+    return last_call
+end
+
+real_t['卡牌逻辑树_获取最后调用'] = function ()
+    return call_stack.top()
 end

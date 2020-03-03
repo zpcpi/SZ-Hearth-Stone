@@ -219,6 +219,99 @@ t['动画系统_跟随鼠标'] = function(string_obj, _string_attr, o_animquest_
     return {}
 end
 
+t['动画系统_两控件相向运动'] = function(string_obj, string_tar, _string_attr, _number_目标值, o_animquest_bezier_曲线参数)
+    local cur_actor = G.misc().当前演算体
+    local cur_quest = G.misc().当前动画段
+    local time = cur_quest['time']
+    
+    -- [1] 目标点比例，正：相向，负：相背
+    -- [2] 最大移动距离，正：移动距离，负：隔离距离
+
+    local obj_list = G.call('动画系统_获取名称指代', string_obj)
+    local tar_list = G.call('动画系统_获取名称指代', string_tar)
+
+    if obj_list and tar_list and (#tar_list == 1) then
+        if _string_attr and (#_string_attr == 2) then
+            if _number_目标值 and (#_number_目标值 >= 1) then
+                goto next
+            end
+        end
+    end
+
+    do
+        return {}
+    end
+
+    ::next::
+    local get_distance = function (orgx, orgy, tarx, tary)
+        local px = tarx - orgx
+        local py = tary - orgy
+        return math.sqrt((px * px) + (py * py))
+    end
+    local get_pos = function (obj, orgx, orgy, tarx, tary, scale)
+        local px = (tarx - orgx) * scale + orgx
+        local py = (tary - orgy) * scale + orgy
+
+        if obj.parent then
+            return obj.parent.globalToLocal(px, py)
+        elseif obj.obj and obj.obj.parent then
+            return obj.obj.parent.globalToLocal(px, py)
+        end
+    end
+
+    local shaft_list = {}
+
+    local tarx, tary = tar_list[1].localToGlobal(0, 0)
+    for _, obj in ipairs(obj_list) do
+        local objx, objy = obj.localToGlobal(0, 0)
+
+        local distance = get_distance(objx, objy, tarx, tary)
+        local scale = _number_目标值[1]
+        
+        if _number_目标值[2] then
+            local cur_distance = math.abs(distance * scale)
+
+            if _number_目标值[2] > 0 then
+                -- 正：移动距离
+                if cur_distance > _number_目标值[2] then
+                    -- 移动距离超过限制
+                    scale = _number_目标值[2] / distance
+                    if _number_目标值[1] >= 0 then
+                        -- 相向移动
+                    else
+                        -- 相背移动
+                        scale = 0 - scale
+                    end
+                end
+            else
+                -- 负：隔离距离
+                if scale >= 1 then
+                    -- 向前延伸
+                    if (distance - cur_distance) > _number_目标值[2] then
+                        scale = (distance - _number_目标值[2]) / distance
+                    end
+                elseif (scale >= 0) and (scale < 1) then
+                    -- 往前缩短
+                    if (cur_distance - distance) > _number_目标值[2] then
+                        scale = (distance + _number_目标值[2]) / distance
+                    end
+                elseif (scale < 0) then
+                    -- 往后延伸
+                    if (distance + cur_distance) < (0 - _number_目标值[2]) then
+                        scale = _number_目标值[2] / distance
+                    end
+                end
+            end
+        end
+
+        local posx, posy = get_pos(obj, objx, objy, tarx, tary, scale)
+        table.insert(shaft_list, create_shaft(obj, _string_attr[1], posx, time, o_animquest_bezier_曲线参数))
+        table.insert(shaft_list, create_shaft(obj, _string_attr[2], posy, time, o_animquest_bezier_曲线参数))
+    end
+
+    return shaft_list
+end
+
 --type=actor
 --hide=true
 --ret=_o_animquest_shaft
