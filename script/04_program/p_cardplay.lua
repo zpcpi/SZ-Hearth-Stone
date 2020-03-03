@@ -759,14 +759,14 @@ end
 
 -- trigger注册
 t['逻辑注册_初始化'] = function ()
-    local card = G.event_info()
+    local card, player_ab = G.event_info()
     card['动态数据'] = {
         ['浮动属性'] = {},
         ['武器属性'] = {},
         ['光环属性'] = {},
         ['当前属性'] = {},
         ['卡牌位置'] = '牌库',
-        ['所有者'] = G.call('系统_获取当前玩家信息').绝对身份,
+        ['所有者'] = player_ab or G.call('房间_获取绝对身份', '我方'),
         ['特性层数'] = {},
     }
     card['动态数据_事件'] = {
@@ -1989,7 +1989,7 @@ t['技能效果_创建手牌'] = function (i_card_创建卡牌ID, boolean_是否
             if boolean_是否是实例 then
                 o_card_添加卡牌实例 = G.QueryName(i_card_创建卡牌ID)
             else
-                o_card_添加卡牌实例 = G.call('卡牌实例化', G.QueryName(i_card_创建卡牌ID))
+                o_card_添加卡牌实例 = G.call('卡牌实例化', G.QueryName(i_card_创建卡牌ID), estr_player_相对身份)
             end
             G.call('角色_添加手牌', estr_player_相对身份, o_card_添加卡牌实例, boolean_是否明牌)
         end
@@ -2150,7 +2150,7 @@ t['技能效果_召唤'] = function (datas)
 
             local o_card_召唤单位
             if type(cardid) == 'number' then
-                o_card_召唤单位 = G.call('卡牌实例化', G.QueryName(cardid))
+                o_card_召唤单位 = G.call('卡牌实例化', G.QueryName(cardid), estr_player_相对身份)
             elseif type(cardid) == 'table' then
             else
                 break
@@ -2387,7 +2387,7 @@ t['技能效果_装备武器'] = function (i_card_武器卡牌ID, boolean_是否
         if boolean_是否是实例 then
             o_card_添加卡牌实例 = G.QueryName(i_card_武器卡牌ID)
         else
-            o_card_添加卡牌实例 = G.call('卡牌实例化', G.QueryName(i_card_武器卡牌ID))
+            o_card_添加卡牌实例 = G.call('卡牌实例化', G.QueryName(i_card_武器卡牌ID), estr_player_相对身份)
         end
 
         G.call('技能效果_效果树_执行子效果',
@@ -2609,7 +2609,7 @@ real_t['卡牌实例表_初始化'] = function ()
     misc.当前效果堆栈 = G.call('create_stack')
 end
 
-real_t['卡牌实例化'] = function (o_card_卡片模板)
+real_t['卡牌实例化'] = function (o_card_卡片模板, estr_player_相对身份)
     local dbname = G.misc().卡牌实例表
     local card = nil
     if dbname then
@@ -2618,7 +2618,8 @@ real_t['卡牌实例化'] = function (o_card_卡片模板)
         card = G.CopyInst(o_card_卡片模板)
     end
 
-    G.trig_event('逻辑_卡牌初始化', card)
+    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份 or '我方')
+    G.trig_event('逻辑_卡牌初始化', card, estr_absolute_id_type_绝对身份)
     return card
 end
 

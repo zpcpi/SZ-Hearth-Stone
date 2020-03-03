@@ -270,7 +270,7 @@ t['动画系统_两控件相向运动'] = function(string_obj, string_tar, _stri
         
         if _number_目标值[2] then
             local cur_distance = math.abs(distance * scale)
-
+            
             if _number_目标值[2] > 0 then
                 -- 正：移动距离
                 if cur_distance > _number_目标值[2] then

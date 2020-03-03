@@ -76,7 +76,10 @@ t['对决_决定初始卡牌'] = function(o_room_player_玩家)
     -- TODO: 换牌
     if not G.call('对决_是否是先手身份', o_room_player_玩家.绝对身份) then 
         -- 后手添加硬币
-        local o_card_硬币 = G.call('卡牌实例化', G.QueryName(0x1006000e))
+        local estr_absolute_id_type_绝对身份 = o_room_player_玩家['绝对身份']
+        local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
+        
+        local o_card_硬币 = G.call('卡牌实例化', G.QueryName(0x1006000e), estr_player_相对身份)
         G.call('角色_添加手牌', estr_player_相对身份, o_card_硬币, true)
     end
 end
@@ -204,9 +207,11 @@ t['对决_初始化对决角色'] = function(o_room_player_玩家)
     local hero = o_deck_卡组.英雄[1]
     -- TODO: 暂时读取英雄的第一衍生卡作为角色技能
     local skill = G.QueryName(hero).局外数据.衍生卡[1]
-    local estr_player_相对身份 = G.call('房间_获取相对身份', o_room_player_玩家.绝对身份)
-    G.call('角色_战场_设置英雄', estr_player_相对身份, G.call('卡牌实例化', G.QueryName(hero)))
-    G.call('角色_战场_设置英雄技能', estr_player_相对身份, G.call('卡牌实例化', G.QueryName(skill)))
+    local estr_absolute_id_type_绝对身份 = o_room_player_玩家['绝对身份']
+    local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
+    
+    G.call('角色_战场_设置英雄', estr_player_相对身份, G.call('卡牌实例化', G.QueryName(hero), estr_player_相对身份))
+    G.call('角色_战场_设置英雄技能', estr_player_相对身份, G.call('卡牌实例化', G.QueryName(skill), estr_player_相对身份))
 end
 
 --ret=int
@@ -239,9 +244,11 @@ t['对决_初始化对决牌库'] = function(o_room_player_玩家)
     local o_randomlib_随机牌库 = G.call('Create_Randomlib', G.QueryName(0x100c0002)) -- 抽取随机
     local o_randomlib_牌库底 = G.call('Create_Randomlib', G.QueryName(0x100c0004)) -- 顺序选取
 
+    local estr_absolute_id_type_绝对身份 = o_room_player_玩家['绝对身份']
+    local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
     for _, o_card_卡片模板 in ipairs(o_deck_卡组['卡牌列表']) do 
         -- todo，需要判断模板是否双方一致，比如自创卡
-        local o_card_卡片实例 = G.call('卡牌实例化', o_card_卡片模板)
+        local o_card_卡片实例 = G.call('卡牌实例化', o_card_卡片模板, estr_player_相对身份)
 
         o_randomlib_随机牌库:添加数据({o_card_卡片实例, 1})
     end

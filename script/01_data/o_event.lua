@@ -128,6 +128,10 @@ local t = {
 				['id']='Caster',
 				['type']='o_card',
 			},
+			[2]={
+				['id']='PlayerAbsolute',
+				['type']='estr_absolute_id_type',
+			},
 		},
 	},
 	{

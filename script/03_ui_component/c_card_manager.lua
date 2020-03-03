@@ -10,6 +10,7 @@ function t:init()
     self.卡片实例 = self.obj.getChildByName('卡片实例')
 
     self.cur_card = nil
+    self.cur_obj = nil
 end
 
 function t:setData(o_card_卡片数据, boolean_isbattle)
@@ -57,6 +58,7 @@ function t:setData(o_card_卡片数据, boolean_isbattle)
     if o_node_界面 then 
         self.卡背框.visible = false
         self.卡片实例.addChild(o_node_界面)
+        self.cur_obj = o_node_界面
         local script_界面组件 = 'c_' .. string.sub(string_uipath, 3)
         local o_node_卡牌框 = o_node_界面.getChildByName('卡牌框')
         if o_node_卡牌框 and o_node_卡牌框[script_界面组件] and o_node_卡牌框[script_界面组件].setData then 
