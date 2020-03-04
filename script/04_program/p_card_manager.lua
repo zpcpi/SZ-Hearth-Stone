@@ -6,7 +6,7 @@ local L = {}
 local t = G.api
 
 
-t['CardCom_SetData'] = function (com, o_card)
+t['CardCom_SetData'] = function (com, o_card, manager)
     -- 记录当前关联卡牌
     com.cur_card = o_card
 
@@ -184,7 +184,7 @@ t['CardCom_SetData'] = function (com, o_card)
             end
         end
     
-        local key = 'card_flagchange|' .. tostring(com)
+        local key = 'card_flagchange|' .. tostring(manager)
         G.removeListener(key, 'UI_卡牌状态更新')
         G.api[key] = update_data
         G.addListener(key, {'UI_卡牌状态更新', o_card})
@@ -197,7 +197,7 @@ t['CardCom_SetData'] = function (com, o_card)
             com[attr] = value
         end
     
-        local key = 'card_attrchange|' .. tostring(com)
+        local key = 'card_attrchange|' .. tostring(manager)
         G.removeListener(key, 'UI_卡牌属性更新')
         G.api[key] = update_data
         G.addListener(key, {'UI_卡牌属性更新', o_card})
@@ -214,7 +214,7 @@ t['CardCom_SetData'] = function (com, o_card)
             end
         end
 
-        local key = 'card_showinfo|' .. tostring(com)
+        local key = 'card_showinfo|' .. tostring(manager)
         G.removeListener(key, 'UI_卡牌战斗信息')
         G.api[key] = show_info
         G.addListener(key, {'UI_卡牌战斗信息', o_card})

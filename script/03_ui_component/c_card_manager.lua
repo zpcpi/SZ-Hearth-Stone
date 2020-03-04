@@ -14,6 +14,7 @@ function t:init()
 end
 
 function t:setData(o_card_卡片数据, boolean_isbattle)
+    -- TODO，这里有泄露，card里面的事件没有清除
     self.卡片实例.removeAllChildren()
     self.卡背框.visible = true
     self.cur_card = o_card_卡片数据
@@ -62,7 +63,7 @@ function t:setData(o_card_卡片数据, boolean_isbattle)
         local script_界面组件 = 'c_' .. string.sub(string_uipath, 3)
         local o_node_卡牌框 = o_node_界面.getChildByName('卡牌框')
         if o_node_卡牌框 and o_node_卡牌框[script_界面组件] and o_node_卡牌框[script_界面组件].setData then 
-            o_node_卡牌框[script_界面组件]:setData(o_card_卡片数据)
+            o_node_卡牌框[script_界面组件]:setData(o_card_卡片数据, self)
         end
     end
 end

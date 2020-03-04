@@ -409,17 +409,17 @@ t['single_damage'] = function ()
         local int_伤害值 = o_skill_info_效果信息['逐个伤害数值']
         local Target = o_skill_info_效果信息['逐个伤害目标']
 
-        local _int_伤害数值 = o_skill_info_效果信息['伤害数值']
-        local TargetList = o_skill_info_效果信息['最终伤害目标']
-
-        local index = #_int_伤害数值 + 1
-
-        -- 伤害值记录下来
-        _int_伤害数值[index] = int_伤害值
-        TargetList[index] = Target
-
         -- 造成伤害
         if int_伤害值 > 0 then
+            local _int_伤害数值 = o_skill_info_效果信息['伤害数值']
+            local TargetList = o_skill_info_效果信息['最终伤害目标']
+    
+            local index = #_int_伤害数值 + 1
+    
+            -- 伤害值记录下来
+            _int_伤害数值[index] = int_伤害值
+            TargetList[index] = Target
+    
             local old_hp = G.call('卡牌属性_获取', Target, '生命', '当前值') or 0
 
             G.call('card_造成伤害', Target, int_伤害值)
@@ -448,11 +448,6 @@ t['single_heal'] = function ()
 
         local int_治疗值 = o_skill_info_效果信息['逐个治疗数值']
         local Target = o_skill_info_效果信息['逐个治疗目标']
-
-        -- 控制治疗，防止溢出
-        local cur_hp = G.call('卡牌属性_获取', Target, '生命', '当前值') or 0
-        local max_hp = G.call('卡牌属性_获取', Target, '生命', '最大值') or 0
-        int_治疗值 = math.min(int_治疗值 or 0, max_hp - cur_hp)
 
         -- 造成治疗
         if int_治疗值 > 0 then
@@ -1573,7 +1568,7 @@ do -- 治疗流程
         end
 
         local action = function (o_skill_info_效果信息)
-            local int_中间治疗值 = o_skill_info_效果信息['中间治疗数值'] or o_skill_info_效果信息['原始治疗数值']
+            local int_中间治疗值 = o_skill_info_效果信息['中间治疗数值'] or o_skill_info_效果信息['原始治疗数值'] or 0
             local TargetList = o_skill_info_效果信息['Target'] or {}
             local _int_治疗数值 = {}
 
@@ -1581,8 +1576,14 @@ do -- 治疗流程
             o_skill_info_效果信息['治疗数值'] = _int_治疗数值
 
             for k,Target in ipairs(TargetList) do
-                o_skill_info_效果信息['逐个治疗数值'] = int_中间治疗值
                 o_skill_info_效果信息['逐个治疗目标'] = Target
+
+                -- 控制治疗，防止溢出
+                local cur_hp = G.call('卡牌属性_获取', Target, '生命', '当前值') or 0
+                local max_hp = G.call('卡牌属性_获取', Target, '生命', '最大值') or 0
+                local int_治疗值 = math.min(int_中间治疗值, max_hp - cur_hp)
+                o_skill_info_效果信息['逐个治疗数值'] = int_治疗值
+
                 G.call('single_heal')
             end
         end
@@ -2997,7 +2998,7 @@ real_t['卡牌属性_获取'] = function (o_card_当前卡牌, estr_cardattr_enu
     return result
 end
 
-real_t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value)
+t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value)
     if not o_card_当前卡牌 then
         return 
     end
@@ -3226,6 +3227,7 @@ for funs, iter in pairs(t) do
                 noti['卡牌逻辑效果整理'](last_call)
             end
         end
+
     end
 end
 

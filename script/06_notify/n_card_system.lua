@@ -166,6 +166,33 @@ noti[precall .. '卡牌攻击_主流程_thread'] = function ()
     anim_stack.push(o_animquest_当前动画)
 end
 
+noti[postcall .. '卡牌攻击_主流程_thread'] = function ()
+    local o_misc = G.misc()
+    local script_动画系统 = o_misc.技能动画系统
+
+    local o_animquest_当前动画 = anim_stack.pop()
+    -- 播放动画
+    script_动画系统:add_animquest(o_animquest_当前动画)
+end
+
+noti[precall .. '卡牌使用_主流程_thread'] = function ()
+    local o_misc = G.misc()
+    local script_动画系统 = o_misc.技能动画系统
+
+    local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 30)
+    anim_addchild(o_animquest_当前动画)
+    anim_stack.push(o_animquest_当前动画)
+end
+
+noti[postcall .. '卡牌使用_主流程_thread'] = function ()
+    local o_misc = G.misc()
+    local script_动画系统 = o_misc.技能动画系统
+
+    local o_animquest_当前动画 = anim_stack.pop()
+    -- 播放动画
+    script_动画系统:add_animquest(o_animquest_当前动画)
+end
+
 noti[precall .. '卡牌使用_攻击'] = function ()
     local last_call = G.call('卡牌逻辑树_获取最后调用')
     local get_attr = CARD_GET_ATTR
@@ -190,6 +217,48 @@ noti[precall .. '卡牌使用_攻击'] = function ()
         })
     anim_addchild(o_animquest_当前动画)
     anim_stack.push(o_animquest_当前动画)
+end
+
+noti[postcall .. '卡牌使用_攻击'] = function ()
+    local last_call = G.call('卡牌逻辑树_获取最后调用')
+    local get_attr = CARD_GET_ATTR
+    local Caster = get_attr(last_call, 'skill_info', 'Caster')
+    local Target = get_attr(last_call, 'skill_info', 'Target')[1]
+    
+    local o_misc = G.misc()
+    local script_动画系统 = o_misc.技能动画系统
+    local estr_absolute_id_type_绝对身份 = get_attr(Caster, '动态数据', '所有者')
+    local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
+
+    -- 攻击后返回
+    local cardtype = get_attr(Caster, '逻辑数据', '类型')
+    local o_animquest_当前动画
+    local pos_info
+    if cardtype == 0x10090001 then
+        -- 英雄
+        o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, true, 300, {
+                [1] = {push_quote(Caster), '::sys_normal_attck_Caster'},
+                [2] = {'动画系统_多属性设置', '::sys_normal_attck_Caster', {'x', 'y'}, {0, 0}, {
+                    ['x1']=0,
+                    ['y1']=0.5,
+                    ['x2']=0.5,
+                    ['y2']=1,
+                }},
+                [3] = {pop_quote, '::sys_normal_attck_Caster'},
+            })
+    elseif cardtype == 0x10090004 then
+        -- 随从
+        local script_战场随从组件 = get_component(estr_player_相对身份, '战场随从')
+        local set_minion_pos = function (com)
+            script_战场随从组件:set_minion_pos()
+        end
+        o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, true, 300, {
+                {set_minion_pos}
+            })
+    end
+
+    anim_addchild(o_animquest_当前动画)
+    anim_stack.pop()
 end
 
 noti[precall .. 'normal_attck'] = function ()
@@ -248,56 +317,78 @@ noti[postcall .. 'single_damage'] = function ()
     end
 end
 
-noti[postcall .. '卡牌使用_攻击'] = function ()
+noti[postcall .. 'single_heal'] = function ()
     local last_call = G.call('卡牌逻辑树_获取最后调用')
     local get_attr = CARD_GET_ATTR
     local Caster = get_attr(last_call, 'skill_info', 'Caster')
     local Target = get_attr(last_call, 'skill_info', 'Target')[1]
+    local int_治疗值 = get_attr(last_call, 'skill_info', 'Value')[1]
     
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
-    local estr_absolute_id_type_绝对身份 = get_attr(Caster, '动态数据', '所有者')
-    local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
 
-    -- 攻击后返回
-    local cardtype = get_attr(Caster, '逻辑数据', '类型')
-    local o_animquest_当前动画
-    local pos_info
-    if cardtype == 0x10090001 then
-        -- 英雄
-        o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, true, 300, {
-                [1] = {push_quote(Caster), '::sys_normal_attck_Caster'},
-                [2] = {'动画系统_多属性设置', '::sys_normal_attck_Caster', {'x', 'y'}, {0, 0}, {
-                    ['x1']=0,
-                    ['y1']=0.5,
-                    ['x2']=0.5,
-                    ['y2']=1,
-                }},
-                [3] = {pop_quote, '::sys_normal_attck_Caster'},
+    if int_治疗值 and (int_治疗值 > 0) then
+        local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
+                {G.trig_event, 'UI_卡牌战斗信息', Target, '治疗', int_治疗值},
             })
-    elseif cardtype == 0x10090004 then
-        -- 随从
-        local script_战场随从组件 = get_component(estr_player_相对身份, '战场随从')
-        local set_minion_pos = function (com)
-            script_战场随从组件:set_minion_pos()
-        end
-        o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, true, 300, {
-                {set_minion_pos}
-            })
+        anim_addchild(o_animquest_当前动画)
     end
-
-    anim_addchild(o_animquest_当前动画)
-    anim_stack.pop()
 end
 
-noti[postcall .. '卡牌攻击_主流程_thread'] = function ()
-    local o_animquest_当前动画 = anim_stack.pop()
-
+noti[postcall .. '卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value)
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
+    
+    local value = G.call('卡牌属性_获取', o_card_当前卡牌, estr_cardattr_enum_属性名, '当前值')
+    local attr
 
-    script_动画系统:add_animquest(o_animquest_当前动画)
+    if estr_cardattr_enum_属性名 == '费用' then
+        attr = 'cost'
+    elseif estr_cardattr_enum_属性名 == '攻击' then
+        attr = 'atk'
+    elseif estr_cardattr_enum_属性名 == '生命' then
+        attr = 'hp'
+    elseif estr_cardattr_enum_属性名 == '护甲' then
+        attr = 'ap'
+    elseif estr_cardattr_enum_属性名 == '攻击次数' then
+        attr = '攻击框'
+        local is_show = false
+        
+        if G.call('角色攻击次数判断', {['Caster']=o_card_当前卡牌}) then
+            is_show = true
+        end
+
+        local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, true, 5, {
+                {G.trig_event, 'UI_卡牌状态更新', o_card_当前卡牌, attr, is_show},
+            })
+        anim_addchild(o_animquest_当前动画)
+
+        return
+    end
+
+    local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, true, 5, {
+            {G.trig_event, 'UI_卡牌属性更新', o_card_当前卡牌, attr, value},
+        })
+    anim_addchild(o_animquest_当前动画)
 end
+
+noti[precall .. '技能效果_伤害'] = function ()
+    -- 所有非攻击造成的伤害，都发射飞弹
+
+
+
+
+
+end
+
+
+
+
+
+
+
+
+
 
 function noti.卡牌动画_前置调用(funs, ...)
     if noti[precall .. funs] then

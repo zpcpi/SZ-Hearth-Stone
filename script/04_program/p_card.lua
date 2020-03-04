@@ -12,7 +12,9 @@ t['card_造成伤害'] = function (o_card_目标卡牌, int_伤害值)
         if cur_ap >= int_伤害值 then
             G.call('卡牌属性_设置', o_card_目标卡牌, '护甲', '当前值', cur_ap - int_伤害值)
         else
-            G.call('卡牌属性_设置', o_card_目标卡牌, '护甲', '当前值', 0)
+            if cur_ap > 0 then
+                G.call('卡牌属性_设置', o_card_目标卡牌, '护甲', '当前值', 0)
+            end
             G.call('卡牌属性_设置', o_card_目标卡牌, '生命', '当前值', cur_hp + cur_ap - int_伤害值)
         end
     end
