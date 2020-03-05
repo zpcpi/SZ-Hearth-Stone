@@ -28,6 +28,7 @@ function t:init()
         end
     )
 
+    self.特效层级 = self.obj.getChildByName('特效层级')
     self.跨界面操作框 = self.obj.getChildByName('跨界面操作框')
 
     self.endTurnBtn = self.obj.getChildByName('EndTurnButton')
@@ -150,6 +151,14 @@ function t:clear_popline()
 
     self.popline_list = {}
 end
+
+-- 创建特效飞弹
+function t:add_missile()
+
+
+end
+
+
 
 function t:update_end_turn_button()
     local string_按钮文字 = ''

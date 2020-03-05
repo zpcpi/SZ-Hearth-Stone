@@ -219,6 +219,9 @@ t['动画系统_跟随鼠标'] = function(string_obj, _string_attr, o_animquest_
     return {}
 end
 
+--type=actor
+--hide=true
+--ret=_o_animquest_shaft
 t['动画系统_两控件相向运动'] = function(string_obj, string_tar, _string_attr, _number_目标值, o_animquest_bezier_曲线参数)
     local cur_actor = G.misc().当前演算体
     local cur_quest = G.misc().当前动画段
@@ -337,6 +340,31 @@ t['动画系统_连线两端跟随'] = function(string_obj, _string_attr, string
         end
     end
     return {}
+end
+
+--type=actor
+--hide=true
+--ret=_o_animquest_shaft
+t['动画系统_发射飞弹'] = function(string_obj, string_start, string_target)
+    local obj_list = G.call('动画系统_获取名称指代', string_obj)
+    local start_list = G.call('动画系统_获取名称指代', string_start)
+    local target_list = G.call('动画系统_获取名称指代', string_target)
+
+    if obj_list and start_list and (#start_list == 1) and target_list and (#target_list == 1) then
+
+
+
+
+        
+
+
+
+
+
+
+
+
+    end
 end
 
 --type=actor

@@ -142,6 +142,12 @@ local pop_quote = function (key)
     script_动画系统:pop_quote(key)
 end
 
+local create_missile = function (caster_obj)
+
+
+
+end
+
 local anim_stack = G.call('create_stack')
 local anim_addchild = function (anim)
     local parent_anim = anim_stack.top()
@@ -153,6 +159,9 @@ local anim_addchild = function (anim)
         table.insert(parent_anim['child_quests'], anim)
     end
 end
+
+-- 动画状态
+local is_create_missile = 0
 
 -- 本地玩家动画
 local precall = '*本地*前置动画*_'
@@ -309,11 +318,15 @@ noti[postcall .. 'single_damage'] = function ()
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
 
-    if int_伤害值 and (int_伤害值 > 0) then
-        local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                {G.trig_event, 'UI_卡牌战斗信息', Target, '伤害', int_伤害值},
-            })
-        anim_addchild(o_animquest_当前动画)
+    if is_create_missile > 0 then
+    else
+        -- 不发射飞弹
+        if int_伤害值 and (int_伤害值 > 0) then
+            local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
+                    {G.trig_event, 'UI_卡牌战斗信息', Target, '伤害', int_伤害值},
+                })
+            anim_addchild(o_animquest_当前动画)
+        end
     end
 end
 
@@ -374,14 +387,13 @@ end
 
 noti[precall .. '技能效果_伤害'] = function ()
     -- 所有非攻击造成的伤害，都发射飞弹
-
-
-
-
-
+    is_create_missile = is_create_missile + 1
 end
 
-
+noti[postcall .. '技能效果_伤害'] = function ()
+    -- 清除发射飞弹状态
+    is_create_missile = is_create_missile - 1
+end
 
 
 

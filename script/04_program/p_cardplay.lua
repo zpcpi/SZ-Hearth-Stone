@@ -1518,24 +1518,24 @@ do -- 伤害流程
         effect_action_iter(nil, str_事件名, init, action)
     end
 
-    t['技能效果_法术伤害'] = function (int_伤害值)
+    real_t['技能效果_法术伤害'] = function (int_伤害值)
         iter(int_伤害值, '法术', '逻辑_技能效果_法术伤害')
     end
 
-    t['技能效果_英雄技能伤害'] = function (int_伤害值)
+    real_t['技能效果_英雄技能伤害'] = function (int_伤害值)
         iter(int_伤害值, '英雄技能', '逻辑_技能效果_英雄技能伤害')
     end
 
-    t['技能效果_随从伤害'] = function (int_伤害值)
+    real_t['技能效果_随从伤害'] = function (int_伤害值)
         iter(int_伤害值, '随从', '逻辑_技能效果_随从伤害')
     end
 
-    t['技能效果_武器伤害'] = function (int_伤害值)
+    real_t['技能效果_武器伤害'] = function (int_伤害值)
         iter(int_伤害值, '武器', '逻辑_技能效果_武器伤害')
     end
 end
 
-real_t['技能效果_伤害'] = function (int_伤害值)
+t['技能效果_伤害'] = function (int_伤害值)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
@@ -1591,24 +1591,24 @@ do -- 治疗流程
         effect_action_iter(nil, str_事件名, init, action)
     end
 
-    t['技能效果_法术治疗'] = function (int_治疗值)
+    real_t['技能效果_法术治疗'] = function (int_治疗值)
         iter(int_治疗值, '法术', '逻辑_技能效果_法术治疗')
     end
 
-    t['技能效果_英雄技能治疗'] = function (int_治疗值)
+    real_t['技能效果_英雄技能治疗'] = function (int_治疗值)
         iter(int_治疗值, '英雄技能', '逻辑_技能效果_英雄技能治疗')
     end
 
-    t['技能效果_随从治疗'] = function (int_治疗值)
+    real_t['技能效果_随从治疗'] = function (int_治疗值)
         iter(int_治疗值, '随从', '逻辑_技能效果_随从治疗')
     end
 
-    t['技能效果_武器治疗'] = function (int_治疗值)
+    real_t['技能效果_武器治疗'] = function (int_治疗值)
         iter(int_治疗值, '武器', '逻辑_技能效果_武器治疗')
     end
 end
 
-real_t['技能效果_治疗'] = function (int_治疗值)
+t['技能效果_治疗'] = function (int_治疗值)
     local o_skill_info_效果信息 = get_cur_effect_info()
     if o_skill_info_效果信息 then
     else
