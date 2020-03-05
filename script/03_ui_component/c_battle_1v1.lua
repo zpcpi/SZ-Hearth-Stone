@@ -153,12 +153,16 @@ function t:clear_popline()
 end
 
 -- 创建特效飞弹
-function t:add_missile()
+function t:add_missile(posx, posy)
+    local ui_mis = G.loadUI('v_missile')
+    self.特效层级.addChild(ui_mis)
 
+    -- 设置初始位置
+    ui_mis.x, ui_mis.y = self.特效层级.globalToLocal(posx, posy)
+    ui_mis.scaleX, ui_mis.scaleY = 0.1, 0.1
 
+    return ui_mis
 end
-
-
 
 function t:update_end_turn_button()
     local string_按钮文字 = ''
