@@ -62,6 +62,7 @@ local com_mapping = {
     ['我方'] = {
         ['战场随从'] = {'selfBattleminion', 'c_battleminion_self'},
         ['战场英雄'] = {'selfBattlehero', 'c_battlehero_self'},
+        ['执行队列'] = {'卡牌队列组件'},
         ['手牌'] = {'selfHandcard', 'c_handcards_self'},
         ['牌库'] = {'carddeck', 'c_carddeck'},
     },
@@ -124,6 +125,18 @@ local get_obj_bycard = function (Card)
             end
         end
     elseif cardpos == '手牌' then
+        local script_队列组件 = get_component(estr_player_相对身份, '执行队列')
+        if script_队列组件 then
+            obj = script_队列组件:get_obj_bycard(Card)
+        end
+
+        if obj then
+        else
+            -- 在真的手牌找吧
+        end
+
+
+
     elseif cardpos == '牌库' then
     end
 
@@ -362,20 +375,17 @@ noti[precall .. 'single_damage'] = function ()
                 }),
             })
 
-            local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 0, {
+            local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
                 [1] = {push_quote(obj_missile), '::sys_normal_attck_Missile'},
                 [2] = {push_quote(get_obj_bycard(Target)), '::sys_normal_attck_Target'},
+                [3] = {'动画系统_两控件相向运动', '::sys_normal_attck_Missile', '::sys_normal_attck_Target', {'x', 'y'}, {0.99}, {
+                    ['x1']=0,
+                    ['y1']=0.2,
+                    ['x2']=0.9,
+                    ['y2']=1,
+                }},
             },{
-                G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                    {'动画系统_两控件相向运动', '::sys_normal_attck_Missile', '::sys_normal_attck_Target', {'x', 'y'}, {0.99}, {
-                        ['x1']=0,
-                        ['y1']=0.2,
-                        ['x2']=0.9,
-                        ['y2']=1,
-                    }},
-                },{
-                    o_animquest_最后动画,
-                }),
+                o_animquest_最后动画,
             })
             anim_addchild(o_animquest_当前动画)
             anim_stack.push(o_animquest_最后动画)
@@ -431,20 +441,17 @@ noti[precall .. 'single_heal'] = function ()
                 }),
             })
 
-            local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 0, {
+            local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
                 [1] = {push_quote(obj_missile), '::sys_normal_attck_Missile'},
                 [2] = {push_quote(get_obj_bycard(Target)), '::sys_normal_attck_Target'},
+                [3] = {'动画系统_两控件相向运动', '::sys_normal_attck_Missile', '::sys_normal_attck_Target', {'x', 'y'}, {0.99}, {
+                    ['x1']=0,
+                    ['y1']=0.2,
+                    ['x2']=0.9,
+                    ['y2']=1,
+                }},
             },{
-                G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                    {'动画系统_两控件相向运动', '::sys_normal_attck_Missile', '::sys_normal_attck_Target', {'x', 'y'}, {0.99}, {
-                        ['x1']=0,
-                        ['y1']=0.2,
-                        ['x2']=0.9,
-                        ['y2']=1,
-                    }},
-                },{
-                    o_animquest_最后动画,
-                }),
+                o_animquest_最后动画,
             })
             anim_addchild(o_animquest_当前动画)
             anim_stack.push(o_animquest_最后动画)

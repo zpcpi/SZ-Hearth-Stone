@@ -40,14 +40,5 @@ tp = tc
 		tp = tc
 		tp = tp.parent
 		--end
-		tc = G.Entity()
-		tp.addChild(tc)
-		tc.name = 'Tips版'
-		tc.right = 0.000
-		tc.top = 0.000
-		tc.anchor = 0x64006400
-		tp = tc
-		tp = tp.parent
-		--end
 	tp = tp.parent
 	--end

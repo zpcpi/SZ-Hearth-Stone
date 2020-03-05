@@ -345,31 +345,6 @@ end
 --type=actor
 --hide=true
 --ret=_o_animquest_shaft
-t['动画系统_发射飞弹'] = function(string_obj, string_start, string_target)
-    local obj_list = G.call('动画系统_获取名称指代', string_obj)
-    local start_list = G.call('动画系统_获取名称指代', string_start)
-    local target_list = G.call('动画系统_获取名称指代', string_target)
-
-    if obj_list and start_list and (#start_list == 1) and target_list and (#target_list == 1) then
-
-
-
-
-        
-
-
-
-
-
-
-
-
-    end
-end
-
---type=actor
---hide=true
---ret=_o_animquest_shaft
 t['动画系统_属性累加'] = function(string_obj, string_attr, number_累加值, o_animquest_bezier_曲线参数)
     return create_shaftlist(string_obj, {string_attr}, {number_累加值}, o_animquest_bezier_曲线参数, create_shaft_delta)
 end

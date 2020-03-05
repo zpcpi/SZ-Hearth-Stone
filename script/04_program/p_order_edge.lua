@@ -78,19 +78,16 @@ end
 
 t['抓取卡牌_修改数据'] = function (o_order_info_当前指令信息)
     local o_misc = G.misc()
+    local script_战场 = o_misc.主战场系统
     local script_动画系统 = o_misc.主动画系统
     local _, obj = G.event_info()
 
-    local copy_obj = G.Clone(obj)
+    local copy_obj = script_战场.卡牌队列组件:queue_addobj(o_order_info_当前指令信息['Caster'])
     o_order_info_当前指令信息['CasterObj'] = obj
     o_order_info_当前指令信息['CasterObj_Clone'] = copy_obj
-    copy_obj.alpha = 255
-    copy_obj.mouseEnabled = false
     obj.visible = false
 
-    -- 控件父级设置
-    local script_战场 = o_misc.主战场系统
-    script_战场.跨界面操作框.addChild(copy_obj)
+    -- 控件位置设置
     local posx, posy = copy_obj.parent.globalToLocal(G.MousePos())
     copy_obj.x = posx
     copy_obj.y = posy
@@ -155,34 +152,10 @@ t['卡牌进入功能区_单目标法术_修改数据'] = function (o_order_info
     script_动画系统:clear_animquest()
     script_动画系统:push_quote('::PopLine', obj_line)
     script_动画系统:add_animquest(
-        -- 卡牌位置移动到左侧
-        G.call('动画系统_创建quest_自定义', script_动画系统, false, 300, 
-        {
-            [1] = {
-                n = 4,
-                [1] = '动画系统_设置全局位置',
-                [2] = '::CurPickCard',
-                [3] = {
-                    [1] = 'x',
-                    [2] = 'y',
-                },
-                [4] = {
-                    [1] = UI_SPELL_TARGET_POS['posx'],
-                    [2] = UI_SPELL_TARGET_POS['posy'],
-                },
-                [5]={
-                    ['x1']=0,
-                    ['y1']=0.5,
-                    ['x2']=0.5,
-                    ['y2']=1,
-                },
-            },
-        })
-    )
-    script_动画系统:add_animquest(
         -- 注册连线动画
         G.call('动画系统_创建quest', script_动画系统, G.QueryName(0x10010019))
     )
+    script_战场.卡牌队列组件:queue_posinit()
 
     -- 控件状态更改
     script_战场.selfBattlehero.c_battlehero_self:can_show_state(true)
@@ -603,11 +576,12 @@ t['卡牌注册指令_完成'] = function (o_order_info_当前指令信息)
     script_战场:clear_popline()
     
     -- 显示用卡牌删除
-    local copy_obj = o_order_info_当前指令信息['CasterObj_Clone']
-    if copy_obj then
-        copy_obj.visible = false
-        copy_obj.parent:removeChild(copy_obj)
-    end
+    -- local copy_obj = o_order_info_当前指令信息['CasterObj_Clone']
+    -- if copy_obj then
+    --     copy_obj.visible = false
+    --     copy_obj.parent:removeChild(copy_obj)
+    -- end
+    script_战场.卡牌队列组件:queue_posinit()
 
     -- 手牌状态恢复
     local script_手牌组件 = script_战场.selfHandcard.c_handcards_self
@@ -694,8 +668,8 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
         obj.x, obj.y = obj.parent.globalToLocal(orgx, orgy)
         obj.rotation = 0
         obj.visible = true
-        copy_obj.visible = false
-        copy_obj.parent:removeChild(copy_obj)
+        script_战场.卡牌队列组件:queue_removeobj(copy_obj)
+        script_战场.卡牌队列组件:queue_posinit()
     end
     
     -- 播放复位动画

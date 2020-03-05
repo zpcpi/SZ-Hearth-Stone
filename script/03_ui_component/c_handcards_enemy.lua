@@ -8,7 +8,6 @@ local t = G.com()
 function t:init()
     self.功能区 = self.obj.getChildByName('功能区')
 
-    self.tips版 = self.功能区.getChildByName('Tips版')
     self.布局点 = self.功能区.getChildByName('布局点')
 end
 
@@ -18,29 +17,15 @@ function t:start()
     self.handCards = {}
 
     self.CurCard = nil
-    self.TipsCard = nil
 
     self.can_show = true
 
-    self:initTipsCard()
+    self.主战场 = G.misc().主战场系统
 end
 
-function t:InitDifference(baseid, tipsfix, newfix)
+function t:InitDifference(baseid, newfix)
     self.AnimBaseID = baseid
-    self.TipsFix = tipsfix
     self.NewcardFix = newfix
-end
-
-function t:initTipsCard()
-    local ui_card = G.loadUI('v_card_manager')
-    self.tips版.addChild(ui_card)
-    self.TipsCard = ui_card
-
-    ui_card.visible = false
-    ui_card.scaleX = 0.7
-    ui_card.scaleY = 0.7
-
-    self.TipsFix(ui_card)
 end
 
 function t:addCard(o_card_卡牌)
@@ -54,8 +39,8 @@ function t:addCard(o_card_卡牌)
     self.handCards[count] = ui_card
 
     ui_card.mouseEnabled = true
-    ui_card.scaleX = 0.35
-    ui_card.scaleY = 0.35
+    ui_card.scaleX = 0.28
+    ui_card.scaleY = 0.28
     ui_card.c_card_manager:setData(o_card_卡牌)
 
     self.CardCount = count
@@ -88,9 +73,8 @@ function t:rollOver(tar)
 
         local o_card_picked = tar.c_card_manager:getData()
 
-        self.TipsCard.visible = true
-        self.TipsCard.x = tar.x
-        self.TipsCard.c_card_manager:setData(o_card_picked)
+        local posx, posy = tar.localToGlobal(0, 0)
+        self.主战场:showtips(o_card_picked, posx, 550)
     end
 end
 
@@ -101,7 +85,7 @@ function t:rollOut(tar)
 
         local o_card_picked = tar.c_card_manager:getData()
         
-        self.TipsCard.visible = false
+        self.主战场:hidetips()
     end
 end
 

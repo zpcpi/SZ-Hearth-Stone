@@ -9,9 +9,6 @@ function t:init()
     self.enemyHandcard = self.obj.getChildByName('EnemyHandcard')
     self.enemyHandcard.c_handcards_enemy:InitDifference(
         0x1001000f,      -- Anim Basd ID
-        function (obj)   --  Tips fixfunc 
-            obj.y = -180
-        end,
         function (obj)   -- NewCard fixfunc
             obj.y = -200
         end
@@ -20,9 +17,6 @@ function t:init()
     self.selfHandcard = self.obj.getChildByName('SelfHandcard')
     self.selfHandcard.c_handcards_self:InitDifference(
         0x10010005,      -- Anim Basd ID
-        function (obj)  -- Tips fixfunc 
-            obj.y = 140
-        end,
         function (obj)  -- NewCard fixfunc
             obj.y = 200
         end
@@ -30,6 +24,7 @@ function t:init()
 
     self.特效层级 = self.obj.getChildByName('特效层级')
     self.跨界面操作框 = self.obj.getChildByName('跨界面操作框')
+    self.卡牌队列组件 = self.obj.getChildByName('PlayQueue').c_battle_playqueue
 
     self.endTurnBtn = self.obj.getChildByName('EndTurnButton')
 
