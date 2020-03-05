@@ -130,14 +130,20 @@ local get_obj_bycard = function (Card)
     return obj
 end
 
-local create_missile = function (caster_obj)
+local create_missile = function (caster_obj, color)
     if caster_obj then
         local posx, posy = caster_obj.localToGlobal(0, 0)
 
         local o_misc = G.misc()
         local script_战场 = o_misc.主战场系统
 
-        return script_战场:add_missile(posx, posy)
+        local obj_missile = script_战场:add_missile(posx, posy)
+
+        if obj_missile then
+            obj_missile.color = color
+        end
+
+        return obj_missile
     end
 end
 
@@ -174,7 +180,7 @@ local is_create_missile = 0
 -- 本地玩家动画
 local precall = '*本地*前置动画*_'
 local postcall = '*本地*后置动画*_'
-noti[precall .. '卡牌攻击_主流程_thread'] = function ()
+local animquest_push = function ()
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
 
@@ -182,8 +188,7 @@ noti[precall .. '卡牌攻击_主流程_thread'] = function ()
     anim_addchild(o_animquest_当前动画)
     anim_stack.push(o_animquest_当前动画)
 end
-
-noti[postcall .. '卡牌攻击_主流程_thread'] = function ()
+local animquest_pop = function ()
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
 
@@ -192,23 +197,33 @@ noti[postcall .. '卡牌攻击_主流程_thread'] = function ()
     script_动画系统:add_animquest(o_animquest_当前动画)
 end
 
-noti[precall .. '卡牌使用_主流程_thread'] = function ()
-    local o_misc = G.misc()
-    local script_动画系统 = o_misc.技能动画系统
+noti[precall .. '卡牌攻击_主流程_thread'] = animquest_push
+noti[postcall .. '卡牌攻击_主流程_thread'] = animquest_pop
 
-    local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, true, 100)
-    anim_addchild(o_animquest_当前动画)
-    anim_stack.push(o_animquest_当前动画)
-end
+noti[precall .. '卡牌使用_主流程_thread'] = animquest_push
+noti[postcall .. '卡牌使用_主流程_thread'] = animquest_pop
 
-noti[postcall .. '卡牌使用_主流程_thread'] = function ()
-    local o_misc = G.misc()
-    local script_动画系统 = o_misc.技能动画系统
+noti[precall .. '逻辑注册_水晶设置_absolute'] = animquest_push
+noti[postcall .. '逻辑注册_水晶设置_absolute'] = animquest_pop
 
-    local o_animquest_当前动画 = anim_stack.pop()
-    -- 播放动画
-    script_动画系统:add_animquest(o_animquest_当前动画)
-end
+noti[precall .. '逻辑注册_抽牌_absolute'] = animquest_push
+noti[postcall .. '逻辑注册_抽牌_absolute'] = animquest_pop
+
+noti[precall .. '逻辑注册_攻击次数重置_回合开始_absolute'] = animquest_push
+noti[postcall .. '逻辑注册_攻击次数重置_回合开始_absolute'] = animquest_pop
+
+noti[precall .. '逻辑注册_攻击状态设置_回合结束_absolute'] = animquest_push
+noti[postcall .. '逻辑注册_攻击状态设置_回合结束_absolute'] = animquest_pop
+
+noti[precall .. '逻辑注册_武器功能_回合开始_absolute'] = animquest_push
+noti[postcall .. '逻辑注册_武器功能_回合开始_absolute'] = animquest_pop
+
+noti[precall .. '逻辑注册_武器功能_回合结束_absolute'] = animquest_push
+noti[postcall .. '逻辑注册_武器功能_回合结束_absolute'] = animquest_pop
+
+noti[precall .. '逻辑注册_回合结束_冻结删除判断_absolute'] = animquest_push
+noti[postcall .. '逻辑注册_回合结束_冻结删除判断_absolute'] = animquest_pop
+
 
 noti[precall .. '卡牌使用_攻击'] = function ()
     local last_call = G.call('卡牌逻辑树_获取最后调用')
@@ -329,7 +344,7 @@ noti[precall .. 'single_damage'] = function ()
     if int_伤害值 and (int_伤害值 > 0) then
         if is_create_missile > 0 then
             -- 注册引用
-            local obj_missile = create_missile(get_obj_bycard(Caster))
+            local obj_missile = create_missile(get_obj_bycard(Caster), 0x3333CD)
             local del_missile = function ()
                 -- TODO，确认下到底删了没有...
                 if obj_missile then
@@ -385,7 +400,6 @@ noti[postcall .. 'single_damage'] = function ()
     end
 end
 
-
 noti[precall .. 'single_heal'] = function ()
     local last_call = G.call('卡牌逻辑树_获取最后调用')
     local get_attr = CARD_GET_ATTR
@@ -397,10 +411,61 @@ noti[precall .. 'single_heal'] = function ()
     local script_动画系统 = o_misc.技能动画系统
 
     if int_治疗值 and (int_治疗值 > 0) then
-        local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                {G.trig_event, 'UI_卡牌战斗信息', Target, '治疗', int_治疗值},
+        if is_create_missile > 0 then
+            -- 注册引用
+            local obj_missile = create_missile(get_obj_bycard(Caster), 0x68EEBC)
+            local del_missile = function ()
+                -- TODO，确认下到底删了没有...
+                if obj_missile then
+                    obj_missile.visible = false
+                    obj_missile.parent:removeChild(obj_missile)
+                end
+            end
+
+            local o_animquest_最后动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 0, nil,{
+                G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
+                    [1] = {G.trig_event, 'UI_卡牌战斗信息', Target, '治疗', int_治疗值},
+                    [2] = {pop_quote, '::sys_normal_attck_Missile'},
+                    [3] = {pop_quote, '::sys_normal_attck_Target'},
+                    [4] = {del_missile},
+                }),
             })
-        anim_addchild(o_animquest_当前动画)
+
+            local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 0, {
+                [1] = {push_quote(obj_missile), '::sys_normal_attck_Missile'},
+                [2] = {push_quote(get_obj_bycard(Target)), '::sys_normal_attck_Target'},
+            },{
+                G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
+                    {'动画系统_两控件相向运动', '::sys_normal_attck_Missile', '::sys_normal_attck_Target', {'x', 'y'}, {0.99}, {
+                        ['x1']=0,
+                        ['y1']=0.2,
+                        ['x2']=0.9,
+                        ['y2']=1,
+                    }},
+                },{
+                    o_animquest_最后动画,
+                }),
+            })
+            anim_addchild(o_animquest_当前动画)
+            anim_stack.push(o_animquest_最后动画)
+        else
+            -- 不发射飞弹
+            local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
+                    {G.trig_event, 'UI_卡牌战斗信息', Target, '治疗', int_治疗值},
+                })
+            anim_addchild(o_animquest_当前动画)
+        end
+    end
+end
+
+noti[postcall .. 'single_heal'] = function ()
+    local last_call = G.call('卡牌逻辑树_获取最后调用')
+    local get_attr = CARD_GET_ATTR
+    local int_治疗值 = get_attr(last_call, 'skill_info', 'Value')[1]
+    if int_治疗值 and (int_治疗值 > 0) then
+        if is_create_missile > 0 then
+            anim_stack.pop()
+        end
     end
 end
 
@@ -451,12 +516,92 @@ noti[postcall .. '技能效果_伤害'] = function ()
     is_create_missile = is_create_missile - 1
 end
 
+noti[precall .. '技能效果_治疗'] = function ()
+    -- 所有非攻击造成的伤害，都发射飞弹
+    is_create_missile = is_create_missile + 1
+end
 
+noti[postcall .. '技能效果_治疗'] = function ()
+    -- 清除发射飞弹状态
+    is_create_missile = is_create_missile - 1
+end
 
+local get_flag = function (Card, flags, is_not)
+    local result = false
+    for _,flag in ipairs(flags) do
+        if G.call('卡牌条件_卡牌特性判断', o_card, {flag}) then
+            result = true
+        end
+    end
 
+    if is_not then
+        result = not result
+    end
+    return result
+end
 
+local set_flag_obj = function (flags, is_not, attr)
+    return function (Card)
+        local o_misc = G.misc()
+        local script_动画系统 = o_misc.技能动画系统
+        local result = get_flag(Card, flags, is_not)
+        local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
+                {G.trig_event, 'UI_卡牌状态更新', Card, attr, result},
+            })
+        anim_addchild(o_animquest_当前动画)
+    end
+end
 
+local flag_mapping = {
+    ['剧毒'] = set_flag_obj({'剧毒'}, false, '剧毒框'),
+    ['吸血'] = set_flag_obj({'吸血'}, false, '吸血框'),
+    ['超杀'] = set_flag_obj({'超杀'}, false, '超杀框'),
 
+    ['被动'] = set_flag_obj({'被动'}, false, '被动框'),
+    ['亡语'] = set_flag_obj({'亡语'}, false, '亡语框'),
+    ['光环'] = set_flag_obj({'光环'}, false, '光环框'),
+
+    ['嘲讽'] = set_flag_obj({'嘲讽'}, false, '嘲讽框'),
+
+    ['圣盾'] = set_flag_obj({'圣盾'}, false, '圣盾框'),
+    ['复生'] = set_flag_obj({'复生'}, false, '复生框'),
+    ['免疫'] = set_flag_obj({'免疫'}, false, '免疫框'),
+
+    ['冻结'] = set_flag_obj({'冻结'}, false, '冻结框'),
+
+    ['风怒'] = set_flag_obj({'风怒', '超级风怒'}, false, '风怒框'),
+    ['超级风怒'] = set_flag_obj({'风怒', '超级风怒'}, false, '风怒框'),
+
+    ['武器开启'] = function (Card)
+        local get_attr = CARD_GET_ATTR
+        local cardtype = get_attr(Card, '逻辑数据', '类型')
+
+        if cardtype == 0x10090006 then
+            set_flag_obj({'武器开启'}, true, '遮挡板')()
+            set_flag_obj({'武器开启'}, false, '攻击力')()
+        end
+    end,
+}
+
+noti[postcall .. '技能效果_特性'] = function (_string_添加特性, _string_移除特性, _string_还原特性)
+    local last_call = G.call('卡牌逻辑树_获取最后调用')
+    local get_attr = CARD_GET_ATTR
+    local TargetList = get_attr(last_call, 'skill_info', 'Target')
+
+    local iter = function (Card) end
+
+    for _, target in ipairs(TargetList) do
+        for _, flag in ipairs(_string_添加特性 or {}) do
+            (flag_mapping[flag] or iter)(target)
+        end
+        for _, flag in ipairs(_string_移除特性 or {}) do
+            (flag_mapping[flag] or iter)(target)
+        end
+        for _, flag in ipairs(_string_还原特性 or {}) do
+            (flag_mapping[flag] or iter)(target)
+        end
+    end
+end
 
 function noti.卡牌动画_前置调用(funs, ...)
     if noti[precall .. funs] then

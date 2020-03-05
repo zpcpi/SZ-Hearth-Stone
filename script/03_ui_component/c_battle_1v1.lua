@@ -159,7 +159,7 @@ function t:add_missile(posx, posy)
 
     -- 设置初始位置
     ui_mis.x, ui_mis.y = self.特效层级.globalToLocal(posx, posy)
-    ui_mis.scaleX, ui_mis.scaleY = 0.1, 0.1
+    ui_mis.scaleX, ui_mis.scaleY = 0.06, 0.06
 
     return ui_mis
 end

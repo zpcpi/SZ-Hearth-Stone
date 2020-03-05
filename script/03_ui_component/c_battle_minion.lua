@@ -53,9 +53,9 @@ function t:init()
     self.set_ap = G.api['CardCom_SetAttr_hide']('ap', '护甲值数值', 'text', '护甲值')
 end
 
-function t:setData(o_card)
+function t:setData(o_card, ...)
     self.cur_card = o_card
-    G.call('CardCom_SetData', self, o_card)
+    G.call('CardCom_SetData', self, o_card, ...)
 end
 
 function t:getData()

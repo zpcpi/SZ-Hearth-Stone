@@ -1903,9 +1903,6 @@ t['技能效果_特性'] = function (_string_添加特性, _string_移除特性,
                     ['卡牌特性'] = flags
                 }
             end
-
-            -- TODO，临时处理，后面需要动画来管理
-            G.trig_event('卡牌实例_信息更新', Target)
         end
     end
 
@@ -3222,7 +3219,14 @@ for funs, iter in pairs(t) do
             last_call = call_stack.pop()
 
             if (funs == '卡牌使用_主流程_thread') or
-               (funs == '卡牌攻击_主流程_thread')
+               (funs == '卡牌攻击_主流程_thread') or
+               (funs == '逻辑注册_水晶设置_absolute') or
+               (funs == '逻辑注册_抽牌_absolute') or
+               (funs == '逻辑注册_攻击次数重置_回合开始_absolute') or
+               (funs == '逻辑注册_攻击状态设置_回合结束_absolute') or
+               (funs == '逻辑注册_武器功能_回合开始_absolute') or
+               (funs == '逻辑注册_武器功能_回合结束_absolute') or
+               (funs == '逻辑注册_回合结束_冻结删除判断_absolute')
             then
                 noti['卡牌逻辑效果整理'](last_call)
             end
