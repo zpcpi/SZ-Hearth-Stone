@@ -11,6 +11,7 @@ end
 
 function t:start()
     self.objlist = {}
+    self.showlist = {}
 
     self.acotr = self.动画控件.c_animactor
     self.acotr:push_quote('::Self', self)
@@ -37,6 +38,11 @@ function t:get_obj_bycard(card)
             return v
         end
     end
+    for k,v in ipairs(self.showlist or {}) do
+        if v.c_card_manager:getData() == card then
+            return v
+        end
+    end
 end
 
 function t:queue_removeobj(ui_obj)
@@ -48,24 +54,34 @@ function t:queue_removeobj(ui_obj)
             ui_obj.parent:removeChild(ui_obj)
         end
     end
+    for i = #self.showlist, 1, -1 do
+        if self.showlist[i] == ui_obj then
+            table.remove(self.showlist, i)
+
+            ui_obj.visible = false
+            ui_obj.parent:removeChild(ui_obj)
+        end
+    end
 end
 
 function t:queue_popobj(card)
+    local index
     if (#self.objlist > 0) then
-        local ui_obj = self.objlist[1]
-        table.remove(self.objlist, 1)
-
-        if ui_obj.c_card_manager:getData() == card then
-            -- 合法，开始处理
-            return ui_obj
-        else
-            -- 不匹配，可能有问题
-            ui_obj.visible = false
-            ui_obj.parent:removeChild(ui_obj)
-
-            self:queue_popobj(card)
+        for k, ui_obj in ipairs(self.objlist) do
+            if ui_obj.c_card_manager:getData() == card then
+                -- 合法，开始处理
+                index = k
+                goto next
+            end
         end
+        return 
     end
+
+    ::next::
+    local ui_obj = self.objlist[index]
+    table.remove(self.objlist, index)
+    table.insert(self.showlist, ui_obj)
+    return ui_obj
 end
 
 function t:queue_posinit()

@@ -187,6 +187,21 @@ local anim_addchild = function (anim)
     end
 end
 
+local anim_getlast = function ()
+    local parent_anim = anim_stack.top()
+
+    local function iter(anim)
+        local children = anim['child_quests']
+        if (type(children) == 'table') and (#children > 0) then
+            iter(children[#children])
+        else
+            return anim
+        end
+    end
+
+    return iter(parent_anim)
+end
+
 -- 动画状态
 local is_create_missile = 0
 
@@ -197,7 +212,7 @@ local animquest_push = function ()
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
 
-    local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, true, 100)
+    local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, true, 0)
     anim_addchild(o_animquest_当前动画)
     anim_stack.push(o_animquest_当前动画)
 end
@@ -208,6 +223,7 @@ local animquest_pop = function ()
     local o_animquest_当前动画 = anim_stack.pop()
     -- 播放动画
     script_动画系统:add_animquest(o_animquest_当前动画)
+    script_动画系统:add_animquest(G.call('动画系统_创建quest_自定义', script_动画系统, true, 300))
 end
 
 noti[precall .. '卡牌攻击_主流程_thread'] = animquest_push
@@ -237,6 +253,117 @@ noti[postcall .. '逻辑注册_武器功能_回合结束_absolute'] = animquest_
 noti[precall .. '逻辑注册_回合结束_冻结删除判断_absolute'] = animquest_push
 noti[postcall .. '逻辑注册_回合结束_冻结删除判断_absolute'] = animquest_pop
 
+noti[precall .. '卡牌使用_使用'] = function ()
+    local last_call = G.call('卡牌逻辑树_获取最后调用')
+    local get_attr = CARD_GET_ATTR
+    local Caster = get_attr(last_call, 'skill_info', 'Caster')
+
+    local o_misc = G.misc()
+    local script_动画系统 = o_misc.技能动画系统
+    local script_战场 = o_misc.主战场系统
+    local script_卡牌队列组件 = get_component('我方', '执行队列')
+
+    local cardtype = get_attr(Caster, '逻辑数据', '类型')
+
+    local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 0)
+
+    if cardtype == 0x10090003 then
+        -- 英雄技能
+    elseif cardtype == 0x10090004 then
+        -- 随从
+        local del_obj = function ()
+            local obj = script_卡牌队列组件:queue_popobj(Caster)
+            script_卡牌队列组件:queue_removeobj(obj)
+        end
+
+        o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 0, {
+            {del_obj}
+        })
+    elseif cardtype == 0x10090005 then
+        -- 法术
+        local push_queue_quote = function (Caster, string_obj)
+            local obj = script_卡牌队列组件:queue_popobj(Caster)
+            script_动画系统:push_quote(string_obj, obj)
+            -- if obj then
+            --     obj.parent:removeChild(obj)
+            --     script_战场.tips版:addChild(obj)
+            -- end
+        end
+
+        o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, true, 500, {
+            [1] = {push_queue_quote, Caster, '::sys_queue_Caster'},
+            [2] = {'动画系统_设置全局位置', '::sys_queue_Caster', {'x', 'y'}, {UI_SPELL_SHOW_POS['posx'], UI_SPELL_SHOW_POS['posy']}, {
+                ['x1']=0,
+                ['y1']=0.5,
+                ['x2']=0.5,
+                ['y2']=1,
+            }},
+            [3] = {'动画系统_多属性设置', '::sys_queue_Caster', {'scaleX', 'scaleY'}, {0.5, 0.5}, {
+                ['x1']=0,
+                ['y1']=0.5,
+                ['x2']=0.5,
+                ['y2']=1,
+            }},
+            [4] = {pop_quote, '::sys_queue_Caster'}
+        }, {
+            [1] = G.call('动画系统_创建quest_自定义', script_动画系统, true, 1000),
+        })
+    elseif cardtype == 0x10090005 then
+        -- 武器
+        local del_obj = function ()
+            local obj = script_卡牌队列组件:queue_popobj(Caster)
+            script_卡牌队列组件:queue_removeobj(obj)
+        end
+
+        o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 0, {
+            {del_obj}
+        })
+    end
+
+    anim_addchild(o_animquest_当前动画)
+    anim_stack.push(o_animquest_当前动画)
+end
+
+noti[postcall .. '卡牌使用_使用'] = function ()
+    local last_call = G.call('卡牌逻辑树_获取最后调用')
+    local get_attr = CARD_GET_ATTR
+    local Caster = get_attr(last_call, 'skill_info', 'Caster')
+
+    local o_misc = G.misc()
+    local script_动画系统 = o_misc.技能动画系统
+    local script_卡牌队列组件 = get_component('我方', '执行队列')
+
+    local cardtype = get_attr(Caster, '逻辑数据', '类型')
+
+    if cardtype == 0x10090005 then
+        local obj = get_obj_bycard(Caster)
+
+        if obj then
+            local del_queueobj = function ()
+                script_卡牌队列组件:queue_removeobj(obj)
+            end
+            -- 法术
+            local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
+                [1] = {push_quote(obj), '::sys_queue_Caster'},
+                [2] = {'动画系统_多属性设置', '::sys_queue_Caster', {'alpha'}, {1}, {
+                    ['x1']=0,
+                    ['y1']=0.5,
+                    ['x2']=0.5,
+                    ['y2']=1,
+                }},
+                [3] = {pop_quote, '::sys_queue_Caster'},
+            },{
+                [1] = G.call('动画系统_创建quest_自定义', script_动画系统, false, 10, {
+                    {del_queueobj},
+                })
+            })
+
+            anim_addchild(o_animquest_当前动画)
+        end
+    end
+
+    anim_stack.pop()
+end
 
 noti[precall .. '卡牌使用_攻击'] = function ()
     local last_call = G.call('卡牌逻辑树_获取最后调用')
@@ -360,7 +487,7 @@ noti[precall .. 'single_damage'] = function ()
             local obj_missile
             local push_missile = function (Card, color, string_obj)
                 obj_missile = create_missile(get_obj_bycard(Card), color)
-                push_quote(obj_missile)(string_obj)
+                script_动画系统:push_quote(string_obj, obj_missile)
             end
             local del_missile = function ()
                 -- TODO，确认下到底删了没有...
@@ -374,15 +501,15 @@ noti[precall .. 'single_damage'] = function ()
                 G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
                     [1] = {G.trig_event, 'UI_卡牌战斗信息', Target, '伤害', int_伤害值},
                     [2] = {del_missile},
-                    [3] = {pop_quote, '::sys_normal_attck_Missile'},
-                    [4] = {pop_quote, '::sys_normal_attck_Target'},
+                    [3] = {pop_quote, '::sys_single_damage_Missile'},
+                    [4] = {pop_quote, '::sys_single_damage_Target'},
                 }),
             })
 
             local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                [1] = {push_missile, Caster, 0x3333CD, '::sys_normal_attck_Missile'},
-                [2] = {push_quote(get_obj_bycard(Target)), '::sys_normal_attck_Target'},
-                [3] = {'动画系统_两控件相向运动', '::sys_normal_attck_Missile', '::sys_normal_attck_Target', {'x', 'y'}, {0.99}, {
+                [1] = {push_missile, Caster, 0x3333CD, '::sys_single_damage_Missile'},
+                [2] = {push_quote(get_obj_bycard(Target)), '::sys_single_damage_Target'},
+                [3] = {'动画系统_两控件相向运动', '::sys_single_damage_Missile', '::sys_single_damage_Target', {'x', 'y'}, {0.99}, {
                     ['x1']=0,
                     ['y1']=0.2,
                     ['x2']=0.9,
@@ -430,7 +557,7 @@ noti[precall .. 'single_heal'] = function ()
             local obj_missile
             local push_missile = function (Card, color, string_obj)
                 obj_missile = create_missile(get_obj_bycard(Card), color)
-                push_quote(obj_missile)(string_obj)
+                script_动画系统:push_quote(string_obj, obj_missile)
             end
             local del_missile = function ()
                 -- TODO，确认下到底删了没有...
@@ -444,15 +571,15 @@ noti[precall .. 'single_heal'] = function ()
                 G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
                     [1] = {G.trig_event, 'UI_卡牌战斗信息', Target, '治疗', int_治疗值},
                     [2] = {del_missile},
-                    [3] = {pop_quote, '::sys_normal_attck_Missile'},
-                    [4] = {pop_quote, '::sys_normal_attck_Target'},
+                    [3] = {pop_quote, '::sys_single_heal_Missile'},
+                    [4] = {pop_quote, '::sys_single_heal_Target'},
                 }),
             })
 
             local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                [1] = {push_missile, Caster, 0x68EEBC, '::sys_normal_attck_Missile'},
-                [2] = {push_quote(get_obj_bycard(Target)), '::sys_normal_attck_Target'},
-                [3] = {'动画系统_两控件相向运动', '::sys_normal_attck_Missile', '::sys_normal_attck_Target', {'x', 'y'}, {0.99}, {
+                [1] = {push_missile, Caster, 0x68EEBC, '::sys_single_heal_Missile'},
+                [2] = {push_quote(get_obj_bycard(Target)), '::sys_single_heal_Target'},
+                [3] = {'动画系统_两控件相向运动', '::sys_single_heal_Missile', '::sys_single_heal_Target', {'x', 'y'}, {0.99}, {
                     ['x1']=0,
                     ['y1']=0.2,
                     ['x2']=0.9,
