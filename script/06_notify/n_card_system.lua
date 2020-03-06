@@ -357,7 +357,11 @@ noti[precall .. 'single_damage'] = function ()
     if int_伤害值 and (int_伤害值 > 0) then
         if is_create_missile > 0 then
             -- 注册引用
-            local obj_missile = create_missile(get_obj_bycard(Caster), 0x3333CD)
+            local obj_missile
+            local push_missile = function (Card, color, string_obj)
+                obj_missile = create_missile(get_obj_bycard(Card), color)
+                push_quote(obj_missile)(string_obj)
+            end
             local del_missile = function ()
                 -- TODO，确认下到底删了没有...
                 if obj_missile then
@@ -369,14 +373,14 @@ noti[precall .. 'single_damage'] = function ()
             local o_animquest_最后动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 0, nil,{
                 G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
                     [1] = {G.trig_event, 'UI_卡牌战斗信息', Target, '伤害', int_伤害值},
-                    [2] = {pop_quote, '::sys_normal_attck_Missile'},
-                    [3] = {pop_quote, '::sys_normal_attck_Target'},
-                    [4] = {del_missile},
+                    [2] = {del_missile},
+                    [3] = {pop_quote, '::sys_normal_attck_Missile'},
+                    [4] = {pop_quote, '::sys_normal_attck_Target'},
                 }),
             })
 
             local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                [1] = {push_quote(obj_missile), '::sys_normal_attck_Missile'},
+                [1] = {push_missile, Caster, 0x3333CD, '::sys_normal_attck_Missile'},
                 [2] = {push_quote(get_obj_bycard(Target)), '::sys_normal_attck_Target'},
                 [3] = {'动画系统_两控件相向运动', '::sys_normal_attck_Missile', '::sys_normal_attck_Target', {'x', 'y'}, {0.99}, {
                     ['x1']=0,
@@ -423,7 +427,11 @@ noti[precall .. 'single_heal'] = function ()
     if int_治疗值 and (int_治疗值 > 0) then
         if is_create_missile > 0 then
             -- 注册引用
-            local obj_missile = create_missile(get_obj_bycard(Caster), 0x68EEBC)
+            local obj_missile
+            local push_missile = function (Card, color, string_obj)
+                obj_missile = create_missile(get_obj_bycard(Card), color)
+                push_quote(obj_missile)(string_obj)
+            end
             local del_missile = function ()
                 -- TODO，确认下到底删了没有...
                 if obj_missile then
@@ -435,14 +443,14 @@ noti[precall .. 'single_heal'] = function ()
             local o_animquest_最后动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 0, nil,{
                 G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
                     [1] = {G.trig_event, 'UI_卡牌战斗信息', Target, '治疗', int_治疗值},
-                    [2] = {pop_quote, '::sys_normal_attck_Missile'},
-                    [3] = {pop_quote, '::sys_normal_attck_Target'},
-                    [4] = {del_missile},
+                    [2] = {del_missile},
+                    [3] = {pop_quote, '::sys_normal_attck_Missile'},
+                    [4] = {pop_quote, '::sys_normal_attck_Target'},
                 }),
             })
 
             local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                [1] = {push_quote(obj_missile), '::sys_normal_attck_Missile'},
+                [1] = {push_missile, Caster, 0x68EEBC, '::sys_normal_attck_Missile'},
                 [2] = {push_quote(get_obj_bycard(Target)), '::sys_normal_attck_Target'},
                 [3] = {'动画系统_两控件相向运动', '::sys_normal_attck_Missile', '::sys_normal_attck_Target', {'x', 'y'}, {0.99}, {
                     ['x1']=0,

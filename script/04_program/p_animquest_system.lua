@@ -151,6 +151,12 @@ t['动画系统_获取名称指代'] = function(string_obj)
     return get_animactor_obj(G.misc().当前演算体, string_obj)
 end
 
+--hide=true
+t['动画系统_获取指定动画名称指代'] = function (script_动画系统, string_obj)
+    return get_animactor_obj(script_动画系统, string_obj)
+end
+
+
 local function create_shaftlist(string_obj, _string_attr, _number_val, o_animquest_bezier_曲线参数, iter)
     local cur_actor = G.misc().当前演算体
     local cur_quest = G.misc().当前动画段
