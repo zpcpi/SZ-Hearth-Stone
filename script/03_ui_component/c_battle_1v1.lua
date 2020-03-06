@@ -24,7 +24,7 @@ function t:init()
 
     self.特效层级 = self.obj.getChildByName('特效层级')
     self.跨界面操作框 = self.obj.getChildByName('跨界面操作框')
-    self.卡牌队列组件 = self.obj.getChildByName('PlayQueue').c_battle_playqueue
+    self.SelfPlayQueue = self.obj.getChildByName('SelfPlayQueue').c_battle_playqueue_self
 
     self.endTurnBtn = self.obj.getChildByName('EndTurnButton')
 

@@ -82,7 +82,7 @@ t['抓取卡牌_修改数据'] = function (o_order_info_当前指令信息)
     local script_动画系统 = o_misc.主动画系统
     local _, obj = G.event_info()
 
-    local copy_obj = script_战场.卡牌队列组件:queue_addobj(o_order_info_当前指令信息['Caster'])
+    local copy_obj = script_战场.SelfPlayQueue:queue_addobj(o_order_info_当前指令信息['Caster'])
     o_order_info_当前指令信息['CasterObj'] = obj
     o_order_info_当前指令信息['CasterObj_Clone'] = copy_obj
     obj.visible = false
@@ -155,7 +155,7 @@ t['卡牌进入功能区_单目标法术_修改数据'] = function (o_order_info
         -- 注册连线动画
         G.call('动画系统_创建quest', script_动画系统, G.QueryName(0x10010019))
     )
-    script_战场.卡牌队列组件:queue_posinit()
+    script_战场.SelfPlayQueue:queue_posinit()
 
     -- 控件状态更改
     script_战场.selfBattlehero.c_battlehero_self:can_show_state(true)
@@ -581,7 +581,7 @@ t['卡牌注册指令_完成'] = function (o_order_info_当前指令信息)
     --     copy_obj.visible = false
     --     copy_obj.parent:removeChild(copy_obj)
     -- end
-    script_战场.卡牌队列组件:queue_posinit()
+    script_战场.SelfPlayQueue:queue_posinit()
 
     -- 手牌状态恢复
     local script_手牌组件 = script_战场.selfHandcard.c_handcards_self
@@ -676,8 +676,8 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
         obj.x, obj.y = obj.parent.globalToLocal(orgx, orgy)
         obj.rotation = 0
         obj.visible = true
-        script_战场.卡牌队列组件:queue_removeobj(copy_obj)
-        script_战场.卡牌队列组件:queue_posinit()
+        script_战场.SelfPlayQueue:queue_removeobj(copy_obj)
+        script_战场.SelfPlayQueue:queue_posinit()
     end
     
     -- 播放复位动画

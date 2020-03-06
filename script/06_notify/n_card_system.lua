@@ -62,7 +62,7 @@ local com_mapping = {
     ['我方'] = {
         ['战场随从'] = {'selfBattleminion', 'c_battleminion_self'},
         ['战场英雄'] = {'selfBattlehero', 'c_battlehero_self'},
-        ['执行队列'] = {'卡牌队列组件'},
+        ['执行队列'] = {'SelfPlayQueue'},
         ['手牌'] = {'selfHandcard', 'c_handcards_self'},
         ['牌库'] = {'carddeck', 'c_carddeck'},
     },
@@ -261,7 +261,7 @@ noti[precall .. '卡牌使用_使用'] = function ()
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
     local script_战场 = o_misc.主战场系统
-    local script_卡牌队列组件 = get_component('我方', '执行队列')
+    local script_SelfPlayQueue = get_component('我方', '执行队列')
 
     local cardtype = get_attr(Caster, '逻辑数据', '类型')
 
@@ -272,8 +272,8 @@ noti[precall .. '卡牌使用_使用'] = function ()
     elseif cardtype == 0x10090004 then
         -- 随从
         local del_obj = function ()
-            local obj = script_卡牌队列组件:queue_popobj(Caster)
-            script_卡牌队列组件:queue_removeobj(obj)
+            local obj = script_SelfPlayQueue:queue_popobj(Caster)
+            script_SelfPlayQueue:queue_removeobj(obj)
         end
 
         o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 0, {
@@ -282,7 +282,7 @@ noti[precall .. '卡牌使用_使用'] = function ()
     elseif cardtype == 0x10090005 then
         -- 法术
         local push_queue_quote = function (Caster, string_obj)
-            local obj = script_卡牌队列组件:queue_popobj(Caster)
+            local obj = script_SelfPlayQueue:queue_popobj(Caster)
             script_动画系统:push_quote(string_obj, obj)
             -- if obj then
             --     obj.parent:removeChild(obj)
@@ -311,8 +311,8 @@ noti[precall .. '卡牌使用_使用'] = function ()
     elseif cardtype == 0x10090005 then
         -- 武器
         local del_obj = function ()
-            local obj = script_卡牌队列组件:queue_popobj(Caster)
-            script_卡牌队列组件:queue_removeobj(obj)
+            local obj = script_SelfPlayQueue:queue_popobj(Caster)
+            script_SelfPlayQueue:queue_removeobj(obj)
         end
 
         o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 0, {
@@ -331,7 +331,7 @@ noti[postcall .. '卡牌使用_使用'] = function ()
 
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
-    local script_卡牌队列组件 = get_component('我方', '执行队列')
+    local script_SelfPlayQueue = get_component('我方', '执行队列')
 
     local cardtype = get_attr(Caster, '逻辑数据', '类型')
 
@@ -340,7 +340,7 @@ noti[postcall .. '卡牌使用_使用'] = function ()
 
         if obj then
             local del_queueobj = function ()
-                script_卡牌队列组件:queue_removeobj(obj)
+                script_SelfPlayQueue:queue_removeobj(obj)
             end
             -- 法术
             local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {

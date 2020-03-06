@@ -3,11 +3,11 @@
 ]]
 local G = require 'gf'
 local c_animactor = require 'c_animactor'
-local c_battle_playqueue = require 'c_battle_playqueue'
+local c_battle_playqueue_self = require 'c_battle_playqueue_self'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
-tc.name = 'v_battle_playqueue'
+tc.name = 'v_battle_playqueue_self'
 tc.left = -640.000
 tc.right = 640.000
 tc.bottom = -360.000
@@ -71,4 +71,4 @@ tp = tc
 	tp.c_animactor = setmetatable({}, c_animactor)
 	tp = tp.parent
 	--end
-tp.c_battle_playqueue = setmetatable({}, c_battle_playqueue)
+tp.c_battle_playqueue_self = setmetatable({}, c_battle_playqueue_self)
