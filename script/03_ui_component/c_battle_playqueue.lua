@@ -50,11 +50,23 @@ function t:queue_removeobj(ui_obj)
     end
 end
 
-function t:queue_popobj()
+function t:queue_popobj(card)
+    if (#self.objlist > 0) then
+        local ui_obj = self.objlist[1]
+        table.remove(self.objlist, 1)
 
+        if ui_obj.c_card_manager:getData() == card then
+            -- 合法，开始处理
+            return ui_obj
+        else
+            -- 不匹配，可能有问题
+            ui_obj.visible = false
+            ui_obj.parent:removeChild(ui_obj)
 
+            self:queue_popobj(card)
+        end
+    end
 end
-
 
 function t:queue_posinit()
     self.acotr:clear_animquest()

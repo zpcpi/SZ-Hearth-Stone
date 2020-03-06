@@ -652,7 +652,9 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
     script_战场.enemyBattlehero.c_battlehero_enemy:can_show_state(true)
     script_战场.enemyBattleminion.c_battleminion_enemy:can_show_state(true)
 
+    local m_posx, m_posy
     if o_order_info_当前指令信息['CurPlayMinionObj'] then
+        m_posx, m_posy = o_order_info_当前指令信息['CurPlayMinionObj'].localToGlobal(0, 0)
         script_己方战场随从:removeCard(o_order_info_当前指令信息['MinionPos'])
     end
 
@@ -662,7 +664,13 @@ t['卡牌注册指令_退出'] = function (o_order_info_当前指令信息)
     local obj = o_order_info_当前指令信息['CasterObj']
     local copy_obj = o_order_info_当前指令信息['CasterObj_Clone']
     if copy_obj then
-        local orgx, orgy = copy_obj.localToGlobal(0, 0)
+        local orgx, orgy
+        if m_posx and m_posy then
+            -- 如果之前随从在战场上有位置，那么从这个位置返回手牌
+            orgx, orgy = m_posx, m_posy
+        else
+            orgx, orgy = copy_obj.localToGlobal(0, 0)
+        end
 
         -- TODO，如果有随从，播放随从变卡动画
         obj.x, obj.y = obj.parent.globalToLocal(orgx, orgy)
