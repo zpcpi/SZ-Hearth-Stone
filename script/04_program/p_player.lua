@@ -259,14 +259,17 @@ t['角色_获取可用卡牌'] = function(estr_absolute_id_type_绝对身份, bo
     local _o_card_可用卡牌 = {}
     local int_剩余水晶数 = G.call('角色_获取水晶数据_绝对身份', estr_absolute_id_type_绝对身份, '当前值')
     local _o_card_手牌列表 = G.call('角色_获取手牌_绝对身份', estr_absolute_id_type_绝对身份)
-    if boolean_包含技能 then 
-        local o_card_英雄技能 = G.call('角色_战场_获取英雄技能_绝对身份', estr_absolute_id_type_绝对身份)
-        table.insert(_o_card_手牌列表, o_card_英雄技能)
-    end
     for _, o_card_手牌 in ipairs(_o_card_手牌列表) do 
         local int_卡片费用 = G.call('卡牌属性_获取', o_card_手牌, '费用', '当前值') or 0
         if int_剩余水晶数 >= int_卡片费用 then 
             table.insert(_o_card_可用卡牌, o_card_手牌)
+        end
+    end
+    if boolean_包含技能 then 
+        local o_card_英雄技能 = G.call('角色_战场_获取英雄技能_绝对身份', estr_absolute_id_type_绝对身份)
+        local int_卡片费用 = G.call('卡牌属性_获取', o_card_英雄技能, '费用', '当前值') or 0
+        if int_剩余水晶数 >= int_卡片费用 then 
+            table.insert(_o_card_可用卡牌, o_card_英雄技能)
         end
     end
     return _o_card_可用卡牌

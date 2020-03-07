@@ -14,15 +14,28 @@ t['卡牌使用_主流程_thread'] = function (estr_player_相对身份, o_order
     local get_attr = CARD_GET_ATTR
 
     local effect_stack = G.misc().当前效果堆栈
+    local Caster = o_order_info_当前指令信息['Caster']
 
     local root_info = {
         ['Player'] = estr_player_相对身份,
-        ['Caster'] = o_order_info_当前指令信息['Caster'],
+        ['Caster'] = Caster,
         ['Target'] = o_order_info_当前指令信息['Target'],
         ['Parent'] = nil,
         ['MinionPos'] = o_order_info_当前指令信息['MinionPos'],
     }
     effect_stack.push(root_info)
+
+    -- 进行一次卡牌信息广播
+    G.call('卡牌实例化_信息更新_预处理', Caster, {'root', '卡牌属性', '逻辑数据', '动态数据'})
+    
+    -- 去除未知标签
+    if G.call('卡牌条件_卡牌特性判断', Caster, {'未知'}) then
+        G.call('技能效果_效果树_执行子效果', {
+            ['Target'] = {Caster},
+        }, function ()
+            G.call('技能效果_特性', nil, {'未知'})
+        end)
+    end
 
     -- 法力值消耗
     G.call('卡牌使用_消耗法力')

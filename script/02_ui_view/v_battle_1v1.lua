@@ -2,25 +2,26 @@
 
 ]]
 local G = require 'gf'
-local c_button = require 'c_button'
-local c_battlehero_self = require 'c_battlehero_self'
-local c_handcards_self = require 'c_handcards_self'
-local c_carddeck = require 'c_carddeck'
-local c_battleminion_enemy = require 'c_battleminion_enemy'
-local c_battlemana_enemy = require 'c_battlemana_enemy'
 local c_animactor = require 'c_animactor'
-local c_battlehero_enemy = require 'c_battlehero_enemy'
+local c_battleminion_self = require 'c_battleminion_self'
+local c_choose = require 'c_choose'
+local c_handcards_enemy = require 'c_handcards_enemy'
+local c_carddeck = require 'c_carddeck'
 local c_give_up_button = require 'c_give_up_button'
-local c_perfectsize = require 'c_perfectsize'
+local c_battle_playqueue_enemy = require 'c_battle_playqueue_enemy'
+local c_battleminion_enemy = require 'c_battleminion_enemy'
 local c_card_manager = require 'c_card_manager'
 local c_layout_v = require 'c_layout_v'
-local c_battleminion_self = require 'c_battleminion_self'
-local c_battle_1v1 = require 'c_battle_1v1'
-local c_choose = require 'c_choose'
-local c_battle_playqueue_self = require 'c_battle_playqueue_self'
-local c_handcards_enemy = require 'c_handcards_enemy'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local c_battlemana_self = require 'c_battlemana_self'
+local c_perfectsize = require 'c_perfectsize'
+local c_handcards_self = require 'c_handcards_self'
+local c_battle_playqueue_self = require 'c_battle_playqueue_self'
+local c_battlehero_enemy = require 'c_battlehero_enemy'
+local c_mintextquadsize = require 'c_mintextquadsize'
+local c_battlehero_self = require 'c_battlehero_self'
+local c_button = require 'c_button'
+local c_battle_1v1 = require 'c_battle_1v1'
+local c_battlemana_enemy = require 'c_battlemana_enemy'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -251,10 +252,23 @@ tp = tc
 	tp = tc
 	tp = tp.parent
 	--end
+	tc = G.loadUI('v_battle_playqueue_enemy')
+	tc.prefab = true
+	tp.addChild(tc)
+	tc.name = 'enemyPlayQueue'
+	tc.left = -640.000
+	tc.right = 640.000
+	tc.bottom = -360.000
+	tc.top = 360.000
+	tp = tc
+	tp.c_battle_playqueue_self = setmetatable({}, c_battle_playqueue_self)
+	tp.c_battle_playqueue_enemy = setmetatable({}, c_battle_playqueue_enemy)
+	tp = tp.parent
+	--end
 	tc = G.loadUI('v_battle_playqueue_self')
 	tc.prefab = true
 	tp.addChild(tc)
-	tc.name = 'SelfPlayQueue'
+	tc.name = 'selfPlayQueue'
 	tc.left = -640.000
 	tc.right = 640.000
 	tc.bottom = -360.000
