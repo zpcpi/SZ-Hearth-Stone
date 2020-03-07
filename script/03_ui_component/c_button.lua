@@ -1,7 +1,7 @@
 --[[3101
 ,
 ]]
-local G = require 'res/common/script/gf'
+local G = require 'gf'
 
 local t = G.com()
 
@@ -50,7 +50,12 @@ function t:rollOut(tar)
 		self.state = 'n'
 	end
 end
-
+-- function t:mouseWheelUp(tar)
+-- 	print("mouseWheelUp",tar)
+-- end 
+-- function t:mouseWheelDown(tar)
+-- 	print("mouseWheelDown",tar)
+-- end 
 function t:mouseUp(tar)
 	if self.state == 'p' and self.btn_class == 1 then 
 		self.state = 'c'
@@ -59,17 +64,14 @@ function t:mouseUp(tar)
 	end 
 	
 end
-
 function t:setButtonUnable()
 	self.state = 'd'
 	self.obj.mouseEnabled = false
 end 
-
 function t:setButtonEnable()
 	self.state = 'n'
 	self.obj.mouseEnabled = true
 end 
-
 function t:mouseDown(tar)
 	if self.state == 'h' then
 		self.state = 'p'
@@ -89,11 +91,11 @@ function t:disable(tar)
 end
 
 function t:set_state()
+
 	self:setImage(self.state)
 	self:setTextColor(self.state)
 	self:playAudio(self.state)
 end
-
 function t:playAudio(state)
 	if state == 'h' and self.audio_hover then
 		G.Play(self.audio_hover, 1,false,100)
@@ -101,7 +103,6 @@ function t:playAudio(state)
 		G.Play(self.audio_press, 1,false,100)
 	end
 end 
-
 function t:setTextColor(state)
 	if state == 'c' and self.color_toggle then
 		self:set_text_color(self.color_toggle)
@@ -115,11 +116,9 @@ function t:setTextColor(state)
 		self:set_text_color(self.color_normal)
 	end
 end
-
 function t:set_img_togEx()
 	self:setImage('c')
 end 
-
 function t:setImage(state)
 	local bg = self.obj.getChildByName("frameList")
 	if bg then
@@ -152,14 +151,11 @@ function t:setImage(state)
 		self:set_img(self.img_normal)
 	end
 end 
-
 function t:click()
 end
-
 function t:set_click(func)
 	t.click = func
 end
-
 function t:set_frameList(frameList)
 	local bg = self.obj.getChildByName("frameList")
 	if bg then
@@ -167,15 +163,16 @@ function t:set_frameList(frameList)
 		local w,h = G.imageSize(frameList)
 		if self.customsize == nil or self.customsize == false then 
 			if w and w > 0 then
+				--bg.width = w 
 				self.obj.width = w
 			end
 			if h and h > 0 then
+				--bg.height = h
 				self.obj.height = h
 			end
 		end 
 	end
 end
-
 function t:set_textid()
 	local obj = self.obj
 	local t = self.obj.getChildByName("text")
@@ -183,7 +180,6 @@ function t:set_textid()
 		t.textid = self.textid
 	end
 end
-
 function t:set_text()
 	local obj = self.obj
 	local t = self.obj.getChildByName("text")
@@ -191,7 +187,6 @@ function t:set_text()
 		t.text = self.text
 	end
 end 
-
 function t:set_img(img)
 	local bg = self.obj.getChildByName("img")
 	if not bg then 
@@ -201,9 +196,11 @@ function t:set_img(img)
 	local w,h = G.imageSize(img)
 	if self.customsize == nil or self.customsize == false then 
 		if w and w > 0 then
+			--bg.width = w 
 			self.obj.width = w
 		end
 		if h and h > 0 then
+			--bg.height = h
 			self.obj.height = h
 		end
 	end 
@@ -215,10 +212,31 @@ function t:set_text_color(text_color)
 	end
 end
 
+
+-- function t:set_prop(name,value)
+-- 	for index,v in pairs(t.prop) do 
+-- 		if v.name == name then 
+-- 			v = value
+-- 			return 
+-- 		end 
+-- 	end 
+-- 	table.insert( t.prop,value )
+-- end 
 function t:set_img_normal()
 	if self.img_normal then 
 		self:set_img(self.img_normal)
+		
+		-- local img = self.obj.getChildByName("img")
+		-- if img then 
+		-- 	img.width = w
+		-- 	img.height = h
+		-- end 
+		-- local text = self.obj.getChildByName("text")
+		-- if text then 
+		-- 	text.width = w
+		-- 	text.height = h
+		-- end 
+		
 	end
 end 
-
 return t
