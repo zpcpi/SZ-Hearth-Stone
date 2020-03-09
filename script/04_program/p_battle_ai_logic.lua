@@ -19,6 +19,7 @@ t['AI逻辑_弱智酒馆老板_回合开始'] = function()
     local int_当前回合数 = G.call('对决_获取当前回合数', estr_absolute_id_type_绝对身份)
     -- 只要有卡能用就一直用
     while G.call('角色_是否剩余可用水晶', estr_absolute_id_type_绝对身份) do 
+        G.wait_time(1500)
         local _o_card_可用卡牌 = G.call('角色_获取可用卡牌', estr_absolute_id_type_绝对身份, true)
         if #_o_card_可用卡牌 == 0 then
             break 
