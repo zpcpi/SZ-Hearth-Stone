@@ -16,7 +16,7 @@ tp = tc
 	tc = G.Entity()
 	tp.addChild(tc)
 	tc.name = '队列功能区'
-	tc.left = -511.000
+	tc.left = -375.000
 	tc.right = -285.000
 	tc.bottom = -210.000
 	tc.top = -85.000

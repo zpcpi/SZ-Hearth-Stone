@@ -21,11 +21,6 @@ UI_IN_HAND_AREA = {
     ['maxy'] = 110,
 }
 
-UI_SPELL_TARGET_POS = {
-    ['posx'] = 310,
-    ['posy'] = 185,
-}
-
 UI_SPELL_SHOW_POS = {
     ['posx'] = 160,
     ['posy'] = 380,

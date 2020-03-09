@@ -6,6 +6,8 @@ local G = require "gf"
 local t = G.com()
 
 function t:init()
+    self.队列功能区 = self.obj.getChildByName('队列功能区')
+
     self.动画控件 = self.obj.getChildByName('动画控件')
 end
 
@@ -19,7 +21,7 @@ end
 
 function t:queue_addobj(o_card_卡牌)
     local ui_card = G.loadUI('v_card_manager')
-    self.obj.addChild(ui_card)
+    self.队列功能区.addChild(ui_card)
 
     ui_card.mouseEnabled = false
     ui_card.alpha = 255
@@ -96,15 +98,15 @@ function t:queue_posinit()
             {
                 [1] = {
                     n = 4,
-                    [1] = '动画系统_设置全局位置',
+                    [1] = '动画系统_多属性设置',
                     [2] = '::Self.objlist[' .. i .. ']',
                     [3] = {
                         [1] = 'x',
                         [2] = 'y',
                     },
                     [4] = {
-                        [1] = UI_SPELL_TARGET_POS['posx'] - (px * (max - i)),
-                        [2] = UI_SPELL_TARGET_POS['posy'] + 385,
+                        [1] = 0 - (px * (max - i)),
+                        [2] = 0,
                     },
                     [5]={
                         ['x1']=0,
