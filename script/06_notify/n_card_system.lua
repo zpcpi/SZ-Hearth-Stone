@@ -102,6 +102,7 @@ local get_obj_bycard = function (Card)
     local cardpos = get_attr(Card, '动态数据', '卡牌位置')
     local estr_absolute_id_type_绝对身份 = get_attr(Card, '动态数据', '所有者')
     local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
+
     if cardpos == '战场' then
         local cardtype = get_attr(Card, '逻辑数据', '类型')
         if cardtype == 0x10090001 then
@@ -277,6 +278,7 @@ noti[precall .. '卡牌使用_使用'] = function ()
         script_PlayQueue:queue_addobj(Caster)
         script_PlayQueue:queue_posinit()
     end
+    local obj = get_obj_bycard(Caster)
 
     if cardtype == 0x10090003 then
         -- 英雄技能
@@ -344,6 +346,7 @@ noti[postcall .. '卡牌使用_使用'] = function ()
     local cardtype = get_attr(Caster, '逻辑数据', '类型')
 
     if cardtype == 0x10090005 then
+        -- 法术
         local obj = get_obj_bycard(Caster)
 
         if obj then
@@ -492,9 +495,10 @@ noti[precall .. 'single_damage'] = function ()
     if int_伤害值 and (int_伤害值 > 0) then
         if is_create_missile > 0 then
             -- 注册引用
+            local obj_card = get_obj_bycard(Caster)
             local obj_missile
-            local push_missile = function (Card, color, string_obj)
-                obj_missile = create_missile(get_obj_bycard(Card), color)
+            local push_missile = function (color, string_obj)
+                obj_missile = create_missile(obj_card, color)
                 script_动画系统:push_quote(string_obj, obj_missile)
             end
             local del_missile = function ()
@@ -515,7 +519,7 @@ noti[precall .. 'single_damage'] = function ()
             })
 
             local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                [1] = {push_missile, Caster, 0x3333CD, '::sys_single_damage_Missile'},
+                [1] = {push_missile, 0x3333CD, '::sys_single_damage_Missile'},
                 [2] = {push_quote(get_obj_bycard(Target)), '::sys_single_damage_Target'},
                 [3] = {'动画系统_两控件相向运动', '::sys_single_damage_Missile', '::sys_single_damage_Target', {'x', 'y'}, {0.99}, {
                     ['x1']=0,
@@ -562,9 +566,10 @@ noti[precall .. 'single_heal'] = function ()
     if int_治疗值 and (int_治疗值 > 0) then
         if is_create_missile > 0 then
             -- 注册引用
+            local obj_card = get_obj_bycard(Caster)
             local obj_missile
-            local push_missile = function (Card, color, string_obj)
-                obj_missile = create_missile(get_obj_bycard(Card), color)
+            local push_missile = function (color, string_obj)
+                obj_missile = create_missile(obj_card, color)
                 script_动画系统:push_quote(string_obj, obj_missile)
             end
             local del_missile = function ()
@@ -585,7 +590,7 @@ noti[precall .. 'single_heal'] = function ()
             })
 
             local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                [1] = {push_missile, Caster, 0x68EEBC, '::sys_single_heal_Missile'},
+                [1] = {push_missile, 0x68EEBC, '::sys_single_heal_Missile'},
                 [2] = {push_quote(get_obj_bycard(Target)), '::sys_single_heal_Target'},
                 [3] = {'动画系统_两控件相向运动', '::sys_single_heal_Missile', '::sys_single_heal_Target', {'x', 'y'}, {0.99}, {
                     ['x1']=0,

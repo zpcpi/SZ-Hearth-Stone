@@ -67,6 +67,7 @@ t['卡牌使用_主流程_thread'] = function (estr_player_相对身份, o_order
         else
             -- 不在战场，那么可能是在手牌使用的
             G.call('角色_移除手牌_byCard', estr_player_相对身份, Caster)
+            Caster['动态数据']['卡牌位置'] = '坟场'
         end
     elseif cardtype == 0x10090004 then
         -- 随从卡，召唤随从
@@ -79,6 +80,7 @@ t['卡牌使用_主流程_thread'] = function (estr_player_相对身份, o_order
         G.call('卡牌使用_使用')
 
         G.call('角色_移除手牌_byCard', estr_player_相对身份, Caster)
+        Caster['动态数据']['卡牌位置'] = '坟场'
     elseif cardtype == 0x10090006 then
         -- 武器卡
         -- 有特殊处理，需要考虑新旧武器替换
