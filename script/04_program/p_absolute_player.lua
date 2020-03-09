@@ -50,9 +50,6 @@ t['角色_移除手牌_绝对身份'] = function(estr_absolute_id_type_绝对身
 
     local o_card_卡牌 = o_misc.手牌信息[estr_absolute_id_type_绝对身份][int_手牌序号]
     if o_card_卡牌 then
-        if o_card_卡牌['动态数据'] then
-            o_card_卡牌['动态数据']['卡牌位置'] = '坟场'
-        end
         table.remove(o_misc.手牌信息[estr_absolute_id_type_绝对身份], int_手牌序号)
     end
 end
