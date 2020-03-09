@@ -617,6 +617,19 @@ local t = {
 		},
 	},
 	{
+		['name']='流程_对局开始',
+		['arg']={
+			[1]={
+				['id']='Player',
+				['type']='estr_absolute_id_type',
+			},
+			[2]={
+				['id']='RoomPlayer',
+				['type']='o_room_player',
+			},
+		},
+	},
+	{
 		['name']='UI_抓取卡牌_战场',
 		['arg']={
 			[1]={

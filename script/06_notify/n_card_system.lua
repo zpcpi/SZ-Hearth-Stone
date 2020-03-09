@@ -236,6 +236,9 @@ noti[postcall .. '卡牌攻击_主流程_thread'] = animquest_pop
 noti[precall .. '卡牌使用_主流程_thread'] = animquest_push
 noti[postcall .. '卡牌使用_主流程_thread'] = animquest_pop
 
+noti[precall .. '逻辑注册_初始流程_absolute'] = animquest_push
+noti[postcall .. '逻辑注册_初始流程_absolute'] = animquest_pop
+
 noti[precall .. '逻辑注册_水晶设置_absolute'] = animquest_push
 noti[postcall .. '逻辑注册_水晶设置_absolute'] = animquest_pop
 

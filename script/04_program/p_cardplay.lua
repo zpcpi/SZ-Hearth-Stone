@@ -876,6 +876,13 @@ local function get_value_by_interval(v, min, max)
 end
 
 -- 特定流程
+t['逻辑注册_初始流程_absolute'] = function ()
+    local absolute_player,room_player = G.event_info()
+
+    G.call('对决_初始化对决牌库', room_player)
+    G.call('对决_初始化对决角色', room_player)
+end
+
 t['逻辑注册_水晶设置_absolute'] = function ()
     local absolute_player = G.event_info()
     local estr_player_相对身份 = G.call('房间_获取相对身份', absolute_player)
@@ -1427,7 +1434,12 @@ end
 
 real_t['通用逻辑_角色相关流程注册'] = function (estr_absolute_id_type_绝对身份)
     local cond = nil
+    local prior_base = EVENT_PRIOR.base
+    local group_system = EVENT_GROUP.system
     
+    -- 初始化对决角色
+    G.addListener('逻辑注册_初始流程_absolute', {'流程_对局开始', estr_absolute_id_type_绝对身份}, cond, prior_base, group_system)
+
     -- 特定流程
     G.addListener('逻辑注册_水晶设置_absolute', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.SetMana, EVENT_GROUP.SetMana)
     G.addListener('逻辑注册_抽牌_absolute', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.drawCard, EVENT_GROUP.drawCard)
