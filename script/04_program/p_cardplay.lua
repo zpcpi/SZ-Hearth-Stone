@@ -190,10 +190,10 @@ t['卡牌使用_消耗法力'] = function ()
         local estr_player_相对身份 = o_skill_info_效果信息['Player']
 
         local 当前值 = G.call('角色_获取水晶数据', estr_player_相对身份, '当前值')
-        G.call('角色_设置水晶数据', estr_player_相对身份, '当前值', 当前值 - 费用)
+        G.call('角色属性_水晶_设置', estr_player_相对身份, '当前值', 当前值 - 费用)
     
         local 下回锁定值 = G.call('角色_获取水晶数据', estr_player_相对身份, '下回锁定值')
-        G.call('角色_设置水晶数据', estr_player_相对身份, '下回锁定值', 下回锁定值 + 过载费用)
+        G.call('角色属性_水晶_设置', estr_player_相对身份, '下回锁定值', 下回锁定值 + 过载费用)
     end
 
     effect_action_iter(nil, '逻辑_卡牌使用_消耗法力', init, action)
@@ -862,12 +862,32 @@ real_t['逻辑注册_添加'] = function ()
     trigger_iter(card, '添加', skill.name)
 end
 
+local function get_value_by_interval(v, min, max)
+    if v < min then
+        return min
+    elseif v > max then
+        return max
+    else
+        return v
+    end
+end
+
 -- 特定流程
 t['逻辑注册_水晶设置_absolute'] = function ()
     local absolute_player = G.event_info()
     local estr_player_相对身份 = G.call('房间_获取相对身份', absolute_player)
 
-    G.call('角色_设置水晶数据_回合开始', estr_player_相对身份)
+    local 最大值 = G.call('角色_获取水晶数据', estr_player_相对身份, '最大值')
+    最大值 = get_value_by_interval(最大值 + 1, 0, MANA_MAX_COUNT)
+    
+    local 下回锁定值 = G.call('角色_获取水晶数据', estr_player_相对身份, '下回锁定值')
+    local 锁定值 = get_value_by_interval(下回锁定值, 0, 最大值)
+    local 当前值 = get_value_by_interval(最大值 - 下回锁定值, 0, MANA_MAX_COUNT)
+
+    G.call('角色属性_水晶_设置', estr_player_相对身份, '最大值', 最大值)
+    G.call('角色属性_水晶_设置', estr_player_相对身份, '当前值', 当前值)
+    G.call('角色属性_水晶_设置', estr_player_相对身份, '锁定值', 锁定值)
+    G.call('角色属性_水晶_设置', estr_player_相对身份, '下回锁定值', 0)
 end
 
 t['逻辑注册_抽牌_absolute'] = function ()
@@ -1674,7 +1694,7 @@ t['技能效果_本回合当前水晶'] = function (int_变动值)
 
         if estr_player_相对身份 then
             local cur_value = G.call('角色_获取水晶数据', estr_player_相对身份, '当前值') or 0
-            G.call('角色_设置水晶数据', estr_player_相对身份, '当前值', cur_value + int_变动值)
+            G.call('角色属性_水晶_设置', estr_player_相对身份, '当前值', cur_value + int_变动值)
         end
     end
 
@@ -1704,7 +1724,7 @@ t['技能效果_最大水晶'] = function (int_变动值)
 
         if estr_player_相对身份 then
             local cur_value = G.call('角色_获取水晶数据', estr_player_相对身份, '最大值') or 0
-            G.call('角色_设置水晶数据', estr_player_相对身份, '最大值', cur_value + int_变动值)
+            G.call('角色属性_水晶_设置', estr_player_相对身份, '最大值', cur_value + int_变动值)
         end
     end
 
@@ -1724,7 +1744,7 @@ t['技能效果_当前水晶'] = function (int_变动值)
 
         if estr_player_相对身份 then
             local cur_value = G.call('角色_获取水晶数据', estr_player_相对身份, '当前值') or 0
-            G.call('角色_设置水晶数据', estr_player_相对身份, '当前值', cur_value + int_变动值)
+            G.call('角色属性_水晶_设置', estr_player_相对身份, '当前值', cur_value + int_变动值)
         end
     end
 
@@ -3020,6 +3040,8 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
         return v
     end
 
+    -- todo，网络通讯
+
     if estr_cardattr_type_属性类型 == '当前值' then
         dyn_data = o_card_当前卡牌['动态数据']
         tattr = dyn_data['当前属性']
@@ -3067,6 +3089,18 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
 
         G.trig_event('逻辑_卡牌属性改变', o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, old_value)
     end
+end
+
+-- ============================================
+-- ============================================
+-- ============================================
+-- 玩家属性相关接口
+-- ============================================
+-- ============================================
+-- ============================================
+
+t['角色属性_水晶_设置'] = function(estr_player_相对身份, estr_mana_type_修改类型, int_value)
+    G.call('角色_设置水晶数据', estr_player_相对身份, estr_mana_type_修改类型, int_value)
 end
 
 -- ============================================

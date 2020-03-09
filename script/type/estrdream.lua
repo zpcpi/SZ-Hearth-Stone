@@ -33,6 +33,6 @@ t.estr_comptype = {'>', '<', '==', '>=', '<=', '~='}
 
 t.estr_battleinfo_type = {'伤害', '治疗'}
 
-t.estr_ui_component = {'战场随从', '战场英雄', '手牌', '牌库', '历史记录', '执行队列'}
+t.estr_ui_component = {'战场随从', '战场英雄', '手牌', '牌库', '历史记录', '执行队列', '水晶'}
 
 return t

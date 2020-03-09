@@ -227,24 +227,18 @@ t['角色_设置水晶数据'] = function(estr_player_相对身份, estr_mana_ty
         int_value = MANA_MAX_COUNT
     end
 
-    G.call('角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, estr_mana_type_修改类型, int_value)
-    if (estr_mana_type_修改类型 ~= '预览值') and (estr_mana_type_修改类型 ~= '预览锁定值') then
-        G.call('网络通用_广播消息', '角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, estr_mana_type_修改类型, int_value)
+    local int_oldv = G.call('角色_获取水晶数据_绝对身份', estr_absolute_id_type_绝对身份, estr_mana_type_修改类型)
+    if int_value ~= int_oldv then
+        G.call('角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, estr_mana_type_修改类型, int_value)
+        if (estr_mana_type_修改类型 ~= '预览值') and (estr_mana_type_修改类型 ~= '预览锁定值') then
+            G.call('网络通用_广播消息', '角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, estr_mana_type_修改类型, int_value)
+        end
     end
 end
 
 t['角色_获取水晶数据'] = function(estr_player_相对身份, estr_mana_type_获取类型)
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
     return G.call('角色_获取水晶数据_绝对身份', estr_absolute_id_type_绝对身份, estr_mana_type_获取类型)
-end
-
-t['角色_设置水晶数据_回合开始'] = function(estr_player_相对身份)
-    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
-
-    if true then
-        G.call('角色_设置水晶数据_回合开始_绝对身份', estr_absolute_id_type_绝对身份)
-        G.call('网络通用_广播消息', '角色_设置水晶数据_回合开始_绝对身份', estr_absolute_id_type_绝对身份)
-    end
 end
 
 --hide=true

@@ -65,12 +65,14 @@ local com_mapping = {
         ['执行队列'] = {'selfPlayQueue'},
         ['手牌'] = {'selfHandcard', 'c_handcards_self'},
         ['牌库'] = {'carddeck', 'c_carddeck'},
+        ['水晶'] = {'selfBattlemana', 'c_battlemana_self'},
     },
     ['敌方1'] = {
         ['战场随从'] = {'enemyBattleminion', 'c_battleminion_enemy'},
         ['战场英雄'] = {'enemyBattlehero', 'c_battlehero_enemy'},
         ['执行队列'] = {'enemyPlayQueue'},
         ['手牌'] = {'enemyHandcard', 'c_handcards_enemy'},
+        ['水晶'] = {'enemyBattlemana', 'c_battlemana_enemy'},
     },
 }
 
@@ -672,6 +674,22 @@ end
 noti[postcall .. '技能效果_治疗'] = function ()
     -- 清除发射飞弹状态
     is_create_missile = is_create_missile - 1
+end
+
+noti[postcall .. '角色属性_水晶_设置'] = function (estr_player_相对身份, estr_mana_type_修改类型, int_value)
+    local o_misc = G.misc()
+    local script_动画系统 = o_misc.技能动画系统
+
+    local script_水晶组件 = get_component(estr_player_相对身份, '水晶')
+
+    local com_set_value = function ()
+        script_水晶组件[estr_mana_type_修改类型] = int_value
+    end
+
+    local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 30, {
+        {com_set_value},
+    })
+    anim_addchild(o_animquest_当前动画)
 end
 
 local get_flag = function (Card, flags, is_not)
