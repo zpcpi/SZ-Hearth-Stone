@@ -71,10 +71,6 @@ t['卡牌使用_主流程_thread'] = function (estr_player_相对身份, o_order
     elseif cardtype == 0x10090004 then
         -- 随从卡，召唤随从
         -- 可能不对，需要判断下
-        local index = o_order_info_当前指令信息['MinionPos']
-        --o_order_info_当前指令信息[''] = Caster
-        G.call('角色_战场_添加随从', estr_player_相对身份, Caster, index)
-
         G.call('卡牌使用_使用')
 
         G.call('角色_移除手牌_byCard', estr_player_相对身份, Caster)
@@ -290,7 +286,12 @@ t['卡牌使用_随从召唤'] = function ()
     end
 
     local action = function (o_skill_info_效果信息)
+        local Player = o_skill_info_效果信息['Player']
         local Caster = o_skill_info_效果信息['Caster']
+        local index = o_skill_info_效果信息['MinionPos']
+        
+        G.call('角色_战场_添加随从', Player, Caster, index)
+        
         G.trig_event('逻辑_随从召唤', Caster)
 
         -- todo，记录
@@ -878,7 +879,7 @@ t['逻辑注册_水晶设置_absolute'] = function ()
     local estr_player_相对身份 = G.call('房间_获取相对身份', absolute_player)
 
     local 最大值 = G.call('角色_获取水晶数据', estr_player_相对身份, '最大值')
-    最大值 = get_value_by_interval(最大值 + 1, 0, MANA_MAX_COUNT)
+    最大值 = get_value_by_interval(最大值 + MANA_GROW_COUNT, 0, MANA_MAX_COUNT)
     
     local 下回锁定值 = G.call('角色_获取水晶数据', estr_player_相对身份, '下回锁定值')
     local 锁定值 = get_value_by_interval(下回锁定值, 0, 最大值)
@@ -2204,7 +2205,6 @@ t['技能效果_召唤'] = function (datas)
                             ['MinionPos'] = index,
                         }, 
                         function ()
-                            G.call('角色_战场_添加随从', player, o_card_召唤单位, index)
                             G.call('卡牌使用_上场')
                             G.call('卡牌使用_随从召唤')
                         end
@@ -2355,10 +2355,11 @@ t['技能效果_牧师精控'] = function ()
 
                         Target['动态数据']['所有者'] = G.call('房间_获取绝对身份', player)
 
+                        G.call('卡牌使用_上场')
+                        
+                        -- 精控只有上场，不是召唤
                         -- TODO，判断场面是否满了
                         G.call('角色_战场_添加随从', player, Target)
-
-                        G.call('卡牌使用_上场')
                     end
                 )
         end
@@ -2461,6 +2462,7 @@ t['技能效果_弃牌'] = function (int_编号)
         local int_编号 = o_skill_info_效果信息['弃牌编号']
 
         if int_编号 then
+            -- todo，这里调用丢弃手牌接口
             G.call('角色_移除手牌', estr_player_相对身份, int_编号)
         end
     end
