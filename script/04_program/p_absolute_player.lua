@@ -111,7 +111,8 @@ end
 --ret=o_card
 t['角色_战场_获取英雄技能_绝对身份'] = function(estr_absolute_id_type_绝对身份)
     local o_misc = G.misc()
-
+    
+    misc_attr_check('英雄技能信息')
     return o_misc.英雄技能信息[estr_absolute_id_type_绝对身份]
 end
 
