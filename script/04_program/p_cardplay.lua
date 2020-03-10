@@ -933,6 +933,22 @@ real_t['逻辑注册_添加'] = function ()
     trigger_iter(card, '添加', skill.name)
 end
 
+-- 关键字逻辑注册
+
+real_t['逻辑注册_死亡'] = function ()
+    local info = G.event_info()
+    local card = info['Caster']
+
+    trigger_iter(card, '死亡')
+end
+
+real_t['逻辑注册_战吼'] = function ()
+    local info = G.event_info()
+    local card = info['Caster']
+
+    trigger_iter(card, '战吼')
+end
+
 local function get_value_by_interval(v, min, max)
     if v < min then
         return min
@@ -1256,14 +1272,10 @@ t['逻辑注册_武器功能_消耗耐久'] = function ()
     end
 end
 
--- 特定逻辑
--- 战吼
-t['逻辑注册_战吼'] = function ()
-    local info = G.event_info()
-    local card = info['Caster']
+-- 死亡
 
-    trigger_iter(card, '战吼')
-end
+-- 特定卡牌死亡
+-- 英雄、技能、随从、武器、奥秘、场地
 
 t['逻辑注册_卡牌死亡结算'] = function ()
     local init = function (o_skill_info_效果信息)
@@ -1365,13 +1377,7 @@ t['逻辑注册_卡牌死亡结算'] = function ()
     effect_action_iter(nil, nil, init, action)
 end
 
--- 死亡
-t['逻辑注册_死亡'] = function ()
-    local info = G.event_info()
-    local card = info['Caster']
-
-    trigger_iter(card, '死亡')
-end
+-- 关键字功能
 
 t['逻辑注册_冲锋添加'] = function ()
     local Target = G.event_info()
