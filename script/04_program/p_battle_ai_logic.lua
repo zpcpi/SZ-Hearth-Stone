@@ -12,14 +12,16 @@ t['AI逻辑_弱智酒馆老板_游戏开始'] = function()
 end
 
 --type=ailogic
-t['AI逻辑_弱智酒馆老板_回合开始'] = function()
+t['AI逻辑_弱智酒馆老板_回合开始_thread'] = function ()
+    G.wait_time(1000)
+
     local estr_absolute_id_type_绝对身份 = G.call('对决_获取当前回合玩家绝对身份')
     local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
     G.call('提示_添加提示', '轮到我的回合了!')
     local int_当前回合数 = G.call('对决_获取当前回合数', estr_absolute_id_type_绝对身份)
     -- 只要有卡能用就一直用
     while G.call('角色_是否剩余可用水晶', estr_absolute_id_type_绝对身份) do 
-        G.wait_time(1500)
+        G.wait_time(150)
         local _o_card_可用卡牌 = G.call('角色_获取可用卡牌', estr_absolute_id_type_绝对身份, true)
         if #_o_card_可用卡牌 == 0 then
             break 
@@ -43,6 +45,11 @@ t['AI逻辑_弱智酒馆老板_回合开始'] = function()
         G.call('提示_添加提示', '哒哒哒!')
     end
     G.call('对决_回合结束', estr_absolute_id_type_绝对身份)
+end
+
+--type=ailogic
+t['AI逻辑_弱智酒馆老板_回合开始'] = function()
+    G.start_program('AI逻辑_弱智酒馆老板_回合开始_thread')
 end
 
 --type=ailogic
