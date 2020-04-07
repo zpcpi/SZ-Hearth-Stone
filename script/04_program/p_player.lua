@@ -103,7 +103,11 @@ t['角色_牌库抽取卡牌'] = function(estr_player_抽牌者相对身份, est
                         _o_randomlib_抽牌牌库[3](1)[1] or -- 为空，说明牌库底里面没有卡牌
                         G.call('卡牌实例化', G.QueryName(0x100600b5), estr_player_牌库所属相对身份) -- 为空，抽疲劳卡
                    
-    G.call('角色_添加手牌', estr_player_抽牌者相对身份, o_card_卡片)
+    G.call('技能效果_效果树_执行子效果', {
+        ['Player'] = estr_player_抽牌者相对身份,
+    },function ()
+        G.call('角色属性_手牌_添加', estr_player_抽牌者相对身份, o_card_卡片)
+    end)
     G.trig_event('UI_牌库更新')
 end
 

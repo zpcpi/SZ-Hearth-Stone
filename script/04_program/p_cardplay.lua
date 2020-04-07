@@ -2134,7 +2134,7 @@ t['技能效果_创建手牌'] = function (i_card_创建卡牌ID, boolean_是否
             else
                 o_card_添加卡牌实例 = G.call('卡牌实例化', G.QueryName(i_card_创建卡牌ID), estr_player_相对身份)
             end
-            G.call('角色_添加手牌', estr_player_相对身份, o_card_添加卡牌实例, boolean_是否明牌)
+            G.call('角色属性_手牌_添加', estr_player_相对身份, o_card_添加卡牌实例, boolean_是否明牌)
         end
     end
 
@@ -3283,6 +3283,10 @@ end
 
 t['角色属性_水晶_设置'] = function(estr_player_相对身份, estr_mana_type_修改类型, int_value)
     G.call('角色_设置水晶数据', estr_player_相对身份, estr_mana_type_修改类型, int_value)
+end
+
+t['角色属性_手牌_添加'] = function(estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
+    G.call('角色_添加手牌', estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
 end
 
 -- ============================================

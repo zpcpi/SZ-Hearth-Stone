@@ -700,6 +700,19 @@ noti[postcall .. '角色属性_水晶_设置'] = function (estr_player_相对身
     anim_addchild(o_animquest_当前动画)
 end
 
+
+noti[precall .. '角色属性_手牌_添加'] = function (estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
+    -- todo，根据一些额外信息，设置初始卡牌的信息
+
+end
+
+
+noti[postcall .. '角色属性_手牌_添加'] = function (estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
+    -- 找到卡牌，移动手合适位置
+
+end
+
+
 local get_flag = function (Card, flags, is_not)
     local result = false
     for _,flag in ipairs(flags) do

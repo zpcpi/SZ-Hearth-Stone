@@ -82,7 +82,12 @@ t['对决_决定初始卡牌'] = function(o_room_player_玩家)
         local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
         
         local o_card_硬币 = G.call('卡牌实例化', G.QueryName(0x1006000e), estr_player_相对身份)
-        G.call('角色_添加手牌', estr_player_相对身份, o_card_硬币, true)
+
+        G.call('技能效果_效果树_执行子效果', {
+            ['Player'] = estr_player_相对身份,
+        },function ()
+            G.call('角色属性_手牌_添加', estr_player_相对身份, o_card_硬币, true)
+        end)
     end
 end
 
