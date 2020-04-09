@@ -1374,6 +1374,10 @@ local t = {
 				['name']='弃牌编号',
 				['type']='int',
 			},
+			[34]={
+				['name']='卡牌来源',
+				['type']='estr_cardsource_type',
+			},
 		},
 	},
 }}

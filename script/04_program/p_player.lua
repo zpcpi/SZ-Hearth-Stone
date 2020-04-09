@@ -105,6 +105,7 @@ t['角色_牌库抽取卡牌'] = function(estr_player_抽牌者相对身份, est
                    
     G.call('技能效果_效果树_执行子效果', {
         ['Player'] = estr_player_抽牌者相对身份,
+        ['卡牌来源'] = '我方牌库',
     },function ()
         G.call('角色属性_手牌_添加', estr_player_抽牌者相对身份, o_card_卡片)
     end)

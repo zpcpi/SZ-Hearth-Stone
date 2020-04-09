@@ -85,6 +85,7 @@ t['对决_决定初始卡牌'] = function(o_room_player_玩家)
 
         G.call('技能效果_效果树_执行子效果', {
             ['Player'] = estr_player_相对身份,
+            ['卡牌来源'] = '发现',
         },function ()
             G.call('角色属性_手牌_添加', estr_player_相对身份, o_card_硬币, true)
         end)

@@ -2134,6 +2134,8 @@ t['技能效果_创建手牌'] = function (i_card_创建卡牌ID, boolean_是否
             else
                 o_card_添加卡牌实例 = G.call('卡牌实例化', G.QueryName(i_card_创建卡牌ID), estr_player_相对身份)
             end
+
+            o_skill_info_效果信息['卡牌来源'] = o_skill_info_效果信息['卡牌来源'] or '释放者创造'
             G.call('角色属性_手牌_添加', estr_player_相对身份, o_card_添加卡牌实例, boolean_是否明牌)
         end
     end
@@ -2249,6 +2251,7 @@ t['技能效果_追踪术'] = function (int_追踪数量)
                                         ['Caster'] = Caster,
                                         ['Target'] = {o_card_select},
                                         ['Parent'] = o_skill_info_效果信息,
+                                        ['卡牌来源'] = '发现',
                                     }, 
                                     function ()
                                         G.call('技能效果_创建手牌', o_card_select.name, false, true)
@@ -2502,7 +2505,9 @@ t['技能效果_潜行者闷棍'] = function ()
                         if (int_手牌数量 < HANDCARDS_MAX_COUNT) then
                             -- 手牌没有满，移动回手牌
                             G.call('角色_战场_移除随从', owner, Target)
-                            G.call('技能效果_创建手牌', Target.name, false, true)
+
+                            o_skill_info_效果信息['卡牌来源'] = '目标还原'
+                            G.call('技能效果_创建手牌', Target.name, true, true)
                         else
                             G.call('技能效果_消灭目标')
                         end
@@ -3286,6 +3291,7 @@ t['角色属性_水晶_设置'] = function(estr_player_相对身份, estr_mana_t
 end
 
 t['角色属性_手牌_添加'] = function(estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
+    -- todo，处理一下事件
     G.call('角色_添加手牌', estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
 end
 

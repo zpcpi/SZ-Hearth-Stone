@@ -702,14 +702,43 @@ end
 
 
 noti[precall .. '角色属性_手牌_添加'] = function (estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
-    -- todo，根据一些额外信息，设置初始卡牌的信息
+    local last_call = G.call('卡牌逻辑树_获取最后调用')
+    local get_attr = CARD_GET_ATTR
+    local Caster = get_attr(last_call, 'skill_info', 'Caster')
+    local Target = get_attr(last_call, 'skill_info', 'Target')[1]
+    local 卡牌来源 = get_attr(last_call, 'skill_info', '卡牌来源')
+
+    if 卡牌来源 == '我方牌库' then
+    elseif 卡牌来源 == '敌方牌库' then
+    elseif 卡牌来源 == '敌方英雄' then
+    elseif 卡牌来源 == '释放者创造' then
+    elseif 卡牌来源 == '目标还原' then
+    elseif 卡牌来源 == '发现' then
+    else
+
+    end
+
 
 end
 
 
 noti[postcall .. '角色属性_手牌_添加'] = function (estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
-    -- 找到卡牌，移动手合适位置
+    local o_misc = G.misc()
+    local script_战场 = o_misc.主战场系统
+    local script_动画系统 = o_misc.技能动画系统
 
+    if get_obj_bycard(o_card_卡牌) then
+        -- 找到已经创建的卡牌
+        -- todo，手牌组件得修改一下
+        script_动画系统:add_animquest(
+            G.call('动画系统_创建quest_自定义', script_动画系统, false, 200, {
+                {script_手牌组件.addCard, script_手牌组件, G.QueryName(i_card_卡牌)},
+            })
+        )
+        script_动画系统:add_animquest(
+            G.call('动画系统_创建quest', script_动画系统, G.QueryName(script_手牌组件.AnimBaseID + int_当前手牌数量 - 1))
+        )
+    end
 end
 
 
