@@ -51,18 +51,18 @@ end
 --hide=true
 --type=farg
 --ret=boolean
-t['fargboolean_compare'] = function(estr_compare_op_比较符号, int_数值A, int_数值B)
-    if estr_compare_op_比较符号 == '==' then
+t['fargboolean_compare'] = function(estr_comptype_比较符号, int_数值A, int_数值B)
+    if estr_comptype_比较符号 == '==' then
         return int_数值A == int_数值B
-    elseif estr_compare_op_比较符号 == '~=' then
+    elseif estr_comptype_比较符号 == '~=' then
         return int_数值A ~= int_数值B
-    elseif estr_compare_op_比较符号 == '>=' then
+    elseif estr_comptype_比较符号 == '>=' then
         return int_数值A >= int_数值B
-    elseif estr_compare_op_比较符号 == '<=' then
+    elseif estr_comptype_比较符号 == '<=' then
         return int_数值A <= int_数值B
-    elseif estr_compare_op_比较符号 == '>' then
+    elseif estr_comptype_比较符号 == '>' then
         return int_数值A > int_数值B
-    elseif estr_compare_op_比较符号 == '<' then
+    elseif estr_comptype_比较符号 == '<' then
         return int_数值A < int_数值B
     end
     return false
