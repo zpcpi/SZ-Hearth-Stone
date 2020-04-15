@@ -48,6 +48,8 @@ function t:init()
     self.carddeckPanel = self.Record_功能区.getChildByName('我方牌库面签')
     self.carddeck = self.carddeckPanel.getChildByName('容器')
 
+    self.新卡界面 = self.obj.getChildByName('全局新卡版')
+
     self.tips版 = self.obj.getChildByName('全局Tips版')
     self:initTipsCard()
 

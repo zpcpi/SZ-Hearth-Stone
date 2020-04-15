@@ -164,6 +164,11 @@ local create_missile = function (caster_obj, color)
     end
 end
 
+local create_newcard = function (Card)
+
+
+end
+
 local push_quote = function (obj)
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
