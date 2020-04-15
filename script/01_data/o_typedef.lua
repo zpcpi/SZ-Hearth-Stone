@@ -528,7 +528,7 @@ local t = {
 				['type']='fargboolean',
 			},
 			[12]={
-				['name']='战吼目标条件',
+				['name']='卡牌使用目标条件',
 				['type']='_fargboolean',
 			},
 			[13]={
