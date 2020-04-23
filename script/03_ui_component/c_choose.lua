@@ -32,6 +32,14 @@ function t:create_cardobj()
     return ui_card
 end
 
+function t:get_obj_bycard(target)
+    for k, card in iparis(show_cards) do
+        if card == target then
+            return self.card_objs[k]
+        end
+    end
+end
+
 function t:calculate_posinfo(count)
     local info = {}
 

@@ -13,26 +13,12 @@ function t:start()
 
 end
 
-function t:get_choose_obj(target)
-    local o_misc = G.misc()
-    local script_战场 = o_misc.主战场系统
-    local choose = script_战场.choose
-    local show_cards = choose.show_cards
-
-    for k, card in iparis(show_cards) do
-        if card == target then
-            return choose.card_objs[k]
-        end
-    end
-end
-
-function t:create_newcard(card)
-    local card_obj = self:get_choose_obj(card)
-
-    if card_obj then
-        -- 卡是发现的
+function t:create_newcard(card, create_obj, pos)
+    if create_obj then
+        -- 卡有明确来源
     else
         -- 卡需要创建
+
     end
 
 end

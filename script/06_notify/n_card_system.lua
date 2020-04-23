@@ -66,6 +66,7 @@ local com_mapping = {
         ['手牌'] = {'selfHandcard', 'c_handcards_self'},
         ['牌库'] = {'carddeck', 'c_carddeck'},
         ['水晶'] = {'selfBattlemana', 'c_battlemana_self'},
+        ['发现'] = {'choose'}
     },
     ['敌方1'] = {
         ['战场随从'] = {'enemyBattleminion', 'c_battleminion_enemy'},
@@ -109,23 +110,31 @@ local get_obj_bycard = function (Card)
             -- 英雄
             if Card == G.call('角色_战场_获取英雄', estr_player_相对身份) then
                 local script_战场组件 = get_component(estr_player_相对身份, '战场英雄')
-                obj = script_战场组件.英雄.c_card_manager.cur_obj
+                if script_战场组件 then
+                    obj = script_战场组件.英雄.c_card_manager.cur_obj
+                end
             end
         elseif cardtype == 0x10090003 then
             -- 英雄技能
             if Card == G.call('角色_战场_获取英雄技能', estr_player_相对身份) then
                 local script_战场组件 = get_component(estr_player_相对身份, '战场英雄')
-                obj = script_战场组件.英雄技能.c_card_manager.cur_obj
+                if script_战场组件 then
+                    obj = script_战场组件.英雄技能.c_card_manager.cur_obj
+                end
             end
         elseif cardtype == 0x10090004 then
             -- 随从
             local script_战场组件 = get_component(estr_player_相对身份, '战场随从')
-            obj = script_战场组件:get_obj_bycard(Card)
+            if script_战场组件 then
+                obj = script_战场组件:get_obj_bycard(Card)
+            end
         elseif cardtype == 0x10090006 then
             -- 武器
             if Card == G.call('角色_战场_获取武器', estr_player_相对身份) then
                 local script_战场组件 = get_component(estr_player_相对身份, '战场英雄')
-                obj = script_战场组件.武器.c_card_manager.cur_obj
+                if script_战场组件 then
+                    obj = script_战场组件.武器.c_card_manager.cur_obj
+                end
             end
         end
     elseif cardpos == '手牌' then
@@ -142,6 +151,12 @@ local get_obj_bycard = function (Card)
 
 
     elseif cardpos == '牌库' then
+    else
+        -- 发现的卡没有位置
+        local script_战场组件 = get_component(estr_player_相对身份, '发现')
+        if script_战场组件 then
+            obj = script_战场组件:get_obj_bycard(Card)
+        end
     end
 
     return obj
@@ -713,12 +728,15 @@ noti[precall .. '角色属性_手牌_添加'] = function (estr_player_相对身�
     local Target = get_attr(last_call, 'skill_info', 'Target')[1]
     local 卡牌来源 = get_attr(last_call, 'skill_info', '卡牌来源')
 
+    local create_obj = nil
     if 卡牌来源 == '我方牌库' then
     elseif 卡牌来源 == '敌方牌库' then
     elseif 卡牌来源 == '敌方英雄' then
     elseif 卡牌来源 == '释放者创造' then
+        create_obj = nil
     elseif 卡牌来源 == '目标还原' then
     elseif 卡牌来源 == '发现' then
+        create_obj = nil
     else
 
     end
