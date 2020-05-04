@@ -753,7 +753,7 @@ local t = {
 			},
 			[11]={
 				['name']='是否可选',
-				['type']='bool',
+				['type']='boolean',
 			},
 		},
 	},
