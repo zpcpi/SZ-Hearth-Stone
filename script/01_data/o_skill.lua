@@ -5076,11 +5076,11 @@ end
 				['是否重复触发']=true,
 				['触发时机']={
 t =
-{'$逻辑_技能效果_伤害前'},
+{'$逻辑_技能效果_法术伤害前'},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return {"逻辑_技能效果_伤害前"}
+	return {"逻辑_技能效果_法术伤害前"}
 end
 ,
 },
