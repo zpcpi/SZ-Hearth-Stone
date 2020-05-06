@@ -16,16 +16,6 @@ local function misc_attr_check(...)
     end
 end
 
-local function get_value_by_interval(v, min, max)
-    if v < min then
-        return min
-    elseif v > max then
-        return max
-    else
-        return v
-    end
-end
-
 --hide=true
 t['角色_添加手牌_绝对身份'] = function(estr_absolute_id_type_绝对身份, i_card_卡牌)
     local o_misc = G.misc()
@@ -121,7 +111,8 @@ end
 --ret=o_card
 t['角色_战场_获取英雄技能_绝对身份'] = function(estr_absolute_id_type_绝对身份)
     local o_misc = G.misc()
-
+    
+    misc_attr_check('英雄技能信息')
     return o_misc.英雄技能信息[estr_absolute_id_type_绝对身份]
 end
 
@@ -237,20 +228,6 @@ t['角色_获取水晶数据_绝对身份'] = function(estr_absolute_id_type_绝
 
     misc_attr_check('水晶信息', estr_absolute_id_type_绝对身份)
     return o_misc.水晶信息[estr_absolute_id_type_绝对身份][estr_mana_type_获取类型] or 0
-end
-
-t['角色_设置水晶数据_回合开始_绝对身份'] = function(estr_absolute_id_type_绝对身份)
-    local 最大值 = G.call('角色_获取水晶数据_绝对身份', estr_absolute_id_type_绝对身份, '最大值')
-    最大值 = get_value_by_interval(最大值 + 1, 0, MANA_MAX_COUNT)
-    
-    local 下回锁定值 = G.call('角色_获取水晶数据_绝对身份', estr_absolute_id_type_绝对身份, '下回锁定值')
-    local 锁定值 = get_value_by_interval(下回锁定值, 0, 最大值)
-    local 当前值 = get_value_by_interval(最大值 - 下回锁定值, 0, MANA_MAX_COUNT)
-
-    G.call('角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, '最大值', 最大值)
-    G.call('角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, '当前值', 当前值)
-    G.call('角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, '锁定值', 锁定值)
-    G.call('角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, '下回锁定值', 0)
 end
 
 --hide=true

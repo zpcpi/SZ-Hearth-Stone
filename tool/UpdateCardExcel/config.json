@@ -1,5 +1,5 @@
 {
-    "CardExcelPath" : "../../excel/卡牌信息表.xlsx",
+    "CardExcelPath" : "../../excel/卡片表.xlsx",
     "HSDataJsonPath" : "./cards.json",
     "HSDataXmlPath" : "./CardDefs.xml",
     "CardXmlParseDefinePath" : "./CardXmlParseDefine.xml"

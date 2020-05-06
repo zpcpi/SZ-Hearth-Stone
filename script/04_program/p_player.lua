@@ -103,7 +103,12 @@ t['角色_牌库抽取卡牌'] = function(estr_player_抽牌者相对身份, est
                         _o_randomlib_抽牌牌库[3](1)[1] or -- 为空，说明牌库底里面没有卡牌
                         G.call('卡牌实例化', G.QueryName(0x100600b5), estr_player_牌库所属相对身份) -- 为空，抽疲劳卡
                    
-    G.call('角色_添加手牌', estr_player_抽牌者相对身份, o_card_卡片)
+    G.call('技能效果_效果树_执行子效果', {
+        ['Player'] = estr_player_抽牌者相对身份,
+        ['卡牌来源'] = '我方牌库',
+    },function ()
+        G.call('角色属性_手牌_添加', estr_player_抽牌者相对身份, o_card_卡片)
+    end)
     G.trig_event('UI_牌库更新')
 end
 
@@ -227,24 +232,18 @@ t['角色_设置水晶数据'] = function(estr_player_相对身份, estr_mana_ty
         int_value = MANA_MAX_COUNT
     end
 
-    G.call('角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, estr_mana_type_修改类型, int_value)
-    if (estr_mana_type_修改类型 ~= '预览值') and (estr_mana_type_修改类型 ~= '预览锁定值') then
-        G.call('网络通用_广播消息', '角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, estr_mana_type_修改类型, int_value)
+    local int_oldv = G.call('角色_获取水晶数据_绝对身份', estr_absolute_id_type_绝对身份, estr_mana_type_修改类型)
+    if int_value ~= int_oldv then
+        G.call('角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, estr_mana_type_修改类型, int_value)
+        if (estr_mana_type_修改类型 ~= '预览值') and (estr_mana_type_修改类型 ~= '预览锁定值') then
+            G.call('网络通用_广播消息', '角色_设置水晶数据_绝对身份', estr_absolute_id_type_绝对身份, estr_mana_type_修改类型, int_value)
+        end
     end
 end
 
 t['角色_获取水晶数据'] = function(estr_player_相对身份, estr_mana_type_获取类型)
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
     return G.call('角色_获取水晶数据_绝对身份', estr_absolute_id_type_绝对身份, estr_mana_type_获取类型)
-end
-
-t['角色_设置水晶数据_回合开始'] = function(estr_player_相对身份)
-    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
-
-    if true then
-        G.call('角色_设置水晶数据_回合开始_绝对身份', estr_absolute_id_type_绝对身份)
-        G.call('网络通用_广播消息', '角色_设置水晶数据_回合开始_绝对身份', estr_absolute_id_type_绝对身份)
-    end
 end
 
 --hide=true
@@ -259,14 +258,17 @@ t['角色_获取可用卡牌'] = function(estr_absolute_id_type_绝对身份, bo
     local _o_card_可用卡牌 = {}
     local int_剩余水晶数 = G.call('角色_获取水晶数据_绝对身份', estr_absolute_id_type_绝对身份, '当前值')
     local _o_card_手牌列表 = G.call('角色_获取手牌_绝对身份', estr_absolute_id_type_绝对身份)
-    if boolean_包含技能 then 
-        local o_card_英雄技能 = G.call('角色_战场_获取英雄技能_绝对身份', estr_absolute_id_type_绝对身份)
-        table.insert(_o_card_手牌列表, o_card_英雄技能)
-    end
     for _, o_card_手牌 in ipairs(_o_card_手牌列表) do 
         local int_卡片费用 = G.call('卡牌属性_获取', o_card_手牌, '费用', '当前值') or 0
         if int_剩余水晶数 >= int_卡片费用 then 
             table.insert(_o_card_可用卡牌, o_card_手牌)
+        end
+    end
+    if boolean_包含技能 then 
+        local o_card_英雄技能 = G.call('角色_战场_获取英雄技能_绝对身份', estr_absolute_id_type_绝对身份)
+        local int_卡片费用 = G.call('卡牌属性_获取', o_card_英雄技能, '费用', '当前值') or 0
+        if int_剩余水晶数 >= int_卡片费用 then 
+            table.insert(_o_card_可用卡牌, o_card_英雄技能)
         end
     end
     return _o_card_可用卡牌

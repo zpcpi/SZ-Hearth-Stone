@@ -55,8 +55,10 @@ t['对决_初始化界面'] = function()
 end
 
 t['对决_初始化数据'] = function(o_room_player_玩家)
-    G.call('对决_初始化对决牌库', o_room_player_玩家)
-    G.call('对决_初始化对决角色', o_room_player_玩家)
+    G.trig_event('流程_对局开始', o_room_player_玩家.绝对身份, o_room_player_玩家)
+
+    -- G.call('对决_初始化对决牌库', o_room_player_玩家)
+    -- G.call('对决_初始化对决角色', o_room_player_玩家)
 end
 
 t['对决_初始化协程'] = function(o_room_player_玩家)
@@ -80,7 +82,13 @@ t['对决_决定初始卡牌'] = function(o_room_player_玩家)
         local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
         
         local o_card_硬币 = G.call('卡牌实例化', G.QueryName(0x1006000e), estr_player_相对身份)
-        G.call('角色_添加手牌', estr_player_相对身份, o_card_硬币, true)
+
+        G.call('技能效果_效果树_执行子效果', {
+            ['Player'] = estr_player_相对身份,
+            ['卡牌来源'] = '发现',
+        },function ()
+            G.call('角色属性_手牌_添加', estr_player_相对身份, o_card_硬币, true)
+        end)
     end
 end
 
@@ -195,25 +203,6 @@ t['对决_设置对决卡组'] = function(o_deck_卡组)
     G['对决卡组'] = o_deck_卡组
 end
 
---ret=o_battle_role
-t['对决_初始化对决角色'] = function(o_room_player_玩家)
-    local o_deck_卡组 = G.call('对决_获取卡组模板', o_room_player_玩家)
-    if not G.call('对决_卡组模板是否有效', o_deck_卡组) then
-        G.call('提示_添加提示', '卡组模板数据不正确')
-        return 
-    end
-
-    -- TODO: 暂时读取卡组的第一英雄作为角色英雄
-    local hero = o_deck_卡组.英雄[1]
-    -- TODO: 暂时读取英雄的第一衍生卡作为角色技能
-    local skill = G.QueryName(hero).局外数据.衍生卡[1]
-    local estr_absolute_id_type_绝对身份 = o_room_player_玩家['绝对身份']
-    local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
-    
-    G.call('角色_战场_设置英雄', estr_player_相对身份, G.call('卡牌实例化', G.QueryName(hero), estr_player_相对身份))
-    G.call('角色_战场_设置英雄技能', estr_player_相对身份, G.call('卡牌实例化', G.QueryName(skill), estr_player_相对身份))
-end
-
 --ret=int
 t['对决_获取对决角色生命值'] = function(estr_player_相对身份)
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
@@ -232,7 +221,6 @@ t['对决_获取初始生命值'] = function()
     return 30
 end
 
---ret=o_deck
 t['对决_初始化对决牌库'] = function(o_room_player_玩家)
     local o_deck_卡组 = G.call('对决_获取卡组模板', o_room_player_玩家)
     if not G.call('对决_卡组模板是否有效', o_deck_卡组) then 
@@ -277,6 +265,24 @@ t['对决_初始化对决牌库'] = function(o_room_player_玩家)
         o_randomlib_牌库底,
     }
     G.trig_event('UI_牌库更新')
+end
+
+t['对决_初始化对决角色'] = function(o_room_player_玩家)
+    local o_deck_卡组 = G.call('对决_获取卡组模板', o_room_player_玩家)
+    if not G.call('对决_卡组模板是否有效', o_deck_卡组) then
+        G.call('提示_添加提示', '卡组模板数据不正确')
+        return 
+    end
+
+    -- TODO: 暂时读取卡组的第一英雄作为角色英雄
+    local hero = o_deck_卡组.英雄[1]
+    -- TODO: 暂时读取英雄的第一衍生卡作为角色技能
+    local skill = G.QueryName(hero).局外数据.衍生卡[1]
+    local estr_absolute_id_type_绝对身份 = o_room_player_玩家['绝对身份']
+    local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
+    
+    G.call('角色_战场_设置英雄', estr_player_相对身份, G.call('卡牌实例化', G.QueryName(hero), estr_player_相对身份))
+    G.call('角色_战场_设置英雄技能', estr_player_相对身份, G.call('卡牌实例化', G.QueryName(skill), estr_player_相对身份))
 end
 
 --ret=boolean

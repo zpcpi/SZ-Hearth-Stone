@@ -3,11 +3,11 @@
 ]]
 local G = require 'gf'
 local c_animactor = require 'c_animactor'
-local c_battle_playqueue = require 'c_battle_playqueue'
+local c_battle_playqueue_enemy = require 'c_battle_playqueue_enemy'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
-tc.name = 'v_battle_playqueue'
+tc.name = 'v_battle_playqueue_self'
 tc.left = -640.000
 tc.right = 640.000
 tc.bottom = -360.000
@@ -16,11 +16,11 @@ tp = tc
 	tc = G.Entity()
 	tp.addChild(tc)
 	tc.name = '队列功能区'
-	tc.left = -511.000
+	tc.left = -375.000
 	tc.right = -285.000
-	tc.bottom = 120.000
-	tc.top = 245.000
-	tc.anchor = 0x3232
+	tc.bottom = -210.000
+	tc.top = -85.000
+	tc.anchor = 0x64643232
 	tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
@@ -39,10 +39,10 @@ tp = tc
 	tc = G.Entity()
 	tp.addChild(tc)
 	tc.name = '释放功能区'
-	tc.left = -528.000
-	tc.right = -344.000
-	tc.bottom = 344.500
-	tc.top = 608.500
+	tc.left = -557.000
+	tc.right = -373.000
+	tc.bottom = 246.000
+	tc.top = 510.000
 	tc.anchor = 0x3232
 	tp = tc
 		tc = G.Quad()
@@ -71,4 +71,4 @@ tp = tc
 	tp.c_animactor = setmetatable({}, c_animactor)
 	tp = tp.parent
 	--end
-tp.c_battle_playqueue = setmetatable({}, c_battle_playqueue)
+tp.c_battle_playqueue_enemy = setmetatable({}, c_battle_playqueue_enemy)

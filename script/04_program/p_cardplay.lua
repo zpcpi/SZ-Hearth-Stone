@@ -10,19 +10,40 @@ local real_t = G.api
 -- 逻辑_法术牌打出
 -- 逻辑_英雄技能使用
 
+local function o2i(card)
+    return card.name
+end
+
+local function i2o(i_card)
+    return G.QueryName(i_card)
+end
+
 t['卡牌使用_主流程_thread'] = function (estr_player_相对身份, o_order_info_当前指令信息)
     local get_attr = CARD_GET_ATTR
 
     local effect_stack = G.misc().当前效果堆栈
+    local Caster = i2o(o_order_info_当前指令信息['Caster'])
 
     local root_info = {
         ['Player'] = estr_player_相对身份,
-        ['Caster'] = o_order_info_当前指令信息['Caster'],
-        ['Target'] = o_order_info_当前指令信息['Target'],
+        ['Caster'] = Caster,
+        ['Target'] = G.call('array_map', o_order_info_当前指令信息['Target'], i2o),
         ['Parent'] = nil,
         ['MinionPos'] = o_order_info_当前指令信息['MinionPos'],
     }
     effect_stack.push(root_info)
+
+    -- 进行一次卡牌信息广播
+    -- G.call('卡牌实例化_信息更新_预处理', Caster, {'root', '卡牌属性', '逻辑数据', '动态数据'})
+    
+    -- 去除未知标签
+    if G.call('卡牌条件_卡牌特性判断', Caster, {'未知'}) then
+        G.call('技能效果_效果树_执行子效果', {
+            ['Target'] = {Caster},
+        }, function ()
+            G.call('技能效果_特性', nil, {'未知'})
+        end)
+    end
 
     -- 法力值消耗
     G.call('卡牌使用_消耗法力')
@@ -36,7 +57,7 @@ t['卡牌使用_主流程_thread'] = function (estr_player_相对身份, o_order
     end
 
     -- 不同类型，加下来的事件并不一致
-    local Caster = o_order_info_当前指令信息['Caster']
+    local Caster = i2o(o_order_info_当前指令信息['Caster'])
     local cardtype = get_attr(Caster, '逻辑数据', '类型')
 
     if cardtype == 0x10090001 then
@@ -54,14 +75,11 @@ t['卡牌使用_主流程_thread'] = function (estr_player_相对身份, o_order
         else
             -- 不在战场，那么可能是在手牌使用的
             G.call('角色_移除手牌_byCard', estr_player_相对身份, Caster)
+            Caster['动态数据']['卡牌位置'] = '坟场'
         end
     elseif cardtype == 0x10090004 then
         -- 随从卡，召唤随从
         -- 可能不对，需要判断下
-        local index = o_order_info_当前指令信息['MinionPos']
-        --o_order_info_当前指令信息[''] = Caster
-        G.call('角色_战场_添加随从', estr_player_相对身份, Caster, index)
-
         G.call('卡牌使用_使用')
 
         G.call('角色_移除手牌_byCard', estr_player_相对身份, Caster)
@@ -70,6 +88,7 @@ t['卡牌使用_主流程_thread'] = function (estr_player_相对身份, o_order
         G.call('卡牌使用_使用')
 
         G.call('角色_移除手牌_byCard', estr_player_相对身份, Caster)
+        Caster['动态数据']['卡牌位置'] = '坟场'
     elseif cardtype == 0x10090006 then
         -- 武器卡
         -- 有特殊处理，需要考虑新旧武器替换
@@ -86,7 +105,26 @@ t['卡牌使用_主流程_thread'] = function (estr_player_相对身份, o_order
 end
 
 real_t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
-    G.start_program('卡牌使用_主流程_thread', estr_player_相对身份, o_order_info_当前指令信息)
+    local Caster = o_order_info_当前指令信息['Caster']
+    if G.call('主机_是主机') then
+        G.start_program('卡牌使用_主流程_thread', estr_player_相对身份, {
+            ['Player'] = '我方',
+            ['Caster'] = o2i(Caster),
+            ['Target'] = G.call('array_map', o_order_info_当前指令信息['Target'], o2i),
+            ['Parent'] = nil,
+            ['MinionPos'] = o_order_info_当前指令信息['MinionPos'],
+        })
+    else
+        G.call('卡牌实例化_信息更新_预处理', Caster, {'root', '卡牌属性', '逻辑数据', '动态数据'})
+
+        G.call('网络通用_广播消息', '卡牌使用_主流程_thread', '敌方1', {
+            ['Player'] = '敌方1',
+            ['Caster'] = o2i(Caster),
+            ['Target'] = G.call('array_map', o_order_info_当前指令信息['Target'], o2i),
+            ['Parent'] = nil,
+            ['MinionPos'] = o_order_info_当前指令信息['MinionPos'],
+        })
+    end
 end
 
 t['卡牌攻击_主流程_thread'] = function (estr_player_相对身份, o_order_info_当前指令信息)
@@ -112,7 +150,24 @@ t['卡牌攻击_主流程_thread'] = function (estr_player_相对身份, o_order
 end
 
 real_t['卡牌攻击_主流程'] = function (estr_player_相对身份, o_order_info_当前指令信息)
-    G.start_program('卡牌攻击_主流程_thread', estr_player_相对身份, o_order_info_当前指令信息)
+    local Caster = o_order_info_当前指令信息['Caster']
+    if G.call('主机_是主机') then
+        G.start_program('卡牌攻击_主流程_thread', estr_player_相对身份, {
+            ['Player'] = '我方',
+            ['Caster'] = o2i(Caster),
+            ['Target'] = G.call('array_map', o_order_info_当前指令信息['Target'], o2i),
+            ['Parent'] = nil,
+            ['MinionPos'] = o_order_info_当前指令信息['MinionPos'],
+        })
+    else
+        G.call('网络通用_广播消息', '卡牌攻击_主流程_thread', '敌方1', {
+            ['Player'] = '敌方1',
+            ['Caster'] = o2i(Caster),
+            ['Target'] = G.call('array_map', o_order_info_当前指令信息['Target'], o2i),
+            ['Parent'] = nil,
+            ['MinionPos'] = o_order_info_当前指令信息['MinionPos'],
+        })
+    end
 end
 
 -- ============================================
@@ -177,10 +232,10 @@ t['卡牌使用_消耗法力'] = function ()
         local estr_player_相对身份 = o_skill_info_效果信息['Player']
 
         local 当前值 = G.call('角色_获取水晶数据', estr_player_相对身份, '当前值')
-        G.call('角色_设置水晶数据', estr_player_相对身份, '当前值', 当前值 - 费用)
+        G.call('角色属性_水晶_设置', estr_player_相对身份, '当前值', 当前值 - 费用)
     
         local 下回锁定值 = G.call('角色_获取水晶数据', estr_player_相对身份, '下回锁定值')
-        G.call('角色_设置水晶数据', estr_player_相对身份, '下回锁定值', 下回锁定值 + 过载费用)
+        G.call('角色属性_水晶_设置', estr_player_相对身份, '下回锁定值', 下回锁定值 + 过载费用)
     end
 
     effect_action_iter(nil, '逻辑_卡牌使用_消耗法力', init, action)
@@ -274,10 +329,17 @@ t['卡牌使用_随从召唤'] = function ()
     local get_attr = CARD_GET_ATTR
 
     local init = function (o_skill_info_效果信息)
+        local Caster = o_skill_info_效果信息['Caster']
+        G.trig_event('逻辑_随从召唤前', Caster)
     end
 
     local action = function (o_skill_info_效果信息)
+        local Player = o_skill_info_效果信息['Player']
         local Caster = o_skill_info_效果信息['Caster']
+        local index = o_skill_info_效果信息['MinionPos']
+        
+        G.call('角色_战场_添加随从', Player, Caster, index)
+        
         G.trig_event('逻辑_随从召唤', Caster)
 
         -- todo，记录
@@ -286,27 +348,22 @@ t['卡牌使用_随从召唤'] = function ()
 end
 
 t['卡牌使用_武器装备'] = function ()
-    local get_attr = CARD_GET_ATTR
-
     local init = function (o_skill_info_效果信息)
         local Caster = o_skill_info_效果信息['Caster']
-        
         G.trig_event('逻辑_武器装备前', Caster)
     end
 
     local action = function (o_skill_info_效果信息)
+        local Player = o_skill_info_效果信息['Player']
         local Caster = o_skill_info_效果信息['Caster']
-        local cardtype = get_attr(Caster, '逻辑数据', '类型')
-        local player = '我方'
 
         -- 老武器摧毁
-        -- TODO，玩家归属判断
-        local old_weapon = G.call('角色_战场_获取武器', player)
+        local old_weapon = G.call('角色_战场_获取武器', Player)
         if old_weapon then
             -- 这里只是打上标记
             G.call('技能效果_效果树_执行子效果',
                     {
-                        ['Player'] = o_skill_info_效果信息['Player'],
+                        ['Player'] = Player,
                         ['Caster'] = Caster,
                         ['Target'] = {old_weapon},
                     },
@@ -314,16 +371,87 @@ t['卡牌使用_武器装备'] = function ()
                         G.call('技能效果_消灭目标')
                     end
                 )
-            -- G.call('技能效果_死亡结算')
         end
         -- 武器卡
-        -- TODO，先判断下武器还在不在
-        G.call('角色_战场_设置武器', player, Caster)
+        G.call('角色_战场_设置武器', Player, Caster)
         G.trig_event('逻辑_武器装备', Caster)
 
         -- todo，记录
     end
+    
     effect_action_iter(nil, nil, init, action)
+end
+
+t['卡牌使用_英雄召唤'] = function ()
+    local init = function (o_skill_info_效果信息)
+        local Caster = o_skill_info_效果信息['Caster']
+        G.trig_event('逻辑_英雄召唤前', Caster)
+    end
+
+    local action = function (o_skill_info_效果信息)
+        local Player = o_skill_info_效果信息['Player']
+        local Caster = o_skill_info_效果信息['Caster']
+
+        -- 老英雄摧毁
+        local old_hero = G.call('角色_战场_获取英雄', Player)
+        if old_hero then
+            -- 这里只是打上标记
+            G.call('技能效果_效果树_执行子效果',
+                    {
+                        ['Player'] = Player,
+                        ['Caster'] = Caster,
+                        ['Target'] = {old_hero},
+                    },
+                    function ()
+                        G.call('技能效果_消灭目标')
+                    end
+                )
+        end
+
+        G.call('角色_战场_设置英雄', Player, Caster)
+        G.trig_event('逻辑_英雄召唤', Caster)
+
+        -- todo，记录
+    end
+
+    effect_action_iter(nil, nil, init, action)
+end
+
+t['卡牌使用_英雄技能装备'] = function ()
+    local init = function (o_skill_info_效果信息)
+        local Caster = o_skill_info_效果信息['Caster']
+        G.trig_event('逻辑_英雄技能装备前', Caster)
+    end
+
+    local action = function (o_skill_info_效果信息)
+        local Player = o_skill_info_效果信息['Player']
+        local Caster = o_skill_info_效果信息['Caster']
+
+        -- 老英雄技能摧毁
+        local old_skill = G.call('角色_战场_获取英雄技能', Player)
+        if old_skill then
+            -- 这里只是打上标记
+            G.call('技能效果_效果树_执行子效果',
+                    {
+                        ['Player'] = Player,
+                        ['Caster'] = Caster,
+                        ['Target'] = {old_skill},
+                    },
+                    function ()
+                        G.call('技能效果_消灭目标')
+                    end
+                )
+        end
+
+        G.call('角色_战场_设置英雄技能', Player, Caster)
+        G.trig_event('逻辑_英雄技能装备', Caster)
+
+        -- todo，记录
+    end
+
+    effect_action_iter(nil, nil, init, action)
+
+    -- 逻辑_英雄技能装备
 end
 
 
@@ -849,12 +977,78 @@ real_t['逻辑注册_添加'] = function ()
     trigger_iter(card, '添加', skill.name)
 end
 
+-- 关键字逻辑注册
+
+real_t['逻辑注册_死亡'] = function ()
+    local info = G.event_info()
+    local card = info['Caster']
+
+    trigger_iter(card, '死亡')
+end
+
+real_t['逻辑注册_战吼'] = function ()
+    local info = G.event_info()
+    local card = info['Caster']
+
+    trigger_iter(card, '战吼')
+end
+
+local function get_value_by_interval(v, min, max)
+    if v < min then
+        return min
+    elseif v > max then
+        return max
+    else
+        return v
+    end
+end
+
 -- 特定流程
+t['逻辑注册_初始流程_absolute'] = function ()
+    local absolute_player,room_player = G.event_info()
+
+    local o_deck_卡组 = G.call('对决_获取卡组模板', room_player)
+    if not G.call('对决_卡组模板是否有效', o_deck_卡组) then
+        G.call('提示_添加提示', '卡组模板数据不正确')
+        return 
+    end
+
+    G.call('对决_初始化对决牌库', room_player)
+    --G.call('对决_初始化对决角色', room_player)
+
+    -- 对决_初始化对决角色
+    do
+        -- TODO: 暂时读取卡组的第一英雄作为角色英雄
+        local hero = o_deck_卡组.英雄[1]
+        -- TODO: 暂时读取英雄的第一衍生卡作为角色技能
+        local skill = G.QueryName(hero).局外数据.衍生卡[1]
+
+        G.call('技能效果_效果树_执行子效果',
+                {
+                    ['Player'] = G.call('房间_获取相对身份', absolute_player),
+                },
+                function ()
+                    G.call('技能效果_替换英雄', hero, false, skill, false)
+                end
+            )
+    end
+end
+
 t['逻辑注册_水晶设置_absolute'] = function ()
     local absolute_player = G.event_info()
     local estr_player_相对身份 = G.call('房间_获取相对身份', absolute_player)
 
-    G.call('角色_设置水晶数据_回合开始', estr_player_相对身份)
+    local 最大值 = G.call('角色_获取水晶数据', estr_player_相对身份, '最大值')
+    最大值 = get_value_by_interval(最大值 + MANA_GROW_COUNT, 0, MANA_MAX_COUNT)
+    
+    local 下回锁定值 = G.call('角色_获取水晶数据', estr_player_相对身份, '下回锁定值')
+    local 锁定值 = get_value_by_interval(下回锁定值, 0, 最大值)
+    local 当前值 = get_value_by_interval(最大值 - 下回锁定值, 0, MANA_MAX_COUNT)
+
+    G.call('角色属性_水晶_设置', estr_player_相对身份, '最大值', 最大值)
+    G.call('角色属性_水晶_设置', estr_player_相对身份, '当前值', 当前值)
+    G.call('角色属性_水晶_设置', estr_player_相对身份, '锁定值', 锁定值)
+    G.call('角色属性_水晶_设置', estr_player_相对身份, '下回锁定值', 0)
 end
 
 t['逻辑注册_抽牌_absolute'] = function ()
@@ -1122,14 +1316,10 @@ t['逻辑注册_武器功能_消耗耐久'] = function ()
     end
 end
 
--- 特定逻辑
--- 战吼
-t['逻辑注册_战吼'] = function ()
-    local info = G.event_info()
-    local card = info['Caster']
+-- 死亡
 
-    trigger_iter(card, '战吼')
-end
+-- 特定卡牌死亡
+-- 英雄、技能、随从、武器、奥秘、场地
 
 t['逻辑注册_卡牌死亡结算'] = function ()
     local init = function (o_skill_info_效果信息)
@@ -1231,13 +1421,7 @@ t['逻辑注册_卡牌死亡结算'] = function ()
     effect_action_iter(nil, nil, init, action)
 end
 
--- 死亡
-t['逻辑注册_死亡'] = function ()
-    local info = G.event_info()
-    local card = info['Caster']
-
-    trigger_iter(card, '死亡')
-end
+-- 关键字功能
 
 t['逻辑注册_冲锋添加'] = function ()
     local Target = G.event_info()
@@ -1391,7 +1575,12 @@ end
 
 real_t['通用逻辑_角色相关流程注册'] = function (estr_absolute_id_type_绝对身份)
     local cond = nil
+    local prior_base = EVENT_PRIOR.base
+    local group_system = EVENT_GROUP.system
     
+    -- 初始化对决角色
+    G.addListener('逻辑注册_初始流程_absolute', {'流程_对局开始', estr_absolute_id_type_绝对身份}, cond, prior_base, group_system)
+
     -- 特定流程
     G.addListener('逻辑注册_水晶设置_absolute', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.SetMana, EVENT_GROUP.SetMana)
     G.addListener('逻辑注册_抽牌_absolute', {'流程_回合开始', estr_absolute_id_type_绝对身份}, cond, EVENT_PRIOR.drawCard, EVENT_GROUP.drawCard)
@@ -1661,7 +1850,7 @@ t['技能效果_本回合当前水晶'] = function (int_变动值)
 
         if estr_player_相对身份 then
             local cur_value = G.call('角色_获取水晶数据', estr_player_相对身份, '当前值') or 0
-            G.call('角色_设置水晶数据', estr_player_相对身份, '当前值', cur_value + int_变动值)
+            G.call('角色属性_水晶_设置', estr_player_相对身份, '当前值', cur_value + int_变动值)
         end
     end
 
@@ -1691,7 +1880,7 @@ t['技能效果_最大水晶'] = function (int_变动值)
 
         if estr_player_相对身份 then
             local cur_value = G.call('角色_获取水晶数据', estr_player_相对身份, '最大值') or 0
-            G.call('角色_设置水晶数据', estr_player_相对身份, '最大值', cur_value + int_变动值)
+            G.call('角色属性_水晶_设置', estr_player_相对身份, '最大值', cur_value + int_变动值)
         end
     end
 
@@ -1711,7 +1900,7 @@ t['技能效果_当前水晶'] = function (int_变动值)
 
         if estr_player_相对身份 then
             local cur_value = G.call('角色_获取水晶数据', estr_player_相对身份, '当前值') or 0
-            G.call('角色_设置水晶数据', estr_player_相对身份, '当前值', cur_value + int_变动值)
+            G.call('角色属性_水晶_设置', estr_player_相对身份, '当前值', cur_value + int_变动值)
         end
     end
 
@@ -1989,7 +2178,9 @@ t['技能效果_创建手牌'] = function (i_card_创建卡牌ID, boolean_是否
             else
                 o_card_添加卡牌实例 = G.call('卡牌实例化', G.QueryName(i_card_创建卡牌ID), estr_player_相对身份)
             end
-            G.call('角色_添加手牌', estr_player_相对身份, o_card_添加卡牌实例, boolean_是否明牌)
+
+            o_skill_info_效果信息['卡牌来源'] = o_skill_info_效果信息['卡牌来源'] or '释放者创造'
+            G.call('角色属性_手牌_添加', estr_player_相对身份, o_card_添加卡牌实例, boolean_是否明牌)
         end
     end
 
@@ -2104,6 +2295,7 @@ t['技能效果_追踪术'] = function (int_追踪数量)
                                         ['Caster'] = Caster,
                                         ['Target'] = {o_card_select},
                                         ['Parent'] = o_skill_info_效果信息,
+                                        ['卡牌来源'] = '发现',
                                     }, 
                                     function ()
                                         G.call('技能效果_创建手牌', o_card_select.name, false, true)
@@ -2171,7 +2363,6 @@ t['技能效果_召唤'] = function (datas)
                             ['MinionPos'] = index,
                         }, 
                         function ()
-                            G.call('角色_战场_添加随从', player, o_card_召唤单位, index)
                             G.call('卡牌使用_上场')
                             G.call('卡牌使用_随从召唤')
                         end
@@ -2322,10 +2513,11 @@ t['技能效果_牧师精控'] = function ()
 
                         Target['动态数据']['所有者'] = G.call('房间_获取绝对身份', player)
 
+                        G.call('卡牌使用_上场')
+                        
+                        -- 精控只有上场，不是召唤
                         -- TODO，判断场面是否满了
                         G.call('角色_战场_添加随从', player, Target)
-
-                        G.call('卡牌使用_上场')
                     end
                 )
         end
@@ -2357,7 +2549,9 @@ t['技能效果_潜行者闷棍'] = function ()
                         if (int_手牌数量 < HANDCARDS_MAX_COUNT) then
                             -- 手牌没有满，移动回手牌
                             G.call('角色_战场_移除随从', owner, Target)
-                            G.call('技能效果_创建手牌', Target.name, false, true)
+
+                            o_skill_info_效果信息['卡牌来源'] = '目标还原'
+                            G.call('技能效果_创建手牌', Target.name, true, true)
                         else
                             G.call('技能效果_消灭目标')
                         end
@@ -2404,6 +2598,75 @@ t['技能效果_装备武器'] = function (i_card_武器卡牌ID, boolean_是否
     effect_action_iter(nil, nil, init, action)
 end
 
+t['技能效果_替换英雄'] = function (i_card_英雄卡牌ID, boolean_英雄是否是实例, i_card_技能卡牌ID, boolean_技能是否是实例)
+    local init = function (o_skill_info_效果信息)
+    end
+    local action = function (o_skill_info_效果信息)
+        local estr_player_相对身份 = o_skill_info_效果信息['Player']
+        if estr_player_相对身份 then
+        else
+            return
+        end
+
+        -- TODO，缺少处理
+        local o_card_英雄卡牌实例
+        if boolean_英雄是否是实例 then
+            o_card_英雄卡牌实例 = G.QueryName(i_card_英雄卡牌ID)
+        else
+            o_card_英雄卡牌实例 = G.call('卡牌实例化', G.QueryName(i_card_英雄卡牌ID), estr_player_相对身份)
+        end
+
+        G.call('技能效果_效果树_执行子效果',
+                {
+                    ['Player'] = estr_player_相对身份,
+                    ['Caster'] = o_card_英雄卡牌实例,
+                },
+                function ()
+                    G.call('卡牌使用_上场')
+                    G.call('卡牌使用_英雄召唤')
+                    G.call('技能效果_更换英雄技能', i_card_技能卡牌ID, boolean_技能是否是实例)
+                end
+            )
+    end
+        
+    -- TODO，英雄和技能替换需要抛出事件
+    effect_action_iter(nil, nil, init, action)
+end
+
+t['技能效果_更换英雄技能'] = function (i_card_技能卡牌ID, boolean_技能是否是实例)
+    local init = function (o_skill_info_效果信息)
+    end
+    local action = function (o_skill_info_效果信息)
+        local estr_player_相对身份 = o_skill_info_效果信息['Player']
+        if estr_player_相对身份 then
+        else
+            return
+        end
+
+        -- TODO，缺少处理
+        local o_card_技能卡牌实例
+        if boolean_技能是否是实例 then
+            o_card_技能卡牌实例 = G.QueryName(i_card_技能卡牌ID)
+        else
+            o_card_技能卡牌实例 = G.call('卡牌实例化', G.QueryName(i_card_技能卡牌ID), estr_player_相对身份)
+        end
+
+        G.call('技能效果_效果树_执行子效果',
+                {
+                    ['Player'] = estr_player_相对身份,
+                    ['Caster'] = o_card_技能卡牌实例,
+                },
+                function ()
+                    G.call('卡牌使用_上场')
+                    G.call('卡牌使用_英雄技能装备')
+                end
+            )
+    end
+
+    -- TODO，英雄和技能替换需要抛出事件
+    effect_action_iter(nil, nil, init, action)
+end
+
 t['技能效果_弃牌'] = function (int_编号)
     local init = function (o_skill_info_效果信息)
         local estr_player_相对身份 = o_skill_info_效果信息['Player']
@@ -2428,6 +2691,7 @@ t['技能效果_弃牌'] = function (int_编号)
         local int_编号 = o_skill_info_效果信息['弃牌编号']
 
         if int_编号 then
+            -- todo，这里调用丢弃手牌接口
             G.call('角色_移除手牌', estr_player_相对身份, int_编号)
         end
     end
@@ -3007,6 +3271,8 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
         return v
     end
 
+    -- todo，网络通讯
+
     if estr_cardattr_type_属性类型 == '当前值' then
         dyn_data = o_card_当前卡牌['动态数据']
         tattr = dyn_data['当前属性']
@@ -3054,6 +3320,23 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
 
         G.trig_event('逻辑_卡牌属性改变', o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, old_value)
     end
+end
+
+-- ============================================
+-- ============================================
+-- ============================================
+-- 玩家属性相关接口
+-- ============================================
+-- ============================================
+-- ============================================
+
+t['角色属性_水晶_设置'] = function(estr_player_相对身份, estr_mana_type_修改类型, int_value)
+    G.call('角色_设置水晶数据', estr_player_相对身份, estr_mana_type_修改类型, int_value)
+end
+
+t['角色属性_手牌_添加'] = function(estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
+    -- todo，处理一下事件
+    G.call('角色_添加手牌', estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
 end
 
 -- ============================================

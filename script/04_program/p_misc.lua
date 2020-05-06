@@ -47,7 +47,12 @@ t['asdasd'] = function ()
 end
 
 t['zpc_test'] = function (count)
-    G.call('网络通讯_请求信息', '敌方1', {'网络通讯_技能效果_获知随机卡牌', 1, '手牌', true})
+    print('asd', 1, os.clock())
+
+    G.wait_time(1000)
+
+    print('asd', 2, os.clock())
+
 end
 
 t['zpc_test2'] = function (a)

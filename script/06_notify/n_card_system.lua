@@ -62,14 +62,18 @@ local com_mapping = {
     ['我方'] = {
         ['战场随从'] = {'selfBattleminion', 'c_battleminion_self'},
         ['战场英雄'] = {'selfBattlehero', 'c_battlehero_self'},
-        ['执行队列'] = {'卡牌队列组件'},
+        ['执行队列'] = {'selfPlayQueue'},
         ['手牌'] = {'selfHandcard', 'c_handcards_self'},
         ['牌库'] = {'carddeck', 'c_carddeck'},
+        ['水晶'] = {'selfBattlemana', 'c_battlemana_self'},
+        ['发现'] = {'choose'}
     },
     ['敌方1'] = {
         ['战场随从'] = {'enemyBattleminion', 'c_battleminion_enemy'},
         ['战场英雄'] = {'enemyBattlehero', 'c_battlehero_enemy'},
+        ['执行队列'] = {'enemyPlayQueue'},
         ['手牌'] = {'enemyHandcard', 'c_handcards_enemy'},
+        ['水晶'] = {'enemyBattlemana', 'c_battlemana_enemy'},
     },
 }
 
@@ -99,29 +103,38 @@ local get_obj_bycard = function (Card)
     local cardpos = get_attr(Card, '动态数据', '卡牌位置')
     local estr_absolute_id_type_绝对身份 = get_attr(Card, '动态数据', '所有者')
     local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
+
     if cardpos == '战场' then
         local cardtype = get_attr(Card, '逻辑数据', '类型')
         if cardtype == 0x10090001 then
             -- 英雄
             if Card == G.call('角色_战场_获取英雄', estr_player_相对身份) then
                 local script_战场组件 = get_component(estr_player_相对身份, '战场英雄')
-                obj = script_战场组件.英雄.c_card_manager.cur_obj
+                if script_战场组件 then
+                    obj = script_战场组件.英雄.c_card_manager.cur_obj
+                end
             end
         elseif cardtype == 0x10090003 then
             -- 英雄技能
             if Card == G.call('角色_战场_获取英雄技能', estr_player_相对身份) then
                 local script_战场组件 = get_component(estr_player_相对身份, '战场英雄')
-                obj = script_战场组件.英雄技能.c_card_manager.cur_obj
+                if script_战场组件 then
+                    obj = script_战场组件.英雄技能.c_card_manager.cur_obj
+                end
             end
         elseif cardtype == 0x10090004 then
             -- 随从
             local script_战场组件 = get_component(estr_player_相对身份, '战场随从')
-            obj = script_战场组件:get_obj_bycard(Card)
+            if script_战场组件 then
+                obj = script_战场组件:get_obj_bycard(Card)
+            end
         elseif cardtype == 0x10090006 then
             -- 武器
             if Card == G.call('角色_战场_获取武器', estr_player_相对身份) then
                 local script_战场组件 = get_component(estr_player_相对身份, '战场英雄')
-                obj = script_战场组件.武器.c_card_manager.cur_obj
+                if script_战场组件 then
+                    obj = script_战场组件.武器.c_card_manager.cur_obj
+                end
             end
         end
     elseif cardpos == '手牌' then
@@ -138,6 +151,12 @@ local get_obj_bycard = function (Card)
 
 
     elseif cardpos == '牌库' then
+    else
+        -- 发现的卡没有位置
+        local script_战场组件 = get_component(estr_player_相对身份, '发现')
+        if script_战场组件 then
+            obj = script_战场组件:get_obj_bycard(Card)
+        end
     end
 
     return obj
@@ -158,6 +177,11 @@ local create_missile = function (caster_obj, color)
 
         return obj_missile
     end
+end
+
+local create_newcard = function (Card)
+
+
 end
 
 local push_quote = function (obj)
@@ -232,6 +256,9 @@ noti[postcall .. '卡牌攻击_主流程_thread'] = animquest_pop
 noti[precall .. '卡牌使用_主流程_thread'] = animquest_push
 noti[postcall .. '卡牌使用_主流程_thread'] = animquest_pop
 
+noti[precall .. '逻辑注册_初始流程_absolute'] = animquest_push
+noti[postcall .. '逻辑注册_初始流程_absolute'] = animquest_pop
+
 noti[precall .. '逻辑注册_水晶设置_absolute'] = animquest_push
 noti[postcall .. '逻辑注册_水晶设置_absolute'] = animquest_pop
 
@@ -257,23 +284,32 @@ noti[precall .. '卡牌使用_使用'] = function ()
     local last_call = G.call('卡牌逻辑树_获取最后调用')
     local get_attr = CARD_GET_ATTR
     local Caster = get_attr(last_call, 'skill_info', 'Caster')
+    local Player = G.call('房间_获取相对身份', get_attr(Caster, '动态数据', '所有者'))
 
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
     local script_战场 = o_misc.主战场系统
-    local script_卡牌队列组件 = get_component('我方', '执行队列')
+    local script_PlayQueue = get_component(Player, '执行队列')
 
     local cardtype = get_attr(Caster, '逻辑数据', '类型')
 
     local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 0)
+
+    if get_obj_bycard(Caster) then
+    else
+        -- 没有获取到控件
+        script_PlayQueue:queue_addobj(Caster)
+        script_PlayQueue:queue_posinit()
+    end
+    local obj = get_obj_bycard(Caster)
 
     if cardtype == 0x10090003 then
         -- 英雄技能
     elseif cardtype == 0x10090004 then
         -- 随从
         local del_obj = function ()
-            local obj = script_卡牌队列组件:queue_popobj(Caster)
-            script_卡牌队列组件:queue_removeobj(obj)
+            local obj = script_PlayQueue:queue_popobj(Caster)
+            script_PlayQueue:queue_removeobj(obj)
         end
 
         o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 0, {
@@ -282,12 +318,8 @@ noti[precall .. '卡牌使用_使用'] = function ()
     elseif cardtype == 0x10090005 then
         -- 法术
         local push_queue_quote = function (Caster, string_obj)
-            local obj = script_卡牌队列组件:queue_popobj(Caster)
+            local obj = script_PlayQueue:queue_popobj(Caster)
             script_动画系统:push_quote(string_obj, obj)
-            -- if obj then
-            --     obj.parent:removeChild(obj)
-            --     script_战场.tips版:addChild(obj)
-            -- end
         end
 
         o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, true, 500, {
@@ -311,8 +343,8 @@ noti[precall .. '卡牌使用_使用'] = function ()
     elseif cardtype == 0x10090005 then
         -- 武器
         local del_obj = function ()
-            local obj = script_卡牌队列组件:queue_popobj(Caster)
-            script_卡牌队列组件:queue_removeobj(obj)
+            local obj = script_selfPlayQueue:queue_popobj(Caster)
+            script_selfPlayQueue:queue_removeobj(obj)
         end
 
         o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 0, {
@@ -328,19 +360,21 @@ noti[postcall .. '卡牌使用_使用'] = function ()
     local last_call = G.call('卡牌逻辑树_获取最后调用')
     local get_attr = CARD_GET_ATTR
     local Caster = get_attr(last_call, 'skill_info', 'Caster')
+    local Player = G.call('房间_获取相对身份', get_attr(Caster, '动态数据', '所有者'))
 
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
-    local script_卡牌队列组件 = get_component('我方', '执行队列')
+    local script_PlayQueue = get_component(Player, '执行队列')
 
     local cardtype = get_attr(Caster, '逻辑数据', '类型')
 
     if cardtype == 0x10090005 then
+        -- 法术
         local obj = get_obj_bycard(Caster)
 
         if obj then
             local del_queueobj = function ()
-                script_卡牌队列组件:queue_removeobj(obj)
+                script_PlayQueue:queue_removeobj(obj)
             end
             -- 法术
             local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
@@ -484,9 +518,10 @@ noti[precall .. 'single_damage'] = function ()
     if int_伤害值 and (int_伤害值 > 0) then
         if is_create_missile > 0 then
             -- 注册引用
+            local obj_card = get_obj_bycard(Caster)
             local obj_missile
-            local push_missile = function (Card, color, string_obj)
-                obj_missile = create_missile(get_obj_bycard(Card), color)
+            local push_missile = function (color, string_obj)
+                obj_missile = create_missile(obj_card, color)
                 script_动画系统:push_quote(string_obj, obj_missile)
             end
             local del_missile = function ()
@@ -507,7 +542,7 @@ noti[precall .. 'single_damage'] = function ()
             })
 
             local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                [1] = {push_missile, Caster, 0x3333CD, '::sys_single_damage_Missile'},
+                [1] = {push_missile, 0x3333CD, '::sys_single_damage_Missile'},
                 [2] = {push_quote(get_obj_bycard(Target)), '::sys_single_damage_Target'},
                 [3] = {'动画系统_两控件相向运动', '::sys_single_damage_Missile', '::sys_single_damage_Target', {'x', 'y'}, {0.99}, {
                     ['x1']=0,
@@ -554,9 +589,10 @@ noti[precall .. 'single_heal'] = function ()
     if int_治疗值 and (int_治疗值 > 0) then
         if is_create_missile > 0 then
             -- 注册引用
+            local obj_card = get_obj_bycard(Caster)
             local obj_missile
-            local push_missile = function (Card, color, string_obj)
-                obj_missile = create_missile(get_obj_bycard(Card), color)
+            local push_missile = function (color, string_obj)
+                obj_missile = create_missile(obj_card, color)
                 script_动画系统:push_quote(string_obj, obj_missile)
             end
             local del_missile = function ()
@@ -577,7 +613,7 @@ noti[precall .. 'single_heal'] = function ()
             })
 
             local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                [1] = {push_missile, Caster, 0x68EEBC, '::sys_single_heal_Missile'},
+                [1] = {push_missile, 0x68EEBC, '::sys_single_heal_Missile'},
                 [2] = {push_quote(get_obj_bycard(Target)), '::sys_single_heal_Target'},
                 [3] = {'动画系统_两控件相向运动', '::sys_single_heal_Missile', '::sys_single_heal_Target', {'x', 'y'}, {0.99}, {
                     ['x1']=0,
@@ -667,6 +703,67 @@ noti[postcall .. '技能效果_治疗'] = function ()
     -- 清除发射飞弹状态
     is_create_missile = is_create_missile - 1
 end
+
+noti[postcall .. '角色属性_水晶_设置'] = function (estr_player_相对身份, estr_mana_type_修改类型, int_value)
+    local o_misc = G.misc()
+    local script_动画系统 = o_misc.技能动画系统
+
+    local script_水晶组件 = get_component(estr_player_相对身份, '水晶')
+
+    local com_set_value = function ()
+        script_水晶组件[estr_mana_type_修改类型] = int_value
+    end
+
+    local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 30, {
+        {com_set_value},
+    })
+    anim_addchild(o_animquest_当前动画)
+end
+
+
+noti[precall .. '角色属性_手牌_添加'] = function (estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
+    local last_call = G.call('卡牌逻辑树_获取最后调用')
+    local get_attr = CARD_GET_ATTR
+    local Caster = get_attr(last_call, 'skill_info', 'Caster')
+    local Target = get_attr(last_call, 'skill_info', 'Target')[1]
+    local 卡牌来源 = get_attr(last_call, 'skill_info', '卡牌来源')
+
+    local create_obj = nil
+    if 卡牌来源 == '我方牌库' then
+    elseif 卡牌来源 == '敌方牌库' then
+    elseif 卡牌来源 == '敌方英雄' then
+    elseif 卡牌来源 == '释放者创造' then
+        create_obj = nil
+    elseif 卡牌来源 == '目标还原' then
+    elseif 卡牌来源 == '发现' then
+        create_obj = nil
+    else
+
+    end
+
+
+end
+
+
+noti[postcall .. '角色属性_手牌_添加'] = function (estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
+    local o_misc = G.misc()
+    local script_战场 = o_misc.主战场系统
+    local script_动画系统 = o_misc.技能动画系统
+
+    if get_obj_bycard(o_card_卡牌) then
+        -- 找到已经创建的卡牌
+        -- todo，手牌组件得修改一下
+        script_动画系统:add_animquest(
+            G.call('动画系统_创建quest_自定义', script_动画系统, false, 200, {
+                {script_手牌组件.addCard, script_手牌组件, G.QueryName(i_card_卡牌)},
+            })
+        )
+        script_动画系统:add_animquest(
+            G.call('动画系统_创建quest', script_动画系统, G.QueryName(script_手牌组件.AnimBaseID + int_当前手牌数量 - 1))
+        )
+    end
+end
+
 
 local get_flag = function (Card, flags, is_not)
     local result = false

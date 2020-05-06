@@ -24,7 +24,8 @@ function t:init()
 
     self.特效层级 = self.obj.getChildByName('特效层级')
     self.跨界面操作框 = self.obj.getChildByName('跨界面操作框')
-    self.卡牌队列组件 = self.obj.getChildByName('PlayQueue').c_battle_playqueue
+    self.selfPlayQueue = self.obj.getChildByName('selfPlayQueue').c_battle_playqueue_self
+    self.enemyPlayQueue = self.obj.getChildByName('enemyPlayQueue').c_battle_playqueue_enemy
 
     self.endTurnBtn = self.obj.getChildByName('EndTurnButton')
 
@@ -46,6 +47,8 @@ function t:init()
     self.Record_功能区 = self.Record.getChildByName('功能区')
     self.carddeckPanel = self.Record_功能区.getChildByName('我方牌库面签')
     self.carddeck = self.carddeckPanel.getChildByName('容器')
+
+    self.新卡界面 = self.obj.getChildByName('全局新卡版')
 
     self.tips版 = self.obj.getChildByName('全局Tips版')
     self:initTipsCard()

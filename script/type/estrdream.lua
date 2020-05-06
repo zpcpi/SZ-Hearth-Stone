@@ -16,6 +16,8 @@ t.estr_cardpos_type = {
     '卡组',
     '相邻', '对面',
 }
+t.estr_cardsource_type = {'我方牌库', '敌方牌库', '敌方英雄', '释放者创造', '目标还原', '发现'}
+
 t.estr_minionpos_type = {'左邻', '右邻', '末尾'}
 
 t.estr_damage_type = {'法术', '英雄技能', '随从', '武器', '攻击', '疲劳', '直接'}
@@ -33,6 +35,6 @@ t.estr_comptype = {'>', '<', '==', '>=', '<=', '~='}
 
 t.estr_battleinfo_type = {'伤害', '治疗'}
 
-t.estr_ui_component = {'战场随从', '战场英雄', '手牌', '牌库', '历史记录', '执行队列'}
+t.estr_ui_component = {'战场随从', '战场英雄', '手牌', '牌库', '历史记录', '执行队列', '水晶', '发现'}
 
 return t

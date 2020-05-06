@@ -29,6 +29,7 @@ function t:InitDifference(baseid, newfix)
     self.NewcardFix = newfix
 end
 
+--todo, 要添加参数 obj, index
 function t:addCard(o_card_卡牌)
     local count = self.CardCount + 1
     if count > self.maxCount then

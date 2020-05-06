@@ -154,10 +154,28 @@ local t = {
 		},
 	},
 	{
+		['name']='逻辑_英雄召唤',
+		['arg']={
+			[1]={
+				['id']='Hero',
+				['type']='o_card',
+			},
+		},
+	},
+	{
 		['name']='逻辑_武器装备',
 		['arg']={
 			[1]={
 				['id']='Weapon',
+				['type']='o_card',
+			},
+		},
+	},
+	{
+		['name']='逻辑_英雄技能装备',
+		['arg']={
+			[1]={
+				['id']='HeroSkill',
 				['type']='o_card',
 			},
 		},
@@ -613,6 +631,19 @@ local t = {
 			[1]={
 				['id']='Player',
 				['type']='estr_absolute_id_type',
+			},
+		},
+	},
+	{
+		['name']='流程_对局开始',
+		['arg']={
+			[1]={
+				['id']='Player',
+				['type']='estr_absolute_id_type',
+			},
+			[2]={
+				['id']='RoomPlayer',
+				['type']='o_room_player',
 			},
 		},
 	},

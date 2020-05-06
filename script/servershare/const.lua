@@ -2,11 +2,13 @@ DEFAULT_NET_PORT = '3363'
 
 PLAYER_ONLY_KEY_LIST = {'玩家名称', '玩家IP', '是主机'}
 
-
+-- 本地玩家常量，允许修改
 HANDCARDS_MAX_COUNT = 10
 MANA_MAX_COUNT = 10
+MANA_GROW_COUNT = 1
 BATTLEMINIONS_MAX_COUNT = 7
 
+-- 指令进入功能区域范围
 UI_IN_FUNC_AREA = {
     ['minx'] = 285,
     ['miny'] = 0,
@@ -14,6 +16,7 @@ UI_IN_FUNC_AREA = {
     ['maxy'] = 155,
 }
 
+-- 指令进入手牌区域范围
 UI_IN_HAND_AREA = {
     ['minx'] = 315,
     ['miny'] = 0,
@@ -21,16 +24,13 @@ UI_IN_HAND_AREA = {
     ['maxy'] = 110,
 }
 
-UI_SPELL_TARGET_POS = {
-    ['posx'] = 310,
-    ['posy'] = 185,
-}
-
+-- 卡牌释放位置点
 UI_SPELL_SHOW_POS = {
     ['posx'] = 160,
     ['posy'] = 380,
 }
 
+-- 随从布阵信息
 UI_BATTLEMINIONS_POSX = {
     ['centerx'] = 0,
     ['spacex'] = 85,

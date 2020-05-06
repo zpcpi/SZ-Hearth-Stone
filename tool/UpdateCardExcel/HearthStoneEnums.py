@@ -122,7 +122,9 @@ CardClassZhCN = {
 	12 : "中立",
 	"12" : "中立",
 	13 : "威兹班",
-	"13" : "威兹班"
+	"13" : "威兹班",
+	14 : "恶魔猎手",
+	"14" : "恶魔猎手",
 }
 
 Rarity = {
@@ -431,10 +433,16 @@ CardSetZhCN = {
 	"1158" : "奥丹姆奇兵",
 	1347 : "巨龙降临",
 	"1347" : "巨龙降临",
+	1403 : "YEAR_OF_THE_DRAGON",
+	"1403" : "YEAR_OF_THE_DRAGON",
+	1414 : "外域的灰烬",
+	"1414" : "外域的灰烬",
 	1439 : "WILD_EVENT",
 	"1439" : "WILD_EVENT",
 	1453 : "BATTLEGROUNDS",
 	"1453" : "BATTLEGROUNDS",
     1143 : "TAVERNS_OF_TIME",
-	"1143" : "TAVERNS_OF_TIME"
+	"1143" : "TAVERNS_OF_TIME",
+	1463 : "恶魔猎手新兵",
+	"1463" : "恶魔猎手新兵",
 }

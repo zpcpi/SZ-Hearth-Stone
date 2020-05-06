@@ -133,23 +133,23 @@ class CardDataManager():
         cardSheet = excelData['卡牌表']
         cardDataUIdDict = self.GenerateDictByKey(self.xmlCardDataList, 'UID')
         lastRow = 4
-        for row in range(4, ExcelMaxRow):
-            cardEditorID = cardSheet['A' + str(row)].value
-            if cardEditorID == None:
-                lastRow = row
-                break
-            cardDbfID = cardSheet['D' + str(row)].value
-            cardUID = cardSheet['E' + str(row)].value
-            cardData = None
-            if cardUID in cardDataUIdDict:
-                cardData = cardDataUIdDict[cardUID]
-                del(cardDataUIdDict[cardUID])
-            if str(cardUID) in cardDataUIdDict:
-                cardData = cardDataUIdDict[str(cardUID)]
-                del(cardDataUIdDict[str(cardUID)])
-            if cardData != None:
-                if cardDbfID == None or str(cardData['DbfID']) != str(cardDbfID):
-                    cardSheet['D' + str(row)].value = cardData['DbfID']
+        # for row in range(4, ExcelMaxRow):
+        #     cardEditorID = cardSheet['A' + str(row)].value
+        #     if cardEditorID == None:
+        #         lastRow = row
+        #         break
+        #     cardDbfID = cardSheet['D' + str(row)].value
+        #     cardUID = cardSheet['E' + str(row)].value
+        #     cardData = None
+        #     if cardUID in cardDataUIdDict:
+        #         cardData = cardDataUIdDict[cardUID]
+        #         del(cardDataUIdDict[cardUID])
+        #     if str(cardUID) in cardDataUIdDict:
+        #         cardData = cardDataUIdDict[str(cardUID)]
+        #         del(cardDataUIdDict[str(cardUID)])
+        #     if cardData != None:
+        #         if cardDbfID == None or str(cardData['DbfID']) != str(cardDbfID):
+        #             cardSheet['D' + str(row)].value = cardData['DbfID']
         for cardUID in cardDataUIdDict:
             cardData = cardDataUIdDict[cardUID]
             cardSheet['A' + str(lastRow)].value = cardData['EditorID']

@@ -73,7 +73,7 @@ end
 --type=array
 t['array_map'] = function (arr, iter)
     local new_arr = {}
-    for _,v in ipairs(arr) do
+    for _,v in ipairs(arr or {}) do
         table.insert(new_arr, iter(v))
     end
     return new_arr
@@ -83,7 +83,7 @@ end
 --type=array
 t['array_filter'] = function (arr, filter)
     local new_arr = {}
-    for _,v in ipairs(arr) do
+    for _,v in ipairs(arr or {}) do
         if filter(v) then
             table.insert(new_arr, v)
         end
