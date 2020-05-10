@@ -591,8 +591,6 @@ local Gr = {'tLua',
 t['tLua_parse'] = function (exp)
     local d = require '_data'
     local ast, label, sfail = match(Gr, exp)
-    --print(ast, label, sfail)
-    --G.show_table(ast)
     return ast
 end
 
@@ -882,7 +880,5 @@ t['tLua_code'] = function(ast)
         code_iter(ast)
         tabc = tabc - 1
     tlt('\nend\n')
-
-    --G.show_table(table.concat(code, ''))
     return table.concat(code, '')
 end

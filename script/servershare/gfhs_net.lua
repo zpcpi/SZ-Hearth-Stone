@@ -12,12 +12,9 @@ function GF.NetReceive()
             local socket = readySocketList[i]
             if socket == GF.tcpServerSocket then 
                 local client, err = socket:accept()
-                GF.call('系统_输出信息', '新玩家连接成功!')
+                GF.call('系统_输出信息', '有新的玩家尝试连入!')
                 table.insert(GF.socketList, client)
                 table.insert(GF.connectList, client)
-                local any_当前玩家 = GF.call('系统_获取当前玩家信息')
-                GF.call('网络通用_发送消息', client, '房间_更新玩家信息', any_当前玩家)
-                GF.call('网络通用_发送消息', client, '对决_设置游戏模式', GF.call('对决_获取当前游戏模式'))
             else
                 local rev, err = socket:receive('*l')
                 if rev == nil and err == nil then 
@@ -34,7 +31,7 @@ function GF.NetReceive()
                     end
                     GF.call('系统_输出信息', '玩家离开房间!')
                 else
-                    GF.call('网络通用_处理消息', rev)
+                    GF.call('网络通用_处理消息', socket, rev)
                 end
             end
         end
@@ -48,7 +45,7 @@ function GF.NetReceive()
                 GF.call('提示_添加提示', '与主机连接断开!')
                 return
             else
-                GF.call('网络通用_处理消息', rev)
+                GF.call('网络通用_处理消息', socket, rev)
             end
         end
     end

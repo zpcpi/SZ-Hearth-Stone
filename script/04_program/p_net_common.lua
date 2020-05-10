@@ -8,6 +8,10 @@ local lsocket = require("socket.core")
 local json = require 'cjson.c'
 
 t['网络通用_发送消息'] = function(target, ...)
+    if target == nil then 
+        error('消息对象为空')
+        return
+    end
     local msg = {...}
     msg.size = G.call('系统_获取table长度', msg)
     local buffer = json.encode(msg)
@@ -19,18 +23,12 @@ t['网络通用_广播消息'] = function(...)
     if type(G.connectList) ~= 'table' then 
         return 
     end
-
-    local msg = {...}
-    msg.size = G.call('系统_获取table长度', msg)
-    local buffer = json.encode(msg)
-    buffer = buffer .. string.char(10)
-
     for _, connect in ipairs(G.connectList) do 
-        connect:send(buffer)
+        G.call('网络通用_发送消息', connect, ...)
     end
 end
 
-t['网络通用_处理消息'] = function(buffer)
+t['网络通用_处理消息'] = function(socketTarget, buffer)
     G.canBroadcast = false
     if not pcall(json.decode, buffer) then 
         G.canBroadcast = true
@@ -45,7 +43,8 @@ t['网络通用_处理消息'] = function(buffer)
     for i = 1, size do 
         table.insert(paramsList, paramsList[tostring(i)])
     end
-    G.call(table.unpack(paramsList, 1, size))
+    local funcName = paramsList[1]
+    G.call(funcName, table.unpack(paramsList, 2, size), socketTarget)
     G.canBroadcast = true
 end
 
@@ -55,12 +54,12 @@ t['网络通用_获取本机IP地址'] = function()
 end
 
 t['网络通用_获取主机端口'] = function()
-    print('--== 网络通用_获取主机端口 G.netPort', G.netPort)
     return tostring(G.netPort)
 end
 
 t['网络通用_能否广播'] = function()
-    return G.canBroadcast ~= false
+    -- 只有主机可以广播消息, 其他客机只能通知主机
+    return G.call('主机_是主机')
 end
 
 t['Net_SendMsg'] = function(msg)

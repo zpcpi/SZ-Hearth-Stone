@@ -239,9 +239,13 @@ t['房间_是否同一阵营_相对身份'] = function(estr_player_相对身份1
 end
 
 t['房间_当前玩家准备'] = function()
-    local any_当前玩家信息 = G.call('系统_获取当前玩家信息')
-    any_当前玩家信息.准备就绪 = not any_当前玩家信息.准备就绪
-    G.call('房间_更新玩家信息', any_当前玩家信息)
+    local o_room_player_当前玩家信息 = G.call('系统_获取当前玩家信息')
+    if G.call('主机_是主机') then 
+        o_room_player_当前玩家信息.准备就绪 = not o_room_player_当前玩家信息.准备就绪
+        G.call('房间_更新玩家信息', o_room_player_当前玩家信息)
+    else
+        G.call('客机_向主机发送消息', '主机处理回调_更改准备状态', o_room_player_当前玩家信息)
+    end
 end
 
 t['房间_分配绝对身份'] = function()
@@ -309,5 +313,28 @@ t['房间_获取玩家信息列表'] = function(boolean_是否获取真实玩家
             end
         end
         return _o_room_player_玩家列表
+    end
+end
+
+t['房间_同步房间信息'] = function(targetSocket)
+    local i_game_mode_游戏模式 = G.call('对决_获取当前游戏模式')
+    local _o_room_player_玩家信息列表 = G.misc().房间玩家列表
+    -- 同步玩家信息
+    for _, o_room_player_玩家信息 in ipairs(_o_room_player_玩家信息列表) do 
+        if targetSocket == nil then 
+            -- 广播给所有人
+            G.call('网络通用_广播消息', '房间_更新玩家信息', o_room_player_玩家信息)
+        else
+            -- 发送给目标
+            G.call('网络通用_发送消息', targetSocket, '房间_更新玩家信息', o_room_player_玩家信息)
+        end
+    end
+    -- 同步当前游戏模式
+    if targetSocket == nil then 
+        -- 广播给所有人
+        G.call('网络通用_广播消息', '对决_设置游戏模式', i_game_mode_游戏模式)
+    else
+        -- 发送给目标
+        G.call('网络通用_发送消息', targetSocket, '对决_设置游戏模式', i_game_mode_游戏模式)
     end
 end

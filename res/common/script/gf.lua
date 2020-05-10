@@ -112,10 +112,7 @@ end
 
 local gc = 0
 function GF.main(t)
-	-- print(1000 / GF.GetGameElapsed())
 	if GF._isProfiling == true then 
-		-- GF.beginProfile();
-
 		GF.beginProfileBinary(string.format("%d", GF.GetGameTime()))
 
 		for k, v in ipairs(GF.update) do
@@ -123,15 +120,6 @@ function GF.main(t)
 				return
 			end
 		end
-		-- if GF.close_gc then 
-		-- else
-		-- 	gc = gc + 1
-		-- end
-		-- if gc > 30 then
-		-- 	collectgarbage("collect")
-		-- 	gc = 0
-		-- end
-
 		GF.endProfileBinary();
 	else
 		for k, v in ipairs(GF.update) do

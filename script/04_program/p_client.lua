@@ -38,11 +38,22 @@ end
 --hide=true
 t['客机_连接成功回调'] = function()
     G.socketList = {G.tcpClientSocket}
-    local any_当前玩家 = G.call('系统_获取当前玩家信息')
-    any_当前玩家.是主机 = false
-    G.call('房间_更新玩家信息', any_当前玩家)
+    G.hostSocket = G.tcpClientSocket
+    G.call('客机_申请加入房间')
+end
+
+--hide=true
+t['客机_申请加入房间'] = function()
+    local o_room_player_当前玩家 = G.call('系统_获取当前玩家信息')
+    o_room_player_当前玩家.是主机 = false
+    G.call('客机_向主机发送消息', '主机处理回调_申请加入房间', o_room_player_当前玩家)
 end
 
 --hide=true
 t['客机_输出连接信息'] = function(string_信息)
+end
+
+--hide=true
+t['客机_向主机发送消息'] = function(...)
+    G.call('网络通用_发送消息', G.hostSocket, ...)
 end

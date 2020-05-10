@@ -66,8 +66,12 @@ function noti.客机_输出连接信息(string_信息)
     end
 end
 
-function noti.客机_连接成功回调()
-    G.changeUI('v_room')    
+function noti.客机处理回调_加入房间回调(boolean_结果)
+    if boolean_结果 then 
+        local o_node_room = G.changeUI('v_room')    
+        o_node_room.c_room:UpdateGameModeInfo()
+        o_node_room.c_room:UpdateRoom()
+    end
 end
 
 function noti.提示_播放提示(string_提示内容)

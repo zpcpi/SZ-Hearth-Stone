@@ -30,7 +30,6 @@ local function resume_wait(ED,p)
     local ret,tag
     ED.info = p.e
     t.remove_wait(ED, p)
-    -- print('进入线程',ED.name[p.co])
 
     if p.isAction ~= true then
         GF.set_readonly(false)
@@ -43,7 +42,6 @@ local function resume_wait(ED,p)
     if p.isAction ~= true then
         GF.set_readonly(true)
     end
-    -- print('离开线程',ED.name[p.co])
 
     if tag == 'EXIT' then
         ED.name[p.co] = nil
@@ -167,33 +165,20 @@ function t.add_wait(ED, p)
 end
 
 function t.removeby_co(wait, pco)
-    -- FIXME: 换成哈希表
     if pco == nil then return end
-
---    local count = 0
     for k = #wait, 1, -1 do
         if wait[k].co == pco then
             g_t_remove(wait,k)
---            count = count + 1
         end
     end
---    if count > 1 then
---        print(pco,'removeby_co end',count,#wait)
---    end
 end
 function t.removeby_name(wait, name_tab, name)
-    -- FIXME: 换成哈希表
---    local count = 0
     for k = #wait, 1, -1 do
         local pco = wait[k].co
         if name_tab[pco] == name then
             g_t_remove(wait,k)
---            count = count + 1
         end
     end
---    if count > 1 then
---        print(name,'removeby_name end',count,#wait)
---    end
 end
 
 function t.remove_wait(ED, p)

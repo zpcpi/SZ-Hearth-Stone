@@ -1075,8 +1075,6 @@ t['excel_写出数据'] = function(o_excel_当前数据)
                 end
             end
         end
-        G.show_table(counts)
-
         local _string_待写入数据 = excel_写出数据_生成字符串(o_any_all)
         
         csv_save(string_o表名称, _string_待写入数据, 'w+')

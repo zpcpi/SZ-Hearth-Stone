@@ -82,6 +82,10 @@ end
 
 function t:click(tar)
     if tar == self.gameModeBtn then 
+        if not G.call('主机_是主机') then 
+            G.call('提示_添加提示', '只有房主可以修改游戏模式')
+            return
+        end
         if self:IsModeListVisible() then 
             self:HideModeList()
         else
@@ -90,10 +94,18 @@ function t:click(tar)
     elseif tar == self.startGameBtn then 
         G.call('对决_开始')
     elseif tar == self.prepareBtn then 
+        if not G.call('房间_是否满足开始条件') then 
+            return 
+        end
         G.call('房间_当前玩家准备')
     elseif tar == self.quitBtn then 
         G.call('房间_退出房间')
     elseif tar == self.deckButton then 
+        local o_room_player_当前玩家 = G.call('系统_获取当前玩家信息')
+        if o_room_player_当前玩家.准备就绪 then 
+            G.call('提示_添加提示', '请先解除准备状态, 再更换卡组')
+            return 
+        end
         if self:IsDeckListVisible() then 
             self:HideDeckList()
         else

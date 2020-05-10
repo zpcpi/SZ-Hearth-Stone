@@ -39,11 +39,6 @@ t['asdasd'] = function ()
     for k,v in ipairs(r) do
         tt[v] = (tt[v] or 0) + 1
     end
-
-
-
-    --G.show_table(r)
-    G.show_table(tt)
 end
 
 t['zpc_test'] = function (count)
