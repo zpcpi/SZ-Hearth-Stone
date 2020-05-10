@@ -191,6 +191,7 @@ t['收藏_获取卡组全称'] = function(o_deck_卡组)
     local string_卡组名称 = o_deck_卡组.卡组名称
     local string_职业名称 = ''
     local _i_profession_卡组职业 = G.call('收藏_获取卡组职业', o_deck_卡组, false)
+    G.show_table(_i_profession_卡组职业)
     for _, i_profession_职业ID in ipairs(_i_profession_卡组职业) do 
         local o_profession_职业 = G.QueryName(i_profession_职业ID)
         if o_profession_职业 ~= nil then 

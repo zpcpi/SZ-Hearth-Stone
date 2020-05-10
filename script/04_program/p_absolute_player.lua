@@ -229,11 +229,3 @@ t['角色_获取水晶数据_绝对身份'] = function(estr_absolute_id_type_绝
     misc_attr_check('水晶信息', estr_absolute_id_type_绝对身份)
     return o_misc.水晶信息[estr_absolute_id_type_绝对身份][estr_mana_type_获取类型] or 0
 end
-
---hide=true
-t['角色_获取卡组_绝对身份'] = function(estr_absolute_id_type_绝对身份)
-    if G['对决卡组'] == nil then 
-        return nil
-    end
-    return G['对决卡组'][estr_absolute_id_type_绝对身份]
-end

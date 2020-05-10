@@ -89,7 +89,6 @@ t['系统_读取卡组列表'] = function()
         return
     end
     for _, o_deck_档案卡组 in ipairs(_o_deck_卡组列表) do 
-        local o_deck_卡组 = G.NewInst('o_deck')
         o_deck_卡组.卡组名称 = o_deck_档案卡组.卡组名称
         o_deck_卡组.英雄 = o_deck_档案卡组.英雄
         o_deck_卡组.卡牌列表 = {}

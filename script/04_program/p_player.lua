@@ -247,12 +247,6 @@ t['角色_获取水晶数据'] = function(estr_player_相对身份, estr_mana_ty
 end
 
 --hide=true
-t['角色_获取卡组'] = function(estr_player_相对身份)
-    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份) 
-    return G.call('角色_获取卡组_绝对身份', estr_absolute_id_type_绝对身份)
-end
-
---hide=true
 --ret=_o_card
 t['角色_获取可用卡牌'] = function(estr_absolute_id_type_绝对身份, boolean_包含技能)
     local _o_card_可用卡牌 = {}

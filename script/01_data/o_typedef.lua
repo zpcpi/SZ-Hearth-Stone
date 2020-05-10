@@ -880,6 +880,10 @@ local t = {
 				['name']='AI',
 				['type']='i_battle_ai',
 			},
+			[7]={
+				['name']='卡组',
+				['type']='o_deck',
+			},
 		},
 	},
 	{

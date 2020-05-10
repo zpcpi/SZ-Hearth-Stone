@@ -196,11 +196,22 @@ end
 
 --ret=o_deck
 t['对决_获取对决卡组'] = function()
-    return G['对决卡组']
+    local o_room_player_当前玩家信息 = G.call('系统_获取当前玩家信息')
+    if o_room_player_当前玩家信息 == nil then 
+        return nil
+    end
+    return o_room_player_当前玩家信息.卡组 
 end
 
 t['对决_设置对决卡组'] = function(o_deck_卡组)
-    G['对决卡组'] = o_deck_卡组
+    local o_room_player_当前玩家信息 = G.call('系统_获取当前玩家信息')
+    o_room_player_当前玩家信息.卡组 = {
+        卡牌列表 = o_deck_卡组.卡牌列表,
+        英雄 = o_deck_卡组.英雄,
+        英雄技能 = o_deck_卡组.英雄技能,
+        卡组名称 = o_deck_卡组.卡组名称,
+        模式 = o_deck_卡组.模式,
+    }
 end
 
 --ret=int
