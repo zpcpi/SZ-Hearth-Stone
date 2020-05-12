@@ -43,7 +43,8 @@ function t:start()
         while true do
             G.wait1('UI_牌库更新')
             local index = 0
-            local _o_randomlib_抽牌牌库 = G.misc()['我方牌库']
+            local estr_absolute_id_type_我方绝对身份 = G.call('房间_获取绝对身份', '我方')
+            local _o_randomlib_抽牌牌库 = G.misc()[estr_absolute_id_type_我方绝对身份 .. '牌库']
 
             for k,v in ipairs(_o_randomlib_抽牌牌库) do
                 if v and v.datas and (#v.datas > 0) then

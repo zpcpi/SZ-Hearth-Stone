@@ -42,8 +42,8 @@ function t:setData(o_card_卡片数据, boolean_isbattle)
         self:delete()
         return 
     end
-
     local i_cardtype_卡片类型 = CARD_GET_ATTR(o_card_卡片数据, '逻辑数据', '类型')
+    print('i_cardtype_卡片类型', i_cardtype_卡片类型, o_card_卡片数据.name)
     if not i_cardtype_卡片类型 then 
         return 
     end

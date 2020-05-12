@@ -64,48 +64,29 @@ t['角色_获取手牌'] = function(estr_player_相对身份)
 end
 
 --ret=_o_randomlib
-t['角色_获取牌库'] = function(estr_player_牌库所属相对身份)
-    local _o_randomlib_抽牌牌库
-    if G.call('角色_牌库数据是否在本地', estr_player_牌库所属相对身份) then
-        _o_randomlib_抽牌牌库 = G.misc()[estr_player_牌库所属相对身份 .. '牌库']
-    else
-        -- TODO: 如果要从别人的牌库抽取卡牌, 需要通过网络通知别人, 因为本地只有自己牌库的信息
-        -- 交换下身份，通过网络发送该函数，这样就需要制作一个绝对接口
-    end
-    return _o_randomlib_抽牌牌库
-end
-
---ret=boolean
-t['角色_牌库数据是否在本地'] = function(estr_player_牌库所属相对身份)
-    if estr_player_牌库所属相对身份 == '我方' then
-        -- 我方牌库的数据始终在本地
-        return true
-    elseif G.call('战斗AI_是否是AI', estr_player_牌库所属相对身份) and G.call('主机_是主机') then
-        -- 主机 AI 的数据也在本地
-        return true
-    end
-    return false
+t['角色_获取牌库'] = function(estr_absolute_id_type_牌库拥有者绝对身份)
+    return G.misc()[estr_absolute_id_type_牌库拥有者绝对身份 .. '牌库']
 end
 
 --hide=true
-t['角色_牌库抽取卡牌'] = function(estr_player_抽牌者相对身份, estr_player_牌库所属相对身份)
-    local _o_randomlib_抽牌牌库 = G.call('角色_获取牌库', estr_player_牌库所属相对身份)
-
+t['角色_牌库抽取卡牌'] = function(estr_absolute_id_type_抽牌者绝对身份, estr_absolute_id_type_牌库拥有者绝对身份)
+    local _o_randomlib_抽牌牌库 = G.call('角色_获取牌库', estr_absolute_id_type_牌库拥有者绝对身份)
     if _o_randomlib_抽牌牌库 then
     else
         return
     end
-    local estr_absolute_id_type_牌库所属绝对身份 = G.call('房间_获取绝对身份', estr_player_牌库所属相对身份)
     local o_card_卡片 = _o_randomlib_抽牌牌库[1](1)[1] or -- 为空，说明牌库顶里面没有卡牌
                         _o_randomlib_抽牌牌库[2](1)[1] or -- 为空，说明随机牌库里面没有卡牌
                         _o_randomlib_抽牌牌库[3](1)[1] or -- 为空，说明牌库底里面没有卡牌
-                        G.call('卡牌实例化', G.QueryName(0x100600b5), estr_player_牌库所属相对身份) -- 为空，抽疲劳卡
+                        G.call('卡牌实例化', G.QueryName(0x100600b5), estr_absolute_id_type_牌库拥有者绝对身份) -- 为空，抽疲劳卡
                    
     -- TODO: 改成绝对身份?                        
     G.call('技能效果_效果树_执行子效果', {
-        ['Player'] = estr_player_抽牌者相对身份,
-        ['卡牌来源'] = estr_player_抽牌者相对身份 .. '牌库',
+        ['Player'] = estr_absolute_id_type_抽牌者绝对身份,
+        ['卡牌来源'] = estr_absolute_id_type_抽牌者绝对身份 .. '牌库',
     },function ()
+        -- TODO: 换成绝对身份?
+        local estr_player_抽牌者相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_抽牌者绝对身份)
         G.call('角色属性_手牌_添加', estr_player_抽牌者相对身份, o_card_卡片)
     end)
     G.trig_event('UI_牌库更新')

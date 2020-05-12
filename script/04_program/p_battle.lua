@@ -73,7 +73,7 @@ t['对决_决定初始卡牌'] = function(o_room_player_玩家)
     local estr_player_相对身份 = G.call('房间_获取相对身份', o_room_player_玩家.绝对身份)
     -- TODO: 先抽 3(?) 张
     for i = 1, 3 do 
-        G.call('角色_牌库抽取卡牌', estr_player_相对身份, estr_player_相对身份)
+        G.call('角色_牌库抽取卡牌', o_room_player_玩家.绝对身份, o_room_player_玩家.绝对身份)
     end
 
     -- TODO: 等待换牌结束
@@ -267,9 +267,8 @@ t['对决_初始化对决牌库'] = function(o_room_player_玩家)
     o_randomlib_牌库底:初始化(false, true)
 
     local estr_absolute_id_type_绝对身份 = o_room_player_玩家.绝对身份
-    local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
-    -- FIXME: 不能直接指定我方牌库
-    G.misc()[estr_player_相对身份 .. '牌库'] = {
+    local string_牌库键 = estr_absolute_id_type_绝对身份 .. '牌库'
+    G.misc()[string_牌库键] = {
         o_randomlib_牌库顶,
         o_randomlib_随机牌库,
         o_randomlib_牌库底,

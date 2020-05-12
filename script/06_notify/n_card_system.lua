@@ -728,6 +728,7 @@ noti[precall .. '角色属性_手牌_添加'] = function (estr_player_相对身�
     local Target = get_attr(last_call, 'skill_info', 'Target')[1]
     local 卡牌来源 = get_attr(last_call, 'skill_info', '卡牌来源')
 
+    -- FIXME: 牌库来源改为绝对身份
     local create_obj = nil
     if 卡牌来源 == '我方牌库' then
     elseif 卡牌来源 == '敌方牌库' then
@@ -738,10 +739,7 @@ noti[precall .. '角色属性_手牌_添加'] = function (estr_player_相对身�
     elseif 卡牌来源 == '发现' then
         create_obj = nil
     else
-
     end
-
-
 end
 
 

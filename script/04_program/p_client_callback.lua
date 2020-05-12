@@ -15,3 +15,9 @@ t['客机处理回调_对决开始回调'] = function()
     -- TODO: 更新界面
     G.call('对决_初始化界面')
 end
+
+--hide=true
+t['客机处理回调_同步牌库信息'] = function(string_牌库键, any_牌库)
+    G.misc()[string_牌库键] = any_牌库
+    G.trig_event('UI_牌库更新')
+end

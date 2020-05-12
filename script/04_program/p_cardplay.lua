@@ -1034,7 +1034,7 @@ t['逻辑注册_抽牌_absolute'] = function ()
     local absolute_player = G.event_info()
     local estr_player_相对身份 = G.call('房间_获取相对身份', absolute_player)
 
-    G.call('角色_牌库抽取卡牌', estr_player_相对身份, estr_player_相对身份)
+    G.call('角色_牌库抽取卡牌', absolute_player, absolute_player)
 end
 
 local card_init_attack_count = function (Target, int_已攻击次数)
@@ -2134,8 +2134,9 @@ t['技能效果_抽牌'] = function ()
         local estr_player_相对身份 = o_skill_info_效果信息['Player']
 
         if estr_player_相对身份 then
+            local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
             -- TODO，缺少处理，默认自己抽自己
-            G.call('角色_牌库抽取卡牌', estr_player_相对身份, estr_player_相对身份)
+            G.call('角色_牌库抽取卡牌', estr_absolute_id_type_绝对身份, estr_absolute_id_type_绝对身份)
         end
     end
 
@@ -2238,7 +2239,8 @@ t['技能效果_追踪术'] = function (int_追踪数量)
     local action = function (o_skill_info_效果信息)
         local estr_player_相对身份 = o_skill_info_效果信息['Player']
         local Caster = o_skill_info_效果信息['Caster']
-        local _o_randomlib_抽牌牌库 = G.call('角色_获取牌库', estr_player_相对身份)
+        local estr_absolute_id_type_牌库拥有者绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
+        local _o_randomlib_抽牌牌库 = G.call('角色_获取牌库', estr_absolute_id_type_牌库拥有者绝对身份)
     
         if _o_randomlib_抽牌牌库 then
         else
