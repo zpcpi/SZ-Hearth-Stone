@@ -12,13 +12,11 @@ t['角色_添加手牌'] = function(estr_player_相对身份, o_card_卡牌, boo
     if (o_card_卡牌 ~= nil) and (int_当前手牌数量 < HANDCARDS_MAX_COUNT) then
         local i_card_卡牌 = o_card_卡牌.name
         G.call('角色_添加手牌_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
-        
-        if boolean_是否明牌 then
+        -- TODO: 明牌逻辑
+        if G.call('主机_是主机') then 
             G.call('卡牌实例化_信息更新_预处理', o_card_卡牌, {'root', '卡牌属性', '逻辑数据', '动态数据'})
-        else
-            G.call('卡牌实例化_信息更新_预处理', o_card_卡牌)
+            G.call('网络通用_广播消息', '角色_添加手牌_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
         end
-        G.call('网络通用_广播消息', '角色_添加手牌_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
     end
 end
 
@@ -97,15 +95,16 @@ t['角色_牌库抽取卡牌'] = function(estr_player_抽牌者相对身份, est
     else
         return
     end
-
+    local estr_absolute_id_type_牌库所属绝对身份 = G.call('房间_获取绝对身份', estr_player_牌库所属相对身份)
     local o_card_卡片 = _o_randomlib_抽牌牌库[1](1)[1] or -- 为空，说明牌库顶里面没有卡牌
                         _o_randomlib_抽牌牌库[2](1)[1] or -- 为空，说明随机牌库里面没有卡牌
                         _o_randomlib_抽牌牌库[3](1)[1] or -- 为空，说明牌库底里面没有卡牌
                         G.call('卡牌实例化', G.QueryName(0x100600b5), estr_player_牌库所属相对身份) -- 为空，抽疲劳卡
                    
+    -- TODO: 改成绝对身份?                        
     G.call('技能效果_效果树_执行子效果', {
         ['Player'] = estr_player_抽牌者相对身份,
-        ['卡牌来源'] = '我方牌库',
+        ['卡牌来源'] = estr_player_抽牌者相对身份 .. '牌库',
     },function ()
         G.call('角色属性_手牌_添加', estr_player_抽牌者相对身份, o_card_卡片)
     end)

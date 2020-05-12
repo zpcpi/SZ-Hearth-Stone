@@ -187,18 +187,14 @@ local t = {
 				['type']='any',
 			},
 			[18]={
-				['name']='卡牌实例表',
-				['type']='string',
-			},
-			[19]={
 				['name']='当前效果堆栈',
 				['type']='any',
 			},
-			[20]={
+			[19]={
 				['name']='我方牌库',
 				['type']='_o_randomlib',
 			},
-			[21]={
+			[20]={
 				['name']='击杀者列表',
 				['type']='any',
 			},
@@ -388,6 +384,11 @@ local t = {
 			[6]={
 				['name']='动态数据_事件',
 				['type']='o_dynamic_eventdata',
+			},
+			[7]={
+				['name']='查看权限玩家',
+				['type']='_',
+				['needcopy']=true,
 			},
 		},
 	},

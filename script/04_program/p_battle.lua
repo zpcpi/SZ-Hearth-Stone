@@ -106,9 +106,7 @@ t['对决_流程控制'] = function(o_room_player_玩家)
         G.call('对决_增加当前回合数', estr_absolute_id_type_绝对身份, 1)
         G.call('对决_设置当前回合玩家绝对身份', estr_absolute_id_type_绝对身份)
         G.call('对决_回合开始', o_room_player_玩家)
-        LuaPanda.BP()
         G.call('对决_等待我方回合结束', estr_absolute_id_type_绝对身份)
-        LuaPanda.BP()
         -- TODO: 播放对方回合开始动画
         G.call('对决_等待对方回合结束', estr_absolute_id_type_绝对身份)
     end
@@ -146,7 +144,6 @@ t['对决_等待我方回合结束'] = function(estr_absolute_id_type_绝对身�
 end
 
 t['对决_等待对方回合结束'] = function(estr_absolute_id_type_绝对身份)
-    LuaPanda.BP()
     local estr_absolute_id_type_上一个行动玩家身份 = G.call('对决_获取上一个行动角色绝对身份', estr_absolute_id_type_绝对身份)
     G.wait1('流程_回合结束', estr_absolute_id_type_上一个行动玩家身份)
 end

@@ -120,7 +120,6 @@ function t:update()
 end
 
 function t:click(tar)
-    LuaPanda.BP()
     if G.call('对决_当前是否是我方回合') and tar == self.endTurnBtn then 
         local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', '我方')
         G.call('对决_回合结束', estr_absolute_id_type_绝对身份)

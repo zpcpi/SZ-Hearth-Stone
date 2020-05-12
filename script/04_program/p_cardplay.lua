@@ -2817,48 +2817,11 @@ end
 -- ============================================
 -- ============================================
 -- ============================================
-real_t['卡牌实例表_初始化'] = function ()
-    G.newinst_cache['o_card_redplayer1'] = {}
-    G.newinst_cache['o_card_redplayer2'] = {}
-    G.newinst_cache['o_card_blueplayer1'] = {}
-    G.newinst_cache['o_card_blueplayer2'] = {}
-
-    local misc = G.misc()
-
-    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', '我方')
-    local dbname
-    if estr_absolute_id_type_绝对身份 == '红1' then
-        dbname = 'o_card_redplayer1'
-    elseif estr_absolute_id_type_绝对身份 == '红2' then
-        dbname = 'o_card_redplayer2'
-    elseif estr_absolute_id_type_绝对身份 == '蓝1' then
-        dbname = 'o_card_blueplayer1'
-    elseif estr_absolute_id_type_绝对身份 == '蓝2' then
-        dbname = 'o_card_blueplayer2'
-    end
-    if dbname then
-        misc['卡牌实例表'] = dbname
-    end
-    
-    G.call('通用逻辑_默认流程注册')
-    G.call('通用逻辑_角色相关流程注册', estr_absolute_id_type_绝对身份)
-
-    -- 效果信息堆栈建立
-    misc.当前效果堆栈 = G.call('create_stack')
-end
-
 real_t['卡牌实例化'] = function (o_card_卡片模板, estr_player_相对身份)
-    local dbname = G.misc().卡牌实例表
-    local card = nil
-    if dbname then
-        card = G.CopyInst(o_card_卡片模板, {}, G.NewInst(dbname))
-    else
-        card = G.CopyInst(o_card_卡片模板)
-    end
-
+    local o_card_卡片实例 = G.CopyInst(o_card_卡片模板)
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份 or '我方')
-    G.trig_event('逻辑_卡牌初始化', card, estr_absolute_id_type_绝对身份)
-    return card
+    G.trig_event('逻辑_卡牌初始化', o_card_卡片实例, estr_absolute_id_type_绝对身份)
+    return o_card_卡片实例
 end
 
 local function get_card_dbname(i_card_卡牌)
@@ -2869,7 +2832,7 @@ real_t['网络通讯_卡牌实例化_信息更新'] = function (i_card_卡牌, _
     local o_card_卡牌 = G.QueryName(i_card_卡牌)
     if o_card_卡牌 then
     elseif i_card_卡牌 == 0 then
-        local dbname = G.misc().卡牌实例表
+        local dbname = G.DBInst('o_card')
         o_card_卡牌 = G.NewInst(dbname)
         i_card_卡牌 = o_card_卡牌.name
     else

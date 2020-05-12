@@ -63,3 +63,4 @@ c.SetMainloop(G.main)
 
 c.SetWinName(c.UtfToGbk(' 山寨炉石')) 
 LuaPanda = require("LuaPanda")
+-- LuaPanda.start("127.0.0.1",8818)

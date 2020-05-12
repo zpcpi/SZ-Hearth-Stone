@@ -12,6 +12,7 @@ t['网络通用_发送消息'] = function(target, ...)
         error('消息对象为空')
         return
     end
+    print('[网络通用_发送消息]', ...)
     local msg = {...}
     msg.size = G.call('系统_获取table长度', msg)
     local buffer = json.encode(msg)
@@ -40,11 +41,13 @@ t['网络通用_处理消息'] = function(socketTarget, buffer)
         return 
     end
     local size = paramsList.size
-    for i = 1, size do 
+    for i = 1, size do
         table.insert(paramsList, paramsList[tostring(i)])
     end
     local funcName = paramsList[1]
-    G.call(funcName, table.unpack(paramsList, 2, size), socketTarget)
+    print('[网络通用_处理消息]', funcName, table.unpack(paramsList, 2, size))
+    G.curSocketTarget = socketTarget
+    G.call(funcName, table.unpack(paramsList, 2, size))
     G.canBroadcast = true
 end
 

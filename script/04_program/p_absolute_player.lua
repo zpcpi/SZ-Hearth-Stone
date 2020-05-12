@@ -21,9 +21,10 @@ t['角色_添加手牌_绝对身份'] = function(estr_absolute_id_type_绝对身
     local o_misc = G.misc()
     local int_当前手牌数量 = G.call('角色_获取手牌数量_绝对身份', estr_absolute_id_type_绝对身份)
     o_misc.手牌数量[estr_absolute_id_type_绝对身份] = int_当前手牌数量 + 1
-
     misc_attr_check('手牌信息', estr_absolute_id_type_绝对身份)
+    print('角色_添加手牌_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
     local o_card_卡牌 = G.QueryName(i_card_卡牌)
+    print('角色_添加手牌_绝对身份', estr_absolute_id_type_绝对身份, o_card_卡牌)
     if o_card_卡牌 then
         if o_card_卡牌['动态数据'] then
             o_card_卡牌['动态数据']['卡牌位置'] = '手牌'
