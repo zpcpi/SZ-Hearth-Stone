@@ -22,3 +22,10 @@ function GF.GetEnumValue(enumname)
 	end
 	return estr[enumname] or enum[enumname]
 end
+
+function GF.ClearDynamicData(tableName)
+	if GF.newinst_cache == nil then 
+		return
+	end
+	GF.newinst_cache[tableName] = {}
+end 

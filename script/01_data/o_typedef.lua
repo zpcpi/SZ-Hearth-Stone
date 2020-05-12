@@ -199,14 +199,6 @@ local t = {
 				['type']='_o_randomlib',
 			},
 			[21]={
-				['name']='实例化卡牌列表',
-				['type']='_o_card',
-			},
-			[22]={
-				['name']='别人实例化卡牌反查表',
-				['type']='_boolean',
-			},
-			[23]={
 				['name']='击杀者列表',
 				['type']='any',
 			},

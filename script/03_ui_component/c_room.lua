@@ -66,7 +66,7 @@ end
 
 function t:UpdateDeckInfo()
     self.deckButton.c_button.text = '[03]请选择卡组'
-    local o_deck_卡组 = G.call('对决_获取对决卡组')
+    local o_deck_卡组 = G.call('对决_获取当前玩家对决卡组')
     if o_deck_卡组 == nil then 
         return 
     end

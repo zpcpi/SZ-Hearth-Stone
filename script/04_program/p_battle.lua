@@ -23,6 +23,10 @@ t['对决_初始化2v2战场'] = function()
 end
 
 t['对决_开始'] = function()
+    if not G.call('主机_是主机') then 
+        -- 只有主机可以开始游戏
+        return 
+    end
     if not G.call('房间_是否满足开始条件') then 
         return 
     end
@@ -31,23 +35,24 @@ t['对决_开始'] = function()
         return 
     end
     G.call('对决_初始化界面')
+    G.call('网络通用_广播消息', '对决_初始化界面')
     G.call('战斗AI_AI空位补全AI')
     -- TODO: 根据游戏模式初始化数据
-    if G.call('主机_是主机') then 
-        G.call('房间_分配绝对身份')
-        G.call('网络通用_广播消息', '对决_开始')
+    G.call('房间_分配绝对身份')
+    -- 流程监听初始化
+    G.call('通用逻辑_默认流程注册')
+    for _, o_room_player_玩家信息 in ipairs(G.misc().房间玩家列表) do 
+        G.call('通用逻辑_角色相关流程注册', o_room_player_玩家信息.绝对身份)
     end
-    -- 初始化卡牌实例表
-    G.call('卡牌实例表_初始化')
-    
-    -- AI 数据归主机管理
-    if G.call('主机_是主机') then 
-        G.call('战斗AI_对决初始化')
+    G.misc().当前效果堆栈 = G.call('create_stack')
+    -- 清空卡牌实例
+    G.ClearDynamicData('o_card')
+    -- AI 模块初始化
+    G.call('战斗AI_对决初始化')
+    for _, o_room_player_玩家信息 in ipairs(G.misc().房间玩家列表) do 
+        G.call('对决_初始化数据', o_room_player_玩家信息)
+        G.call('对决_初始化协程', o_room_player_玩家信息)
     end
-    
-    local o_room_player_玩家 = G.call('房间_相对身份获取玩家信息', '我方')
-    G.call('对决_初始化数据', o_room_player_玩家)
-    G.call('对决_初始化协程', o_room_player_玩家)
 end
 
 t['对决_初始化界面'] = function()
@@ -56,9 +61,6 @@ end
 
 t['对决_初始化数据'] = function(o_room_player_玩家)
     G.trig_event('流程_对局开始', o_room_player_玩家.绝对身份, o_room_player_玩家)
-
-    -- G.call('对决_初始化对决牌库', o_room_player_玩家)
-    -- G.call('对决_初始化对决角色', o_room_player_玩家)
 end
 
 t['对决_初始化协程'] = function(o_room_player_玩家)
@@ -195,7 +197,7 @@ t['对决_当前是否是我方回合'] = function()
 end
 
 --ret=o_deck
-t['对决_获取对决卡组'] = function()
+t['对决_获取当前玩家对决卡组'] = function()
     local o_room_player_当前玩家信息 = G.call('系统_获取当前玩家信息')
     if o_room_player_当前玩家信息 == nil then 
         return nil
@@ -235,7 +237,7 @@ end
 t['对决_初始化对决牌库'] = function(o_room_player_玩家)
     local o_deck_卡组 = G.call('对决_获取卡组模板', o_room_player_玩家)
     if not G.call('对决_卡组模板是否有效', o_deck_卡组) then 
-        G.call('提示_添加提示', '卡组模板数据不正确')
+        G.call('提示_添加提示', '[对决_初始化对决牌库] 卡组模板数据不正确, 是无效卡组')
         return 
     end
 
@@ -281,7 +283,7 @@ end
 t['对决_初始化对决角色'] = function(o_room_player_玩家)
     local o_deck_卡组 = G.call('对决_获取卡组模板', o_room_player_玩家)
     if not G.call('对决_卡组模板是否有效', o_deck_卡组) then
-        G.call('提示_添加提示', '卡组模板数据不正确')
+        G.call('提示_添加提示', '[对决_初始化对决角色] 卡组模板数据不正确, 是无效卡组')
         return 
     end
 
@@ -342,13 +344,11 @@ end
 --ret=o_deck
 t['对决_获取卡组模板'] = function(o_room_player_玩家)
     local o_deck_卡组 = nil
-    if G.call('房间_获取相对身份', o_room_player_玩家.绝对身份) == '我方' then 
-        o_deck_卡组 = G.call('对决_获取对决卡组')
-    elseif o_room_player_玩家.AI ~= nil then 
+    if o_room_player_玩家.AI ~= nil then 
         local i_deck_卡组 = G.call('战斗AI_获取随机卡组', o_room_player_玩家.AI)
         o_deck_卡组 = G.QueryName(i_deck_卡组)
     else
-        -- TODO: 初始化其他玩家牌库?
+        o_deck_卡组 = o_room_player_玩家.卡组 
     end
     return o_deck_卡组
 end

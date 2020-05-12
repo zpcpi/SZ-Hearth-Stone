@@ -96,9 +96,7 @@ end
 
 t['战斗AI_对决初始化'] = function()
     local _o_room_player_AI玩家列表 = G.call('房间_获取玩家信息列表', false)
-    LuaPanda.BP()
     for _, o_room_player_AI玩家 in ipairs(_o_room_player_AI玩家列表) do 
-        G.call('通用逻辑_角色相关流程注册', _o_room_player_AI玩家列表.绝对身份)
         G.call('战斗AI_启动AI逻辑监听', o_room_player_AI玩家)
         G.call('对决_初始化数据', o_room_player_AI玩家)
         G.call('对决_初始化协程', o_room_player_AI玩家)

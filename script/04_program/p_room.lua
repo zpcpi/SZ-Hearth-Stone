@@ -305,6 +305,8 @@ t['房间_获取玩家信息列表'] = function(boolean_是否获取真实玩家
         return G.misc().房间玩家列表 or {}
     else
         local _o_room_player_玩家列表 = {}
+        print(G.misc())
+        print(G.misc().房间玩家列表)
         for _, o_room_player_玩家 in ipairs(G.misc().房间玩家列表) do 
             if o_room_player_玩家.AI == nil and boolean_是否获取真实玩家 then 
                 table.insert(_o_room_player_玩家列表, o_room_player_玩家)

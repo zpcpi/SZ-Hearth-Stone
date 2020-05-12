@@ -634,7 +634,7 @@ local aura_add_buff = function (func_filer, func_add, func_del, _earg_光环添�
         return
     end
 
-    local all_cards = G.misc()['实例化卡牌列表']
+    local all_cards = G.DBInst('o_card')
     local TargetList = G.call('array_filter', all_cards, func_filer)
 
     G.call('技能效果_效果树_执行子效果',
@@ -920,21 +920,7 @@ t['逻辑注册_初始化'] = function ()
         end
     end
 
-    -- 防重复记录
-    local misc = G.misc()
-    if misc['别人实例化卡牌反查表'][card.name] then
-    else
-        table.insert(misc['实例化卡牌列表'], card)
-        misc['别人实例化卡牌反查表'][card.name] = true
-    end
-
     trigger_iter(card, '初始')
-end
-
-real_t['逻辑注册_别人初始化前置条件'] = function ()
-    local card = G.event_info()
-    local misc = G.misc()
-    return misc['别人实例化卡牌反查表'][card.name] ~= true
 end
 
 t['逻辑注册_别人初始化'] = function ()
@@ -942,13 +928,6 @@ t['逻辑注册_别人初始化'] = function ()
     card['动态数据_事件'] = {
         ['当前注册事件'] = {},
     }
-
-    local misc = G.misc()
-    if misc['别人实例化卡牌反查表'][card.name] then
-    elseif card['动态数据'] then
-        table.insert(misc['实例化卡牌列表'], card)
-        misc['别人实例化卡牌反查表'][card.name] = true
-    end
 end
 
 real_t['逻辑注册_上场'] = function ()
@@ -1009,7 +988,7 @@ t['逻辑注册_初始流程_absolute'] = function ()
 
     local o_deck_卡组 = G.call('对决_获取卡组模板', room_player)
     if not G.call('对决_卡组模板是否有效', o_deck_卡组) then
-        G.call('提示_添加提示', '卡组模板数据不正确')
+        G.call('提示_添加提示', '[逻辑注册_初始流程_absolute] 卡组模板数据不正确, 是无效卡组')
         return 
     end
 
@@ -1323,7 +1302,7 @@ end
 
 t['逻辑注册_卡牌死亡结算'] = function ()
     local init = function (o_skill_info_效果信息)
-        local all_cards = G.misc()['实例化卡牌列表']
+        local all_cards = G.DBInst('o_card')
         local TargetList = G.call('array_filter', all_cards, function (t)
             local cardtype = (t['逻辑数据'] or {})['类型']
             if (cardtype == 0x10090001) --[[英雄]] or 
@@ -1602,7 +1581,7 @@ real_t['通用逻辑_默认流程注册'] = function ()
     
     -- trigger注册
     G.addListener('逻辑注册_初始化', {'逻辑_卡牌初始化'}, cond, EVENT_PRIOR.first, group_system)
-    G.addListener('逻辑注册_别人初始化', {'卡牌实例_信息更新'}, real_t['逻辑注册_别人初始化前置条件'], EVENT_PRIOR.first, group_system)
+    G.addListener('逻辑注册_别人初始化', {'卡牌实例_信息更新'}, cond, EVENT_PRIOR.first, group_system)
     G.addListener('逻辑注册_上场', {'逻辑_随从上场前'}, cond, prior_base, group_system)
     G.addListener('逻辑注册_上场', {'逻辑_武器上场前'}, cond, prior_base, group_system)
     G.addListener('逻辑注册_上手', {'逻辑_卡牌上手前'}, cond, prior_base, group_system)
@@ -2861,9 +2840,6 @@ real_t['卡牌实例表_初始化'] = function ()
         misc['卡牌实例表'] = dbname
     end
     
-    -- 机制启用
-    misc['实例化卡牌列表'] = {}
-    misc['别人实例化卡牌反查表'] = {}
     G.call('通用逻辑_默认流程注册')
     G.call('通用逻辑_角色相关流程注册', estr_absolute_id_type_绝对身份)
 
@@ -3188,7 +3164,7 @@ end
 
 real_t['卡牌数据_获取过滤后数量'] = function (o_skill, Caster)
     local func_filer = G.call('卡牌数据_制作过滤器', o_skill['目标筛选'], Caster)
-    local all_cards = G.misc()['实例化卡牌列表']
+    local all_cards = G.DBInst('o_card')
 
     return #G.call('array_filter', all_cards, func_filer)
 end
@@ -3397,7 +3373,7 @@ real_t['网络通讯_请求信息'] = function (estr_player_目标身份, farg)
 end
 
 real_t['网络通讯_技能效果_获知随机卡牌'] = function (int_数量, estr_cardpos_type_卡牌来源, boolean_是否复制, boolean_是否明牌)
-    local all_cards = G.misc()['实例化卡牌列表']
+    local all_cards = G.DBInst('o_card')
     local TargetList
 
     if estr_cardpos_type_卡牌来源 == '卡组' then
