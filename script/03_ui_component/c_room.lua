@@ -114,7 +114,7 @@ function t:click(tar)
     elseif tar.parent == self.deckListContent then
         local i_deck_卡组ID = math.floor(tar.data)
         local o_deck_卡组 = G.QueryName(i_deck_卡组ID)
-        G.call('对决_设置对决卡组', o_deck_卡组)
+        G.call('对决_设置预设对决卡组', o_deck_卡组)
         self:HideDeckList()
     elseif tar.parent == self.modeListContent then
         local i_game_mode_游戏模式 = math.floor(tar.data)

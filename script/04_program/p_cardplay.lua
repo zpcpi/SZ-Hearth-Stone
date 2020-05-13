@@ -986,7 +986,7 @@ end
 t['逻辑注册_初始流程_absolute'] = function ()
     local absolute_player,room_player = G.event_info()
 
-    local o_deck_卡组 = G.call('对决_获取卡组模板', room_player)
+    local o_deck_卡组 = G.call('对决_获取预设卡组', room_player)
     if not G.call('对决_卡组模板是否有效', o_deck_卡组) then
         G.call('提示_添加提示', '[逻辑注册_初始流程_absolute] 卡组模板数据不正确, 是无效卡组')
         return 
@@ -2821,6 +2821,9 @@ end
 -- ============================================
 real_t['卡牌实例化'] = function (o_card_卡片模板, estr_player_相对身份)
     local o_card_卡片实例 = G.CopyInst(o_card_卡片模板)
+    print('[卡牌实例化]', o_card_卡片实例.name, o_card_卡片实例.root, o_card_卡片模板.name)
+    print('\t[卡牌实例化]', o_card_卡片模板.逻辑数据.类型)
+    print('\t[卡牌实例化]', o_card_卡片实例.逻辑数据.类型, CARD_GET_ATTR(o_card_卡片实例, '逻辑数据', '类型'))
     local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份 or '我方')
     G.trig_event('逻辑_卡牌初始化', o_card_卡片实例, estr_absolute_id_type_绝对身份)
     return o_card_卡片实例
@@ -2896,6 +2899,7 @@ local card_get_value = function (card, _attr)
 end
 
 real_t['卡牌实例化_信息更新_预处理'] = function (o_card_卡牌, _string_attr)
+    print('[卡牌实例化_信息更新_预处理]', o_card_卡牌.name, o_card_卡牌.root)
     local _value = card_get_value(o_card_卡牌, _string_attr)
     if _value then
         G.call('网络通用_广播消息', '网络通讯_卡牌实例化_信息更新', o_card_卡牌.name, _string_attr, _value)

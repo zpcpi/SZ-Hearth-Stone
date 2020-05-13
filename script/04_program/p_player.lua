@@ -14,6 +14,7 @@ t['角色_添加手牌'] = function(estr_player_相对身份, o_card_卡牌, boo
         G.call('角色_添加手牌_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
         -- TODO: 明牌逻辑
         if G.call('主机_是主机') then 
+            -- 创建卡牌的时候就同步
             G.call('卡牌实例化_信息更新_预处理', o_card_卡牌, {'root', '卡牌属性', '逻辑数据', '动态数据'})
             G.call('网络通用_广播消息', '角色_添加手牌_绝对身份', estr_absolute_id_type_绝对身份, i_card_卡牌)
         end

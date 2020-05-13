@@ -875,7 +875,7 @@ local t = {
 			},
 			[7]={
 				['name']='卡组',
-				['type']='o_deck',
+				['type']='o_deck_template',
 			},
 		},
 	},
@@ -1044,6 +1044,31 @@ local t = {
 			[6]={
 				['name']='condivalue',
 				['type']='boolean',
+			},
+		},
+	},
+	{
+		['name']='o_deck_template',
+		['define']={
+			[1]={
+				['name']='卡组名称',
+				['type']='string',
+			},
+			[2]={
+				['name']='卡牌列表',
+				['type']='_i_card',
+			},
+			[3]={
+				['name']='英雄',
+				['type']='_i_card',
+			},
+			[4]={
+				['name']='英雄技能',
+				['type']='_i_card',
+			},
+			[5]={
+				['name']='模式',
+				['type']='estr_game_mode',
 			},
 		},
 	},

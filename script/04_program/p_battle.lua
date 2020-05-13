@@ -202,15 +202,19 @@ t['对决_获取当前玩家对决卡组'] = function()
     return o_room_player_当前玩家信息.卡组 
 end
 
-t['对决_设置对决卡组'] = function(o_deck_卡组)
+t['对决_设置预设对决卡组'] = function(o_deck_卡组)
     local o_room_player_当前玩家信息 = G.call('系统_获取当前玩家信息')
     o_room_player_当前玩家信息.卡组 = {
-        卡牌列表 = o_deck_卡组.卡牌列表,
+        卡牌列表 = {},
         英雄 = o_deck_卡组.英雄,
         英雄技能 = o_deck_卡组.英雄技能,
         卡组名称 = o_deck_卡组.卡组名称,
         模式 = o_deck_卡组.模式,
     }
+    for _, o_card_卡牌 in ipairs(o_deck_卡组.卡牌列表) do 
+        local i_card_卡牌ID = o_card_卡牌.name
+        table.insert(o_room_player_当前玩家信息.卡组.卡牌列表, i_card_卡牌ID)
+    end
 end
 
 --ret=int
@@ -232,7 +236,7 @@ t['对决_获取初始生命值'] = function()
 end
 
 t['对决_初始化对决牌库'] = function(o_room_player_玩家)
-    local o_deck_卡组 = G.call('对决_获取卡组模板', o_room_player_玩家)
+    local o_deck_卡组 = G.call('对决_获取预设卡组', o_room_player_玩家)
     if not G.call('对决_卡组模板是否有效', o_deck_卡组) then 
         G.call('提示_添加提示', '[对决_初始化对决牌库] 卡组模板数据不正确, 是无效卡组')
         return 
@@ -277,7 +281,7 @@ t['对决_初始化对决牌库'] = function(o_room_player_玩家)
 end
 
 t['对决_初始化对决角色'] = function(o_room_player_玩家)
-    local o_deck_卡组 = G.call('对决_获取卡组模板', o_room_player_玩家)
+    local o_deck_卡组 = G.call('对决_获取预设卡组', o_room_player_玩家)
     if not G.call('对决_卡组模板是否有效', o_deck_卡组) then
         G.call('提示_添加提示', '[对决_初始化对决角色] 卡组模板数据不正确, 是无效卡组')
         return 
@@ -338,13 +342,24 @@ t['对决_获取当前游戏模式'] = function()
 end
 
 --ret=o_deck
-t['对决_获取卡组模板'] = function(o_room_player_玩家)
+t['对决_获取预设卡组'] = function(o_room_player_玩家)
     local o_deck_卡组 = nil
     if o_room_player_玩家.AI ~= nil then 
         local i_deck_卡组 = G.call('战斗AI_获取随机卡组', o_room_player_玩家.AI)
         o_deck_卡组 = G.QueryName(i_deck_卡组)
     else
-        o_deck_卡组 = o_room_player_玩家.卡组 
+        local o_deck_template_预设卡组 = o_room_player_玩家.卡组 
+        o_deck_卡组 = {
+            卡组名称 = o_deck_template_预设卡组.卡组名称,
+            卡牌列表 = {},
+            英雄 = o_deck_template_预设卡组.英雄,
+            英雄技能 = o_deck_template_预设卡组.英雄技能,
+            模式 = o_deck_template_预设卡组.模式,
+        }
+        for _, i_card_卡片ID in ipairs(o_room_player_玩家.卡组) do 
+            local o_card_卡片 = G.QueryName(i_card_卡片ID)
+            table.insert(o_deck_卡组.卡牌列表, o_card_卡片)
+        end
     end
     return o_deck_卡组
 end
