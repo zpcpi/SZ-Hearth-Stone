@@ -254,9 +254,16 @@ t['房间_分配绝对身份'] = function()
     local i_game_mode_游戏模式 = G.call('对决_获取当前游戏模式')
     local o_game_mode_游戏模式 = G.QueryName(i_game_mode_游戏模式)
     _any_可用身份列表 = o_game_mode_游戏模式.可分配身份列表
+    G.call('提示_添加提示', '[测试]主机必定先手')
     for i = 1, #any_玩家信息列表 do 
-        local int_随机数 = G.random(1, #_any_可用身份列表)
-        any_玩家信息列表[i].绝对身份 = table.remove(_any_可用身份列表, int_随机数)
+        -- FIXME: 测试用 主机必定先手
+        if any_玩家信息列表[i].是主机 then 
+            any_玩家信息列表[i].绝对身份 = '红1'
+        else
+            any_玩家信息列表[i].绝对身份 = '蓝1'
+        end
+        -- local int_随机数 = G.random(1, #_any_可用身份列表)
+        -- any_玩家信息列表[i].绝对身份 = table.remove(_any_可用身份列表, int_随机数)
     end
     for i = 1, #any_玩家信息列表 do 
         G.call('房间_更新玩家信息', any_玩家信息列表[i])

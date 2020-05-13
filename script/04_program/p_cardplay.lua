@@ -2421,7 +2421,7 @@ t['技能效果_变形'] = function (i_card_变形卡牌ID, boolean_是否保留
                     )
 
             -- TODO，临时处理，后面需要动画来管理
-            G.trig_event('卡牌实例_信息更新', Target)
+            G.trig_event('卡牌实例_信息更新', Target.name)
         end
     end
 
@@ -2868,9 +2868,7 @@ real_t['网络通讯_卡牌实例化_信息更新'] = function (i_card_卡牌, _
             end
         end
     end
-
-    G.trig_event('卡牌实例_信息更新', o_card_卡牌)
-    G.trig_event('UI_卡牌属性更新', o_card_卡牌.name)
+    
     return i_card_卡牌
 end
 
@@ -3267,6 +3265,7 @@ t['卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属
 
         G.trig_event('逻辑_卡牌属性改变', o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, old_value)
     end
+    G.call('卡牌实例化_信息更新_预处理', o_card_当前卡牌, {'root', '卡牌属性', '逻辑数据', '动态数据'})
 end
 
 -- ============================================

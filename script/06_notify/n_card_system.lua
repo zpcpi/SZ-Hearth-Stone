@@ -648,6 +648,9 @@ noti[postcall .. 'single_heal'] = function ()
 end
 
 noti[postcall .. '卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value)
+    if G.call('主机_是主机') then 
+        G.call('网络通用_广播消息', '客机处理回调_动画逻辑', postcall .. '卡牌属性_设置', o_card_当前卡牌.name, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value)
+    end
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
     
@@ -682,7 +685,6 @@ noti[postcall .. '卡牌属性_设置'] = function (o_card_当前卡牌, estr_ca
             {G.trig_event, 'UI_卡牌属性更新', o_card_当前卡牌.name, attr, value},
         })
     anim_addchild(o_animquest_当前动画)
-    
 end
 
 noti[precall .. '技能效果_伤害'] = function ()
