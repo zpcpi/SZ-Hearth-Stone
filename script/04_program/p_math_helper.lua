@@ -442,6 +442,3 @@ t['Create_Randomlib'] = function (o_randomlib_type_随机库类型)
 
     return rlib
 end
-
-
-

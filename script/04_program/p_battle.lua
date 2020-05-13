@@ -356,7 +356,7 @@ t['对决_获取预设卡组'] = function(o_room_player_玩家)
             英雄技能 = o_deck_template_预设卡组.英雄技能,
             模式 = o_deck_template_预设卡组.模式,
         }
-        for _, i_card_卡片ID in ipairs(o_room_player_玩家.卡组) do 
+        for _, i_card_卡片ID in ipairs(o_room_player_玩家.卡组.卡牌列表) do 
             local o_card_卡片 = G.QueryName(i_card_卡片ID)
             table.insert(o_deck_卡组.卡牌列表, o_card_卡片)
         end
