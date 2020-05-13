@@ -534,7 +534,7 @@ noti[precall .. 'single_damage'] = function ()
 
             local o_animquest_最后动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 0, nil,{
                 G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                    [1] = {G.trig_event, 'UI_卡牌战斗信息', Target, '伤害', int_伤害值},
+                    [1] = {G.trig_event, 'UI_卡牌战斗信息', Target.name, '伤害', int_伤害值},
                     [2] = {del_missile},
                     [3] = {pop_quote, '::sys_single_damage_Missile'},
                     [4] = {pop_quote, '::sys_single_damage_Target'},
@@ -558,7 +558,7 @@ noti[precall .. 'single_damage'] = function ()
         else
             -- 不发射飞弹
             local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                    {G.trig_event, 'UI_卡牌战斗信息', Target, '伤害', int_伤害值},
+                    {G.trig_event, 'UI_卡牌战斗信息', Target.name, '伤害', int_伤害值},
                 })
             anim_addchild(o_animquest_当前动画)
         end
@@ -605,7 +605,7 @@ noti[precall .. 'single_heal'] = function ()
 
             local o_animquest_最后动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 0, nil,{
                 G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                    [1] = {G.trig_event, 'UI_卡牌战斗信息', Target, '治疗', int_治疗值},
+                    [1] = {G.trig_event, 'UI_卡牌战斗信息', Target.name, '治疗', int_治疗值},
                     [2] = {del_missile},
                     [3] = {pop_quote, '::sys_single_heal_Missile'},
                     [4] = {pop_quote, '::sys_single_heal_Target'},
@@ -629,7 +629,7 @@ noti[precall .. 'single_heal'] = function ()
         else
             -- 不发射飞弹
             local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                    {G.trig_event, 'UI_卡牌战斗信息', Target, '治疗', int_治疗值},
+                    {G.trig_event, 'UI_卡牌战斗信息', Target.name, '治疗', int_治疗值},
                 })
             anim_addchild(o_animquest_当前动画)
         end
@@ -648,9 +648,6 @@ noti[postcall .. 'single_heal'] = function ()
 end
 
 noti[postcall .. '卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value)
-    if G.call('主机_是主机') then 
-        G.call('网络通用_广播消息', '客机处理回调_动画逻辑', postcall .. '卡牌属性_设置', o_card_当前卡牌.name, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value)
-    end
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
     
@@ -674,9 +671,15 @@ noti[postcall .. '卡牌属性_设置'] = function (o_card_当前卡牌, estr_ca
         end
 
         local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                {G.trig_event, 'UI_卡牌状态更新', o_card_当前卡牌, attr, is_show},
+                {G.trig_event, 'UI_卡牌状态更新', o_card_当前卡牌.name, attr, is_show},
             })
         anim_addchild(o_animquest_当前动画)
+
+
+        -- 临时的，后面需要传完整动画
+        if G.call('主机_是主机') then 
+            G.call('网络通用_广播消息', '客机处理回调_抛出事件', 'UI_卡牌状态更新', o_card_当前卡牌.name, attr, is_show)
+        end
 
         return
     end
@@ -685,6 +688,11 @@ noti[postcall .. '卡牌属性_设置'] = function (o_card_当前卡牌, estr_ca
             {G.trig_event, 'UI_卡牌属性更新', o_card_当前卡牌.name, attr, value},
         })
     anim_addchild(o_animquest_当前动画)
+
+    -- 临时的，后面需要传完整动画
+    if G.call('主机_是主机') then 
+        G.call('网络通用_广播消息', '客机处理回调_抛出事件', 'UI_卡牌属性更新', o_card_当前卡牌.name, attr, value)
+    end
 end
 
 noti[precall .. '技能效果_伤害'] = function ()
@@ -786,7 +794,7 @@ local set_flag_obj = function (flags, is_not, attr)
         local script_动画系统 = o_misc.技能动画系统
         local result = get_flag(Card, flags, is_not)
         local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-                {G.trig_event, 'UI_卡牌状态更新', Card, attr, result},
+                {G.trig_event, 'UI_卡牌状态更新', Card.name, attr, result},
             })
         anim_addchild(o_animquest_当前动画)
     end

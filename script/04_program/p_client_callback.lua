@@ -23,7 +23,6 @@ t['客机处理回调_同步牌库信息'] = function(string_牌库键, any_牌�
 end
 
 --hide=true
-t['客机处理回调_动画逻辑'] = function(string_函数名, i_card_卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value)
-    local o_card_卡牌 = G.QueryName(i_card_卡牌)
-    G.call(string_函数名, o_card_卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value)
+t['客机处理回调_抛出事件'] = function(string_事件名, ...)
+    G.trig_event(string_事件名, ...)
 end
