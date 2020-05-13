@@ -679,9 +679,10 @@ noti[postcall .. '卡牌属性_设置'] = function (o_card_当前卡牌, estr_ca
     end
 
     local o_animquest_当前动画 = G.call('动画系统_创建quest_自定义', script_动画系统, false, 500, {
-            {G.trig_event, 'UI_卡牌属性更新', o_card_当前卡牌, attr, value},
+            {G.trig_event, 'UI_卡牌属性更新', o_card_当前卡牌.name, attr, value},
         })
     anim_addchild(o_animquest_当前动画)
+    
 end
 
 noti[precall .. '技能效果_伤害'] = function ()

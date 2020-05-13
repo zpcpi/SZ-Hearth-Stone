@@ -200,7 +200,7 @@ t['CardCom_SetData'] = function (com, o_card, manager)
         local key = 'card_attrchange|' .. tostring(manager)
         G.removeListener(key, 'UI_卡牌属性更新')
         G.api[key] = update_data
-        G.addListener(key, {'UI_卡牌属性更新', o_card})
+        G.addListener(key, {'UI_卡牌属性更新', o_card.name})
     end
 
     -- 注册卡牌战斗信息监听

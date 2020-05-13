@@ -216,8 +216,8 @@ t['角色_获取随从列表_绝对身份'] = function(estr_absolute_id_type_绝
 end
 
 t['角色_设置水晶数据_绝对身份'] = function(estr_absolute_id_type_绝对身份, estr_mana_type_修改类型, int_value)
+    print('[角色_设置水晶数据_绝对身份]  estr_absolute_id_type_绝对身份', estr_absolute_id_type_绝对身份, 'estr_mana_type_修改类型', estr_mana_type_修改类型, 'int_value', int_value)
     local o_misc = G.misc()
-
     misc_attr_check('水晶信息', estr_absolute_id_type_绝对身份)
     o_misc.水晶信息[estr_absolute_id_type_绝对身份][estr_mana_type_修改类型] = int_value
 end

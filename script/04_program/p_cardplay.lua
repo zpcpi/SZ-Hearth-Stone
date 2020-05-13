@@ -2834,6 +2834,7 @@ local function get_card_dbname(i_card_卡牌)
 end
 
 real_t['网络通讯_卡牌实例化_信息更新'] = function (i_card_卡牌, _string_attr, _value)
+    print('[网络通讯_卡牌实例化_信息更新] i_card_卡牌', i_card_卡牌)
     local o_card_卡牌 = G.QueryName(i_card_卡牌)
     if o_card_卡牌 then
     elseif i_card_卡牌 == 0 then
@@ -2869,6 +2870,7 @@ real_t['网络通讯_卡牌实例化_信息更新'] = function (i_card_卡牌, _
     end
 
     G.trig_event('卡牌实例_信息更新', o_card_卡牌)
+    G.trig_event('UI_卡牌属性更新', o_card_卡牌.name)
     return i_card_卡牌
 end
 
