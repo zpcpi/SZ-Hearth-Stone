@@ -301,6 +301,7 @@ t['Randomlib_求值_完全随机'] = function (self)
     local weight_max = rlib_终止判断(self)
 
     if weight_max == 0 then
+        print('[Randomlib_求值_完全随机] weight_max == 0')
         return
     end
 
@@ -309,6 +310,7 @@ t['Randomlib_求值_完全随机'] = function (self)
 
     if (int_baseindex < 1) or (int_baseindex > self.int_最大有效数据索引) then
         -- 数据越界
+        print('[Randomlib_求值_完全随机] 数据越界 int_baseindex:' .. int_baseindex .. '  self.int_最大有效数据索引:' .. self.int_最大有效数据索引)
         return
     end
 
@@ -322,6 +324,7 @@ t['Randomlib_求值_抽取随机'] = function (self)
     local weight_max = rlib_终止判断(self)
 
     if weight_max == 0 then
+        print('[Randomlib_求值_抽取随机] weight_max == 0')
         return
     end
 
@@ -330,6 +333,7 @@ t['Randomlib_求值_抽取随机'] = function (self)
 
     if (int_baseindex < 1) or (int_baseindex > self.int_最大有效数据索引) then
         -- 数据越界
+        print('[Randomlib_求值_抽取随机] 数据越界 int_baseindex:' .. int_baseindex .. '  self.int_最大有效数据索引:' .. self.int_最大有效数据索引)
         return
     end
 
@@ -346,6 +350,7 @@ t['Randomlib_求值_有损随机'] = function (self)
     local weight_max = rlib_终止判断(self)
 
     if weight_max == 0 then
+        print('[Randomlib_求值_有损随机] weight_max == 0')
         return
     end
 
@@ -354,6 +359,7 @@ t['Randomlib_求值_有损随机'] = function (self)
 
     if (int_baseindex < 1) or (int_baseindex > self.int_最大有效数据索引) then
         -- 数据越界
+        print('[Randomlib_求值_有损随机] 数据越界 int_baseindex:' .. int_baseindex .. '  self.int_最大有效数据索引:' .. self.int_最大有效数据索引)
         return
     end
 
@@ -370,6 +376,7 @@ t['Randomlib_求值_顺序选取'] = function (self)
     local weight_max = rlib_终止判断(self)
 
     if weight_max == 0 then
+        print('[Randomlib_求值_顺序选取] weight_max == 0')
         return
     end
 
@@ -379,6 +386,7 @@ t['Randomlib_求值_顺序选取'] = function (self)
 
     if (int_baseindex < 1) or (int_baseindex > self.int_最大有效数据索引) then
         -- 数据越界
+        print('[Randomlib_求值_顺序选取] 数据越界 int_baseindex:' .. int_baseindex .. '  self.int_最大有效数据索引:' .. self.int_最大有效数据索引)
         return
     end
 
