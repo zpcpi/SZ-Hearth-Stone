@@ -1,5 +1,6 @@
 local GF = require('gfbase')
 local lsocket = require("socket.core")
+local json = require 'cjson.c'
 
 table.insert(GF.update, function(t, k)
 	GF.NetReceive()
@@ -48,5 +49,30 @@ function GF.NetReceive()
                 GF.call('网络通用_处理消息', socket, rev)
             end
         end
+    end
+end
+
+function GF.DecodeJson(buffer)
+    local data = json.decode(buffer)
+    GF.FormatJsonTable(data)
+    return data
+end
+
+function GF.FormatJsonTable(jsonTable)
+    if type(jsonTable) ~= 'table' then 
+        return
+    end
+    local deleteKeyList = {}
+    for k, v in pairs(jsonTable) do
+        if type(k) == 'string' and tonumber(k) ~= nil then
+            jsonTable[tonumber(k)] = v
+            table.insert(deleteKeyList, k)
+        end
+        if type(v) == 'table' then 
+            GF.FormatJsonTable(v)
+        end
+    end
+    for _, k in ipairs(deleteKeyList) do 
+        jsonTable[k] = nil
     end
 end

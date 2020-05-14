@@ -35,7 +35,7 @@ t['网络通用_处理消息'] = function(socketTarget, buffer)
         G.canBroadcast = true
         return 
     end
-    local paramsList = json.decode(buffer)
+    local paramsList = G.DecodeJson(buffer)
     if type(paramsList) ~= 'table' then 
         G.canBroadcast = true
         return 

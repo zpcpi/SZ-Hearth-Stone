@@ -244,7 +244,7 @@ t['卡牌选择目标_条件'] = function (o_order_info_当前指令信息)
            (OrderId == 0x10040004) or -- 随从_单目标指令
            (OrderId == 0x1004000a) -- 英雄技能_单目标指令
             then 
-            condi[count] = G.call('卡牌数据_制作过滤器', Caster['逻辑数据']['卡牌使用目标条件'][count], Caster)
+                condi[count] = G.call('卡牌数据_制作过滤器', Caster['逻辑数据']['卡牌使用目标条件'][count], Caster)
         end
     end
 
