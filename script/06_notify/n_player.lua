@@ -187,3 +187,5 @@ function noti.角色_战场_移除随从_绝对身份(estr_absolute_id_type_绝�
     script_战场随从组件:set_minion_pos()
 end
 
+function noti.角色_获取水晶数据_绝对身份(estr_absolute_id_type_绝对身份, estr_mana_type_获取类型)
+end

@@ -64,6 +64,10 @@ function t:水晶_init()
 end
 
 function t:水晶值计算()
+    -- FIXME: 临时实现
+    self.最大值 = G.call('角色_获取水晶数据', '我方', '最大值')
+    self.当前值 = G.call('角色_获取水晶数据', '我方', '当前值')
+
     local 最大值 = self.最大值 or 0
     local 当前值 = self.当前值 or 0
     local 锁定值 = self.锁定值 or 0
@@ -189,12 +193,17 @@ function t:水晶状态计算()
 end
 
 function t:need_flash(attr, old_value)
-    self.等待计算 = true
+    -- FIXME: 临时改为全局脏标记
+    -- self.等待计算 = true
+    G.manaDirtyFlag = true
 end
 
 function t:update()
-    if self.等待计算 == true then
-        self.等待计算 = false
+    -- FIXME: 临时改为全局脏标记
+    -- if self.等待计算 == true then
+    --     self.等待计算 = false
+    if G.manaDirtyFlag then
+        G.manaDirtyFlag = false
 
         local 水晶state, 水晶state_next = self:水晶状态计算()
         local ui_item

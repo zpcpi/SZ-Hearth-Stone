@@ -220,11 +220,14 @@ t['角色_设置水晶数据_绝对身份'] = function(estr_absolute_id_type_绝
     local o_misc = G.misc()
     misc_attr_check('水晶信息', estr_absolute_id_type_绝对身份)
     o_misc.水晶信息[estr_absolute_id_type_绝对身份][estr_mana_type_修改类型] = int_value
+    -- FIXME: 临时改为全局脏标记
+    G.manaDirtyFlag = true
 end
 
 t['角色_获取水晶数据_绝对身份'] = function(estr_absolute_id_type_绝对身份, estr_mana_type_获取类型)
     local o_misc = G.misc()
 
     misc_attr_check('水晶信息', estr_absolute_id_type_绝对身份)
+    print('[角色_获取水晶数据_绝对身份] estr_absolute_id_type_绝对身份', estr_absolute_id_type_绝对身份, 'estr_mana_type_获取类型', estr_mana_type_获取类型)
     return o_misc.水晶信息[estr_absolute_id_type_绝对身份][estr_mana_type_获取类型] or 0
 end
