@@ -106,7 +106,7 @@ function t:setData(list, i_order_当前指令)
         ui_card.visible = true
 
         if i_order_当前指令 then
-            G.call('卡牌注册指令', list[i], i_order_当前指令)
+            G.call('卡牌注册指令', list[i].name, i_order_当前指令)
         end
     end
 

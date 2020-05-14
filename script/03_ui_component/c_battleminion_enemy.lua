@@ -58,7 +58,7 @@ function t:addMinion(o_card_卡牌, count)
         ui_card.c_card_manager:setData(o_card_卡牌, true)
     
         -- 随从的攻击指令
-        -- G.call('卡牌注册指令', o_card_卡牌, 0x10040008)
+        -- G.call('卡牌注册指令', o_card_卡牌.name, 0x10040008)
 
         -- 插入到列表里面
         table.insert(self.minions, count, ui_card)

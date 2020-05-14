@@ -48,7 +48,7 @@ function t:setData(o_card_卡片数据)
         self.cur_card_list['英雄'] = o_card_卡片数据
 
         -- 随从的攻击指令
-        G.call('卡牌注册指令', o_card_卡片数据, get_attr(o_card_卡片数据, '逻辑数据', '战场卡牌指令') or 0x10040008)
+        G.call('卡牌注册指令', o_card_卡片数据.name, get_attr(o_card_卡片数据, '逻辑数据', '战场卡牌指令') or 0x10040008)
     elseif string_卡片类型名称 == '英雄技能' then
         o_node_界面 = self.英雄技能
         self.cur_card_list['英雄技能'] = o_card_卡片数据
@@ -56,7 +56,7 @@ function t:setData(o_card_卡片数据)
         -- 英雄技能战场指令
         local i_order_当前指令 = get_attr(o_card_卡片数据, '逻辑数据', '战场卡牌指令')
         if i_order_当前指令 then
-            G.call('卡牌注册指令', o_card_卡片数据, i_order_当前指令)
+            G.call('卡牌注册指令', o_card_卡片数据.name, i_order_当前指令)
         end
     elseif string_卡片类型名称 == '武器卡' then
         o_node_界面 = self.武器

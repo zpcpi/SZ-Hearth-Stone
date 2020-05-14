@@ -44,7 +44,7 @@ function t:addCard(o_card_卡牌)
     ui_card.scaleX = 0.28
     ui_card.scaleY = 0.28
     ui_card.c_card_manager:setData(o_card_卡牌)
-    G.call('卡牌注册指令', o_card_卡牌)
+    G.call('卡牌注册指令', o_card_卡牌.name)
 
     self.CardCount = count
 

@@ -55,7 +55,9 @@ end
 
 --hide=true
 --ret=o_order
-t['卡牌注册指令'] = function (o_card_使用卡牌, i_order_当前指令)
+t['卡牌注册指令'] = function (i_card_使用卡牌ID, i_order_当前指令)
+    print('[卡牌注册指令] o_card_使用卡牌', i_card_使用卡牌ID, i_order_当前指令)
+    local o_card_使用卡牌 = G.QueryName(i_card_使用卡牌ID)
     i_order_当前指令 = i_order_当前指令 or CARD_GET_ATTR(o_card_使用卡牌, '逻辑数据', '卡牌指令')
     local o_order_当前指令 = G.QueryName(i_order_当前指令)
 
@@ -107,7 +109,7 @@ t['卡牌注册指令'] = function (o_card_使用卡牌, i_order_当前指令)
                 G.call('卡牌注册指令_退出', o_order_info_当前指令信息)
 
                 -- 重新注册指令
-                G.call('卡牌注册指令', o_card_使用卡牌, i_order_当前指令)
+                G.call('卡牌注册指令', o_card_使用卡牌.name, i_order_当前指令)
             elseif state == -3 then
                 -- 攻击指令完成
                 G.call('卡牌注册指令_完成', o_order_info_当前指令信息)
@@ -116,7 +118,7 @@ t['卡牌注册指令'] = function (o_card_使用卡牌, i_order_当前指令)
                 G.call('卡牌攻击_主流程', '我方', o_order_info_当前指令信息)
 
                 -- 重新注册指令
-                G.call('卡牌注册指令', o_card_使用卡牌, i_order_当前指令)
+                G.call('卡牌注册指令', o_card_使用卡牌.name, i_order_当前指令)
             elseif state == -4 then
                 -- 英雄技能指令完成
                 G.call('卡牌注册指令_完成', o_order_info_当前指令信息)
@@ -125,7 +127,7 @@ t['卡牌注册指令'] = function (o_card_使用卡牌, i_order_当前指令)
                 G.call('卡牌使用_主流程', '我方', o_order_info_当前指令信息)
 
                 -- 重新注册指令
-                G.call('卡牌注册指令', o_card_使用卡牌, i_order_当前指令)
+                G.call('卡牌注册指令', o_card_使用卡牌.name, i_order_当前指令)
             elseif state == -5 then
                 -- 选择界面指令完成
                 G.call('卡牌注册指令_选择界面完成', o_order_info_当前指令信息)
