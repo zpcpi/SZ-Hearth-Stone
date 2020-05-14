@@ -121,7 +121,7 @@ function t:rollOver(tar)
             self.CurCard = tar
 
             if tar == self.英雄技能 then
-                G.trig_event('UI_鼠标覆盖卡牌', o_card_picked)
+                G.trig_event('UI_鼠标覆盖卡牌', o_card_picked.name)
             end
 
             local posx, posy = tar.localToGlobal(0, 0)
@@ -136,7 +136,7 @@ function t:rollOut(tar)
 
         if o_card_picked then
             if tar == self.英雄技能 then
-                G.trig_event('UI_鼠标离开卡牌', o_card_picked)
+                G.trig_event('UI_鼠标离开卡牌', o_card_picked.name)
             end
 
             self.CurCard = nil
@@ -151,12 +151,12 @@ function t:mouseDown(tar)
 
         if tar == self.英雄技能 then
             o_card_picked = self:getClickData(tar)
-            G.trig_event('UI_抓取卡牌_英雄技能', o_card_picked, tar)
+            G.trig_event('UI_抓取卡牌_英雄技能', o_card_picked.name, tar)
         else
             -- 那就是英雄
             o_card_picked, tar = self:getClickData_pick(tar)
             if o_card_picked then
-                G.trig_event('UI_抓取卡牌_战场', o_card_picked, tar)
+                G.trig_event('UI_抓取卡牌_战场', o_card_picked.name, tar)
             end
         end
     end

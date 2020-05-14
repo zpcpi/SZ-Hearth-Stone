@@ -84,7 +84,7 @@ function t:rollOver(tar)
         self.CurCard = tar
 
         local o_card_picked = tar.c_card_manager:getData()
-        G.trig_event('UI_鼠标覆盖卡牌', o_card_picked)
+        G.trig_event('UI_鼠标覆盖卡牌', o_card_picked.name)
 
         local posx, posy = tar.localToGlobal(0, 0)
         self.主战场:showtips(o_card_picked, posx, 170)
@@ -97,7 +97,7 @@ function t:rollOut(tar)
         self.CurCard = nil
 
         local o_card_picked = tar.c_card_manager:getData()
-        G.trig_event('UI_鼠标离开卡牌', o_card_picked)
+        G.trig_event('UI_鼠标离开卡牌', o_card_picked.name)
         
         self.主战场:hidetips()
     end
@@ -107,7 +107,7 @@ function t:mouseDown(tar)
     if self.can_pick then
         local o_card_picked = tar.c_card_manager:getData()
         if o_card_picked then
-            G.trig_event('UI_抓取卡牌', o_card_picked, tar)
+            G.trig_event('UI_抓取卡牌', o_card_picked.name, tar)
         end
     end
 end

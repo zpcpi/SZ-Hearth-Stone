@@ -23,7 +23,7 @@ end
 --==========================================================
 t['法力消耗预览_事件'] = function (o_order_info_当前指令信息)
     local Caster = o_order_info_当前指令信息['Caster']
-    return {'UI_鼠标覆盖卡牌', Caster}
+    return {'UI_鼠标覆盖卡牌', Caster.name}
 end
 
 t['法力消耗预览_条件'] = function (o_order_info_当前指令信息)
@@ -48,7 +48,7 @@ end
 --==========================================================
 t['法力消耗预览取消_事件'] = function (o_order_info_当前指令信息)
     local Caster = o_order_info_当前指令信息['Caster']
-    return {'UI_鼠标离开卡牌', Caster}
+    return {'UI_鼠标离开卡牌', Caster.name}
 end
 
 t['法力消耗预览取消_条件'] = function (o_order_info_当前指令信息)
@@ -67,12 +67,10 @@ end
 --==========================================================
 t['抓取卡牌_事件'] = function (o_order_info_当前指令信息)
     local Caster = o_order_info_当前指令信息['Caster']
-    return {'UI_抓取卡牌', Caster}
+    return {'UI_抓取卡牌', Caster.name}
 end
 
 t['抓取卡牌_条件'] = function (o_order_info_当前指令信息)
-    -- local Caster = o_order_info_当前指令信息['Caster']
-    -- print('UI_抓取卡牌', string.format('0x%x', Caster['name']), Caster['showname'])
 	return G.call('卡牌抓取条件判断', o_order_info_当前指令信息)
 end
 
@@ -404,7 +402,7 @@ end
 
 t['抓取卡牌_随从_事件'] = function (o_order_info_当前指令信息)
     local Caster = o_order_info_当前指令信息['Caster']
-    return {'UI_抓取卡牌_战场', Caster}
+    return {'UI_抓取卡牌_战场', Caster.name}
 end
 
 t['抓取卡牌_随从_条件'] = function (o_order_info_当前指令信息)
@@ -471,7 +469,7 @@ end
 
 t['抓取卡牌_英雄技能_事件'] = function (o_order_info_当前指令信息)
     local Caster = o_order_info_当前指令信息['Caster']
-    return {'UI_抓取卡牌_英雄技能', Caster}
+    return {'UI_抓取卡牌_英雄技能', Caster.name}
 end
 
 t['抓取卡牌_英雄技能_条件'] = function (o_order_info_当前指令信息)
