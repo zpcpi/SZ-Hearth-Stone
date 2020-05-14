@@ -90,7 +90,6 @@ t['卡牌注册指令'] = function (i_card_使用卡牌ID, i_order_当前指令)
                             init_order_edge()
                         end
                     end
-        
                     -- 创建动态key，注册监听
                     add_listener(t[edge['事件']], worker, o_order_info_当前指令信息)
                 end
@@ -133,7 +132,6 @@ t['卡牌注册指令'] = function (i_card_使用卡牌ID, i_order_当前指令)
                 G.call('卡牌注册指令_选择界面完成', o_order_info_当前指令信息)
             end
         end
-
         init_order_edge()
     end
 end
