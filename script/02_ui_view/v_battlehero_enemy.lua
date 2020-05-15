@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_battlehero_enemy = require 'c_battlehero_enemy'
 local c_card_manager = require 'c_card_manager'
+local c_battlehero_enemy = require 'c_battlehero_enemy'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -17,10 +17,10 @@ tp = tc
 	tp.addChild(tc)
 	tc.name = '功能区'
 	tc.pivotY = 1.000
-	tc.left = -280.000
-	tc.right = 80.000
-	tc.bottom = -215.000
-	tc.top = -80.000
+	tc.left = -322.000
+	tc.right = 38.000
+	tc.bottom = -205.000
+	tc.top = -70.000
 	tc.anchor = 0x64643232
 	tp = tc
 		tc = G.Quad()

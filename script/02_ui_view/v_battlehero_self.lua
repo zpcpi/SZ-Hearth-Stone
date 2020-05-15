@@ -17,10 +17,10 @@ tp = tc
 	tp.addChild(tc)
 	tc.name = '功能区'
 	tc.pivotY = 0.000
-	tc.left = -280.000
-	tc.right = 80.000
-	tc.bottom = 115.000
-	tc.top = 250.000
+	tc.left = -323.000
+	tc.right = 37.000
+	tc.bottom = 84.000
+	tc.top = 219.000
 	tc.anchor = 0x3232
 	tp = tc
 		tc = G.Quad()
