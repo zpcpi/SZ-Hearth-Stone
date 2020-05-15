@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_card_manager = require 'c_card_manager'
 local c_battlehero_enemy = require 'c_battlehero_enemy'
+local c_card_manager = require 'c_card_manager'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -29,6 +29,7 @@ tp = tc
 		tc.right = 0.000
 		tc.top = 0.000
 		tc.anchor = 0x64006400
+		tc.visible = false
 		tc.color = 0x3a3a4f
 		tc.img = 0x56000001
 		tp = tc
