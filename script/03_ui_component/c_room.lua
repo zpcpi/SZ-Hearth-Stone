@@ -24,7 +24,7 @@ function t:init()
     self.ipText = self.obj.getChildByName('IP').getChildByName('IPText')
     self.ipText.text = G.call('网络通用_获取本机IP地址') .. ':' .. G.call('网络通用_获取主机端口')
 
-    self.roomMemberParent = self.obj.getChildByName('RoomMember')
+    self.roomMemberParent = self.obj.getChildByName('RoomMember').getChildByName('content')
 
     self.roomInfoParent = self.obj.getChildByName('Info').getChildByName('content')
     self.infoTextTemp = self.roomInfoParent.getChildByName('TextTemplate')

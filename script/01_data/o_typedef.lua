@@ -108,12 +108,14 @@ local t = {
 	},
 	{
 		['name']='o_image',
+		['mod']='image',
 		['define']={
 			[1]={
 				['name']='grid',
 				['type']='grid9',
 			},
 		},
+		['static']=true,
 	},
 	{
 		['name']='o_misc',
