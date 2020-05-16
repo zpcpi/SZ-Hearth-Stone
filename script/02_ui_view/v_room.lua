@@ -2,12 +2,12 @@
 
 ]]
 local G = require 'gf'
-local c_layout_h = require 'c_layout_h'
-local c_button = require 'c_button'
-local c_layout_v = require 'c_layout_v'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local c_scrollview = require 'c_scrollview'
 local c_perfectsize = require 'c_perfectsize'
-local c_mintextquadsize = require 'c_mintextquadsize'
+local c_layout_v = require 'c_layout_v'
+local c_button = require 'c_button'
+local c_layout_h = require 'c_layout_h'
 local c_room = require 'c_room'
 local tp,tc,com,tk
 tc = G.Entity()
@@ -54,31 +54,21 @@ tp = tc
 	tc = G.Entity()
 	tp.addChild(tc)
 	tc.name = 'IP'
-	tc.left = -629.333
-	tc.right = -529.333
-	tc.bottom = 279.333
-	tc.top = 379.333
+	tc.left = -242.500
+	tc.right = -47.500
+	tc.bottom = 326.333
+	tc.top = 356.333
 	tp = tc
 		tc = G.TextQuad()
 		tp.addChild(tc)
-		tc.name = 'IPTitle'
-		tc.left = -100.000
-		tc.bottom = -21.000
-		tc.top = 21.000
-		tc.text = 'IP地址'
-		tc.font = 0x63200041
-		tp = tc
-		tp = tp.parent
-		--end
-		tc = G.TextQuad()
-		tp.addChild(tc)
 		tc.name = 'IPText'
-		tc.left = 59.000
-		tc.right = 327.000
-		tc.bottom = -22.000
-		tc.top = 22.000
+		tc.left = -97.500
+		tc.right = 97.500
+		tc.bottom = -15.000
+		tc.top = 15.000
+		tc.color = 0x0
 		tc.text = '192.168.215.114:nil'
-		tc.font = 0x63200041
+		tc.font = 0x63140000
 		tp = tc
 		tp = tp.parent
 		--end
@@ -87,10 +77,10 @@ tp = tc
 	tc = G.Entity()
 	tp.addChild(tc)
 	tc.name = 'GameMode'
-	tc.left = -630.000
-	tc.right = -410.000
-	tc.bottom = 211.000
-	tc.top = 259.000
+	tc.left = 249.000
+	tc.right = 469.000
+	tc.bottom = 172.000
+	tc.top = 220.000
 	tc.mouseEnabled = true
 	tp = tc
 		tc = G.Quad()
@@ -149,10 +139,10 @@ tp = tc
 	tc = G.Entity()
 	tp.addChild(tc)
 	tc.name = 'DeckInfo'
-	tc.left = -630.000
-	tc.right = -410.000
-	tc.bottom = 144.000
-	tc.top = 192.000
+	tc.left = 251.000
+	tc.right = 471.000
+	tc.bottom = 69.000
+	tc.top = 117.000
 	tc.mouseEnabled = true
 	tp = tc
 		tc = G.Quad()
@@ -233,7 +223,7 @@ tp = tc
 		tc.right = 0.000
 		tc.top = 0.000
 		tc.anchor = 0x64006400
-		tc.img = 0x562c0001
+		tc.img = 0x562c0002
 		tp = tc
 		tp = tp.parent
 		--end
@@ -296,7 +286,7 @@ tp = tc
 		tc.right = 0.000
 		tc.top = 0.000
 		tc.anchor = 0x64006400
-		tc.img = 0x562c0001
+		tc.img = 0x562c0002
 		tp = tc
 		tp = tp.parent
 		--end
@@ -414,15 +404,14 @@ tp = tc
 	com['changeAnchor'] =false
 	tp = tp.parent
 	--end
-	tc = G.Quad()
+	tc = G.Entity()
 	tp.addChild(tc)
 	tc.name = 'Info'
-	tc.left = -630.500
-	tc.right = -331.500
-	tc.bottom = -352.000
-	tc.top = -16.000
+	tc.left = -396.500
+	tc.right = 76.500
+	tc.bottom = -285.000
+	tc.top = -203.000
 	tc.mouseEnabled = true
-	tc.img = 0x56000001
 	tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
@@ -441,7 +430,7 @@ tp = tc
 		tc.name = 'content'
 		tc.pivotX = 0.000
 		tc.pivotY = 1.000
-		tc.right = 413.000
+		tc.right = 473.000
 		tc.top = 0.000
 		tc.anchor = 0x64640000
 		tp = tc
@@ -451,15 +440,15 @@ tp = tc
 			tc.pivotX = 0.000
 			tc.pivotY = 1.000
 			tc.left = 10.000
-			tc.right = 289.000
-			tc.bottom = -20.000
+			tc.right = 410.000
+			tc.bottom = -16.000
 			tc.top = 0.000
 			tc.anchor = 0x64640000
 			tc.visible = false
 			tc.color = 0x0
 			tc.text = '123'
 			tc.wrap = true
-			tc.font = 0x63140000
+			tc.font = 0x63100000
 			tc.align = 4
 			tp = tc
 			tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
@@ -583,11 +572,12 @@ tp = tc
 	tc = G.Quad()
 	tp.addChild(tc)
 	tc.name = 'DeckList'
-	tc.left = -630.000
-	tc.right = -410.000
-	tc.bottom = -301.500
-	tc.top = 141.500
+	tc.left = 250.000
+	tc.right = 470.000
+	tc.bottom = -379.500
+	tc.top = 63.500
 	tc.mouseEnabled = true
+	tc.visible = false
 	tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
@@ -735,11 +725,12 @@ tp = tc
 	tc = G.Quad()
 	tp.addChild(tc)
 	tc.name = 'ModeList'
-	tc.left = -630.000
-	tc.right = -410.000
-	tc.bottom = -237.500
-	tc.top = 205.500
+	tc.left = 249.000
+	tc.right = 469.000
+	tc.bottom = -279.500
+	tc.top = 163.500
 	tc.mouseEnabled = true
+	tc.visible = false
 	tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
