@@ -94,12 +94,18 @@ function t:click(tar)
     elseif tar == self.startGameBtn then 
         G.call('对决_开始')
     elseif tar == self.prepareBtn then 
+        self.prepareBtn.c_button.state = 'n'
         local o_room_player_当前玩家 = G.call('系统_获取当前玩家信息')
         if not o_room_player_当前玩家.准备就绪 then 
             if not G.call('房间_是否满足开始条件') then 
                 return 
             end
-            G.call('房间_当前玩家准备')
+        end
+        G.call('房间_当前玩家准备')
+        if not o_room_player_当前玩家.准备就绪 then 
+            self.prepareBtn.c_button.state = 'c'
+        else
+            self.prepareBtn.c_button.state = 'n'
         end
     elseif tar == self.quitBtn then 
         G.call('房间_退出房间')
