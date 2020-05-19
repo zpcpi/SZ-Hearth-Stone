@@ -112,7 +112,8 @@ local get_obj_bycard = function (Card)
     local estr_absolute_id_type_绝对身份 = get_attr(Card, '动态数据', '所有者')
     local estr_player_相对身份 = G.call('房间_获取相对身份', estr_absolute_id_type_绝对身份)
 
-    if cardpos == '战场' then
+    -- 战场上找找
+    if not obj then
         local cardtype = get_attr(Card, '逻辑数据', '类型')
         if cardtype == 0x10090001 then
             -- 英雄
@@ -145,7 +146,10 @@ local get_obj_bycard = function (Card)
                 end
             end
         end
-    elseif cardpos == '手牌' then
+    end
+
+    if not obj then
+        -- 指令队列找找
         local script_队列组件 = get_component(estr_player_相对身份, '执行队列')
         if script_队列组件 then
             obj = script_队列组件:get_obj_bycard(Card)
@@ -155,11 +159,9 @@ local get_obj_bycard = function (Card)
         else
             -- 在真的手牌找吧
         end
+    end
 
-
-
-    elseif cardpos == '牌库' then
-    else
+    if not obj then
         -- 发现的卡没有位置
         local script_战场组件 = get_component(estr_player_相对身份, '发现')
         if script_战场组件 then
@@ -284,12 +286,14 @@ local infoquest_pop = function ()
 
     local final_info = info_stack.pop()
 
-    -- 本地执行动画
-    G.call('run_infoquest', final_info)
+    if final_info then
+        -- 本地执行动画
+        G.call('run_infoquest', final_info)
 
-    -- 传递信息
-    if G.call('网络通用_能否广播') then
-        G.call('网络通用_广播消息', 'run_infoquest', final_info)
+        -- 传递信息
+        if G.call('网络通用_能否广播') then
+            G.call('网络通用_广播消息', 'run_infoquest', final_info)
+        end
     end
 end
 
@@ -960,7 +964,9 @@ noti[preinfo .. '角色属性_手牌_添加'] = function (estr_player_相对身�
     local 卡牌来源 = get_attr(last_call, 'skill_info', '卡牌来源')
 
     local abPlayer = G.call('房间_获取绝对身份', estr_player_相对身份)
-    local info = {precall .. '角色属性_手牌_添加', abPlayer, o_card_卡牌.name, boolean_是否明牌 or 1, {
+    local info = {
+        n = 5,
+        precall .. '角色属性_手牌_添加', abPlayer, o_card_卡牌.name, boolean_是否明牌, {
         (Caster or {}).name, (Target or {}).name, 卡牌来源
     }}
 
@@ -978,8 +984,6 @@ end
 
 noti[precall .. '角色属性_手牌_添加'] = function (abPlayer, cardid, boolean_是否明牌, last_call)
     local get_attr = CARD_GET_ATTR
-
-    print('asd', abPlayer, cardid, boolean_是否明牌, last_call)
 
     local estr_player_相对身份 = G.call('房间_获取相对身份', abPlayer)
     local o_card_卡牌 = G.QueryName(cardid)
