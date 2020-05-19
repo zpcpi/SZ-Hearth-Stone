@@ -58,6 +58,14 @@ function noti.卡牌逻辑效果整理(last_call)
     print(table.concat(treestr, ''))
 end
 
+local function o2i(card)
+    return card.name
+end
+
+local function i2o(i_card)
+    return G.QueryName(i_card)
+end
+
 local com_mapping = {
     ['我方'] = {
         ['战场随从'] = {'selfBattleminion', 'c_battleminion_self'},
@@ -199,6 +207,33 @@ local pop_quote = function (key)
     script_动画系统:pop_quote(key)
 end
 
+local info_stack = G.call('create_stack')
+local info_addchild = function (info)
+    local parent_info = info_stack.top()
+    if parent_info then
+        if parent_info['child_quests'] then
+        else
+            parent_info['child_quests'] = {}
+        end
+        table.insert(parent_info['child_quests'], info)
+    end
+end
+
+local info_getlast = function ()
+    local parent_info = info_stack.top()
+
+    local function iter(info)
+        local children = info['child_quests']
+        if (type(children) == 'table') and (#children > 0) then
+            iter(children[#children])
+        else
+            return info
+        end
+    end
+
+    return iter(parent_info)
+end
+
 local anim_stack = G.call('create_stack')
 local anim_addchild = function (anim)
     local parent_anim = anim_stack.top()
@@ -229,9 +264,50 @@ end
 -- 动画状态
 local is_create_missile = 0
 
+-- 共用动画信息
+local preinfo = '*共用*前置信息*_'
+local postinfo = '*共用*后置信息*_'
+
 -- 本地玩家动画
 local precall = '*本地*前置动画*_'
 local postcall = '*本地*后置动画*_'
+
+local infoquest_push = function ()
+    local info = {precall .. 'precall'}
+
+    info_addchild(info)
+    info_stack.push(info)
+end
+local infoquest_pop = function ()
+    local info = {postcall .. 'postcall'}
+    info_addchild(info)
+
+    local final_info = info_stack.pop()
+
+    -- 本地执行动画
+    G.call('run_infoquest', final_info)
+
+    -- 传递信息
+    if G.call('网络通用_能否广播') then
+        G.call('网络通用_广播消息', 'run_infoquest', final_info)
+    end
+end
+
+G.api['run_infoquest'] = function (info)
+    local children = info['child_quests']
+
+    -- 注册动画序列
+    info['child_quests'] = nil
+    G.call(info)
+
+    -- 执行子动画farg
+    if (type(children) == 'table') and (#children > 0) then
+        for _, child in ipairs(children) do
+            G.call('run_infoquest', child)
+        end
+    end
+end
+
 local animquest_push = function ()
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
@@ -240,6 +316,7 @@ local animquest_push = function ()
     anim_addchild(o_animquest_当前动画)
     anim_stack.push(o_animquest_当前动画)
 end
+
 local animquest_pop = function ()
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
@@ -250,47 +327,60 @@ local animquest_pop = function ()
     script_动画系统:add_animquest(G.call('动画系统_创建quest_自定义', script_动画系统, true, 300))
 end
 
-noti[precall .. '卡牌攻击_主流程_thread'] = animquest_push
-noti[postcall .. '卡牌攻击_主流程_thread'] = animquest_pop
+-- 默认动画组装入口
+noti[precall .. 'precall'] = animquest_push
+noti[postcall .. 'postcall'] = animquest_pop
 
-noti[precall .. '卡牌使用_主流程_thread'] = animquest_push
-noti[postcall .. '卡牌使用_主流程_thread'] = animquest_pop
+do
+    local func_list = {
+        '卡牌攻击_主流程_thread',
+        '卡牌使用_主流程_thread',
+        '逻辑注册_初始流程_absolute',
+        '逻辑注册_水晶设置_absolute',
+        '逻辑注册_抽牌_absolute',
+        '逻辑注册_攻击次数重置_回合开始_absolute',
+        '逻辑注册_攻击状态设置_回合结束_absolute',
+        '逻辑注册_武器功能_回合开始_absolute',
+        '逻辑注册_武器功能_回合结束_absolute',
+        '逻辑注册_回合结束_冻结删除判断_absolute',
+    }
 
-noti[precall .. '逻辑注册_初始流程_absolute'] = animquest_push
-noti[postcall .. '逻辑注册_初始流程_absolute'] = animquest_pop
-
-noti[precall .. '逻辑注册_水晶设置_absolute'] = animquest_push
-noti[postcall .. '逻辑注册_水晶设置_absolute'] = animquest_pop
-
-noti[precall .. '逻辑注册_抽牌_absolute'] = animquest_push
-noti[postcall .. '逻辑注册_抽牌_absolute'] = animquest_pop
-
-noti[precall .. '逻辑注册_攻击次数重置_回合开始_absolute'] = animquest_push
-noti[postcall .. '逻辑注册_攻击次数重置_回合开始_absolute'] = animquest_pop
-
-noti[precall .. '逻辑注册_攻击状态设置_回合结束_absolute'] = animquest_push
-noti[postcall .. '逻辑注册_攻击状态设置_回合结束_absolute'] = animquest_pop
-
-noti[precall .. '逻辑注册_武器功能_回合开始_absolute'] = animquest_push
-noti[postcall .. '逻辑注册_武器功能_回合开始_absolute'] = animquest_pop
-
-noti[precall .. '逻辑注册_武器功能_回合结束_absolute'] = animquest_push
-noti[postcall .. '逻辑注册_武器功能_回合结束_absolute'] = animquest_pop
-
-noti[precall .. '逻辑注册_回合结束_冻结删除判断_absolute'] = animquest_push
-noti[postcall .. '逻辑注册_回合结束_冻结删除判断_absolute'] = animquest_pop
-
-noti[precall .. '卡牌使用_使用'] = function (Caster, Player)
-    local get_attr = CARD_GET_ATTR
-    if Caster == nil or Player == nil then 
-        local last_call = G.call('卡牌逻辑树_获取最后调用')
-        Caster = get_attr(last_call, 'skill_info', 'Caster')
-        local estr_absolute_id_type_Player绝对身份 = get_attr(Caster, '动态数据', '所有者')
-        Player = G.call('房间_获取相对身份', estr_absolute_id_type_Player绝对身份)
-        if G.call('网络通用_能否广播') then 
-            G.call('网络通用_广播消息', '客机处理回调_动画_使用', precall .. '卡牌使用_使用', Caster.name, estr_absolute_id_type_Player绝对身份)
-        end
+    for _,func in ipairs(func_list) do
+        noti[preinfo .. func] = infoquest_push
+        noti[postinfo .. func] = infoquest_pop
+        noti[precall .. func] = animquest_push
+        noti[postcall .. func] = animquest_pop
     end
+end
+
+-- 卡牌使用_使用
+noti[preinfo .. '卡牌使用_使用'] = function ()
+    local last_call = G.call('卡牌逻辑树_获取最后调用')
+    local get_attr = CARD_GET_ATTR
+    local Caster = get_attr(last_call, 'skill_info', 'Caster')
+
+    local info = {precall .. '卡牌使用_使用', Caster.name}
+
+    info_addchild(info)
+    info_stack.push(info)
+end
+
+noti[postinfo .. '卡牌使用_使用'] = function ()
+    local last_call = G.call('卡牌逻辑树_获取最后调用')
+    local get_attr = CARD_GET_ATTR
+    local Caster = get_attr(last_call, 'skill_info', 'Caster')
+
+    local info = {postcall .. '卡牌使用_使用', Caster.name}
+
+    info_addchild(info)
+    info_stack.pop(info)
+end
+
+noti[precall .. '卡牌使用_使用'] = function (Casterid)
+    local get_attr = CARD_GET_ATTR
+
+    local Caster = G.QueryName(Casterid)
+    local Player = G.call('房间_获取相对身份', get_attr(Caster, '动态数据', '所有者'))
 
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
@@ -362,17 +452,11 @@ noti[precall .. '卡牌使用_使用'] = function (Caster, Player)
     anim_stack.push(o_animquest_当前动画)
 end
 
-noti[postcall .. '卡牌使用_使用'] = function (Caster, Player)
+noti[postcall .. '卡牌使用_使用'] = function (Casterid)
     local get_attr = CARD_GET_ATTR
-    if Caster == nil or Player == nil then 
-        local last_call = G.call('卡牌逻辑树_获取最后调用')
-        Caster = get_attr(last_call, 'skill_info', 'Caster')
-        local estr_absolute_id_type_Player绝对身份 = get_attr(Caster, '动态数据', '所有者')
-        Player = G.call('房间_获取相对身份', estr_absolute_id_type_Player绝对身份)
-        if G.call('网络通用_能否广播') then 
-            G.call('网络通用_广播消息', '客机处理回调_动画_使用', postcall .. '卡牌使用_使用', Caster.name, estr_absolute_id_type_Player绝对身份)
-        end
-    end
+    
+    local Caster = G.QueryName(Casterid)
+    local Player = G.call('房间_获取相对身份', get_attr(Caster, '动态数据', '所有者'))
 
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
@@ -411,14 +495,37 @@ noti[postcall .. '卡牌使用_使用'] = function (Caster, Player)
     anim_stack.pop()
 end
 
-noti[precall .. '卡牌使用_攻击'] = function (Caster, Target)
+-- 卡牌使用_攻击
+noti[preinfo .. '卡牌使用_攻击'] = function ()
+    local last_call = G.call('卡牌逻辑树_获取最后调用')
     local get_attr = CARD_GET_ATTR
-    if Caster == nil or Target == nil then 
-        local last_call = G.call('卡牌逻辑树_获取最后调用')
-        Caster = get_attr(last_call, 'skill_info', 'Caster')
-        Target = get_attr(last_call, 'skill_info', 'Target')[1]
-    end
-    
+    local Caster = get_attr(last_call, 'skill_info', 'Caster')
+    local Target = get_attr(last_call, 'skill_info', 'Target')[1]
+
+    local info = {precall .. '卡牌使用_攻击', Caster.name, Target.name}
+
+    info_addchild(info)
+    info_stack.push(info)
+end
+
+noti[postinfo .. '卡牌使用_攻击'] = function ()
+    local last_call = G.call('卡牌逻辑树_获取最后调用')
+    local get_attr = CARD_GET_ATTR
+    local Caster = get_attr(last_call, 'skill_info', 'Caster')
+    local Target = get_attr(last_call, 'skill_info', 'Target')[1]
+
+    local info = {postcall .. '卡牌使用_攻击', Caster.name, Target.name}
+
+    info_addchild(info)
+    info_stack.pop(info)
+end
+
+noti[precall .. '卡牌使用_攻击'] = function (Casterid, Targetid)
+    local get_attr = CARD_GET_ATTR
+
+    local Caster = G.QueryName(Casterid)
+    local Target = G.QueryName(Targetid)
+
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
 
@@ -439,13 +546,11 @@ noti[precall .. '卡牌使用_攻击'] = function (Caster, Target)
     anim_stack.push(o_animquest_当前动画)
 end
 
-noti[postcall .. '卡牌使用_攻击'] = function (Caster, Target)
+noti[postcall .. '卡牌使用_攻击'] = function (Casterid, Targetid)
     local get_attr = CARD_GET_ATTR
-    if Caster == nil or Target == nil then 
-        local last_call = G.call('卡牌逻辑树_获取最后调用')
-        Caster = get_attr(last_call, 'skill_info', 'Caster')
-        Target = get_attr(last_call, 'skill_info', 'Target')[1]
-    end
+
+    local Caster = G.QueryName(Casterid)
+    local Target = G.QueryName(Targetid)
     
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
@@ -483,12 +588,24 @@ noti[postcall .. '卡牌使用_攻击'] = function (Caster, Target)
     anim_stack.pop()
 end
 
-noti[precall .. 'normal_attck'] = function ()
+-- normal_attck
+noti[preinfo .. 'normal_attck'] = function ()
     local last_call = G.call('卡牌逻辑树_获取最后调用')
     local get_attr = CARD_GET_ATTR
     local Caster = get_attr(last_call, 'skill_info', 'Caster')
     local Target = get_attr(last_call, 'skill_info', 'Target')[1]
-    
+
+    local info = {precall .. 'normal_attck', Caster.name, Target.name}
+
+    info_addchild(info)
+end
+
+noti[precall .. 'normal_attck'] = function (Casterid, Targetid)
+    local get_attr = CARD_GET_ATTR
+
+    local Caster = G.QueryName(Casterid)
+    local Target = G.QueryName(Targetid)
+
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
 
@@ -521,17 +638,34 @@ noti[precall .. 'normal_attck'] = function ()
     anim_addchild(o_animquest_当前动画)
 end
 
-noti[precall .. 'single_damage'] = function (Caster, Target, int_伤害值)
-    if Caster == nil or Target == nil or int_伤害值 == nil then 
-        local last_call = G.call('卡牌逻辑树_获取最后调用')
-        local get_attr = CARD_GET_ATTR
-        Caster = get_attr(last_call, 'skill_info', 'Caster')
-        Target = get_attr(last_call, 'skill_info', 'Target')[1]
-        int_伤害值 = get_attr(last_call, 'skill_info', 'Value')[1]
-        if G.call('网络通用_能否广播') then 
-            G.call('网络通用_广播消息', '客机处理回调_动画_precall_single_damage', precall .. 'single_damage', Caster.name, Target.name, int_伤害值)
-        end
-    end
+-- single_damage
+noti[preinfo .. 'single_damage'] = function ()
+    local last_call = G.call('卡牌逻辑树_获取最后调用')
+    local get_attr = CARD_GET_ATTR
+    local Caster = get_attr(last_call, 'skill_info', 'Caster')
+    local Target = get_attr(last_call, 'skill_info', 'Target')[1]
+    local int_伤害值 = get_attr(last_call, 'skill_info', 'Value')[1]
+
+    local info = {precall .. 'single_damage', Caster.name, Target.name, int_伤害值}
+
+    info_addchild(info)
+    info_stack.push(info)
+end
+
+noti[postinfo .. 'single_damage'] = function ()
+    local last_call = G.call('卡牌逻辑树_获取最后调用')
+    local get_attr = CARD_GET_ATTR
+    local int_伤害值 = get_attr(last_call, 'skill_info', 'Value')[1]
+
+    local info = {postcall .. 'single_damage', int_伤害值}
+
+    info_addchild(info)
+    info_stack.pop(info)
+end
+
+noti[precall .. 'single_damage'] = function (Casterid, Targetid, int_伤害值)
+    local Caster = G.QueryName(Casterid)
+    local Target = G.QueryName(Targetid)
     
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
@@ -587,15 +721,6 @@ noti[precall .. 'single_damage'] = function (Caster, Target, int_伤害值)
 end
 
 noti[postcall .. 'single_damage'] = function (int_伤害值)
-    if int_伤害值 == nil then 
-        local last_call = G.call('卡牌逻辑树_获取最后调用')
-        local get_attr = CARD_GET_ATTR
-        int_伤害值 = get_attr(last_call, 'skill_info', 'Value')[1]
-        if G.call('网络通用_能否广播') then 
-            G.call('网络通用_广播消息', '客机处理回调_动画_postcall_single_damage', postcall .. 'single_damage', int_伤害值)
-        end
-    end
-
     if int_伤害值 and (int_伤害值 > 0) then
         if is_create_missile > 0 then
             anim_stack.pop()
@@ -603,12 +728,34 @@ noti[postcall .. 'single_damage'] = function (int_伤害值)
     end
 end
 
-noti[precall .. 'single_heal'] = function ()
+-- single_heal
+noti[preinfo .. 'single_heal'] = function ()
     local last_call = G.call('卡牌逻辑树_获取最后调用')
     local get_attr = CARD_GET_ATTR
     local Caster = get_attr(last_call, 'skill_info', 'Caster')
     local Target = get_attr(last_call, 'skill_info', 'Target')[1]
     local int_治疗值 = get_attr(last_call, 'skill_info', 'Value')[1]
+
+    local info = {precall .. 'single_heal', Caster.name, Target.name, int_治疗值}
+
+    info_addchild(info)
+    info_stack.push(info)
+end
+
+noti[postinfo .. 'single_heal'] = function ()
+    local last_call = G.call('卡牌逻辑树_获取最后调用')
+    local get_attr = CARD_GET_ATTR
+    local int_治疗值 = get_attr(last_call, 'skill_info', 'Value')[1]
+
+    local info = {postcall .. 'single_heal', int_治疗值}
+
+    info_addchild(info)
+    info_stack.pop(info)
+end
+
+noti[precall .. 'single_heal'] = function (Casterid, Targetid, int_治疗值)
+    local Caster = G.QueryName(Casterid)
+    local Target = G.QueryName(Targetid)
     
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
@@ -663,10 +810,7 @@ noti[precall .. 'single_heal'] = function ()
     end
 end
 
-noti[postcall .. 'single_heal'] = function ()
-    local last_call = G.call('卡牌逻辑树_获取最后调用')
-    local get_attr = CARD_GET_ATTR
-    local int_治疗值 = get_attr(last_call, 'skill_info', 'Value')[1]
+noti[postcall .. 'single_heal'] = function (int_治疗值)
     if int_治疗值 and (int_治疗值 > 0) then
         if is_create_missile > 0 then
             anim_stack.pop()
@@ -674,7 +818,16 @@ noti[postcall .. 'single_heal'] = function ()
     end
 end
 
-noti[postcall .. '卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value)
+-- 卡牌属性_设置
+noti[postinfo .. '卡牌属性_设置'] = function (o_card_当前卡牌, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value)
+    local info = {postcall .. '卡牌属性_设置', o_card_当前卡牌.name, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value}
+
+    info_addchild(info)
+end
+
+noti[postcall .. '卡牌属性_设置'] = function (cardid, estr_cardattr_enum_属性名, estr_cardattr_type_属性类型, int_value)
+    local o_card_当前卡牌 = G.QueryName(cardid)
+
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
     
@@ -704,9 +857,9 @@ noti[postcall .. '卡牌属性_设置'] = function (o_card_当前卡牌, estr_ca
 
 
         -- 临时的，后面需要传完整动画
-        if G.call('主机_是主机') then 
-            G.call('网络通用_广播消息', '客机处理回调_抛出事件', 'UI_卡牌状态更新', o_card_当前卡牌.name, attr, is_show)
-        end
+        -- if G.call('主机_是主机') then 
+        --     G.call('网络通用_广播消息', '客机处理回调_抛出事件', 'UI_卡牌状态更新', o_card_当前卡牌.name, attr, is_show)
+        -- end
 
         return
     end
@@ -717,29 +870,53 @@ noti[postcall .. '卡牌属性_设置'] = function (o_card_当前卡牌, estr_ca
     anim_addchild(o_animquest_当前动画)
 
     -- 临时的，后面需要传完整动画
-    if G.call('主机_是主机') then 
-        G.call('网络通用_广播消息', '客机处理回调_抛出事件', 'UI_卡牌属性更新', o_card_当前卡牌.name, attr, value)
-    end
+    -- if G.call('主机_是主机') then 
+    --     G.call('网络通用_广播消息', '客机处理回调_抛出事件', 'UI_卡牌属性更新', o_card_当前卡牌.name, attr, value)
+    -- end
+end
+
+-- 技能效果_伤害
+noti[preinfo .. '技能效果_伤害'] = function ()
+    local info = {precall .. '技能效果_伤害'}
+
+    info_addchild(info)
+    info_stack.push(info)
+end
+
+noti[postinfo .. '技能效果_伤害'] = function ()
+    local info = {postcall .. '技能效果_伤害'}
+
+    info_addchild(info)
+    info_stack.pop(info)
 end
 
 noti[precall .. '技能效果_伤害'] = function ()
-    if G.call('网络通用_能否广播') then 
-        G.call('网络通用_广播消息', '客机处理回调_动画_技能效果_伤害', precall .. '技能效果_伤害')
-    end
     -- 所有非攻击造成的伤害，都发射飞弹
     is_create_missile = is_create_missile + 1
 end
 
 noti[postcall .. '技能效果_伤害'] = function ()
-    if G.call('网络通用_能否广播') then 
-        G.call('网络通用_广播消息', '客机处理回调_动画_技能效果_伤害', postcall .. '技能效果_伤害')
-    end
     -- 清除发射飞弹状态
     is_create_missile = is_create_missile - 1
 end
 
+-- 技能效果_治疗
+noti[preinfo .. '技能效果_治疗'] = function ()
+    local info = {precall .. '技能效果_治疗'}
+
+    info_addchild(info)
+    info_stack.push(info)
+end
+
+noti[postinfo .. '技能效果_治疗'] = function ()
+    local info = {postcall .. '技能效果_治疗'}
+
+    info_addchild(info)
+    info_stack.pop(info)
+end
+
 noti[precall .. '技能效果_治疗'] = function ()
-    -- 所有非攻击造成的伤害，都发射飞弹
+    -- 所有非治疗造成的伤害，都发射飞弹
     is_create_missile = is_create_missile + 1
 end
 
@@ -748,7 +925,17 @@ noti[postcall .. '技能效果_治疗'] = function ()
     is_create_missile = is_create_missile - 1
 end
 
-noti[postcall .. '角色属性_水晶_设置'] = function (estr_player_相对身份, estr_mana_type_修改类型, int_value)
+-- 角色属性_水晶_设置
+noti[postinfo .. '角色属性_水晶_设置'] = function (estr_player_相对身份, estr_mana_type_修改类型, int_value)
+    local abPlayer = G.call('房间_获取绝对身份', estr_player_相对身份)
+    local info = {postcall .. '角色属性_水晶_设置', abPlayer, estr_mana_type_修改类型, int_value}
+
+    info_addchild(info)
+end
+
+noti[postcall .. '角色属性_水晶_设置'] = function (abPlayer, estr_mana_type_修改类型, int_value)
+    local estr_player_相对身份 = G.call('房间_获取相对身份', abPlayer)
+
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
 
@@ -764,13 +951,41 @@ noti[postcall .. '角色属性_水晶_设置'] = function (estr_player_相对身
     anim_addchild(o_animquest_当前动画)
 end
 
-
-noti[precall .. '角色属性_手牌_添加'] = function (estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
+-- 角色属性_手牌_添加
+noti[preinfo .. '角色属性_手牌_添加'] = function (estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
     local last_call = G.call('卡牌逻辑树_获取最后调用')
     local get_attr = CARD_GET_ATTR
     local Caster = get_attr(last_call, 'skill_info', 'Caster')
     local Target = get_attr(last_call, 'skill_info', 'Target')[1]
     local 卡牌来源 = get_attr(last_call, 'skill_info', '卡牌来源')
+
+    local abPlayer = G.call('房间_获取绝对身份', estr_player_相对身份)
+    local info = {precall .. '角色属性_手牌_添加', abPlayer, o_card_卡牌.name, boolean_是否明牌 or 1, {
+        (Caster or {}).name, (Target or {}).name, 卡牌来源
+    }}
+
+    info_addchild(info)
+    info_stack.push(info)
+end
+
+noti[postinfo .. '角色属性_手牌_添加'] = function (estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
+    local abPlayer = G.call('房间_获取绝对身份', estr_player_相对身份)
+    local info = {postcall .. '角色属性_手牌_添加', abPlayer, o_card_卡牌.name}
+
+    info_addchild(info)
+    info_stack.pop(info)
+end
+
+noti[precall .. '角色属性_手牌_添加'] = function (abPlayer, cardid, boolean_是否明牌, last_call)
+    local get_attr = CARD_GET_ATTR
+
+    print('asd', abPlayer, cardid, boolean_是否明牌, last_call)
+
+    local estr_player_相对身份 = G.call('房间_获取相对身份', abPlayer)
+    local o_card_卡牌 = G.QueryName(cardid)
+    local Caster = G.QueryName(last_call[1])
+    local Target = G.QueryName(last_call[2])
+    local 卡牌来源 = last_call[3]
 
     -- FIXME: 牌库来源改为绝对身份
     local create_obj = nil
@@ -786,8 +1001,10 @@ noti[precall .. '角色属性_手牌_添加'] = function (estr_player_相对身�
     end
 end
 
+noti[postcall .. '角色属性_手牌_添加'] = function (abPlayer, cardid)
+    local estr_player_相对身份 = G.call('房间_获取相对身份', abPlayer)
+    local o_card_卡牌 = G.QueryName(cardid)
 
-noti[postcall .. '角色属性_手牌_添加'] = function (estr_player_相对身份, o_card_卡牌, boolean_是否明牌)
     local o_misc = G.misc()
     local script_战场 = o_misc.主战场系统
     local script_动画系统 = o_misc.技能动画系统
@@ -864,10 +1081,20 @@ local flag_mapping = {
     end,
 }
 
-noti[postcall .. '技能效果_特性'] = function (_string_添加特性, _string_移除特性, _string_还原特性)
+-- 技能效果_特性
+noti[postinfo .. '技能效果_特性'] = function (_string_添加特性, _string_移除特性, _string_还原特性)
     local last_call = G.call('卡牌逻辑树_获取最后调用')
     local get_attr = CARD_GET_ATTR
     local TargetList = get_attr(last_call, 'skill_info', 'Target')
+
+    local info = {postcall .. '技能效果_特性', G.call('array_map', TargetList, o2i), _string_添加特性, _string_移除特性, _string_还原特性}
+
+    info_addchild(info)
+    info_stack.pop(info)
+end
+
+noti[postcall .. '技能效果_特性'] = function (idlist, _string_添加特性, _string_移除特性, _string_还原特性)
+    local TargetList = G.call('array_map', idlist, i2o)
 
     local iter = function (Card) end
 
@@ -885,13 +1112,13 @@ noti[postcall .. '技能效果_特性'] = function (_string_添加特性, _strin
 end
 
 function noti.卡牌动画_前置调用(funs, ...)
-    if noti[precall .. funs] then
-        noti[precall .. funs](...)
+    if noti[preinfo .. funs] then
+        noti[preinfo .. funs](...)
     end
 end
 
 function noti.卡牌动画_后置调用(funs, ...)
-    if noti[postcall .. funs] then
-        noti[postcall .. funs](...)
+    if noti[postinfo .. funs] then
+        noti[postinfo .. funs](...)
     end
 end

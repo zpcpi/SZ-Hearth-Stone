@@ -33,7 +33,7 @@ function t:create_cardobj()
 end
 
 function t:get_obj_bycard(target)
-    for k, card in iparis(show_cards) do
+    for k, card in ipairs(self.show_cards or {}) do
         if card == target then
             return self.card_objs[k]
         end
