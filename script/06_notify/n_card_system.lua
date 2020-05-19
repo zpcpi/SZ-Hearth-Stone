@@ -288,7 +288,7 @@ noti[precall .. '卡牌使用_使用'] = function (Caster, Player)
         local estr_absolute_id_type_Player绝对身份 = get_attr(Caster, '动态数据', '所有者')
         Player = G.call('房间_获取相对身份', estr_absolute_id_type_Player绝对身份)
         if G.call('网络通用_能否广播') then 
-            G.call('网络通用_广播消息', '客机处理回调_卡牌使用动画', precall .. '卡牌使用_使用', Caster.name, estr_absolute_id_type_Player绝对身份)
+            G.call('网络通用_广播消息', '客机处理回调_动画_使用', precall .. '卡牌使用_使用', Caster.name, estr_absolute_id_type_Player绝对身份)
         end
     end
 
@@ -370,7 +370,7 @@ noti[postcall .. '卡牌使用_使用'] = function (Caster, Player)
         local estr_absolute_id_type_Player绝对身份 = get_attr(Caster, '动态数据', '所有者')
         Player = G.call('房间_获取相对身份', estr_absolute_id_type_Player绝对身份)
         if G.call('网络通用_能否广播') then 
-            G.call('网络通用_广播消息', '客机处理回调_卡牌使用动画', postcall .. '卡牌使用_使用', Caster.name, estr_absolute_id_type_Player绝对身份)
+            G.call('网络通用_广播消息', '客机处理回调_动画_使用', postcall .. '卡牌使用_使用', Caster.name, estr_absolute_id_type_Player绝对身份)
         end
     end
 
@@ -418,10 +418,6 @@ noti[precall .. '卡牌使用_攻击'] = function (Caster, Target)
         Caster = get_attr(last_call, 'skill_info', 'Caster')
         Target = get_attr(last_call, 'skill_info', 'Target')[1]
     end
-    print('--== Caster ------------------------')
-    G.show_table(Caster)
-    print('--== Target ------------------------')
-    G.show_table(Target)
     
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
@@ -450,10 +446,6 @@ noti[postcall .. '卡牌使用_攻击'] = function (Caster, Target)
         Caster = get_attr(last_call, 'skill_info', 'Caster')
         Target = get_attr(last_call, 'skill_info', 'Target')[1]
     end
-    print('--== Caster ------------------------')
-    G.show_table(Caster)
-    print('--== Target ------------------------')
-    G.show_table(Target)
     
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
@@ -529,12 +521,17 @@ noti[precall .. 'normal_attck'] = function ()
     anim_addchild(o_animquest_当前动画)
 end
 
-noti[precall .. 'single_damage'] = function ()
-    local last_call = G.call('卡牌逻辑树_获取最后调用')
-    local get_attr = CARD_GET_ATTR
-    local Caster = get_attr(last_call, 'skill_info', 'Caster')
-    local Target = get_attr(last_call, 'skill_info', 'Target')[1]
-    local int_伤害值 = get_attr(last_call, 'skill_info', 'Value')[1]
+noti[precall .. 'single_damage'] = function (Caster, Target, int_伤害值)
+    if Caster == nil or Target == nil or int_伤害值 == nil then 
+        local last_call = G.call('卡牌逻辑树_获取最后调用')
+        local get_attr = CARD_GET_ATTR
+        Caster = get_attr(last_call, 'skill_info', 'Caster')
+        Target = get_attr(last_call, 'skill_info', 'Target')[1]
+        int_伤害值 = get_attr(last_call, 'skill_info', 'Value')[1]
+        if G.call('网络通用_能否广播') then 
+            G.call('网络通用_广播消息', '客机处理回调_动画_precall_single_damage', precall .. 'single_damage', Caster.name, Target.name, int_伤害值)
+        end
+    end
     
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
@@ -589,10 +586,16 @@ noti[precall .. 'single_damage'] = function ()
     end
 end
 
-noti[postcall .. 'single_damage'] = function ()
-    local last_call = G.call('卡牌逻辑树_获取最后调用')
-    local get_attr = CARD_GET_ATTR
-    local int_伤害值 = get_attr(last_call, 'skill_info', 'Value')[1]
+noti[postcall .. 'single_damage'] = function (int_伤害值)
+    if int_伤害值 == nil then 
+        local last_call = G.call('卡牌逻辑树_获取最后调用')
+        local get_attr = CARD_GET_ATTR
+        int_伤害值 = get_attr(last_call, 'skill_info', 'Value')[1]
+        if G.call('网络通用_能否广播') then 
+            G.call('网络通用_广播消息', '客机处理回调_动画_postcall_single_damage', postcall .. 'single_damage', int_伤害值)
+        end
+    end
+
     if int_伤害值 and (int_伤害值 > 0) then
         if is_create_missile > 0 then
             anim_stack.pop()
@@ -720,11 +723,17 @@ noti[postcall .. '卡牌属性_设置'] = function (o_card_当前卡牌, estr_ca
 end
 
 noti[precall .. '技能效果_伤害'] = function ()
+    if G.call('网络通用_能否广播') then 
+        G.call('网络通用_广播消息', '客机处理回调_动画_技能效果_伤害', precall .. '技能效果_伤害')
+    end
     -- 所有非攻击造成的伤害，都发射飞弹
     is_create_missile = is_create_missile + 1
 end
 
 noti[postcall .. '技能效果_伤害'] = function ()
+    if G.call('网络通用_能否广播') then 
+        G.call('网络通用_广播消息', '客机处理回调_动画_技能效果_伤害', postcall .. '技能效果_伤害')
+    end
     -- 清除发射飞弹状态
     is_create_missile = is_create_missile - 1
 end
