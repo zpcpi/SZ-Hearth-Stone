@@ -287,13 +287,13 @@ local infoquest_pop = function ()
     local final_info = info_stack.pop()
 
     if final_info then
-        -- 本地执行动画
-        G.call('run_infoquest', final_info)
-
         -- 传递信息
         if G.call('网络通用_能否广播') then
             G.call('网络通用_广播消息', 'run_infoquest', final_info)
         end
+
+        -- 本地执行动画
+        G.call('run_infoquest', final_info)
     end
 end
 
