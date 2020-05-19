@@ -280,11 +280,17 @@ noti[postcall .. '逻辑注册_武器功能_回合结束_absolute'] = animquest_
 noti[precall .. '逻辑注册_回合结束_冻结删除判断_absolute'] = animquest_push
 noti[postcall .. '逻辑注册_回合结束_冻结删除判断_absolute'] = animquest_pop
 
-noti[precall .. '卡牌使用_使用'] = function ()
-    local last_call = G.call('卡牌逻辑树_获取最后调用')
+noti[precall .. '卡牌使用_使用'] = function (Caster, Player)
     local get_attr = CARD_GET_ATTR
-    local Caster = get_attr(last_call, 'skill_info', 'Caster')
-    local Player = G.call('房间_获取相对身份', get_attr(Caster, '动态数据', '所有者'))
+    if Caster == nil or Player == nil then 
+        local last_call = G.call('卡牌逻辑树_获取最后调用')
+        Caster = get_attr(last_call, 'skill_info', 'Caster')
+        local estr_absolute_id_type_Player绝对身份 = get_attr(Caster, '动态数据', '所有者')
+        Player = G.call('房间_获取相对身份', estr_absolute_id_type_Player绝对身份)
+        if G.call('网络通用_能否广播') then 
+            G.call('网络通用_广播消息', '客机处理回调_卡牌使用动画', precall .. '卡牌使用_使用', Caster.name, estr_absolute_id_type_Player绝对身份)
+        end
+    end
 
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
@@ -356,11 +362,17 @@ noti[precall .. '卡牌使用_使用'] = function ()
     anim_stack.push(o_animquest_当前动画)
 end
 
-noti[postcall .. '卡牌使用_使用'] = function ()
-    local last_call = G.call('卡牌逻辑树_获取最后调用')
+noti[postcall .. '卡牌使用_使用'] = function (Caster, Player)
     local get_attr = CARD_GET_ATTR
-    local Caster = get_attr(last_call, 'skill_info', 'Caster')
-    local Player = G.call('房间_获取相对身份', get_attr(Caster, '动态数据', '所有者'))
+    if Caster == nil or Player == nil then 
+        local last_call = G.call('卡牌逻辑树_获取最后调用')
+        Caster = get_attr(last_call, 'skill_info', 'Caster')
+        local estr_absolute_id_type_Player绝对身份 = get_attr(Caster, '动态数据', '所有者')
+        Player = G.call('房间_获取相对身份', estr_absolute_id_type_Player绝对身份)
+        if G.call('网络通用_能否广播') then 
+            G.call('网络通用_广播消息', '客机处理回调_卡牌使用动画', postcall .. '卡牌使用_使用', Caster.name, estr_absolute_id_type_Player绝对身份)
+        end
+    end
 
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
@@ -399,11 +411,17 @@ noti[postcall .. '卡牌使用_使用'] = function ()
     anim_stack.pop()
 end
 
-noti[precall .. '卡牌使用_攻击'] = function ()
-    local last_call = G.call('卡牌逻辑树_获取最后调用')
+noti[precall .. '卡牌使用_攻击'] = function (Caster, Target)
     local get_attr = CARD_GET_ATTR
-    local Caster = get_attr(last_call, 'skill_info', 'Caster')
-    local Target = get_attr(last_call, 'skill_info', 'Target')[1]
+    if Caster == nil or Target == nil then 
+        local last_call = G.call('卡牌逻辑树_获取最后调用')
+        Caster = get_attr(last_call, 'skill_info', 'Caster')
+        Target = get_attr(last_call, 'skill_info', 'Target')[1]
+    end
+    print('--== Caster ------------------------')
+    G.show_table(Caster)
+    print('--== Target ------------------------')
+    G.show_table(Target)
     
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
@@ -425,11 +443,17 @@ noti[precall .. '卡牌使用_攻击'] = function ()
     anim_stack.push(o_animquest_当前动画)
 end
 
-noti[postcall .. '卡牌使用_攻击'] = function ()
-    local last_call = G.call('卡牌逻辑树_获取最后调用')
+noti[postcall .. '卡牌使用_攻击'] = function (Caster, Target)
     local get_attr = CARD_GET_ATTR
-    local Caster = get_attr(last_call, 'skill_info', 'Caster')
-    local Target = get_attr(last_call, 'skill_info', 'Target')[1]
+    if Caster == nil or Target == nil then 
+        local last_call = G.call('卡牌逻辑树_获取最后调用')
+        Caster = get_attr(last_call, 'skill_info', 'Caster')
+        Target = get_attr(last_call, 'skill_info', 'Target')[1]
+    end
+    print('--== Caster ------------------------')
+    G.show_table(Caster)
+    print('--== Target ------------------------')
+    G.show_table(Target)
     
     local o_misc = G.misc()
     local script_动画系统 = o_misc.技能动画系统
