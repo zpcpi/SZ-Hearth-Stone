@@ -29,3 +29,17 @@ function GF.ClearDynamicData(tableName)
 	end
 	GF.newinst_cache[tableName] = {}
 end 
+
+function GF.o2i(data)
+	if type(data) ~= 'table' then 
+		return 0
+	end
+	return data.name or 0
+end 
+
+function GF.i2o(id)
+	if type(id) ~= 'number' then 
+		return nil
+	end
+	return G.QueryName(id)
+end 

@@ -10,24 +10,16 @@ local real_t = G.api
 -- 逻辑_法术牌打出
 -- 逻辑_英雄技能使用
 
-local function o2i(card)
-    return card.name
-end
-
-local function i2o(i_card)
-    return G.QueryName(i_card)
-end
-
 t['卡牌使用_主流程_thread'] = function (estr_player_相对身份, o_order_info_当前指令信息)
     local get_attr = CARD_GET_ATTR
 
     local effect_stack = G.misc().当前效果堆栈
-    local Caster = i2o(o_order_info_当前指令信息['Caster'])
+    local Caster = G.i2o(o_order_info_当前指令信息['Caster'])
 
     local root_info = {
         ['Player'] = estr_player_相对身份,
         ['Caster'] = Caster,
-        ['Target'] = G.call('array_map', o_order_info_当前指令信息['Target'], i2o),
+        ['Target'] = G.call('array_map', o_order_info_当前指令信息['Target'], G.i2o),
         ['Parent'] = nil,
         ['MinionPos'] = o_order_info_当前指令信息['MinionPos'],
     }
@@ -57,7 +49,7 @@ t['卡牌使用_主流程_thread'] = function (estr_player_相对身份, o_order
     end
 
     -- 不同类型，加下来的事件并不一致
-    local Caster = i2o(o_order_info_当前指令信息['Caster'])
+    local Caster = G.i2o(o_order_info_当前指令信息['Caster'])
     local cardtype = get_attr(Caster, '逻辑数据', '类型')
 
     if cardtype == 0x10090001 then
@@ -109,8 +101,8 @@ real_t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_i
     if G.call('主机_是主机') then
         G.start_program('卡牌使用_主流程_thread', estr_player_相对身份, {
             ['Player'] = '我方',
-            ['Caster'] = o2i(Caster),
-            ['Target'] = G.call('array_map', o_order_info_当前指令信息['Target'], o2i),
+            ['Caster'] = G.o2i(Caster),
+            ['Target'] = G.call('array_map', o_order_info_当前指令信息['Target'], G.o2i),
             ['Parent'] = nil,
             ['MinionPos'] = o_order_info_当前指令信息['MinionPos'],
         })
@@ -119,8 +111,8 @@ real_t['卡牌使用_主流程'] = function (estr_player_相对身份, o_order_i
 
         G.call('网络通用_广播消息', '卡牌使用_主流程_thread', '敌方1', {
             ['Player'] = '敌方1',
-            ['Caster'] = o2i(Caster),
-            ['Target'] = G.call('array_map', o_order_info_当前指令信息['Target'], o2i),
+            ['Caster'] = G.o2i(Caster),
+            ['Target'] = G.call('array_map', o_order_info_当前指令信息['Target'], G.o2i),
             ['Parent'] = nil,
             ['MinionPos'] = o_order_info_当前指令信息['MinionPos'],
         })
@@ -154,16 +146,16 @@ real_t['卡牌攻击_主流程'] = function (estr_player_相对身份, o_order_i
     if G.call('主机_是主机') then
         G.start_program('卡牌攻击_主流程_thread', estr_player_相对身份, {
             ['Player'] = '我方',
-            ['Caster'] = o2i(Caster),
-            ['Target'] = G.call('array_map', o_order_info_当前指令信息['Target'], o2i),
+            ['Caster'] = G.o2i(Caster),
+            ['Target'] = G.call('array_map', o_order_info_当前指令信息['Target'], G.o2i),
             ['Parent'] = nil,
             ['MinionPos'] = o_order_info_当前指令信息['MinionPos'],
         })
     else
         G.call('网络通用_广播消息', '卡牌攻击_主流程_thread', '敌方1', {
             ['Player'] = '敌方1',
-            ['Caster'] = o2i(Caster),
-            ['Target'] = G.call('array_map', o_order_info_当前指令信息['Target'], o2i),
+            ['Caster'] = G.o2i(Caster),
+            ['Target'] = G.call('array_map', o_order_info_当前指令信息['Target'], G.o2i),
             ['Parent'] = nil,
             ['MinionPos'] = o_order_info_当前指令信息['MinionPos'],
         })

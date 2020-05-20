@@ -58,14 +58,6 @@ function noti.卡牌逻辑效果整理(last_call)
     print(table.concat(treestr, ''))
 end
 
-local function o2i(card)
-    return card.name
-end
-
-local function i2o(i_card)
-    return G.QueryName(i_card)
-end
-
 local com_mapping = {
     ['我方'] = {
         ['战场随从'] = {'selfBattleminion', 'c_battleminion_self'},
@@ -1091,14 +1083,14 @@ noti[postinfo .. '技能效果_特性'] = function (_string_添加特性, _strin
     local get_attr = CARD_GET_ATTR
     local TargetList = get_attr(last_call, 'skill_info', 'Target')
 
-    local info = {postcall .. '技能效果_特性', G.call('array_map', TargetList, o2i), _string_添加特性, _string_移除特性, _string_还原特性}
+    local info = {postcall .. '技能效果_特性', G.call('array_map', TargetList, G.o2i), _string_添加特性, _string_移除特性, _string_还原特性}
 
     info_addchild(info)
     info_stack.pop(info)
 end
 
 noti[postcall .. '技能效果_特性'] = function (idlist, _string_添加特性, _string_移除特性, _string_还原特性)
-    local TargetList = G.call('array_map', idlist, i2o)
+    local TargetList = G.call('array_map', idlist, G.i2o)
 
     local iter = function (Card) end
 
