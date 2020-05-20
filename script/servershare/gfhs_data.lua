@@ -41,5 +41,5 @@ function GF.i2o(id)
 	if type(id) ~= 'number' then 
 		return nil
 	end
-	return G.QueryName(id)
+	return GF.QueryName(id)
 end 
