@@ -229,7 +229,7 @@ table.insert(GF.update, function(t)
 	end
 	GF.preloadResRun()
 	es.tick(srED)
-	if os_clock() - lastGCTime > 60 then -- 3分钟没有gc就gc一次
+	if os_clock() - lastGCTime > 360 then -- 3分钟没有gc就gc一次
 		boolean_needGC = true
 	end
 	if boolean_needGC then
