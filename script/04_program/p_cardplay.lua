@@ -1293,10 +1293,20 @@ end
 -- 特定卡牌死亡
 -- 英雄、技能、随从、武器、奥秘、场地
 
+local cards_filter = function (list, f)
+    local result = {}
+    for _,v in pairs(list) do
+        if f(v) then
+            table.insert(result, v)
+        end
+    end
+    return result
+end
+
 t['逻辑注册_卡牌死亡结算'] = function ()
     local init = function (o_skill_info_效果信息)
         local all_cards = G.DBInst('o_card')
-        local TargetList = G.call('array_filter', all_cards, function (o_card)
+        local TargetList = cards_filter(all_cards, function (o_card)
             local cardtype = (o_card['逻辑数据'] or {})['类型']
             if (cardtype == 0x10090001) --[[英雄]] or 
                (cardtype == 0x10090004) --[[随从]] or
