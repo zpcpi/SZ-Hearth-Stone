@@ -34,6 +34,7 @@ t['对决_开始'] = function()
         G.call('系统_输出信息', '有玩家没有准备就绪， 无法开始游戏！')
         return 
     end
+    G.call('对决_重置对决结果')
     G.call('对决_初始化界面')
     G.call('网络通用_广播消息', '对决_初始化界面')
     G.call('战斗AI_AI空位补全AI')
@@ -308,15 +309,51 @@ t['对决_获取我方对决牌库'] = function()
     return G['对决牌库']
 end
 
-t['对决_结算_相对身份'] = function(estr_player_相对身份, boolean_是否胜利)
-    local estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', estr_player_相对身份)
-
-    G.call('网络通用_广播消息', '对决_结算_绝对身份', estr_absolute_id_type_绝对身份, boolean_是否胜利)
+t['对决_投降'] = function(estr_absolute_id_type_绝对身份)
+    if estr_absolute_id_type_绝对身份 == nil then 
+        estr_absolute_id_type_绝对身份 = G.call('房间_获取绝对身份', '我方') 
+    end
+    if G.call('主机_是主机') then 
+        G.call('对决_结算对决结果', estr_absolute_id_type_绝对身份, false)
+    else
+        G.call('客机_向主机发送消息', '对决_投降', estr_absolute_id_type_绝对身份)
+    end
+    -- TODO: 投降碎裂的动画接入, 界面显示也需要进入动画队列
 end
 
-t['对决_投降'] = function()
-    G.call('对决_结算_相对身份', '我方', false)
-    -- TODO: 投降碎裂的动画接入, 界面显示也需要进入动画队列
+t['对决_重置对决结果'] = function()
+    G.battleResult = nil
+end
+
+--ret=boolean
+t['对决_获取对决结果'] = function(estr_absolute_id_type_绝对身份)
+    if G.battleResult == nil then 
+        return nil
+    end
+    return G.battleResult[estr_absolute_id_type_绝对身份]
+end
+
+t['对决_设置对决结果'] = function(estr_absolute_id_type_绝对身份, boolean_是否胜利)
+    G.battleResult = G.battleResult or {}
+    G.battleResult[estr_absolute_id_type_绝对身份] = boolean_是否胜利
+    if G.call('网络通用_能否广播') then 
+        G.call('网络通用_广播消息', '对决_设置对决结果', estr_absolute_id_type_绝对身份, boolean_是否胜利)
+    end
+end
+
+t['对决_结算对决结果'] = function(estr_absolute_id_type_绝对身份, boolean_是否胜利)
+    if G.call('对决_获取对决结果', estr_absolute_id_type_绝对身份) ~= nil then 
+        return
+    end
+    local o_misc = G.misc()
+    for index, o_room_player in ipairs(o_misc.房间玩家列表) do 
+        local boolean_是同一阵营 = G.call('房间_是否同一阵营_绝对身份', o_room_player.绝对身份, estr_absolute_id_type_绝对身份)
+        if boolean_是同一阵营 then 
+            G.call('对决_设置对决结果', o_room_player.绝对身份, boolean_是否胜利)
+        else
+            G.call('对决_设置对决结果', o_room_player.绝对身份, not boolean_是否胜利)
+        end
+    end
 end
 
 --ret=_i_game_mode

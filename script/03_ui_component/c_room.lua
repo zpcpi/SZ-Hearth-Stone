@@ -17,6 +17,12 @@ function t:init()
     else
         self.startGameBtn.visible = false
         self.prepareBtn.visible = true
+        local o_room_player_当前玩家 = G.call('系统_获取当前玩家信息')
+        if o_room_player_当前玩家.准备就绪 then 
+            self.prepareBtn.c_button.state = 'c'
+        else
+            self.prepareBtn.c_button.state = 'n'
+        end
     end
 
     self.quitBtn = self.obj.getChildByName('Quit')

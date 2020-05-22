@@ -25,3 +25,7 @@ t['主机处理回调_更改准备状态'] = function(o_room_player_准备玩家
         G.call('房间_更新玩家信息', o_room_player_准备玩家)
     end
 end
+
+--hide=true
+t['主机处理回调_投降'] = function(estr_absolute_id_type_绝对身份)
+end

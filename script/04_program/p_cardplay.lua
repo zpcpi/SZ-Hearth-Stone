@@ -1295,29 +1295,30 @@ end
 t['逻辑注册_卡牌死亡结算'] = function ()
     local init = function (o_skill_info_效果信息)
         local all_cards = G.DBInst('o_card')
-        local TargetList = G.call('array_filter', all_cards, function (t)
-            local cardtype = (t['逻辑数据'] or {})['类型']
+        local TargetList = G.call('array_filter', all_cards, function (o_card)
+            local cardtype = (o_card['逻辑数据'] or {})['类型']
             if (cardtype == 0x10090001) --[[英雄]] or 
                (cardtype == 0x10090004) --[[随从]] or
                (cardtype == 0x10090006) --[[武器]] then
-                local cardpos = (t['动态数据'] or {})['卡牌位置']
+                local cardpos = (o_card['动态数据'] or {})['卡牌位置']
                 if (cardpos == '牌库') or
                    (cardpos == '手牌') or
                    (cardpos == '战场') then
-                    if (G.call('卡牌属性_获取', t, '生命', '当前值') or 0) <= 0 then
+                    if (G.call('卡牌属性_获取', o_card, '生命', '当前值') or 0) <= 0 then
                         -- 生命值小于0
+                        local estr_player_相对身份 = G.call('房间_获取相对身份', o_card['动态数据']['所有者'])
                         G.call('技能效果_效果树_执行子效果',
                                 {
-                                    ['Player'] = '我方',
-                                    ['Caster'] = t,
-                                    ['Target'] = {t},
+                                    ['Player'] = estr_player_相对身份,
+                                    ['Caster'] = o_card,
+                                    ['Target'] = {o_card},
                                 },
                                 function ()
                                     G.call('技能效果_特性', {'等待死亡'})
                                 end
                             )
                     end
-                    if G.call('卡牌条件_卡牌特性判断', t, {'等待死亡'}) then
+                    if G.call('卡牌条件_卡牌特性判断', o_card, {'等待死亡'}) then
                         -- 被打上了死亡标记
                         return true
                     end
@@ -1335,9 +1336,10 @@ t['逻辑注册_卡牌死亡结算'] = function ()
         for _,Target in ipairs(TargetList) do
             local cardtype = (Target['逻辑数据'] or {})['类型']
             local cardpos = (Target['动态数据'] or {})['卡牌位置']
-
+            print(cardtype)
             if cardtype == 0x10090001 then
                 -- 英雄
+                G.call('对决_结算对决结果', Target['动态数据']['所有者'], false)
             elseif cardtype == 0x10090004 then
                 -- 随从
                 if cardpos == '牌库' then
