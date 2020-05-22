@@ -5395,5 +5395,34 @@ end
 			},
 		},
 	},
+	{
+		['name']=0x101300ee,
+		['showname']='元气弹-伤害',
+		['逻辑功能']={
+			[1]={
+				['注册时机']='生效',
+				['触发时机']={
+t =
+{'$逻辑_法术牌打出','card'},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return {"逻辑_法术牌打出",card}
+end
+,
+},
+				['触发逻辑']={
+t =
+{'技能效果_伤害',10},
+lua = function (self, card, info, data)
+	local G = require "gf"
+	local t = G.api
+	return G.call("技能效果_伤害",10)
+end
+,
+},
+			},
+		},
+	},
 }}
 return t
