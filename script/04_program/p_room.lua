@@ -254,6 +254,10 @@ t['房间_分配绝对身份'] = function()
     local i_game_mode_游戏模式 = G.call('对决_获取当前游戏模式')
     local o_game_mode_游戏模式 = G.QueryName(i_game_mode_游戏模式)
     _any_可用身份列表 = o_game_mode_游戏模式.可分配身份列表
+    if #any_玩家信息列表 == 0 then 
+        G.call('提示_添加提示', '[房间_分配绝对身份] 没有可用身份 模式ID:' .. string.format('0x%x', i_game_mode_游戏模式 or 0))
+        return
+    end
     for i = 1, #any_玩家信息列表 do 
         local int_随机数 = G.random(1, #_any_可用身份列表)
         any_玩家信息列表[i].绝对身份 = table.remove(_any_可用身份列表, int_随机数)
