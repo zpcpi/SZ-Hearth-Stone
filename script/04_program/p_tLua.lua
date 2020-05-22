@@ -218,7 +218,7 @@ t['tLua_add_listener'] = function (earg_注册事件, func_执行函数, cond, p
             end
             return func_执行函数()
         end
-        G.addListener(key, earg_注册事件, cond, prior or EVENT_PRIOR.base, group)
+        G.addListener(key, earg_注册事件, cond, prior or EVENT_PRIOR.base, group, true)
         return key, event_name
     end
 end
@@ -255,7 +255,7 @@ t['tLua_add_multlisteners'] = function (_listener_info)
                 end
                 return func_执行函数()
             end
-            G.addListener(key, earg_注册事件, func_条件函数, int_prior, string_group)
+            G.addListener(key, earg_注册事件, func_条件函数, int_prior, string_group, true)
             table.insert(api_info, {key, event_name})
         end
     end

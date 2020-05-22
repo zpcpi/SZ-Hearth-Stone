@@ -41,7 +41,7 @@ local add_listener = function (event_func, listener, order_info)
         table.insert(order_info['ListenerList'], {['key'] = key, ['event_name'] = earg[1]})
 
         G.api[key] = listener
-        G.addListener(key, earg)
+        G.addListener(key, earg, nil, nil, nil, true)
     end
 end
 

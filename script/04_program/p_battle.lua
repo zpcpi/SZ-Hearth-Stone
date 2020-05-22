@@ -354,6 +354,7 @@ t['对决_结算对决结果'] = function(estr_absolute_id_type_绝对身份, bo
             G.call('对决_设置对决结果', o_room_player.绝对身份, not boolean_是否胜利)
         end
     end
+    G.clearBattleListener()
 end
 
 --ret=_i_game_mode

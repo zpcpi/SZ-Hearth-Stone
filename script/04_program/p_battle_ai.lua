@@ -113,7 +113,7 @@ t['战斗AI_启动AI逻辑监听'] = function(o_room_player_AI玩家)
     for _, o_battle_ai_logic_逻辑 in ipairs(o_battle_ai_AI.AI逻辑) do
         local even_事件 = o_battle_ai_logic_逻辑.时机
         local funs_回调 = o_battle_ai_logic_逻辑.处理函数
-        G.addListener(funs_回调, {even_事件, estr_absolute_id_type_AI绝对身份})
+        G.addListener(funs_回调, {even_事件, estr_absolute_id_type_AI绝对身份}, nil, nil, nil, true)
     end
 end
 
