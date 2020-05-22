@@ -191,6 +191,7 @@ local effect_action_iter = function (skill_info, event, init, action)
     skill_info = skill_info or get_cur_effect_info()
     if skill_info then
     else
+        print('--== No skill_info!', debug.traceback())
         return
     end
 
@@ -1332,11 +1333,9 @@ t['逻辑注册_卡牌死亡结算'] = function ()
 
     local action = function (o_skill_info_效果信息)
         local TargetList = o_skill_info_效果信息['Target'] or {}
-
         for _,Target in ipairs(TargetList) do
             local cardtype = (Target['逻辑数据'] or {})['类型']
             local cardpos = (Target['动态数据'] or {})['卡牌位置']
-            print(cardtype)
             if cardtype == 0x10090001 then
                 -- 英雄
                 G.call('对决_结算对决结果', Target['动态数据']['所有者'], false)

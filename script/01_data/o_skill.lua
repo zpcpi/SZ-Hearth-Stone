@@ -5413,11 +5413,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_伤害',10},
+{'技能效果_伤害',15},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_伤害",10)
+	return G.call("技能效果_伤害",15)
 end
 ,
 },
