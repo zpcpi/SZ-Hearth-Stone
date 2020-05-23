@@ -35,7 +35,7 @@ function noti.对决_设置对决结果(estr_absolute_id_type_绝对身份, bool
 end
 
 function noti.对决界面_显示结算界面(boolean_是否胜利)
-    local o_node_结算界面 = G.changeUI('v_battle_result')
+    local o_node_结算界面 = G.addUI('v_battle_result')
     if o_node_结算界面 and o_node_结算界面.c_battle_result then 
         o_node_结算界面.c_battle_result:setData(boolean_是否胜利)
     end
