@@ -3,9 +3,9 @@
 ]]
 local G = require 'gf'
 local c_animactor = require 'c_animactor'
+local c_battle_weapon = require 'c_battle_weapon'
 local c_mintextquadsize = require 'c_mintextquadsize'
 local c_battle_info = require 'c_battle_info'
-local c_battle_weapon = require 'c_battle_weapon'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -78,10 +78,10 @@ tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '精英板'
-		tc.left = -102.500
-		tc.right = 148.500
-		tc.bottom = 24.000
-		tc.top = 176.000
+		tc.left = -115.500
+		tc.right = 165.500
+		tc.bottom = 17.000
+		tc.top = 179.000
 		tc.scaleX = 1.250
 		tc.scaleY = 1.250
 		tc.img = 0x560a000f
@@ -112,11 +112,10 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '攻击力'
-			tc.left = -156.846
-			tc.right = -50.846
-			tc.bottom = -93.000
-			tc.top = 13.000
-			tc.visible = false
+			tc.left = -174.346
+			tc.right = -49.346
+			tc.bottom = -86.500
+			tc.top = 0.500
 			tc.scaleX = 0.950
 			tc.scaleY = 0.950
 			tc.img = 0x560b0006
@@ -124,12 +123,13 @@ tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '攻击力数值'
-				tc.left = 3.000
-				tc.right = 3.000
+				tc.left = -0.500
+				tc.right = 34.500
 				tc.bottom = -8.815
 				tc.top = 42.815
 				tc.scaleX = 1.400
 				tc.scaleY = 1.400
+				tc.text = '5'
 				tc.font = 0x63500000
 				tc.style = 14
 				tc.outColor = 0x1
@@ -145,10 +145,10 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '生命值'
-			tc.left = 147.039
-			tc.right = 51.039
-			tc.bottom = -88.962
-			tc.top = 2.038
+			tc.left = 57.539
+			tc.right = 140.539
+			tc.bottom = -93.462
+			tc.top = 0.538
 			tc.scaleX = 0.950
 			tc.scaleY = 0.950
 			tc.img = 0x560b0008
@@ -156,12 +156,13 @@ tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '生命值数值'
-				tc.left = 1.842
-				tc.right = 1.842
+				tc.left = -15.658
+				tc.right = 19.342
 				tc.bottom = 6.289
 				tc.top = 41.289
 				tc.scaleX = 1.400
 				tc.scaleY = 1.400
+				tc.text = '4'
 				tc.font = 0x63500000
 				tc.style = 14
 				tc.outColor = 0x1

@@ -184,24 +184,22 @@ function t:initTipsCard()
     self.TipsCard = ui_card
 
     ui_card.visible = false
-    ui_card.scaleX = 0.7
-    ui_card.scaleY = 0.7
+    ui_card.scaleX = 0.6
+    ui_card.scaleY = 0.6
 end
 
 -- tips在全局显示
 function t:showtips(o_card, posx, posy)
     self.TipsCard.visible = true
-    self.TipsCard.x, self.TipsCard.y = self.TipsCard.parent.globalToLocal(posx, posy)
-
-    local get_attr = CARD_GET_ATTR
-    local cardtype = get_attr(o_card, '逻辑数据', '类型')
-    local pos = get_attr(o_card, '动态数据', '卡牌位置')
-    if (cardtype == 0x10090001) and (pos == '战场') then
-        -- 是英雄卡，并且在战场
-        self.TipsCard.c_card_manager:setData(o_card, true)
-    else
-        self.TipsCard.c_card_manager:setData(o_card)
+    
+    if posy > 550 then
+        posy = 550
+    elseif posy < 160 then
+        posy = 160
     end
+    
+    self.TipsCard.x, self.TipsCard.y = self.TipsCard.parent.globalToLocal(posx, posy)
+    self.TipsCard.c_card_manager:setData(o_card)
 end
 
 function t:hidetips()

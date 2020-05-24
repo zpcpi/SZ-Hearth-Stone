@@ -3,9 +3,9 @@
 ]]
 local G = require 'gf'
 local c_animactor = require 'c_animactor'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local c_battle_hero = require 'c_battle_hero'
 local c_battle_info = require 'c_battle_info'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -61,70 +61,12 @@ tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '背景'
-		tc.left = -180.000
-		tc.right = 180.000
-		tc.bottom = -265.000
-		tc.top = 265.000
-		tc.img = 0x560c000b
+		tc.left = -177.000
+		tc.right = 177.000
+		tc.bottom = -259.000
+		tc.top = 259.000
+		tc.img = 0x560c000f
 		tp = tc
-		tp = tp.parent
-		--end
-		tc = G.Quad()
-		tp.addChild(tc)
-		tc.name = '职业图标2 '
-		tc.left = 12.500
-		tc.right = 103.500
-		tc.bottom = -258.000
-		tc.top = -166.000
-		tc.visible = false
-		tc.scaleX = 0.800
-		tc.scaleY = 0.800
-		tc.img = 0x560d0002
-		tp = tc
-		tp = tp.parent
-		--end
-		tc = G.Quad()
-		tp.addChild(tc)
-		tc.name = '职业图标1'
-		tc.left = -45.500
-		tc.right = 45.500
-		tc.bottom = -265.000
-		tc.top = -173.000
-		tc.visible = false
-		tc.img = 0x560d0002
-		tp = tc
-		tp = tp.parent
-		--end
-		tc = G.Entity()
-		tp.addChild(tc)
-		tc.name = '名称板'
-		tc.left = -212.000
-		tc.right = 220.000
-		tc.bottom = -285.000
-		tc.top = -37.000
-		tc.scaleX = 0.500
-		tc.scaleY = 0.500
-		tp = tc
-			tc = G.TextQuad()
-			tp.addChild(tc)
-			tc.name = '名称字符'
-			tc.left = -80.000
-			tc.right = 80.000
-			tc.top = 0.000
-			tc.anchor = 0x64003232
-			tc.scaleX = 1.890
-			tc.scaleY = 1.890
-			tc.text = '黑曜石雕像'
-			tc.font = 0x62200041
-			tc.style = 13
-			tc.outlineSize = 5.000
-			tp = tc
-			tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
-			com = tp.c_mintextquadsize
-			com['minWidth'] =0.000
-			com['autowidth'] =true
-			tp = tp.parent
-			--end
 		tp = tp.parent
 		--end
 		tc = G.Entity()

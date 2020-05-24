@@ -87,7 +87,7 @@ function t:rollOver(tar)
         G.trig_event('UI_鼠标覆盖卡牌', o_card_picked.name)
 
         local posx, posy = tar.localToGlobal(0, 0)
-        self.主战场:showtips(o_card_picked, posx, 170)
+        self.主战场:showtips(o_card_picked, posx, 160)
     end
 end
 

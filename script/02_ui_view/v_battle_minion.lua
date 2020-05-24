@@ -3,9 +3,9 @@
 ]]
 local G = require 'gf'
 local c_animactor = require 'c_animactor'
-local c_battle_minion = require 'c_battle_minion'
-local c_battle_info = require 'c_battle_info'
 local c_mintextquadsize = require 'c_mintextquadsize'
+local c_battle_info = require 'c_battle_info'
+local c_battle_minion = require 'c_battle_minion'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -90,10 +90,10 @@ tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '精英板'
-		tc.left = -227.312
-		tc.right = 318.688
-		tc.bottom = -64.682
-		tc.top = 232.682
+		tc.left = -226.687
+		tc.right = 319.313
+		tc.bottom = -62.807
+		tc.top = 234.557
 		tc.scaleX = 0.500
 		tc.scaleY = 0.550
 		tc.img = 0x5606000f

@@ -97,13 +97,8 @@ function t:rollOver(tar)
             local posx, posy = tar.localToGlobal(0, 0)
 
             posy = posy - 30
-            if posy > 530 then
-                posy = 530
-            elseif posy < 100 then
-                posy = 100
-            end
 
-            self.主战场:showtips(card, posx - 120, posy)
+            self.主战场:showtips(card, posx - 110, posy)
         end
     end
 end

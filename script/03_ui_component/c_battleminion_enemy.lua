@@ -164,7 +164,7 @@ function t:rollOver(tar)
             local o_card_picked = tar.c_card_manager:getData()
 
             local posx, posy = tar.localToGlobal(0, 0)
-            self.主战场:showtips(o_card_picked, posx + 160, posy)
+            self.主战场:showtips(o_card_picked, posx + 150, posy)
         end
     end
 end

@@ -111,7 +111,7 @@ function t:rollOver(tar)
             self.CurCard = tar
 
             local posx, posy = tar.localToGlobal(0, 0)
-            self.主战场:showtips(o_card_picked, posx + 200, posy - 50)
+            self.主战场:showtips(o_card_picked, posx + 160, posy)
         end
     end
 end
