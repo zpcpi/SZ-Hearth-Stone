@@ -3,8 +3,8 @@
 ]]
 local G = require 'gf'
 local c_card_weapon = require 'c_card_weapon'
-local c_curved_text = require 'c_curved_text'
 local c_mintextquadsize = require 'c_mintextquadsize'
+local c_curved_text = require 'c_curved_text'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -51,8 +51,8 @@ tp = tc
 			tc.bottom = -256.000
 			tc.top = 256.000
 			tc.anchor = 0x46463232
-			tc.scaleX = 0.530
-			tc.scaleY = 0.530
+			tc.scaleX = 0.550
+			tc.scaleY = 0.550
 			tc.img = 0x56010009
 			tp = tc
 			tp = tp.parent
@@ -228,13 +228,12 @@ tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '攻击力数值'
-				tc.left = -2.500
-				tc.right = 32.500
+				tc.left = 15.000
+				tc.right = 15.000
 				tc.bottom = 3.875
 				tc.top = 44.875
 				tc.scaleX = 1.350
 				tc.scaleY = 1.350
-				tc.text = '1'
 				tc.font = 0x63500000
 				tc.style = 14
 				tc.outColor = 0x1
@@ -259,13 +258,12 @@ tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '生命值数值'
-				tc.left = -21.250
-				tc.right = 13.750
+				tc.left = -3.750
+				tc.right = -3.750
 				tc.bottom = -3.614
 				tc.top = 44.864
 				tc.scaleX = 1.350
 				tc.scaleY = 1.350
-				tc.text = '4'
 				tc.font = 0x63500000
 				tc.style = 14
 				tc.outColor = 0x1
@@ -282,7 +280,7 @@ tp = tc
 		--end
 	tp.c_card_weapon = setmetatable({}, c_card_weapon)
 	com = tp.c_card_weapon
-	com['cost'] =1.000
+	com['cost'] =1
 	com['atk'] =nil
 	com['hp'] =nil
 	tp = tp.parent

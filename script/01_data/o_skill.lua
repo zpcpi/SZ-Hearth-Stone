@@ -80,11 +80,11 @@ end
 },
 				['触发逻辑']={
 t =
-{'技能效果_伤害',2},
+{'技能效果_伤害',3},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return G.call("技能效果_伤害",2)
+	return G.call("技能效果_伤害",3)
 end
 ,
 },
@@ -449,7 +449,6 @@ t =
             {},
             {
                 'block',
-                {'技能目标_选取英雄','$敌方1'},
                 {'技能目标_选取随从','$敌方1'},
                 {'技能效果_伤害',2}
             }
@@ -482,7 +481,6 @@ lua = function (self, card, info, data)
 		_ = G.call("技能效果_效果树_执行子效果",{["Caster"] = info.Caster,["Player"] = info.Player},(function()
 			return (function()
 				local _ = nil
-				_ = G.call("技能目标_选取英雄","敌方1")
 				_ = G.call("技能目标_选取随从","敌方1")
 				_ = G.call("技能效果_伤害",2)
 				return _
@@ -5319,7 +5317,7 @@ end
 	},
 	{
 		['name']=0x10130037,
-		['showname']='真言术：盾-加血,抽牌',
+		['showname']='真言术：盾-加血',
 		['逻辑功能']={
 			[1]={
 				['注册时机']='生效',
@@ -5335,20 +5333,11 @@ end
 },
 				['触发逻辑']={
 t =
-{
-    'block',
-    {'技能效果_生命上限',2},
-    {'技能效果_抽牌'}
-},
+{'技能效果_生命上限',2},
 lua = function (self, card, info, data)
 	local G = require "gf"
 	local t = G.api
-	return (function()
-		local _ = nil
-		_ = G.call("技能效果_生命上限",2)
-		_ = G.call("技能效果_抽牌")
-		return _
-	end)()
+	return G.call("技能效果_生命上限",2)
 end
 ,
 },

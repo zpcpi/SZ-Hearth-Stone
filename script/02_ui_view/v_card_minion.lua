@@ -2,9 +2,9 @@
 
 ]]
 local G = require 'gf'
+local c_curved_text = require 'c_curved_text'
 local c_card_minion = require 'c_card_minion'
 local c_mintextquadsize = require 'c_mintextquadsize'
-local c_curved_text = require 'c_curved_text'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -50,7 +50,7 @@ tp = tc
 			tc.right = 256.000
 			tc.bottom = -256.000
 			tc.top = 256.000
-			tc.anchor = 0x46463232
+			tc.anchor = 0x49493535
 			tc.scaleX = 0.550
 			tc.scaleY = 0.550
 			tc.img = 0x56010002
@@ -243,8 +243,8 @@ tp = tc
 			tc.name = '攻击力'
 			tc.left = -188.265
 			tc.right = -89.265
-			tc.bottom = -258.147
-			tc.top = -145.147
+			tc.bottom = -257.147
+			tc.top = -144.147
 			tc.scaleX = 0.950
 			tc.scaleY = 0.950
 			tc.img = 0x560b0003
@@ -275,8 +275,8 @@ tp = tc
 			tc.name = '生命值'
 			tc.left = 115.868
 			tc.right = 187.368
-			tc.bottom = -252.426
-			tc.top = -139.926
+			tc.bottom = -255.426
+			tc.top = -142.926
 			tc.scaleX = 0.950
 			tc.scaleY = 0.950
 			tc.img = 0x560b0002

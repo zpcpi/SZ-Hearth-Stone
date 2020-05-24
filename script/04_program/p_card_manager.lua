@@ -161,10 +161,12 @@ t['CardCom_SetData'] = function (com, o_card, manager)
         end
     end
 
-    if o_card_type.name == 0x10090006 then
-        -- 武器卡
-        obj_show_iter('遮挡板', nil, {'武器开启'})
-        obj_show_iter('攻击力', {'武器开启'})
+    if com['遮挡板'] then
+        if o_card_type.name == 0x10090006 then
+            -- 武器卡
+            obj_show_iter('遮挡板', nil, {'武器开启'})
+            obj_show_iter('攻击力', {'武器开启'})
+        end
     end
 
     if com['攻击框'] then
@@ -311,7 +313,7 @@ local function com_value_mode_生命 ()
             if v > (1 << 31) then
                 v = 0
             end
-            tostring(math.floor(v))
+            v = tostring(math.floor(v))
         end
         return v
     end
@@ -325,7 +327,7 @@ local function com_value_mode_最小0 ()
             elseif v > (1 << 31) then
                 v = 0
             end
-            tostring(math.floor(v))
+            v = tostring(math.floor(v))
         end
         return v
     end
