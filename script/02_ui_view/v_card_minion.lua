@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_curved_text = require 'c_curved_text'
 local c_mintextquadsize = require 'c_mintextquadsize'
+local c_curved_text = require 'c_curved_text'
 local c_card_minion = require 'c_card_minion'
 local tp,tc,com,tk
 tc = G.Entity()
@@ -54,6 +54,17 @@ tp = tc
 			tc.scaleX = 0.580
 			tc.scaleY = 0.580
 			tc.img = 0x56010002
+			tp = tc
+			tp = tp.parent
+			--end
+			tc = G.Quad()
+			tp.addChild(tc)
+			tc.name = '插画边缘阴影'
+			tc.left = -97.500
+			tc.right = 113.500
+			tc.bottom = -36.000
+			tc.top = 256.000
+			tc.img = 0x56060013
 			tp = tc
 			tp = tp.parent
 			--end
@@ -209,8 +220,7 @@ tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '费用数值'
-				tc.left = -17.500
-				tc.right = 17.500
+				tc.right = 0.000
 				tc.bottom = 65.609
 				tc.top = -1.000
 				tc.anchor = 0x64003232
