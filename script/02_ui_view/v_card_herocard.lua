@@ -2,9 +2,9 @@
 
 ]]
 local G = require 'gf'
+local c_curved_text = require 'c_curved_text'
 local c_mintextquadsize = require 'c_mintextquadsize'
 local c_card_herocard = require 'c_card_herocard'
-local c_curved_text = require 'c_curved_text'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -107,7 +107,8 @@ tp = tc
 			tc.prefab = true
 			tp.addChild(tc)
 			tc.name = '名称字符'
-			tc.right = 0.000
+			tc.left = -320.000
+			tc.right = 320.000
 			tc.bottom = -2.000
 			tc.top = -2.000
 			tp = tc
@@ -174,8 +175,8 @@ tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '费用数值'
-				tc.left = -16.357
-				tc.right = 18.643
+				tc.left = 1.143
+				tc.right = 1.143
 				tc.bottom = 13.929
 				tc.top = 44.929
 				tc.scaleX = 1.950
@@ -217,8 +218,8 @@ tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '生命值数值'
-				tc.left = -13.833
-				tc.right = 21.167
+				tc.left = 3.667
+				tc.right = 3.667
 				tc.bottom = 1.160
 				tc.top = 38.160
 				tc.scaleX = 1.500

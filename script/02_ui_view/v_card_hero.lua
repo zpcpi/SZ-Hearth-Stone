@@ -59,11 +59,11 @@ tp = tc
 		tc = G.Quad()
 		tp.addChild(tc)
 		tc.name = '背景'
-		tc.left = -180.000
-		tc.right = 180.000
-		tc.bottom = -265.000
-		tc.top = 265.000
-		tc.img = 0x560c000b
+		tc.left = -177.000
+		tc.right = 177.000
+		tc.bottom = -259.000
+		tc.top = 259.000
+		tc.img = 0x560c000d
 		tp = tc
 		tp = tp.parent
 		--end
