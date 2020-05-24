@@ -35,8 +35,8 @@ t['CardCom_SetData'] = function (com, o_card, manager)
         local number_原画偏移X = get_attr(o_card_curcard, '美术数据', '原画偏移X') or 0
         local number_原画偏移Y = get_attr(o_card_curcard, '美术数据', '原画偏移Y') or 0
         local number_原画旋转 = get_attr(o_card_curcard, '美术数据', '原画旋转') or 0
-        local number_原画缩放X = (get_attr(o_card_curcard, '美术数据', '原画缩放X') or 1) * 0.58
-        local number_原画缩放Y = (get_attr(o_card_curcard, '美术数据', '原画缩放Y') or 1) * 0.58
+        local number_原画缩放X = (get_attr(o_card_curcard, '美术数据', '原画缩放X') or 1) * 0.55
+        local number_原画缩放Y = (get_attr(o_card_curcard, '美术数据', '原画缩放Y') or 1) * 0.55
 
         com.原画.img = image_原画
         com.原画.x = number_原画偏移X

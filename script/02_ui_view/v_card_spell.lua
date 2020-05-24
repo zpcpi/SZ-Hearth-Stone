@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_card_spell = require 'c_card_spell'
 local c_curved_text = require 'c_curved_text'
+local c_card_spell = require 'c_card_spell'
 local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
@@ -32,8 +32,8 @@ tp = tc
 			tc.name = 'mask'
 			tc.left = -182.500
 			tc.right = 182.500
-			tc.bottom = -256.000
-			tc.top = 256.000
+			tc.bottom = -250.000
+			tc.top = 262.000
 			tc.scaleX = 1.100
 			tc.scaleY = 1.100
 			tc.mask = 10
@@ -51,8 +51,8 @@ tp = tc
 			tc.bottom = -256.000
 			tc.top = 256.000
 			tc.anchor = 0x46463232
-			tc.scaleX = 0.640
-			tc.scaleY = 0.640
+			tc.scaleX = 0.550
+			tc.scaleY = 0.550
 			tc.img = 0x56010007
 			tp = tc
 			tp = tp.parent
@@ -196,16 +196,16 @@ tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
 				tc.name = '费用数值'
-				tc.left = -20.357
-				tc.right = 14.643
+				tc.left = -2.857
+				tc.right = -2.857
 				tc.bottom = 32.857
 				tc.top = 32.857
 				tc.anchor = 0x64003232
 				tc.scaleX = 1.950
 				tc.scaleY = 1.950
-				tc.text = '4'
 				tc.font = 0x63500000
 				tc.style = 14
+				tc.outColor = 0x1
 				tp = tc
 				tp.c_mintextquadsize = setmetatable({}, c_mintextquadsize)
 				com = tp.c_mintextquadsize

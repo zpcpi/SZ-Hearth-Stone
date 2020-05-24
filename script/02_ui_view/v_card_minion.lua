@@ -2,8 +2,8 @@
 
 ]]
 local G = require 'gf'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local c_card_minion = require 'c_card_minion'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local c_curved_text = require 'c_curved_text'
 local tp,tc,com,tk
 tc = G.Entity()
@@ -46,13 +46,13 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '原画'
-			tc.left = -247.177
-			tc.right = 264.823
-			tc.bottom = -248.353
-			tc.top = 263.647
+			tc.left = -256.000
+			tc.right = 256.000
+			tc.bottom = -256.000
+			tc.top = 256.000
 			tc.anchor = 0x46463232
-			tc.scaleX = 0.640
-			tc.scaleY = 0.640
+			tc.scaleX = 0.550
+			tc.scaleY = 0.550
 			tc.img = 0x56010002
 			tp = tc
 			tp = tp.parent
