@@ -2,9 +2,9 @@
 
 ]]
 local G = require 'gf'
-local c_mintextquadsize = require 'c_mintextquadsize'
-local c_curved_text = require 'c_curved_text'
 local c_card_minion = require 'c_card_minion'
+local c_curved_text = require 'c_curved_text'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -51,8 +51,8 @@ tp = tc
 			tc.bottom = -248.353
 			tc.top = 263.647
 			tc.anchor = 0x46463232
-			tc.scaleX = 0.580
-			tc.scaleY = 0.580
+			tc.scaleX = 0.640
+			tc.scaleY = 0.640
 			tc.img = 0x56010002
 			tp = tc
 			tp = tp.parent

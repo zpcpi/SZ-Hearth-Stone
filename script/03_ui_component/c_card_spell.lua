@@ -21,8 +21,10 @@ function t:init()
 
     self.精英板 = self.obj.getChildByName('精英板')
 
-    self.名称字符 = self.obj.getChildByName('名称字符')
-    self.描述字符 = self.obj.getChildByName('描述字符')
+    self.名称板 = self.obj.getChildByName('名称板')
+    self.名称字符 = self.名称板.getChildByName('名称字符')
+    self.描述板 = self.obj.getChildByName('描述板')
+    self.描述字符 = self.描述板.getChildByName('描述字符')
 
     self.属性值组合 = self.obj.getChildByName('属性值组合')
     self.费用 = self.属性值组合.getChildByName('费用')
