@@ -19,17 +19,23 @@ end
 
 t['收藏_初始化卡片收藏'] = function()
     G['收藏卡片列表'] = {}
-    local _o_card_卡片列表 = G.DBTable('o_card') or {}
-    for _, o_card_卡片 in ipairs(_o_card_卡片列表) do 
-        if o_card_卡片.局外数据 and o_card_卡片.局外数据.可收集 then 
-            table.insert(G['收藏卡片列表'], o_card_卡片)
-            if o_card_卡片.逻辑数据 ~= nil and o_card_卡片.逻辑数据.职业 then
-                for _, i_profession_职业 in ipairs(o_card_卡片.逻辑数据.职业) do 
-                    G.call('收藏_记录职业卡片', o_card_卡片, i_profession_职业)
+
+    local iter = function (_o_card_卡片列表)
+        for _, o_card_卡片 in ipairs(_o_card_卡片列表) do 
+            if o_card_卡片.局外数据 and o_card_卡片.局外数据.可收集 then 
+                table.insert(G['收藏卡片列表'], o_card_卡片)
+                if o_card_卡片.逻辑数据 ~= nil and o_card_卡片.逻辑数据.职业 then
+                    for _, i_profession_职业 in ipairs(o_card_卡片.逻辑数据.职业) do 
+                        G.call('收藏_记录职业卡片', o_card_卡片, i_profession_职业)
+                    end
                 end
             end
         end
     end
+
+    iter(G.DBTable('o_card') or {})
+    iter(G.DBTable('o_card_expert') or {})
+
 end
 
 t['收藏_记录职业卡片'] = function(o_card_卡片, i_profession_职业ID)
