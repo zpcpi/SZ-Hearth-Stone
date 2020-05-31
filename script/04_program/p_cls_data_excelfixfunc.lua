@@ -9,6 +9,7 @@ local t = G.api
 t['o_card_卡牌信息选择导入'] = function(_o_card_卡牌列表)
     for k,v in ipairs(_o_card_卡牌列表) do
         local 类型 = (v['逻辑数据'] or {})['类型']
+        v['美术数据'] = v['美术数据'] or {}
         if v.类型 == 0x10090005 then
             -- 法术卡
         elseif v.类型 == 0x10090004 then
