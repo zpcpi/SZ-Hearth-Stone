@@ -14,8 +14,9 @@ local t ={
 			name = '卡牌汇总',
 			[1] = 'o_card',
 			[2] = 'o_card_expert',
-			[3] = 'o_card_honours',
-			[4] = 'o_card_naxx',
+			[3] = 'o_card_gvg',
+			[4] = 'o_card_honours',
+			[5] = 'o_card_naxx',
 		},
 		[3] = {
 			name = '系统',
