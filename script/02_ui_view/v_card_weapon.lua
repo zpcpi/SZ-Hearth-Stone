@@ -60,8 +60,8 @@ tp = tc
 			tc = G.Quad()
 			tp.addChild(tc)
 			tc.name = '插画边缘阴影'
-			tc.left = -117.500
-			tc.right = 117.500
+			tc.left = -115.500
+			tc.right = 119.500
 			tc.bottom = -10.250
 			tc.top = 227.750
 			tc.img = 0x560a0005
@@ -280,7 +280,7 @@ tp = tc
 		--end
 	tp.c_card_weapon = setmetatable({}, c_card_weapon)
 	com = tp.c_card_weapon
-	com['cost'] =1
+	com['cost'] =1.000
 	com['atk'] =nil
 	com['hp'] =nil
 	tp = tp.parent
