@@ -94,5 +94,16 @@ local t = {
 		['是否转置']=false,
 		['是否全托']=false,
 	},
+	{
+		['name']=0x10030009,
+		['showname']='黑石山的火焰',
+		['class']={n=0,[1] = 'excel_读取数据',
+		},
+		['文件名称']='卡牌信息表.xlsx',
+		['sheet名称']='黑石山',
+		['o表名称']='o_card_brm',
+		['是否转置']=false,
+		['是否全托']=false,
+	},
 }}
 return t
