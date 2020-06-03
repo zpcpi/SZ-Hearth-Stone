@@ -2,9 +2,9 @@
 
 ]]
 local G = require 'gf'
+local c_mintextquadsize = require 'c_mintextquadsize'
 local c_curved_text = require 'c_curved_text'
 local c_card_minion = require 'c_card_minion'
-local c_mintextquadsize = require 'c_mintextquadsize'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -96,8 +96,8 @@ tp = tc
 			tc.name = '名称字符'
 			tc.left = -320.000
 			tc.right = 320.000
-			tc.bottom = -9.000
-			tc.top = -9.000
+			tc.bottom = -8.000
+			tc.top = -8.000
 			tp = tc
 			tp.c_curved_text = setmetatable({}, c_curved_text)
 			com = tp.c_curved_text
