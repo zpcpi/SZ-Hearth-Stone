@@ -18,6 +18,7 @@ local t ={
 			[4] = 'o_card_gvg',
 			[5] = 'o_card_honours',
 			[6] = 'o_card_naxx',
+			[7] = 'o_card_tgt',
 		},
 		[3] = {
 			name = '系统',

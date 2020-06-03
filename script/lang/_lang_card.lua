@@ -8,5 +8,6 @@ local l = {
     ['o_card_naxx'] = '04-纳克萨玛斯(naxx)',
     ['o_card_gvg'] = '05-地精大战侏儒(gvg)',
     ['o_card_brm'] = '06-黑石山的火焰(brm)',
+    ['o_card_tgt'] = '07-冠军的试炼(tgt)',
 }
 return l
