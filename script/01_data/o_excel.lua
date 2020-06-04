@@ -116,5 +116,16 @@ local t = {
 		['是否转置']=false,
 		['是否全托']=false,
 	},
+	{
+		['name']=0x1003000b,
+		['showname']='探险者协会',
+		['class']={n=0,[1] = 'excel_读取数据',
+		},
+		['文件名称']='卡牌信息表.xlsx',
+		['sheet名称']='探险者协会',
+		['o表名称']='o_card_loe',
+		['是否转置']=false,
+		['是否全托']=false,
+	},
 }}
 return t
