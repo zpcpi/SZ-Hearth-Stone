@@ -127,5 +127,16 @@ local t = {
 		['是否转置']=false,
 		['是否全托']=false,
 	},
+	{
+		['name']=0x1003000c,
+		['showname']='上古之神的低语',
+		['class']={n=0,[1] = 'excel_读取数据',
+		},
+		['文件名称']='卡牌信息表.xlsx',
+		['sheet名称']='上古之神',
+		['o表名称']='o_card_wog',
+		['是否转置']=false,
+		['是否全托']=false,
+	},
 }}
 return t

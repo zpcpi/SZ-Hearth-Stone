@@ -10,5 +10,6 @@ local l = {
     ['o_card_brm'] = '06-黑石山的火焰(brm)',
     ['o_card_tgt'] = '07-冠军的试炼(tgt)',
     ['o_card_loe'] = '08-探险者协会(loe)',
+    ['o_card_wog'] = '09-上古之神的低语(wog)',
 }
 return l
