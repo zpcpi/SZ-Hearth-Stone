@@ -17,8 +17,10 @@ local t ={
 			[3] = 'o_card_expert',
 			[4] = 'o_card_gvg',
 			[5] = 'o_card_honours',
-			[6] = 'o_card_naxx',
-			[7] = 'o_card_tgt',
+			[6] = 'o_card_loe',
+			[7] = 'o_card_naxx',
+			[8] = 'o_card_tgt',
+			[9] = 'o_card_wog',
 		},
 		[3] = {
 			name = '系统',
