@@ -17,6 +17,7 @@ function t:init()
     self.职业边框 = self.obj.getChildByName('背景')
     self.职业图标1 = self.obj.getChildByName('职业图标1')
     self.职业图标2 = self.obj.getChildByName('职业图标2')
+    self.职业图标3 = self.obj.getChildByName('职业图标3')
 
     self.名称板 = self.obj.getChildByName('名称板')
     self.名称字符 = self.名称板.getChildByName('名称字符')

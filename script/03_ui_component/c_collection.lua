@@ -20,6 +20,8 @@ function t:init()
     self.cardNodeList = {}
     for i = 1, 8 do 
         local cardNode = self.cardCollection.getChildByName('Card' .. i)
+        cardNode.scaleX = 0.9
+        cardNode.scaleY = 0.9
         table.insert(self.cardNodeList, cardNode)
     end
     self.lastPageButton = self.obj.getChildByName('CardCollection').getChildByName('LastPage')
