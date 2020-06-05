@@ -12,5 +12,6 @@ local l = {
     ['o_card_loe'] = '08-探险者协会(loe)',
     ['o_card_wog'] = '09-上古之神的低语(wog)',
     ['o_card_kar'] = '10-卡拉赞之夜(kar)',
+    ['o_card_cfm'] = '11-龙争虎斗加基森(cfm)',
 }
 return l
