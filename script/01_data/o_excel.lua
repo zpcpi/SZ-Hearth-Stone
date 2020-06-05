@@ -138,5 +138,16 @@ local t = {
 		['是否转置']=false,
 		['是否全托']=false,
 	},
+	{
+		['name']=0x1003000d,
+		['showname']='卡拉赞之夜',
+		['class']={n=0,[1] = 'excel_读取数据',
+		},
+		['文件名称']='卡牌信息表.xlsx',
+		['sheet名称']='卡拉赞',
+		['o表名称']='o_card_kar',
+		['是否转置']=false,
+		['是否全托']=false,
+	},
 }}
 return t
