@@ -40,6 +40,10 @@ t['收藏_初始化卡片收藏'] = function()
     iter(G.DBTable('o_card_gvg') or {})
     iter(G.DBTable('o_card_brm') or {})
     iter(G.DBTable('o_card_tgt') or {})
+    iter(G.DBTable('o_card_loe') or {})
+    iter(G.DBTable('o_card_wog') or {})
+    iter(G.DBTable('o_card_kar') or {})
+    iter(G.DBTable('o_card_cfm') or {})
 
 end
 
