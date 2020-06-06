@@ -242,7 +242,7 @@ function GF.callGC()
 	boolean_needGC = false
 	lastGCTime = os_clock()
 	collectgarbage("collect")
-	print('gc time:', os_clock() - lastGCTime)
+	print('hs gc time:', os_clock() - lastGCTime)
 end
 
 function GF.get_event_def_data(event_name)
