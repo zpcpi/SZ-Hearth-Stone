@@ -11,23 +11,10 @@ t['主机_新建房间'] = function()
     local any_玩家信息 = G.call('系统_获取当前玩家信息')
     any_玩家信息.是主机 = true
     if G.Steam_CreateLobby then 
-        G.Steam_CreateLobby({
-            SuccessCallback = t['主机_新建房间成功回调'], 
-            FailedCallback = t['主机_新建房间失败回调']
-        })
+        G.Steam_CreateLobby()
     else
         G.start_program('主机_建立连接')
     end
-end
-
---hide=true
-t['主机_新建房间成功回调'] = function(steamLobbyID)
-    print('[主机_新建房间成功回调]', steamLobbyID)
-end
-
---hide=true
-t['主机_新建房间失败回调'] = function(steamLobbyID)
-    print('[主机_新建房间失败回调]', steamLobbyID)
 end
 
 --hide=true
