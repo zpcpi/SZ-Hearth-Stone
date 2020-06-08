@@ -8,7 +8,7 @@ function noti.初始化()
     G.addUI('v_main_menu')
 end
 
-function noti.主机_新建房间()
+function noti.主机_新建房间成功()
     G.changeUI('v_room')
 end
 

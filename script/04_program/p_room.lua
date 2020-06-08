@@ -344,3 +344,10 @@ t['房间_同步房间信息'] = function(targetSocket)
         G.call('网络通用_发送消息', targetSocket, '对决_设置游戏模式', i_game_mode_游戏模式)
     end
 end
+
+t['房间_获取当前房间名称'] = function()
+    if not G.IsSteamAvaliable() then 
+        return G.call('网络通用_获取本机IP地址') .. ':' .. G.call('网络通用_获取主机端口')
+    end
+    return G.Steam_GetLobbyData('name')
+end
