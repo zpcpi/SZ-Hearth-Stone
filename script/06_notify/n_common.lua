@@ -8,10 +8,6 @@ function noti.初始化()
     G.addUI('v_main_menu')
 end
 
-function noti.主机_新建房间()
-    G.changeUI('v_room')
-end
-
 function noti.房间_退出房间()
     G.changeUI('v_main_menu')
 end
@@ -24,7 +20,7 @@ function noti.系统_输出信息(string_信息)
 end
 
 function noti.主机_连接建立成功回调()
-    local v_room = G.getUI('v_room')
+    local v_room = G.changeUI('v_room')
     if v_room then 
         v_room.c_room:UpdateRoom()
     end

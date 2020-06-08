@@ -879,6 +879,10 @@ local t = {
 				['name']='卡组',
 				['type']='o_deck_template',
 			},
+			[8]={
+				['name']='SteamID',
+				['type']='int',
+			},
 		},
 	},
 	{

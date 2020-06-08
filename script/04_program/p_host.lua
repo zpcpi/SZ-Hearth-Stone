@@ -10,7 +10,7 @@ local lsocket = require("socket.core")
 t['主机_新建房间'] = function()
     local any_玩家信息 = G.call('系统_获取当前玩家信息')
     any_玩家信息.是主机 = true
-    if G.Steam_CreateLobby then 
+    if G.IsSteamAvaliable() then 
         G.Steam_CreateLobby()
     else
         G.start_program('主机_建立连接')
@@ -49,7 +49,8 @@ t['主机_连接建立成功回调'] = function()
     local any_当前玩家 = G.call('系统_获取当前玩家信息')
     any_当前玩家.是主机 = true
     G.call('房间_更新玩家信息', any_当前玩家)
-    G.call('对决_设置游戏模式', G.call('对决_获取当前游戏模式'))
+    G.call('对决_设置游戏模式', 0x10150001)
+    G.noti_call('主机_连接建立成功回调')
 end
 
 --hide=true

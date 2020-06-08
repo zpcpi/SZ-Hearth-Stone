@@ -15,7 +15,12 @@ t['系统_初始化玩家信息'] = function()
     if o_misc.玩家信息 == nil then 
         o_misc.玩家信息 = {}
     end
-    o_misc.玩家信息.玩家IP = G.call('网络通用_获取本机IP地址')
+    if G.IsSteamAvaliable() then 
+        o_misc.玩家信息.SteamID = G.Steam_GetSteamID()
+        o_misc.玩家信息.玩家名称 = G.Steam_GetSteamName()
+    else
+        o_misc.玩家信息.玩家IP = G.call('网络通用_获取本机IP地址')
+    end
 end
 
 t['系统_设置玩家名称'] = function(string_名称)
@@ -38,7 +43,8 @@ t['系统_获取table长度'] = function(any_table)
 end
 
 t['系统_获取当前玩家信息'] = function()
-    return G.misc().玩家信息 or {}
+    local o_room_player_当前玩家信息 = G.misc().玩家信息 or {}
+    return o_room_player_当前玩家信息
 end
 
 t['系统_更新当前玩家信息'] = function(o_room_player_玩家信息)
