@@ -83,7 +83,11 @@ end
 function t:UpdateGameModeInfo()
     local i_game_mode_游戏模式 = G.call('对决_获取当前游戏模式')
     local o_game_mode_游戏模式 = G.QueryName(i_game_mode_游戏模式)
-    self.gameModeBtn.c_button.text = o_game_mode_游戏模式.模式名称
+    local modeName = 'None'
+    if o_game_mode_游戏模式 ~= nil then 
+        modeName = o_game_mode_游戏模式.模式名称
+    end
+    self.gameModeBtn.c_button.text = modeName
 end
 
 function t:click(tar)

@@ -368,15 +368,25 @@ t['对决_获取游戏模式列表'] = function()
 end
 
 t['对决_设置游戏模式'] = function(i_game_mode_对决模式)
-    G.misc().游戏模式 = i_game_mode_对决模式
-    if G.call('网络通用_能否广播') then 
-        G.call('网络通用_广播消息', '对决_设置游戏模式', i_game_mode_对决模式)
+    if G.IsSteamAvaliable() then 
+        G.Steam_SetLobbyData('gameMode', tostring(i_game_mode_对决模式))
+        print('对决_设置游戏模式', 'gameMode', i_game_mode_对决模式)
+    else
+        G.misc().游戏模式 = i_game_mode_对决模式
+        if G.call('网络通用_能否广播') then 
+            G.call('网络通用_广播消息', '对决_设置游戏模式', i_game_mode_对决模式)
+        end
     end
 end
 
 --ret=i_game_mode
 t['对决_获取当前游戏模式'] = function()
-    return G.misc().游戏模式 or 0x10150001
+    if G.IsSteamAvaliable() then 
+        local gameMode = G.Steam_GetLobbyData('gameMode')
+        return tonumber(gameMode) or 0
+    else
+        return G.misc().游戏模式 or 0x10150001
+    end
 end
 
 --ret=o_deck
