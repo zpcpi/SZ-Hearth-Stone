@@ -8,7 +8,7 @@ local t = G.com()
 t.prop = 
 {
 	{name = 'cost', type = 'int', ctrl = 'dragint'},
-	{name = 'hp', type = 'int', ctrl = 'dragint'},
+	{name = 'ap', type = 'int', ctrl = 'dragint'},
 }
 
 function t:init()
@@ -24,15 +24,16 @@ function t:init()
     self.描述板 = self.obj.getChildByName('描述板')
     self.描述字符 = self.描述板.getChildByName('描述字符')
 
+    self.精英板 = self.obj.getChildByName('精英板')
+    
     self.属性值组合 = self.obj.getChildByName('属性值组合')
     self.费用 = self.属性值组合.getChildByName('费用')
     self.费用数值 = self.费用.getChildByName('费用数值')
-    self.生命值 = self.属性值组合.getChildByName('生命值')
-    self.生命值数值 = self.生命值.getChildByName('生命值数值')
-    self.精英板 = self.属性值组合.getChildByName('精英板')
+    self.护甲值 = self.属性值组合.getChildByName('护甲值')
+    self.护甲值数值 = self.护甲值.getChildByName('护甲值数值')
 
     self.set_cost = G.api['CardCom_SetAttr']('cost', '费用数值', 'text')
-    self.set_hp = G.api['CardCom_SetAttr']('hp', '生命值数值', 'text')
+    self.set_ap = G.api['CardCom_SetAttr']('ap', '护甲值数值', 'text')
 end
 
 function t:setData(...)

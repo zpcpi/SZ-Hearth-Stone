@@ -2,9 +2,9 @@
 
 ]]
 local G = require 'gf'
+local c_card_herocard = require 'c_card_herocard'
 local c_curved_text = require 'c_curved_text'
 local c_mintextquadsize = require 'c_mintextquadsize'
-local c_card_herocard = require 'c_card_herocard'
 local tp,tc,com,tk
 tc = G.Entity()
 G.cacheUI(tc)
@@ -62,8 +62,8 @@ tp = tc
 			tc.name = '插画边缘阴影'
 			tc.left = -97.176
 			tc.right = 96.824
-			tc.bottom = 4.706
-			tc.top = 228.706
+			tc.bottom = 2.706
+			tc.top = 226.706
 			tc.img = 0x56040011
 			tp = tc
 			tp = tp.parent
@@ -154,6 +154,17 @@ tp = tc
 			--end
 		tp = tp.parent
 		--end
+		tc = G.Quad()
+		tp.addChild(tc)
+		tc.name = '精英板'
+		tc.left = -110.088
+		tc.right = 184.912
+		tc.bottom = 93.647
+		tc.top = 291.647
+		tc.img = 0x56040013
+		tp = tc
+		tp = tp.parent
+		--end
 		tc = G.Entity()
 		tp.addChild(tc)
 		tc.name = '属性值组合'
@@ -195,18 +206,7 @@ tp = tc
 			--end
 			tc = G.Quad()
 			tp.addChild(tc)
-			tc.name = '精英板'
-			tc.left = -110.088
-			tc.right = 184.912
-			tc.bottom = 93.647
-			tc.top = 291.647
-			tc.img = 0x56040013
-			tp = tc
-			tp = tp.parent
-			--end
-			tc = G.Quad()
-			tp.addChild(tc)
-			tc.name = '生命值'
+			tc.name = '护甲值'
 			tc.left = 96.579
 			tc.right = 180.245
 			tc.bottom = -270.928
@@ -217,7 +217,7 @@ tp = tc
 			tp = tc
 				tc = G.TextQuad()
 				tp.addChild(tc)
-				tc.name = '生命值数值'
+				tc.name = '护甲值数值'
 				tc.left = 3.667
 				tc.right = 3.667
 				tc.bottom = 1.160
@@ -241,6 +241,6 @@ tp = tc
 	tp.c_card_herocard = setmetatable({}, c_card_herocard)
 	com = tp.c_card_herocard
 	com['cost'] =nil
-	com['hp'] =nil
+	com['ap'] =nil
 	tp = tp.parent
 	--end

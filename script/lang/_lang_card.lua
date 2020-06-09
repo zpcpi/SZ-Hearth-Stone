@@ -13,5 +13,7 @@ local l = {
     ['o_card_wog'] = '09-上古之神的低语(wog)',
     ['o_card_kar'] = '10-卡拉赞之夜(kar)',
     ['o_card_cfm'] = '11-龙争虎斗加基森(cfm)',
+    ['o_card_ung'] = '12-勇闯安戈洛(ung)',
+    ['o_card_icc'] = '13-冰封王座的骑士(icc)',
 }
 return l
