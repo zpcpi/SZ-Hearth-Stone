@@ -19,7 +19,20 @@ function t:UpdatePlayerInfo(o_room_player_玩家信息)
     else
         self:SetPlayerStatus('未准备')
     end
-    
+end
+
+function t:UpdatePlayerInfoByIndex(memberIndex)
+    self.playerName.text = G.Steam_GetLobbyMemberName(memberIndex)
+    if G.Steam_IsLobbyMemberOwner(memberIndex) then 
+        self:SetPlayerStatus('主机')
+    else
+        local isReady = G.Steam_GetLobbyMemberData(memberIndex, 'Ready') == '1'
+        if isReady then 
+            self:SetPlayerStatus('准备就绪')    
+        else
+            self:SetPlayerStatus('未就绪')
+        end
+    end
 end
 
 function t:SetPlayerStatus(status)

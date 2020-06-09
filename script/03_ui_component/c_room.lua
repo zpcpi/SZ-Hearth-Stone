@@ -62,11 +62,20 @@ end
 
 function t:UpdateRoomMember()
     self:ResetRoomMember()
-    local _o_room_player_对决玩家信息列表 = G.call('房间_获取玩家信息列表')
-    for _, o_room_player_对决玩家 in ipairs(_o_room_player_对决玩家信息列表) do 
-        local node = G.loadUI('v_room_member')
-        self.roomMemberParent.addChild(node)
-        node.c_room_member:UpdatePlayerInfo(o_room_player_对决玩家)
+    if G.IsSteamAvaliable() then 
+        local roomMemberCount = G.Steam_GetLobbyMemberCount()
+        for memberIndex = 0, roomMemberCount - 1 do 
+            local node = G.loadUI('v_room_member')
+            self.roomMemberParent.addChild(node)
+            node.c_room_member:UpdatePlayerInfoByIndex(memberIndex)
+        end
+    else
+        local _o_room_player_对决玩家信息列表 = G.call('房间_获取玩家信息列表')
+        for _, o_room_player_对决玩家 in ipairs(_o_room_player_对决玩家信息列表) do 
+            local node = G.loadUI('v_room_member')
+            self.roomMemberParent.addChild(node)
+            node.c_room_member:UpdatePlayerInfo(o_room_player_对决玩家)
+        end
     end
 end
 
