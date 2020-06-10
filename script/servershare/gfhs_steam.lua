@@ -137,7 +137,8 @@ function GF.InitSteamDll()
             OnLobbyPersonaStateChange = GF.OnLobbyPersonaStateChange,
             OnLobbyDataUpdate = GF.OnLobbyDataUpdate,
 			OnLobbyChatUpdate = GF.OnLobbyChatUpdate,
-			OnRequestLobbyList = GF.OnRequestLobbyList
+			OnRequestLobbyList = GF.OnRequestLobbyList,
+			OnLobbyEntered = GF.OnLobbyEntered
         }
         GF.Steam_SetLobbyCallback(steamCallback)
         print('--== InitSteamDll Complete')
@@ -169,4 +170,10 @@ end
 
 function GF.OnRequestLobbyList(lobbyCount)
 	GF.start_program('房间_刷新房间列表回调', lobbyCount)
+end
+
+function GF.OnLobbyEntered(steamLobbyID)
+	print('OnLobbyEntered', steamLobbyID)
+	GF.curSteamLobbyID = steamLobbyID
+	GF.start_program('客机_加入房间成功回调')
 end

@@ -15,6 +15,7 @@ function t:init()
     self.roomInfoText = self.obj.getChildByName('RoomInfo').getChildByName('Info')
     self.roomButtonParent.removeAllChildren()
     self.roomInfoText.text = '正在获取房间列表...'
+    self.joinLobbyIndex = nil
     if not G.is_editor then 
         G.Steam_RequestLobbyList()
     end
@@ -78,8 +79,15 @@ function t:click(tar)
             return 
         end
         if self.curSelectLobbyIndex == lobbyIndex then 
-            -- TODO: 加入房间
+            if self.joinLobbyIndex ~= nil then 
+                return 
+            end
+            self.joinLobbyIndex = lobbyIndex
+            G.Steam_JoinLobby(lobbyIndex)
+            -- TODO: 弹出提示连接中
+            self.roomInfoText.text = self.roomInfoText.text .. '\n连接中...'
         else
+            self.curSelectLobbyIndex = lobbyIndex
             self:ShowLobbyInfo(lobbyIndex)
         end
     end
