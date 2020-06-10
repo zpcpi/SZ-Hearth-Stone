@@ -21,7 +21,11 @@ function t:click(tar)
     if tar == self.hostGameBtn then 
         G.call('主机_新建房间')
     elseif tar == self.connectGameBtn then 
-        G.addUI('v_connect')
+        if G.IsSteamAvaliable() then 
+            G.addUI('v_room_list')
+        else
+            G.addUI('v_connect')
+        end
     elseif tar == self.collectionBtn then 
         G.call('收藏_进入收藏界面')
     elseif tar == self.quitGameBtn then 

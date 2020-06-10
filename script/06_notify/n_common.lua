@@ -110,3 +110,11 @@ function noti.收藏_移除卡组卡片()
         o_node_界面.c_collection:UpdateDeckInfo()
     end
 end
+
+function noti.房间_刷新房间列表回调(lobbyCount)
+    local o_node_界面 = G.getUI('v_room_list')
+    if not o_node_界面 then 
+        return 
+    end
+    o_node_界面.c_room_list:UpdateRoomList(lobbyCount)
+end
