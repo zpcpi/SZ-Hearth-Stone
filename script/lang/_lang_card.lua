@@ -15,5 +15,6 @@ local l = {
     ['o_card_cfm'] = '11-龙争虎斗加基森(cfm)',
     ['o_card_ung'] = '12-勇闯安戈洛(ung)',
     ['o_card_icc'] = '13-冰封王座的骑士(icc)',
+    ['o_card_loot'] = '14-狗头人与地下世界(loot)',
 }
 return l

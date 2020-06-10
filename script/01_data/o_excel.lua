@@ -182,5 +182,16 @@ local t = {
 		['是否转置']=false,
 		['是否全托']=false,
 	},
+	{
+		['name']=0x10030011,
+		['showname']='狗头人与地下世界',
+		['class']={n=0,[1] = 'excel_读取数据',
+		},
+		['文件名称']='卡牌信息表.xlsx',
+		['sheet名称']='狗头人',
+		['o表名称']='o_card_loot',
+		['是否转置']=false,
+		['是否全托']=false,
+	},
 }}
 return t
