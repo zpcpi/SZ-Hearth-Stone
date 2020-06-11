@@ -204,5 +204,16 @@ local t = {
 		['是否转置']=false,
 		['是否全托']=false,
 	},
+	{
+		['name']=0x10030013,
+		['showname']='砰砰计划',
+		['class']={n=0,[1] = 'excel_读取数据',
+		},
+		['文件名称']='卡牌信息表.xlsx',
+		['sheet名称']='砰砰计划',
+		['o表名称']='o_card_bot',
+		['是否转置']=false,
+		['是否全托']=false,
+	},
 }}
 return t

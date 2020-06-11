@@ -17,5 +17,6 @@ local l = {
     ['o_card_icc'] = '13-冰封王座的骑士(icc)',
     ['o_card_loot'] = '14-狗头人与地下世界(loot)',
     ['o_card_gil'] = '15-女巫森林(gil)',
+    ['o_card_bot'] = '16-砰砰计划(bot)',
 }
 return l
