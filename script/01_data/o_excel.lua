@@ -193,5 +193,16 @@ local t = {
 		['是否转置']=false,
 		['是否全托']=false,
 	},
+	{
+		['name']=0x10030012,
+		['showname']='女巫森林',
+		['class']={n=0,[1] = 'excel_读取数据',
+		},
+		['文件名称']='卡牌信息表.xlsx',
+		['sheet名称']='女巫森林',
+		['o表名称']='o_card_gil',
+		['是否转置']=false,
+		['是否全托']=false,
+	},
 }}
 return t
