@@ -198,6 +198,7 @@ end
 t['对决_获取当前玩家对决卡组'] = function()
     local o_room_player_当前玩家信息 = G.call('系统_获取当前玩家信息')
     if o_room_player_当前玩家信息 == nil then 
+        print('[对决_获取当前玩家对决卡组] 找不到当前玩家信息')
         return nil
     end
     return o_room_player_当前玩家信息.卡组 

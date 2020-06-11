@@ -148,7 +148,7 @@ function GF.InitSteamDll()
 end
 
 function GF.OnLobbyCreated(steamLobbyID, result)
-    print('[OnLobbyCreated]', steamLobbyID, result)
+	print('[OnLobbyCreated]')
     if result == EResult['k_EResultOK'] then 
         GF.curSteamLobbyID = steamLobbyID
         GF.isLobbyHost = true
@@ -156,24 +156,29 @@ function GF.OnLobbyCreated(steamLobbyID, result)
     end
 end
 
-function GF.OnLobbyPersonaStateChange(steamID, changeFlag)
-    print('[OnLobbyPersonaStateChange]', steamID, changeFlag)
+function GF.OnLobbyPersonaStateChange()
+	print('[OnLobbyPersonaStateChange]')
+	GF.start_program('房间_刷新房间界面')
 end
 
-function GF.OnLobbyDataUpdate(steamLobbyID, steamID, isSuccess)
-    print('[OnLobbyDataUpdate]', steamLobbyID, steamID, isSuccess)
+function GF.OnLobbyDataUpdate(isSuccess)
+	print('[OnLobbyDataUpdate]')
+	if isSuccess then 
+		GF.start_program('房间_刷新房间界面')
+	end
 end
 
 function GF.OnLobbyChatUpdate(steamLobbyID, steamIDUserChanged, steamIDMakingChange, chatMemberStateChange)
-    print('[OnLobbyChatUpdate]', steamLobbyID, steamIDUserChanged, steamIDMakingChange, chatMemberStateChange)
+	print('[OnLobbyChatUpdate]')
 end
 
 function GF.OnRequestLobbyList(lobbyCount)
+	print('[OnRequestLobbyList]')
 	GF.start_program('房间_刷新房间列表回调', lobbyCount)
 end
 
 function GF.OnLobbyEntered(steamLobbyID)
-	print('OnLobbyEntered', steamLobbyID)
+	print('[OnLobbyEntered]')
 	GF.curSteamLobbyID = steamLobbyID
-	GF.start_program('客机_加入房间成功回调')
+	GF.start_program('房间_刷新房间界面')
 end

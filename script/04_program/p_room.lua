@@ -66,19 +66,21 @@ t['房间_清空玩家列表'] = function()
     end
 end
 
-t['房间_是否满足开始条件'] = function()
+t['房间_是否满足开始条件'] = function(boolean_判断人数)
     local i_game_mode_游戏模式 = G.call('对决_获取当前游戏模式')
     local o_game_mode_游戏模式 = G.QueryName(i_game_mode_游戏模式)
     if o_game_mode_游戏模式 == nil then 
         G.call('系统_输出信息', '请先选择游戏模式')
         return 
     else
-        if G.call('房间_获取玩家数') < (o_game_mode_游戏模式.玩家数要求 or 0) then 
-            local farg_填满电脑玩家 = {
-                [1] = '战斗AI_玩家空位补全AI'
-            }
-            G.call('提示_显示弹框提示', '当前房间人数不足，是否让电脑填满空位？', farg_填满电脑玩家)
-            return false
+        if boolean_判断人数 ~= false then 
+            if G.call('房间_获取玩家数') < (o_game_mode_游戏模式.玩家数要求 or 0) then 
+                local farg_填满电脑玩家 = {
+                    [1] = '战斗AI_玩家空位补全AI'
+                }
+                G.call('提示_显示弹框提示', '当前房间人数不足，是否让电脑填满空位？', farg_填满电脑玩家)
+                return false
+            end
         end
         return G.call(o_game_mode_游戏模式.开始条件)
     end
@@ -239,12 +241,29 @@ t['房间_是否同一阵营_相对身份'] = function(estr_player_相对身份1
 end
 
 t['房间_当前玩家准备'] = function()
-    local o_room_player_当前玩家信息 = G.call('系统_获取当前玩家信息')
-    if G.call('主机_是主机') then 
-        o_room_player_当前玩家信息.准备就绪 = not o_room_player_当前玩家信息.准备就绪
-        G.call('房间_更新玩家信息', o_room_player_当前玩家信息)
+    if G.IsSteamAvaliable() then 
+        local value = '0'
+        if not G.call('房间_获取当前玩家准备状态') then 
+            value = '1'
+        end
+        G.Steam_SetSelfLobbyMemberData('Ready', value)
     else
-        G.call('客机_向主机发送消息', '主机处理回调_更改准备状态', o_room_player_当前玩家信息)
+        local o_room_player_当前玩家信息 = G.call('系统_获取当前玩家信息')
+        if G.call('主机_是主机') then 
+            o_room_player_当前玩家信息.准备就绪 = not o_room_player_当前玩家信息.准备就绪
+            G.call('房间_更新玩家信息', o_room_player_当前玩家信息)
+        else
+            G.call('客机_向主机发送消息', '主机处理回调_更改准备状态', o_room_player_当前玩家信息)
+        end
+    end
+end
+
+t['房间_获取当前玩家准备状态'] = function()
+    if G.IsSteamAvaliable() then 
+        return G.Steam_GetSelfLobbyMemberData('Ready') == '1'
+    else
+        local o_room_player_当前玩家 = G.call('系统_获取当前玩家信息')
+        return o_room_player_当前玩家.准备就绪
     end
 end
 
@@ -354,4 +373,9 @@ end
 
 t['房间_刷新房间列表回调'] = function(int_房间数量)
     G.noti_call('房间_刷新房间列表回调', int_房间数量)
+end
+
+--hide=true
+t['房间_刷新房间界面'] = function()
+    G.noti_call('房间_刷新房间界面')
 end

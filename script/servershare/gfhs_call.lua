@@ -1,4 +1,3 @@
-
 local GF = require "gfbase"
 local co = require "co"
 local es = require 'gevent'
@@ -229,21 +228,21 @@ table.insert(GF.update, function(t)
 	end
 	GF.preloadResRun()
 	es.tick(srED)
-	if os_clock() - lastGCTime > 360 then -- 3分钟没有gc就gc一次
-		boolean_needGC = true
-	end
-	if boolean_needGC then
-		GF.callGC()
-	end
+	-- if os_clock() - lastGCTime > 360 then -- 3分钟没有gc就gc一次
+	-- 	boolean_needGC = true
+	-- end
+	-- if boolean_needGC then
+	-- 	GF.callGC()
+	-- end
 end)
 
-function GF.callGC()
-	trig_count = 0
-	boolean_needGC = false
-	lastGCTime = os_clock()
-	collectgarbage("collect")
-	print('hs gc time:', os_clock() - lastGCTime)
-end
+-- function GF.callGC()
+-- 	trig_count = 0
+-- 	boolean_needGC = false
+-- 	lastGCTime = os_clock()
+-- 	collectgarbage("collect")
+-- 	print('hs gc time:', os_clock() - lastGCTime, os_clock(), lastGCTime, boolean_needGC, debug.traceback())
+-- end
 
 function GF.get_event_def_data(event_name)
 	if ev_info == nil then 

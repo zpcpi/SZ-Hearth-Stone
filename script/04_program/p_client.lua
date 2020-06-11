@@ -57,8 +57,3 @@ end
 t['客机_向主机发送消息'] = function(...)
     G.call('网络通用_发送消息', G.hostSocket, ...)
 end
-
---hide=true
-t['客机_加入房间成功回调'] = function()
-    G.noti_call('客机_加入房间成功回调')
-end
