@@ -36,7 +36,7 @@ function t:UpdateRoomList(lobbyCount, resetCurPage)
         self:AddRoomButton(G.Steam_GetLobbyName(index), index)
     end
     if (self.curPage + 1) * ONE_PAGE_MAX_LOBBY < self.lobbyCount then 
-        self:AddRoomButton('下一页', ONE_PAGE_MAX_LOBBY)
+        self:AddRoomButton('下一页', -100)
     end
     self.roomInfoText.text = ''
     self.curSelectLobbyIndex = nil
@@ -74,7 +74,7 @@ function t:click(tar)
         if lobbyIndex == -1 then 
             self:UpdateLastPage()
             return
-        elseif lobbyIndex == ONE_PAGE_MAX_LOBBY then
+        elseif lobbyIndex == -100 then
             self:UpdateNextPage()
             return 
         end
