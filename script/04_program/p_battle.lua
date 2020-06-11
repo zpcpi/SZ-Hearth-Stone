@@ -205,7 +205,6 @@ t['对决_获取当前玩家对决卡组'] = function()
 end
 
 t['对决_设置预设对决卡组'] = function(o_deck_卡组)
-    print('[对决_设置预设对决卡组]')
     local o_room_player_当前玩家信息 = G.call('系统_获取当前玩家信息')
     o_room_player_当前玩家信息.卡组 = {
         卡牌列表 = {},
@@ -218,8 +217,6 @@ t['对决_设置预设对决卡组'] = function(o_deck_卡组)
         local i_card_卡牌ID = o_card_卡牌.name
         table.insert(o_room_player_当前玩家信息.卡组.卡牌列表, i_card_卡牌ID)
     end
-    G.show_table(o_deck_卡组)
-    G.show_table(o_room_player_当前玩家信息.卡组)
 end
 
 --ret=int
