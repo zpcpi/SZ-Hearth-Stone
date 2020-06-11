@@ -55,10 +55,13 @@ end
 
 --hide=true
 t['主机_是主机'] = function()
+    local boolean_是主机 = false
     if G.IsSteamAvaliable() then
-        return G.Steam_IsLocalUserLobbyOwner()
+        boolean_是主机 = G.Steam_IsLocalUserLobbyOwner()
     else
         local any_玩家信息 = G.call('系统_获取当前玩家信息')
-        return any_玩家信息.是主机
+        boolean_是主机 = any_玩家信息.是主机
     end
+    print('[主机_是主机]', boolean_是主机)
+    return boolean_是主机
 end

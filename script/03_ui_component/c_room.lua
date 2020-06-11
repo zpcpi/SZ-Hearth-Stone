@@ -140,7 +140,7 @@ end
 function t:OnPrepareButtonClick()
     self.prepareBtn.c_button.state = 'n'
     if not G.call('房间_获取当前玩家准备状态') then 
-        if not G.call('房间_是否满足开始条件') then 
+        if not G.call('房间_是否满足开始条件', false) then 
             return 
         end
     end

@@ -148,7 +148,6 @@ function GF.InitSteamDll()
 end
 
 function GF.OnLobbyCreated(steamLobbyID, result)
-    print('[OnLobbyCreated]', steamLobbyID, result)
     if result == EResult['k_EResultOK'] then 
         GF.curSteamLobbyID = steamLobbyID
         GF.isLobbyHost = true
@@ -157,12 +156,10 @@ function GF.OnLobbyCreated(steamLobbyID, result)
 end
 
 function GF.OnLobbyPersonaStateChange()
-	print('[OnLobbyPersonaStateChange]')
 	GF.start_program('房间_刷新房间界面')
 end
 
 function GF.OnLobbyDataUpdate(isSuccess)
-	print('[OnLobbyDataUpdate]', isSuccess)
 	if isSuccess then 
 		GF.start_program('房间_刷新房间界面')
 	end
