@@ -156,12 +156,16 @@ function GF.OnLobbyCreated(steamLobbyID, result)
     end
 end
 
-function GF.OnLobbyPersonaStateChange(steamID, changeFlag)
-    print('[OnLobbyPersonaStateChange]', steamID, changeFlag)
+function GF.OnLobbyPersonaStateChange()
+	print('[OnLobbyPersonaStateChange]')
+	GF.start_program('房间_刷新房间界面')
 end
 
-function GF.OnLobbyDataUpdate(steamLobbyID, steamID, isSuccess)
-    print('[OnLobbyDataUpdate]', steamLobbyID, steamID, isSuccess)
+function GF.OnLobbyDataUpdate(isSuccess)
+	print('[OnLobbyDataUpdate]', isSuccess)
+	if isSuccess then 
+		GF.start_program('房间_刷新房间界面')
+	end
 end
 
 function GF.OnLobbyChatUpdate(steamLobbyID, steamIDUserChanged, steamIDMakingChange, chatMemberStateChange)
@@ -175,5 +179,5 @@ end
 function GF.OnLobbyEntered(steamLobbyID)
 	print('OnLobbyEntered', steamLobbyID)
 	GF.curSteamLobbyID = steamLobbyID
-	GF.start_program('客机_加入房间成功回调')
+	GF.start_program('房间_刷新房间界面')
 end

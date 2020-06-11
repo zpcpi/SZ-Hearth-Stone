@@ -139,19 +139,16 @@ end
 
 function t:OnPrepareButtonClick()
     self.prepareBtn.c_button.state = 'n'
-    if G.IsSteamAvaliable() then 
+    if not G.call('房间_获取当前玩家准备状态') then 
+        if not G.call('房间_是否满足开始条件') then 
+            return 
+        end
+    end
+    G.call('房间_当前玩家准备')
+    if not G.call('房间_获取当前玩家准备状态') then 
+        self.prepareBtn.c_button.state = 'c'
     else
-        if not G.call('房间_获取当前玩家准备状态') then 
-            if not G.call('房间_是否满足开始条件') then 
-                return 
-            end
-        end
-        G.call('房间_当前玩家准备')
-        if not G.call('房间_获取当前玩家准备状态') then 
-            self.prepareBtn.c_button.state = 'c'
-        else
-            self.prepareBtn.c_button.state = 'n'
-        end
+        self.prepareBtn.c_button.state = 'n'
     end
 end
 

@@ -372,3 +372,8 @@ end
 t['房间_刷新房间列表回调'] = function(int_房间数量)
     G.noti_call('房间_刷新房间列表回调', int_房间数量)
 end
+
+--hide=true
+t['房间_刷新房间界面'] = function()
+    G.noti_call('房间_刷新房间界面')
+end
