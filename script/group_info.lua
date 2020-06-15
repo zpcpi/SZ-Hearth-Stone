@@ -30,8 +30,9 @@ local t ={
 			[16] = 'o_card_redplayer1',
 			[17] = 'o_card_redplayer2',
 			[18] = 'o_card_tgt',
-			[19] = 'o_card_ung',
-			[20] = 'o_card_wog',
+			[19] = 'o_card_trl',
+			[20] = 'o_card_ung',
+			[21] = 'o_card_wog',
 		},
 		[3] = {
 			name = '系统',

@@ -18,5 +18,6 @@ local l = {
     ['o_card_loot'] = '14-狗头人与地下世界(loot)',
     ['o_card_gil'] = '15-女巫森林(gil)',
     ['o_card_bot'] = '16-砰砰计划(bot)',
+    ['o_card_trl'] = '17-拉斯塔哈的大乱斗(trl)',
 }
 return l
